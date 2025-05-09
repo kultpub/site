@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI som stöd</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0 1rem;
+      background-color: #ffffff;
+      color: #000000;
+      transition: background-color 0.3s, color 0.3s;
+      max-width: 500px;
+      margin-inline: auto;
+    }
+
+    .dark-mode {
+      background-color: #121212;
+      color: #e0e0e0;
+    }
+
+    header {
+      text-align: center;
+      padding: 1rem 0 0.5rem;
+    }
+
+    .logo {
+      max-width: 120px;
+      height: auto;
+    }
+
+    .toggle-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 1rem 0;
+    }
+
+    .toggle-container label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .toggle-container input[type="checkbox"] {
+      width: 40px;
+      height: 20px;
+      appearance: none;
+      background: #ccc;
+      outline: none;
+      border-radius: 20px;
+      position: relative;
+      transition: background 0.3s;
+    }
+
+    .toggle-container input[type="checkbox"]:checked {
+      background: #4caf50;
+    }
+
+    .toggle-container input[type="checkbox"]::before {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      top: 1px;
+      left: 1px;
+      background: #fff;
+      transition: transform 0.3s;
+    }
+
+    .toggle-container input[type="checkbox"]:checked::before {
+      transform: translateX(20px);
+    }
+
+    main {
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    ul {
+      padding-left: 1.2rem;
+    }
+
+    li {
+      margin-bottom: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" alt="ChatGPT logotyp" class="logo">
+  </header>
+
+  <div class="toggle-container">
+    <label>
+      <input type="checkbox" id="darkToggle">
+      Mörkt läge
+    </label>
+  </div>
+
+<main>
+  <p>Du vill veta hur AI kan vara ett stöd för dig – inom ledarskap – i ditt arbete på Kulturen. Med tanke på att Kulturen enligt strategiområde 4 ska präglas av ett ledarskap och medarbetarskap med utvecklingsglädje, tydlighet och omtanke – och att vi växer både i verksamhet och personalstyrka – kan AI vara ett strategiskt verktyg i ditt ledarskap på följande sätt:</p>
+  <ul>
+    <li>AI kan ge stöd i beslutsfattande genom att analysera verksamhetsdata, t.ex. besökstal, ekonomi och personalresurser – i linje med att skapa balans mellan uppdrag och resurser.</li>
+    <li>AI-verktyg kan hjälpa identifiera kompetensbehov och matcha dem med interna resurser eller rekryteringsbehov.</li>
+    <li>AI kan analysera medarbetarenkäter och feedback, vilket ger insikter om organisationens välmående och utvecklingsområden.</li>
+    <li>AI-stöd kan användas för att effektivisera bemanningsplanering vid programverksamhet, skollov och högtider, särskilt viktigt vid ökande antal programpunkter.</li>
+    <li>AI-assistenter kan hjälpa dig sammanställa strategiska underlag, presentationer och rapporter inför möten med ledningsgrupp eller styrelse.</li>
+    <li>AI kan ge löpande omvärldsbevakning inom kultursektorn, vilket stärker din förmåga att leda med framtidsfokus.</li>
+    <li>AI kan användas för ledarskapsutveckling, t.ex. genom coachande feedbackverktyg eller simuleringar i konflikthantering – i linje med målet att utveckla en tydlig och omtänksam ledarkultur.</li>
+  </ul>
+</main>
+
+  <script>
+    const toggle = document.getElementById('darkToggle');
+    toggle.addEventListener('change', function () {
+      document.body.classList.toggle('dark-mode', toggle.checked);
+    });
+  </script>
+</body>
+</html>
