@@ -9633,6 +9633,29 @@ Ett arrangemang räknas som utställning om det i källorna uttryckligen benämn
       overlay.style.display = "none";
     }
   };
+
+  // Ladda användarens valda tema
+  document.addEventListener("DOMContentLoaded", function() {
+    const darkMode = localStorage.getItem("darkMode");
+    if (darkMode === "enabled") {
+      document.body.classList.add("dark-mode");
+      document.querySelector(".switch input").checked = true;
+    }
+  });
+
+  function toggleDarkMode() {
+    const isDark = document.body.classList.toggle("dark-mode");
+    if (isDark) {
+      localStorage.setItem("darkMode", "enabled");
+    } else {
+      localStorage.setItem("darkMode", "disabled");
+    }
+  }
+
+  // Modifiera återställ-knappen så att den inte nollställer localStorage
+  document.getElementById("reset-button").addEventListener("click", function() {
+    location.reload(); // bara ladda om sidan – behåller darkMode-inställningen
+  });
 </script>
 </body>
 </html>
