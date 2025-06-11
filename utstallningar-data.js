@@ -7809,7 +7809,7 @@ const utstallningar = [
       start: "2008-02-17",
       slut: "2008-09-28",
       lokal: "Textilhallen",
-      kommentar: "I samarberte med  Tekra Pak; med anledning av att de Olympiska spelen skulle äga rum i Kina och att det publika intresset för landet därmed kunde förväntas vara stort."
+      kommentar: "I samarberte med  Tetra Pak; med anledning av att de Olympiska spelen skulle äga rum i Kina och att det publika intresset för landet därmed kunde förväntas vara stort."
     },
     {
       id: 869,
