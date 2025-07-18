@@ -5,11 +5,8 @@
   <title>Bemanning</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Preload bilder -->
-  <link rel="preload" as="image" href="https://kultpub.github.io/site/bemanning-juni.png">
-  <link rel="preload" as="image" href="https://kultpub.github.io/site/bemanning-juli.png">
-  <link rel="preload" as="image" href="https://kultpub.github.io/site/bemanning-aug.png">
-  <link rel="preload" as="image" href="https://kultpub.github.io/site/bemanning-sep.png">
+  <link rel="preload" as="image" href="https://kultpub.github.io/site/bemanning-juni.webp" type="image/webp">
+  <link rel="preload" as="image" href="https://kultpub.github.io/site/bemanning-juni.png" type="image/png">
 
   <style>
     body {
@@ -47,6 +44,9 @@
       cursor: pointer;
       transition: all 0.2s ease;
       font-weight: 500;
+      -webkit-appearance: none; /* Remove default button styling for consistency */
+      -moz-appearance: none;
+      appearance: none;
     }
 
     .month-btn:hover {
@@ -68,18 +68,14 @@
       text-align: center;
     }
 
+    /* Use object-fit: contain to ensure image always fits without distortion if dimensions change */
     .image-wrapper img {
       width: 100%;
       height: auto;
       border: 1px solid #ccc;
       border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    }
-
-    @media (max-width: 600px) {
-      .button-container {
-        grid-template-columns: repeat(2, 1fr);
-      }
+      display: block; /* Remove extra space below image */
     }
 
     /* === Modal === */
@@ -92,6 +88,14 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      opacity: 0; /* Start hidden */
+      visibility: hidden; /* Start hidden */
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .modal-overlay.show {
+        opacity: 1;
+        visibility: visible;
     }
 
     .modal {
@@ -103,7 +107,12 @@
       position: relative;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
       text-align: left;
-      animation: fadeIn 0.3s ease;
+      transform: scale(0.95); /* Start slightly smaller for animation */
+      transition: transform 0.3s ease;
+    }
+
+    .modal-overlay.show .modal {
+        transform: scale(1);
     }
 
     .modal h2 {
@@ -125,15 +134,17 @@
       border: none;
       cursor: pointer;
       color: #888;
+      padding: 5px; /* Increase clickable area */
     }
 
     .modal-close:hover {
       color: #000;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.95); }
-      to { opacity: 1; transform: scale(1); }
+    @media (max-width: 600px) {
+      .button-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
   </style>
 </head>
@@ -141,75 +152,96 @@
   <h1>Bemanning</h1>
 
   <div class="button-container">
-    <button class="month-btn active" onclick="showImage(0)">Juni</button>
-    <button class="month-btn" onclick="showImage(1)">Juli</button>
-    <button class="month-btn" onclick="showImage(2)">Augusti</button>
-    <button class="month-btn" onclick="showImage(3)">September</button>
+    <button class="month-btn active" data-month-index="0">Juni</button>
+    <button class="month-btn" data-month-index="1">Juli</button>
+    <button class="month-btn" data-month-index="2">Augusti</button>
+    <button class="month-btn" data-month-index="3">September</button>
   </div>
 
   <div class="image-wrapper">
-    <img id="bemanning-image" src="https://kultpub.github.io/site/bemanning-juni.png" alt="Bemanning">
+    <picture>
+      <source id="bemanning-source" srcset="https://kultpub.github.io/site/bemanning-juni.webp" type="image/webp">
+      <img id="bemanning-image" src="https://kultpub.github.io/site/bemanning-juni.png" alt="Bemanning">
+    </picture>
   </div>
 
-  <!-- Modal -->
   <div id="modal-overlay" class="modal-overlay">
-    <div class="modal" id="info-modal">
-      <button class="modal-close" onclick="closeModal()">×</button>
-      <h2>Om denna sida</h2>
+    <div class="modal" id="info-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button class="modal-close" aria-label="Stäng" onclick="closeModal()">×</button>
+      <h2 id="modal-title">Om denna sida</h2>
       <p>På dessa bilder visas bemanning juni–september 2025. Informationen kan komma att uppdateras framöver.</p>
-	  <p>Senaste uppdatering: 2025-07-18.</p> 
+	    <p>Senaste uppdatering: 2025-07-18.</p>
     </div>
   </div>
 
-<div style="display:none;">
-  <img src="https://kultpub.github.io/site/bemanning-juni.png" alt="">
-  <img src="https://kultpub.github.io/site/bemanning-juli.png" alt="">
-  <img src="https://kultpub.github.io/site/bemanning-aug.png" alt="">
-  <img src="https://kultpub.github.io/site/bemanning-sep.png" alt="">
-</div>
-
   <script>
-    const imageUrls = [
-      "https://kultpub.github.io/site/bemanning-juni.png",
-      "https://kultpub.github.io/site/bemanning-juli.png",
-      "https://kultpub.github.io/site/bemanning-aug.png",
-      "https://kultpub.github.io/site/bemanning-sep.png"
+    // Define image paths with WebP and PNG variants
+    const imagePaths = [
+      { webp: "https://kultpub.github.io/site/bemanning-juni.webp", png: "https://kultpub.github.io/site/bemanning-juni.png" },
+      { webp: "https://kultpub.github.io/site/bemanning-juli.webp", png: "https://kultpub.github.io/site/bemanning-juli.png" },
+      { webp: "https://kultpub.github.io/site/bemanning-aug.webp", png: "https://kultpub.github.io/site/bemanning-aug.png" },
+      { webp: "https://kultpub.github.io/site/bemanning-sep.webp", png: "https://kultpub.github.io/site/bemanning-sep.png" }
     ];
 
-    // Preload
-    const preloadedImages = [];
-    imageUrls.forEach(url => {
-      const img = new Image();
-      img.src = url;
-      preloadedImages.push(img);
-    });
-
     const buttons = document.querySelectorAll('.month-btn');
-    const image = document.getElementById('bemanning-image');
+    const pictureElement = document.querySelector('.image-wrapper picture');
+    const sourceElement = document.getElementById('bemanning-source'); // Get the source element
+    const imageElement = document.getElementById('bemanning-image'); // Get the img element
+
+    // Preload all images (WebP and PNG) in the background *after* initial content loads.
+    function preloadAllImages() {
+        imagePaths.forEach(paths => {
+            const webpImg = new Image();
+            webpImg.src = paths.webp; // Load WebP
+            const pngImg = new Image();
+            pngImg.src = paths.png;   // Load PNG fallback
+        });
+    }
 
     function showImage(index) {
-      image.src = imageUrls[index];
+      // Update the <source> and <img> elements within <picture>
+      sourceElement.srcset = imagePaths[index].webp;
+      imageElement.src = imagePaths[index].png; // Fallback src for <img>
+
+      // Remove active class from all buttons and add to the clicked one
       buttons.forEach(btn => btn.classList.remove('active'));
       buttons[index].classList.add('active');
     }
 
-    // Modal hantering
+    // Attach event listeners efficiently using event delegation
+    const buttonContainer = document.querySelector('.button-container');
+    buttonContainer.addEventListener('click', (event) => {
+        const targetButton = event.target.closest('.month-btn');
+        if (targetButton) {
+            const index = parseInt(targetButton.dataset.monthIndex, 10);
+            showImage(index);
+        }
+    });
+
+    // Modal handling
     const overlay = document.getElementById("modal-overlay");
 
     function closeModal() {
-      overlay.style.display = "none";
+      overlay.classList.remove('show');
     }
 
-    // Klick utanför modalen
+    // Click outside modal
     overlay.addEventListener("click", function (e) {
       if (e.target === overlay) {
         closeModal();
       }
     });
 
-    // Visa modalen vid sidladdning
+    // Show modal on page load, but give the browser a moment to render main content
     window.addEventListener("DOMContentLoaded", () => {
-      overlay.style.display = "flex";
+      // Delay showing the modal slightly to prioritize initial content render
+      setTimeout(() => {
+        overlay.classList.add('show');
+      }, 50); // A very small delay
+      
+      // Start preloading ALL images (WebP & PNG) in the background
+      // This is less critical for the initial load, but prepares for quick button clicks.
+      preloadAllImages();
     });
   </script>
 </body>
