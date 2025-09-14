@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <title>Filtrera programpunkter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .controls {
+            margin-bottom: 20px;
+        }
+        .controls label {
+            margin-right: 10px;
+        }
+        .controls input[type="date"] {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        #data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        #data-table th, #data-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        #data-table th {
+            background-color: #f2f2f2;
+        }
+        .hidden-row {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Filtrera programpunkter efter datum</h1>
+
+    <div class="controls">
+        <label for="start-date">Från datum:</label>
+        <input type="date" id="start-date">
+        <label for="end-date">Till datum:</label>
+        <input type="date" id="end-date">
+        <button onclick="filterTable()">Filtrera</button>
+    </div>
+
+    <table id="data-table">
+        <thead>
+            <tr>
+                <th>Vad</th>
+                <th>Dag, start, slut</th>
+                <th>Datum</th>
+                <th>År</th>
+                <th>Månad</th>
+                <th>Veckodag</th>
+                <th>Starttid</th>
+                <th>Sluttid</th>
+                <th>Varaktighet</th>
+                <th>Vad, kategori</th>
+                <th>Var</th>
+                <th>Kommentar</th>
+            </tr>
+        </thead>
+        <tbody>
+            </tbody>
+    </table>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sökvägen till din CSV-fil
+            const csvFilePath = 'alla-programpunkter.csv'; 
+
+            // Hämta tabellens kropp
+            const tableBody = document.querySelector('#data-table tbody');
+            
+            // Hämta datumfälten
+            const startDateInput = document.getElementById('start-date');
+            const endDateInput = document.getElementById('end-date');
+
+            // Funktion för att ladda CSV-filen och rendera tabellen
+            function loadCSV() {
+                fetch(csvFilePath)
+                    .then(response => response.text())
+                    .then(data => {
+                        const rows = data.split('\n').slice(1); // Hoppa över rubrikraden
+                        rows.forEach(row => {
+                            if (row.trim() === '') return; // Hoppa över tomma rader
+                            const columns = row.split(',');
+                            const tr = document.createElement('tr');
+                            columns.forEach(col => {
+                                const td = document.createElement('td');
+                                td.textContent = col.trim();
+                                tr.appendChild(td);
+                            });
+                            tableBody.appendChild(tr);
+                        });
+                    })
+                    .catch(error => console.error('Kunde inte ladda CSV-filen:', error));
+            }
+
+            // Funktion för att filtrera tabellen
+            window.filterTable = function() {
+                const startDate = new Date(startDateInput.value);
+                const endDate = new Date(endDateInput.value);
+                
+                // Om inget datum är valt, visa alla rader
+                if (!startDateInput.value && !endDateInput.value) {
+                    Array.from(tableBody.children).forEach(row => {
+                        row.classList.remove('hidden-row');
+                    });
+                    return;
+                }
+
+                Array.from(tableBody.children).forEach(row => {
+                    // Använder "Datum"-kolumnen, som ligger på index 2
+                    const dateCell = new Date(row.children[2].textContent);
+                    
+                    const isWithinRange = dateCell >= startDate && dateCell <= endDate;
+                    
+                    if (isWithinRange) {
+                        row.classList.remove('hidden-row');
+                    } else {
+                        row.classList.add('hidden-row');
+                    }
+                });
+            };
+
+            // Ladda datan när sidan är klar
+            loadCSV();
+        });
+    </script>
+</body>
+</html>
