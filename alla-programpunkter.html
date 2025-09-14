@@ -89,7 +89,8 @@
                         const rows = data.split('\n').slice(1); // Hoppa över rubrikraden
                         rows.forEach(row => {
                             if (row.trim() === '') return; // Hoppa över tomma rader
-                            const columns = row.split(',');
+                            // Ändring här: delar nu upp kolumnerna med semikolon istället för komma
+                            const columns = row.split(';');
                             const tr = document.createElement('tr');
                             columns.forEach(col => {
                                 const td = document.createElement('td');
