@@ -89,10 +89,13 @@
                         const rows = data.split('\n').slice(1); // Hoppa över rubrikraden
                         rows.forEach(row => {
                             if (row.trim() === '') return; // Hoppa över tomma rader
-                            // Ändring här: delar nu upp kolumnerna med semikolon istället för komma
                             const columns = row.split(';');
                             const tr = document.createElement('tr');
-                            columns.forEach(col => {
+                            
+                            // Loopa igenom kolumnerna, men hoppa över den första (index 0)
+                            // och rendera endast de kolumner vi vill ha
+                            columns.forEach((col, index) => {
+                                if (index === 0) return; // Skippa den första kolumnen (med siffror)
                                 const td = document.createElement('td');
                                 td.textContent = col.trim();
                                 tr.appendChild(td);
@@ -117,7 +120,14 @@
                 }
 
                 Array.from(tableBody.children).forEach(row => {
-                    // Använder "Datum"-kolumnen, som ligger på index 2
+                    // Datumkolumnen är nu på index 2 i HTML-tabellen
+                    // MEN, i den ursprungliga CSV-filen (som vi läser in) ligger den på index 3
+                    // efter att vi hoppat över den första numrerade kolumnen (index 0)
+                    // och sedan kolumnerna "Vad" (index 1) och "Dag, start, slut" (index 2)
+                    // Alltså, om vi skippar den första kolumnen (med siffror), så är "Datum" nu kolumn 2 i den renderade tabellen.
+                    // Men i den *ursprungliga* datan (columns arrayen) är det index 3.
+                    // VIKTIGT: Här måste vi referera till kolumnen som den är i den *renderade* tabellen.
+                    // Om vi skippar den första kolumnen (med siffror), blir "Vad" kolumn 0, "Dag, start, slut" kolumn 1, och "Datum" kolumn 2.
                     const dateCell = new Date(row.children[2].textContent);
                     
                     const isWithinRange = dateCell >= startDate && dateCell <= endDate;
