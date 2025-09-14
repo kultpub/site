@@ -1,363 +1,525 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
-    <meta charset="UTF-8">
-    <title>Filtrera programpunkter</title>
-    
-    <style>
-        /* Grundläggande stilar för ljus läge */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f8f8f8;
-            color: #333;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        .controls {
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .controls label {
-            margin-right: 5px;
-        }
-        .controls select {
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            margin-right: 10px;
-        }
-        .controls button {
-            padding: 5px 15px;
-        }
-        #data-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        #data-table th, #data-table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        #data-table th {
-            background-color: #e2e2e2;
-        }
-        .hidden-row {
-            display: none;
-        }
-        .modal {
-            display: none; 
-            position: fixed; 
-            z-index: 1; 
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto; 
-            background-color: rgba(0,0,0,0.4); 
-        }
-        .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto; 
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%; 
-            max-width: 500px;
-            position: relative;
-        }
-        .close-btn {
-            color: #aaa;
-            position: absolute;
-            right: 15px;
-            top: 10px;
-            font-size: 28px;
-            font-weight: bold;
-            transition: transform 0.3s ease;
-        }
-        .close-btn:hover,
-        .close-btn:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-            transform: rotate(90deg); 
-        }
+  <meta charset="UTF-8" />
+  <title>Filtrera programpunkter (2010–2025)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{
+      --bg: #f8f8f8;
+      --fg: #222;
+      --muted:#666;
+      --card:#ffffff;
+      --border:#ddd;
+      --accent:#0b66ff;
+      --accent-2:#e8f0ff;
+      --danger:#b00020;
+      --chip:#eef2f7;
+      --chip-fg:#223;
+      --kbd:#f2f2f2;
+      --kbd-b:#cfcfcf;
+    }
+    body.dark{
+      --bg:#131416;
+      --fg:#e8e8e8;
+      --muted:#a9b0ba;
+      --card:#1b1d21;
+      --border:#2a2f36;
+      --accent:#84a9ff;
+      --accent-2:#1a2747;
+      --danger:#ff8a8a;
+      --chip:#232a34;
+      --chip-fg:#dde5f1;
+      --kbd:#20242a;
+      --kbd-b:#3a424d;
+    }
 
-        /* --- STILAR FÖR DARK MODE --- */
-        body.dark-mode {
-            background-color: #1a1a1a;
-            color: #f0f0f0;
-        }
-        body.dark-mode h1, body.dark-mode p {
-            color: #f0f0f0;
-        }
-        body.dark-mode #data-table th {
-            background-color: #333;
-            color: #f0f0f0;
-        }
-        body.dark-mode #data-table td {
-            background-color: #2a2a2a;
-            color: #f0f0f0;
-        }
-        body.dark-mode .controls select, body.dark-mode .controls button {
-            background-color: #333;
-            color: #f0f0f0;
-            border: 1px solid #555;
-        }
-    </style>
+    html,body{height:100%}
+    body{
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+      margin:0; background:var(--bg); color:var(--fg);
+    }
+    .wrap{max-width:1600px; margin-inline:auto; padding:20px;}
+    header{display:flex; gap:12px; align-items:center; justify-content:space-between; margin-bottom:12px;}
+    h1{font-size:clamp(18px,3vw,26px); margin:0; font-weight:700;}
+    .muted{color:var(--muted)}
+    .bar{
+      background:var(--card); border:1px solid var(--border); border-radius:12px; padding:12px;
+      display:grid; gap:10px; grid-template-columns: 1fr; margin-bottom:10px;
+    }
+    @media (min-width:920px){
+      .bar{grid-template-columns: auto auto auto 1fr}
+    }
+
+    .group{display:flex; flex-wrap:wrap; gap:8px; align-items:center}
+    .group label{font-size:13px; color:var(--muted)}
+    input[type="date"], button, .btn, .ms, .chip{
+      border-radius:8px; border:1px solid var(--border); background:var(--card); color:var(--fg);
+    }
+    input[type="date"]{padding:6px 8px}
+    button, .btn{
+      padding:8px 10px; cursor:pointer; border:1px solid var(--border);
+    }
+    .btn-accent{background:var(--accent-2); border-color:var(--accent-2)}
+    .btn-ghost{background:transparent}
+    .btn:hover{filter:brightness(1.05)}
+    .btn:focus-visible, input[type="date"]:focus-visible, .ms:focus-within{outline:2px solid var(--accent); outline-offset:2px}
+
+    /* quick buttons row */
+    .quick{display:flex; gap:6px; flex-wrap:wrap}
+
+    /* Multi-select */
+    .ms{min-width:260px; max-width:420px; padding:8px; position:relative}
+    .ms .hdr{display:flex; align-items:center; gap:8px; margin-bottom:6px}
+    .ms .hdr .title{font-size:13px; color:var(--muted)}
+    .ms .search{width:100%; padding:6px 8px; border-radius:6px; border:1px solid var(--border); background:var(--bg); color:var(--fg)}
+    .ms .list{max-height:220px; overflow:auto; margin-top:6px; border:1px dashed var(--border); border-radius:8px; padding:6px}
+    .ms .row{display:flex; gap:8px; align-items:center; padding:4px 6px; border-radius:6px}
+    .ms .row:hover{background:var(--bg)}
+    .ms .actions{display:flex; gap:8px; margin-top:6px}
+    .ms .empty{padding:8px; color:var(--muted); font-size:14px}
+
+    /* chips */
+    .chips{display:flex; gap:6px; flex-wrap:wrap; margin:10px 0}
+    .chip{display:inline-flex; align-items:center; gap:6px; padding:4px 8px; background:var(--chip); color:var(--chip-fg); border:0}
+    .chip .x{cursor:pointer; font-weight:600}
+
+    /* status row */
+    .status{display:flex; align-items:center; gap:10px; justify-content:space-between; margin:6px 0 14px}
+    .error{color:var(--danger); font-weight:600; display:none}
+    .counter{font-weight:700}
+
+    /* table */
+    .table-wrap{overflow:auto; border:1px solid var(--border); border-radius:12px; background:var(--card)}
+    table{border-collapse:separate; border-spacing:0; width:100%}
+    th, td{padding:10px 12px; text-align:left; border-bottom:1px solid var(--border); white-space:nowrap}
+    th{position:sticky; top:0; background:var(--card); z-index:1; font-size:13px; color:var(--muted)}
+    tbody tr:hover{background:var(--bg)}
+    .empty-row td{color:var(--muted); text-align:center}
+
+    /* toolbar */
+    .toolbar{display:flex; align-items:center; gap:8px; flex-wrap:wrap}
+    .spacer{flex:1}
+    .kbd{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+         font-size:12px; background:var(--kbd); color:var(--fg); padding:2px 6px; border-radius:6px; border:1px solid var(--kbd-b)}
+
+    /* dark mode toggle */
+    .toggle{display:inline-flex; align-items:center; gap:8px}
+  </style>
 </head>
 <body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Alla programpunkter 2010–2025</h1>
+        <div class="muted">Filtrera på datum, kategori och plats. Allt uppdateras direkt.</div>
+      </div>
+      <div class="toggle">
+        <span class="muted">Tema</span>
+        <button id="theme" class="btn" aria-pressed="false" title="Växla mörkt/ljusläge">🌙/☀️</button>
+      </div>
+    </header>
 
-    <button id="mode-toggle" style="float: right; margin: 10px; padding: 8px;">Växla bakgrundsfärg</button>
-    
-    <h1>Alla programpunkter 2010–2025</h1>
+    <section class="bar" aria-label="Filter">
+      <div class="group" aria-label="Datumintervall">
+        <label for="from">Från</label>
+        <input id="from" type="date" min="2010-01-01" max="2025-12-31" />
+        <label for="to">Till</label>
+        <input id="to" type="date" min="2010-01-01" max="2025-12-31" />
+      </div>
 
-    <div class="controls">
-        <label for="start-year">Från:</label>
-        <select id="start-year"></select>
-        <select id="start-month"></select>
-        <select id="start-day"></select>
-        
-        <label for="end-year" style="margin-left: 15px;">Till:</label>
-        <select id="end-year"></select>
-        <select id="end-month"></select>
-        <select id="end-day"></select>
-        
-        <label for="category-select" style="margin-left: 15px;">Kategori:</label>
-        <select id="category-select"></select>
-
-        <label for="location-select" style="margin-left: 15px;">Plats:</label>
-        <select id="location-select"></select>
-
-        <button onclick="filterTable()" style="margin-left: 15px;">Filtrera</button>
-    </div>
-
-    <table id="data-table">
-        <thead>
-            <tr>
-                <th>Vad</th>
-                <th>Datum</th>
-                <th>Starttid</th>
-                <th>Sluttid</th>
-                <th>Varaktighet</th>
-                <th>Vad, kategori</th>
-                <th>Var</th>
-                <th>Kommentar</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
-
-    <div id="errorModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <p>Felaktiga inställningar: 'Till'-datumet kan inte vara tidigare än 'Från'-datumet.</p>
+      <div class="group" aria-label="Snabbval">
+        <span class="muted">Snabbval</span>
+        <div class="quick">
+          <button class="btn btn-ghost" data-range="today">Idag</button>
+          <button class="btn btn-ghost" data-range="week">Denna vecka</button>
+          <button class="btn btn-ghost" data-range="month">Denna månad</button>
+          <button class="btn btn-ghost" data-range="all">Alla år</button>
+          <button class="btn btn-ghost" id="clear-dates">Rensa datum</button>
         </div>
+      </div>
+
+      <div class="ms" id="ms-category" aria-label="Kategorier" tabindex="0">
+        <div class="hdr"><span class="title">Kategori(er)</span></div>
+        <input class="search" placeholder="Sök i kategorier…" aria-label="Sök i kategorier" />
+        <div class="list" role="listbox" aria-multiselectable="true"></div>
+        <div class="actions">
+          <button class="btn btn-accent" data-act="all">Alla</button>
+          <button class="btn" data-act="clear">Rensa val</button>
+        </div>
+      </div>
+
+      <div class="ms" id="ms-location" aria-label="Platser" tabindex="0">
+        <div class="hdr"><span class="title">Plats/er</span></div>
+        <input class="search" placeholder="Sök i platser…" aria-label="Sök i platser" />
+        <div class="list" role="listbox" aria-multiselectable="true"></div>
+        <div class="actions">
+          <button class="btn btn-accent" data-act="all">Alla</button>
+          <button class="btn" data-act="clear">Rensa val</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="chips" id="chips"></div>
+
+    <div class="status" aria-live="polite">
+      <div class="toolbar">
+        <button class="btn" id="reset">Återställ alla filter</button>
+        <div class="muted">Tips: använd <span class="kbd">Shift</span> + klick för att välja/avmarkera snabbare i listorna.</div>
+      </div>
+      <div class="spacer"></div>
+      <div class="error" id="err">’Till’ kan inte vara tidigare än ’Från’.</div>
+      <div class="counter" id="count">—</div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const csvFilePath = 'alla-programpunkter.csv'; 
-            const tableBody = document.querySelector('#data-table tbody');
-            let allRows = [];
+    <div class="table-wrap" role="region" aria-label="Resultat">
+      <table id="tbl">
+        <thead>
+          <tr>
+            <th>Vad</th>
+            <th>Datum</th>
+            <th>Start</th>
+            <th>Slut</th>
+            <th>Varaktighet</th>
+            <th>Kategori</th>
+            <th>Plats</th>
+            <th>Kommentar</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
 
-            const errorModal = document.getElementById('errorModal');
-            const closeBtn = document.querySelector('.close-btn');
-            const modeToggleBtn = document.getElementById('mode-toggle');
+  </div>
 
-            // Kontrollerar om dark mode är sparat från tidigare
-            if (localStorage.getItem('theme') === 'dark') {
-                document.body.classList.add('dark-mode');
-            }
+  <script>
+    // ========= Utils =========
+    const $ = (sel, root=document)=> root.querySelector(sel);
+    const $$ = (sel, root=document)=> Array.from(root.querySelectorAll(sel));
+    const fmtDate = (d)=> d.toISOString().slice(0,10);
+    function weekBounds(now=new Date()){
+      const day = (now.getDay()+6)%7; // 0=Mon
+      const mon = new Date(now); mon.setDate(now.getDate()-day);
+      const sun = new Date(mon); sun.setDate(mon.getDate()+6);
+      return [mon, sun];
+    }
+    function debounce(fn, ms=160){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a),ms); }; }
 
-            modeToggleBtn.onclick = function() {
-                document.body.classList.toggle('dark-mode');
-                if (document.body.classList.contains('dark-mode')) {
-                    localStorage.setItem('theme', 'dark');
-                } else {
-                    localStorage.setItem('theme', 'light');
-                }
-            };
+    // Basic semicolon CSV parser with quotes support (RFC4180-ish)
+    function parseCSV(text, delim=';'){
+      const rows=[]; let row=[]; let field=''; let inQ=false;
+      for(let i=0;i<text.length;i++){
+        const c=text[i], n=text[i+1];
+        if(inQ){
+          if(c === '"'){
+            if(n === '"'){ field += '"'; i++; } else { inQ=false; }
+          } else { field += c; }
+        } else {
+          if(c === '"'){ inQ=true; }
+          else if(c === delim){ row.push(field); field=''; }
+          else if(c === '\n'){ row.push(field); rows.push(row); row=[]; field=''; }
+          else if(c === '\r'){ /* ignore */ }
+          else { field += c; }
+        }
+      }
+      if(field.length || row.length){ row.push(field); rows.push(row); }
+      return rows;
+    }
 
-            function closeModal() {
-                errorModal.style.display = 'none';
-            }
+    // ========= State =========
+    const STATE = {
+      rows: [], // parsed objects
+      categories: [],
+      locations: [],
+      selectedCats: new Set(),
+      selectedLocs: new Set(),
+    };
 
-            closeBtn.onclick = closeModal;
-            window.onclick = function(event) {
-                if (event.target == errorModal) {
-                    closeModal();
-                }
-            }
+    const CIDX = { // column indices based on din CSV
+      WHAT: 1,
+      DATE: 3,        // YYYY-MM-DD
+      START: 7,
+      END: 8,
+      DUR: 9,
+      CAT: 10,
+      LOC: 11,
+      NOTE: 12
+    };
 
-            function populateDateSelectors() {
-                const yearStart = 2010;
-                const yearEnd = 2025;
-                const startYearSelect = document.getElementById('start-year');
-                const endYearSelect = document.getElementById('end-year');
-                
-                for (let i = yearStart; i <= yearEnd; i++) {
-                    let optionStart = document.createElement('option');
-                    optionStart.value = i;
-                    optionStart.textContent = i;
-                    startYearSelect.appendChild(optionStart);
-                    
-                    let optionEnd = document.createElement('option');
-                    optionEnd.value = i;
-                    optionEnd.textContent = i;
-                    endYearSelect.appendChild(optionEnd);
-                }
+    // ========= Theme =========
+    const themeBtn = $('#theme');
+    function applyTheme(t){
+      document.body.classList.toggle('dark', t==='dark');
+      themeBtn.setAttribute('aria-pressed', t==='dark' ? 'true' : 'false');
+      localStorage.setItem('theme', t);
+    }
+    themeBtn.addEventListener('click', ()=>{
+      const cur = document.body.classList.contains('dark') ? 'dark' : 'light';
+      applyTheme(cur==='dark' ? 'light' : 'dark');
+    });
+    applyTheme(localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
 
-                const startMonthSelect = document.getElementById('start-month');
-                const endMonthSelect = document.getElementById('end-month');
-                for (let i = 1; i <= 12; i++) {
-                    let optionStart = document.createElement('option');
-                    optionStart.value = String(i).padStart(2, '0');
-                    optionStart.textContent = String(i).padStart(2, '0');
-                    startMonthSelect.appendChild(optionStart);
-                    
-                    let optionEnd = document.createElement('option');
-                    optionEnd.value = String(i).padStart(2, '0');
-                    optionEnd.textContent = String(i).padStart(2, '0');
-                    endMonthSelect.appendChild(optionEnd);
-                }
+    // ========= Multi-select factory =========
+    function buildMultiSelect(rootEl, values, onChange){
+      const search = $('.search', rootEl);
+      const list = $('.list', rootEl);
+      const actAll = $('[data-act="all"]', rootEl);
+      const actClr = $('[data-act="clear"]', rootEl);
+      const selected = new Set();
 
-                const startDaySelect = document.getElementById('start-day');
-                const endDaySelect = document.getElementById('end-day');
-                for (let i = 1; i <= 31; i++) {
-                    let optionStart = document.createElement('option');
-                    optionStart.value = String(i).padStart(2, '0');
-                    optionStart.textContent = String(i).padStart(2, '0');
-                    startDaySelect.appendChild(optionStart);
-                    
-                    let optionEnd = document.createElement('option');
-                    optionEnd.value = String(i).padStart(2, '0');
-                    optionEnd.textContent = String(i).padStart(2, '0');
-                    endDaySelect.appendChild(optionEnd);
-                }
-            }
+      function render(filter=''){
+        list.innerHTML = '';
+        const filtered = values
+          .filter(v => v.toLowerCase().includes(filter.toLowerCase()));
+        if(filtered.length === 0){
+          const div = document.createElement('div');
+          div.className='empty'; div.textContent='Inga träffar';
+          list.appendChild(div);
+          return;
+        }
+        for(const v of filtered){
+          const row = document.createElement('label');
+          row.className = 'row';
+          row.innerHTML = `<input type="checkbox" /> <span>${v}</span>`;
+          const cb = $('input', row);
+          cb.checked = selected.has(v);
+          cb.addEventListener('change', ()=>{
+            cb.checked ? selected.add(v) : selected.delete(v);
+            onChange(new Set(selected));
+          });
+          // shift-click range select (optional nicety)
+          row.addEventListener('click', (e)=>{
+            if(e.shiftKey){ cb.checked = !cb.checked; cb.dispatchEvent(new Event('change')); }
+          });
+          list.appendChild(row);
+        }
+      }
+      search.addEventListener('input', debounce(()=> render(search.value), 120));
+      actAll.addEventListener('click', ()=>{ selected.clear(); onChange(new Set(selected)); render(search.value); });
+      actClr.addEventListener('click', ()=>{ selected.clear(); onChange(new Set(selected)); render(search.value); });
 
-            // Ny funktion för att fylla kategori- och platsväljare
-            function populateCategorySelectors(rows) {
-                const categorySelect = document.getElementById('category-select');
-                const locationSelect = document.getElementById('location-select');
+      render();
+      return {
+        set(valuesNew){
+          // rebuild with new values while keeping selection if possible
+          const kept = new Set([...selected].filter(v => valuesNew.includes(v)));
+          selected.clear(); kept.forEach(v=>selected.add(v));
+          values = valuesNew.slice();
+          render(search.value || '');
+        },
+        getSelected(){ return new Set(selected); },
+        setSelected(setVals){
+          selected.clear(); setVals.forEach(v=>selected.add(v));
+          render(search.value || '');
+        }
+      };
+    }
 
-                const categories = new Set();
-                const locations = new Set();
-
-                // Lägg till en standard "Välj..." option
-                categorySelect.innerHTML = '<option value="">Alla kategorier</option>';
-                locationSelect.innerHTML = '<option value="">Alla platser</option>';
-
-                rows.forEach(columns => {
-                    const category = columns[10].trim();
-                    const location = columns[11].trim();
-
-                    if (category) {
-                        categories.add(category);
-                    }
-                    if (location) {
-                        locations.add(location);
-                    }
-                });
-
-                // Lägg till unika kategorier i dropdown-menyn
-                Array.from(categories).sort().forEach(category => {
-                    const option = document.createElement('option');
-                    option.value = category;
-                    option.textContent = category;
-                    categorySelect.appendChild(option);
-                });
-
-                // Lägg till unika platser i dropdown-menyn
-                Array.from(locations).sort().forEach(location => {
-                    const option = document.createElement('option');
-                    option.value = location;
-                    option.textContent = location;
-                    locationSelect.appendChild(option);
-                });
-            }
-
-
-            function getSelectedDate(prefix) {
-                const year = document.getElementById(prefix + '-year').value;
-                const month = document.getElementById(prefix + '-month').value;
-                const day = document.getElementById(prefix + '-day').value;
-                if (!year || !month || !day) return null;
-                return new Date(`${year}-${month}-${day}`);
-            }
-
-            function loadCSV() {
-                fetch(csvFilePath)
-                    .then(response => response.text())
-                    .then(data => {
-                        const rows = data.split('\n').slice(1);
-                        allRows = rows.map(row => {
-                            if (row.trim() === '') return null;
-                            return row.split(';');
-                        }).filter(Boolean);
-                        
-                        // Fyll de nya väljarna när data har laddats
-                        populateCategorySelectors(allRows);
-                    })
-                    .catch(error => console.error('Kunde inte ladda CSV-filen:', error));
-            }
-
-            window.filterTable = function() {
-                const startDate = getSelectedDate('start');
-                const endDate = getSelectedDate('end');
-                
-                // Hämta valda värden från de nya dropdowns
-                const selectedCategory = document.getElementById('category-select').value;
-                const selectedLocation = document.getElementById('location-select').value;
-
-                if (startDate && endDate && startDate > endDate) {
-                    errorModal.style.display = 'block';
-                    tableBody.innerHTML = '';
-                    return;
-                }
-                
-                tableBody.innerHTML = ''; 
-
-                allRows.forEach(columns => {
-                    const dateCell = new Date(columns[3]);
-                    
-                    let isWithinRange = true;
-                    if (startDate && dateCell < startDate) {
-                        isWithinRange = false;
-                    }
-                    if (endDate && dateCell > endDate) {
-                        isWithinRange = false;
-                    }
-
-                    // Ny filtreringslogik för kategori och plats
-                    if (selectedCategory && columns[10].trim() !== selectedCategory) {
-                        isWithinRange = false;
-                    }
-                    if (selectedLocation && columns[11].trim() !== selectedLocation) {
-                        isWithinRange = false;
-                    }
-                    
-                    if (isWithinRange) {
-                        const tr = document.createElement('tr');
-                        
-                        const columnsToShow = [1, 3, 7, 8, 9, 10, 11, 12];
-
-                        columnsToShow.forEach(colIndex => {
-                            const td = document.createElement('td');
-                            td.textContent = columns[colIndex].trim();
-                            tr.appendChild(td);
-                        });
-
-                        tableBody.appendChild(tr);
-                    }
-                });
-            };
-
-            populateDateSelectors();
-            loadCSV();
+    // ========= Chips =========
+    function renderChips(){
+      const cont = $('#chips'); cont.innerHTML = '';
+      const make = (label, val, type) => {
+        const chip = document.createElement('span'); chip.className='chip';
+        chip.innerHTML = `<span>${label}: ${val}</span> <span class="x" role="button" title="Ta bort">✕</span>`;
+        $('.x', chip).addEventListener('click', ()=>{
+          if(type==='cat'){ STATE.selectedCats.delete(val); msCat.setSelected(STATE.selectedCats); }
+          if(type==='loc'){ STATE.selectedLocs.delete(val); msLoc.setSelected(STATE.selectedLocs); }
+          runFilter();
         });
-    </script>
+        return chip;
+      };
+      [...STATE.selectedCats].forEach(v=> cont.appendChild(make('Kategori', v, 'cat')));
+      [...STATE.selectedLocs].forEach(v=> cont.appendChild(make('Plats', v, 'loc')));
+
+      const from = $('#from').value, to = $('#to').value;
+      if(from) cont.appendChild(make('Från', from, 'from')).querySelector('.x').onclick = ()=>{ $('#from').value=''; runFilter(); };
+      if(to)   cont.appendChild(make('Till', to, 'to')).querySelector('.x').onclick   = ()=>{ $('#to').value=''; runFilter(); };
+    }
+
+    // ========= Filtering =========
+    const errEl = $('#err');
+    const countEl = $('#count');
+    const tbody = $('#tbl tbody');
+
+    function validateDates(){
+      errEl.style.display = 'none';
+      const f = $('#from').value, t = $('#to').value;
+      if(f && t && new Date(f) > new Date(t)){
+        errEl.style.display = 'block'; return false;
+      }
+      return true;
+    }
+
+    function rowMatches(r, fDate, tDate){
+      // date check
+      if(fDate && r._date < fDate) return false;
+      if(tDate && r._date > tDate) return false;
+      // category OR logic within cats
+      if(STATE.selectedCats.size>0 && !STATE.selectedCats.has(r.category)) return false;
+      // location OR logic within locs
+      if(STATE.selectedLocs.size>0 && !STATE.selectedLocs.has(r.location)) return false;
+      return true;
+    }
+
+    function renderRows(rows){
+      tbody.innerHTML='';
+      if(rows.length === 0){
+        const tr = document.createElement('tr'); tr.className='empty-row';
+        const td = document.createElement('td'); td.colSpan=8; td.textContent='Inga träffar – justera filter.';
+        tr.appendChild(td); tbody.appendChild(tr); return;
+      }
+      const frag = document.createDocumentFragment();
+      for(const r of rows){
+        const tr = document.createElement('tr');
+        [r.what, r.date, r.start, r.end, r.duration, r.category, r.location, r.note]
+          .forEach(v => { const td=document.createElement('td'); td.textContent = (v||'').trim(); tr.appendChild(td); });
+        frag.appendChild(tr);
+      }
+      tbody.appendChild(frag);
+    }
+
+    function saveFiltersToURLAndStorage(){
+      const params = new URLSearchParams();
+      if($('#from').value) params.set('from', $('#from').value);
+      if($('#to').value)   params.set('to', $('#to').value);
+      if(STATE.selectedCats.size) params.set('cat', [...STATE.selectedCats].join('|'));
+      if(STATE.selectedLocs.size) params.set('loc', [...STATE.selectedLocs].join('|'));
+      history.replaceState(null,'', `${location.pathname}?${params.toString()}`);
+      localStorage.setItem('progFilters', JSON.stringify({
+        from: $('#from').value || '',
+        to: $('#to').value || '',
+        cats: [...STATE.selectedCats],
+        locs: [...STATE.selectedLocs]
+      }));
+    }
+
+    function restoreFiltersFromURLOrStorage(){
+      const params = new URLSearchParams(location.search);
+      const saved = localStorage.getItem('progFilters');
+      let data = { from:'', to:'', cats:[], locs:[] };
+
+      if(params.has('from') || params.has('to') || params.has('cat') || params.has('loc')){
+        data.from = params.get('from') || '';
+        data.to   = params.get('to') || '';
+        data.cats = (params.get('cat') || '').split('|').filter(Boolean);
+        data.locs = (params.get('loc') || '').split('|').filter(Boolean);
+      } else if(saved){
+        try{ data = JSON.parse(saved) } catch{}
+      }
+      if(data.from) $('#from').value = data.from;
+      if(data.to)   $('#to').value   = data.to;
+      STATE.selectedCats = new Set(data.cats||[]);
+      STATE.selectedLocs = new Set(data.locs||[]);
+    }
+
+    function runFilter(){
+      if(!validateDates()){ renderRows([]); countEl.textContent = '0 träffar'; return; }
+      const f = $('#from').value ? new Date($('#from').value) : null;
+      const t = $('#to').value ? new Date($('#to').value) : null;
+
+      // update chips and persist
+      renderChips();
+      saveFiltersToURLAndStorage();
+
+      const out = STATE.rows.filter(r => rowMatches(r, f, t));
+      renderRows(out);
+      countEl.textContent = `${out.length} träffar`;
+    }
+
+    // ========= Build UI once data is loaded =========
+    let msCat, msLoc;
+
+    function hydrateMultiSelects(){
+      // build unique sorted sets
+      STATE.categories = Array.from(new Set(STATE.rows.map(r=>r.category).filter(Boolean))).sort((a,b)=>a.localeCompare(b,'sv'));
+      STATE.locations  = Array.from(new Set(STATE.rows.map(r=>r.location).filter(Boolean))).sort((a,b)=>a.localeCompare(b,'sv'));
+
+      // build controls
+      msCat = buildMultiSelect($('#ms-category'), STATE.categories, (sel)=>{ STATE.selectedCats = sel; runFilter(); });
+      msLoc = buildMultiSelect($('#ms-location'), STATE.locations,  (sel)=>{ STATE.selectedLocs = sel; runFilter(); });
+
+      // apply restored selections
+      msCat.setSelected(STATE.selectedCats);
+      msLoc.setSelected(STATE.selectedLocs);
+    }
+
+    // ========= CSV load =========
+    const CSV_PATH = 'alla-programpunkter.csv'; // lägg filen bredvid denna HTML
+    async function loadCSV(){
+      const res = await fetch(CSV_PATH);
+      const text = await res.text();
+
+      const rows = parseCSV(text, ';');
+      if(rows.length === 0) return;
+      // antar att första raden är header
+      const dataRows = rows.slice(1).filter(r => r && r.length > Math.max(...Object.values(CIDX)) && r.join('').trim() !== '');
+
+      STATE.rows = dataRows.map(cols => {
+        const dateStr = (cols[CIDX.DATE]||'').trim();
+        let d; try{ d = new Date(dateStr); }catch{ d=null; }
+        return {
+          what: (cols[CIDX.WHAT]||'').trim(),
+          date: dateStr,
+          _date: d,
+          start: (cols[CIDX.START]||'').trim(),
+          end: (cols[CIDX.END]||'').trim(),
+          duration: (cols[CIDX.DUR]||'').trim(),
+          category: (cols[CIDX.CAT]||'').trim(),
+          location: (cols[CIDX.LOC]||'').trim(),
+          note: (cols[CIDX.NOTE]||'').trim(),
+        };
+      }).filter(r => r.date && r._date && !Number.isNaN(r._date.getTime()));
+
+      hydrateMultiSelects();
+      // initial render using restored filters
+      runFilter();
+    }
+
+    // ========= Hook up controls =========
+    $('#from').addEventListener('change', runFilter);
+    $('#to').addEventListener('change', runFilter);
+
+    // quick range buttons
+    $$('.quick [data-range]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const now = new Date();
+        if(btn.dataset.range === 'today'){
+          $('#from').value = fmtDate(now);
+          $('#to').value = fmtDate(now);
+        } else if(btn.dataset.range === 'week'){
+          const [mon, sun] = weekBounds(now);
+          $('#from').value = fmtDate(mon);
+          $('#to').value = fmtDate(sun);
+        } else if(btn.dataset.range === 'month'){
+          const y = now.getFullYear(), m = now.getMonth();
+          const first = new Date(y, m, 1);
+          const last  = new Date(y, m+1, 0);
+          $('#from').value = fmtDate(first);
+          $('#to').value   = fmtDate(last);
+        } else if(btn.dataset.range === 'all'){
+          $('#from').value = '2010-01-01';
+          $('#to').value   = '2025-12-31';
+        }
+        runFilter();
+      });
+    });
+    $('#clear-dates').addEventListener('click', ()=>{ $('#from').value=''; $('#to').value=''; runFilter(); });
+
+    $('#reset').addEventListener('click', ()=>{
+      $('#from').value=''; $('#to').value='';
+      STATE.selectedCats.clear(); STATE.selectedLocs.clear();
+      msCat.setSelected(STATE.selectedCats);
+      msLoc.setSelected(STATE.selectedLocs);
+      history.replaceState(null,'', location.pathname);
+      localStorage.removeItem('progFilters');
+      runFilter();
+    });
+
+    // ========= Boot =========
+    // 1) restore filters before data, so chips render properly later
+    restoreFiltersFromURLOrStorage();
+    // 2) load data
+    loadCSV();
+  </script>
 </body>
 </html>
