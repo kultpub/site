@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Filtrera programpunkter</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,7 +17,7 @@
         .controls label {
             margin-right: 10px;
         }
-        .controls input[type="date"] {
+        .controls input[type="text"] {
             padding: 5px;
             border: 1px solid #ccc;
             border-radius: 4px;
@@ -42,9 +45,9 @@
 
     <div class="controls">
         <label for="start-date">Från datum:</label>
-        <input type="date" id="start-date">
+        <input type="text" id="start-date" placeholder="Välj startdatum">
         <label for="end-date">Till datum:</label>
-        <input type="date" id="end-date">
+        <input type="text" id="end-date" placeholder="Välj slutdatum">
         <button onclick="filterTable()">Filtrera</button>
     </div>
 
@@ -52,11 +55,7 @@
         <thead>
             <tr>
                 <th>Vad</th>
-                <th>Dag, start, slut</th>
                 <th>Datum</th>
-                <th>År</th>
-                <th>Månad</th>
-                <th>Veckodag</th>
                 <th>Starttid</th>
                 <th>Sluttid</th>
                 <th>Varaktighet</th>
@@ -69,78 +68,69 @@
             </tbody>
     </table>
 
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Sökvägen till din CSV-fil
             const csvFilePath = 'alla-programpunkter.csv'; 
-
-            // Hämta tabellens kropp
             const tableBody = document.querySelector('#data-table tbody');
-            
-            // Hämta datumfälten
             const startDateInput = document.getElementById('start-date');
             const endDateInput = document.getElementById('end-date');
 
-            // Funktion för att ladda CSV-filen och rendera tabellen
+            flatpickr("#start-date", { dateFormat: "Y-m-d" });
+            flatpickr("#end-date", { dateFormat: "Y-m-d" });
+
+            let allRows = [];
+
             function loadCSV() {
                 fetch(csvFilePath)
                     .then(response => response.text())
                     .then(data => {
-                        const rows = data.split('\n').slice(1); // Hoppa över rubrikraden
-                        rows.forEach(row => {
-                            if (row.trim() === '') return; // Hoppa över tomma rader
-                            const columns = row.split(';');
-                            const tr = document.createElement('tr');
-                            
-                            // Loopa igenom kolumnerna, men hoppa över den första (index 0)
-                            // och rendera endast de kolumner vi vill ha
-                            columns.forEach((col, index) => {
-                                if (index === 0) return; // Skippa den första kolumnen (med siffror)
-                                const td = document.createElement('td');
-                                td.textContent = col.trim();
-                                tr.appendChild(td);
-                            });
-                            tableBody.appendChild(tr);
-                        });
+                        const rows = data.split('\n').slice(1);
+                        allRows = rows.map(row => {
+                            if (row.trim() === '') return null;
+                            return row.split(';');
+                        }).filter(Boolean);
+                        
+                        filterTable();
                     })
                     .catch(error => console.error('Kunde inte ladda CSV-filen:', error));
             }
 
-            // Funktion för att filtrera tabellen
             window.filterTable = function() {
-                const startDate = new Date(startDateInput.value);
-                const endDate = new Date(endDateInput.value);
+                const startDate = startDateInput.value ? new Date(startDateInput.value) : null;
+                const endDate = endDateInput.value ? new Date(endDateInput.value) : null;
                 
-                // Om inget datum är valt, visa alla rader
-                if (!startDateInput.value && !endDateInput.value) {
-                    Array.from(tableBody.children).forEach(row => {
-                        row.classList.remove('hidden-row');
-                    });
-                    return;
-                }
+                tableBody.innerHTML = ''; 
 
-                Array.from(tableBody.children).forEach(row => {
-                    // Datumkolumnen är nu på index 2 i HTML-tabellen
-                    // MEN, i den ursprungliga CSV-filen (som vi läser in) ligger den på index 3
-                    // efter att vi hoppat över den första numrerade kolumnen (index 0)
-                    // och sedan kolumnerna "Vad" (index 1) och "Dag, start, slut" (index 2)
-                    // Alltså, om vi skippar den första kolumnen (med siffror), så är "Datum" nu kolumn 2 i den renderade tabellen.
-                    // Men i den *ursprungliga* datan (columns arrayen) är det index 3.
-                    // VIKTIGT: Här måste vi referera till kolumnen som den är i den *renderade* tabellen.
-                    // Om vi skippar den första kolumnen (med siffror), blir "Vad" kolumn 0, "Dag, start, slut" kolumn 1, och "Datum" kolumn 2.
-                    const dateCell = new Date(row.children[2].textContent);
+                allRows.forEach(columns => {
+                    const dateCell = new Date(columns[3]);
                     
-                    const isWithinRange = dateCell >= startDate && dateCell <= endDate;
+                    let isWithinRange = true;
+                    if (startDate && dateCell < startDate) {
+                        isWithinRange = false;
+                    }
+                    if (endDate && dateCell > endDate) {
+                        isWithinRange = false;
+                    }
                     
                     if (isWithinRange) {
-                        row.classList.remove('hidden-row');
-                    } else {
-                        row.classList.add('hidden-row');
+                        const tr = document.createElement('tr');
+                        
+                        // Kolumnerna att visa (baserat på index från din ursprungliga CSV-fil)
+                        const columnsToShow = [1, 3, 6, 7, 8, 9, 10, 11]; // Inklusive den numrerade kolumnen, så index 1 är den första riktiga.
+
+                        columnsToShow.forEach(colIndex => {
+                            const td = document.createElement('td');
+                            td.textContent = columns[colIndex].trim();
+                            tr.appendChild(td);
+                        });
+
+                        tableBody.appendChild(tr);
                     }
                 });
             };
 
-            // Ladda datan när sidan är klar
             loadCSV();
         });
     </script>
