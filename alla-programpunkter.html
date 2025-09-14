@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <title>Filtrera programpunkter</title>
     
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,13 +12,11 @@
         .controls {
             margin-bottom: 20px;
         }
-        .controls label {
-            margin-right: 10px;
-        }
-        .controls input[type="text"] {
+        .controls select {
             padding: 5px;
             border: 1px solid #ccc;
             border-radius: 4px;
+            margin-right: 5px;
         }
         #data-table {
             width: 100%;
@@ -44,10 +40,16 @@
     <h1>Filtrera programpunkter efter datum</h1>
 
     <div class="controls">
-        <label for="start-date">Från datum:</label>
-        <input type="text" id="start-date" placeholder="Välj startdatum">
-        <label for="end-date">Till datum:</label>
-        <input type="text" id="end-date" placeholder="Välj slutdatum">
+        <label for="start-year">Från:</label>
+        <select id="start-year"></select>
+        <select id="start-month"></select>
+        <select id="start-day"></select>
+    </div>
+    <div class="controls">
+        <label for="end-year">Till:</label>
+        <select id="end-year"></select>
+        <select id="end-month"></select>
+        <select id="end-day"></select>
         <button onclick="filterTable()">Filtrera</button>
     </div>
 
@@ -65,33 +67,76 @@
             </tr>
         </thead>
         <tbody>
-            </tbody>
+        </tbody>
     </table>
-
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const csvFilePath = 'alla-programpunkter.csv'; 
             const tableBody = document.querySelector('#data-table tbody');
-            const startDateInput = document.getElementById('start-date');
-            const endDateInput = document.getElementById('end-date');
-
-            // Initiera Flatpickr för startdatum med årsbegränsning
-            flatpickr("#start-date", { 
-                dateFormat: "Y-m-d",
-                minDate: "2010-01-01",
-                maxDate: "2025-12-31"
-            });
-            // Initiera Flatpickr för slutdatum med årsbegränsning
-            flatpickr("#end-date", { 
-                dateFormat: "Y-m-d",
-                minDate: "2010-01-01",
-                maxDate: "2025-12-31"
-            });
-
             let allRows = [];
 
+            // Funktion för att skapa och fylla rullgardinsmenyer
+            function populateDateSelectors() {
+                const yearStart = 2010;
+                const yearEnd = 2025;
+                const startYearSelect = document.getElementById('start-year');
+                const endYearSelect = document.getElementById('end-year');
+                
+                // Fylla årsväljarna
+                for (let i = yearEnd; i >= yearStart; i--) {
+                    let optionStart = document.createElement('option');
+                    optionStart.value = i;
+                    optionStart.textContent = i;
+                    startYearSelect.appendChild(optionStart);
+                    
+                    let optionEnd = document.createElement('option');
+                    optionEnd.value = i;
+                    optionEnd.textContent = i;
+                    endYearSelect.appendChild(optionEnd);
+                }
+
+                // Fylla månadsväljarna
+                const startMonthSelect = document.getElementById('start-month');
+                const endMonthSelect = document.getElementById('end-month');
+                for (let i = 1; i <= 12; i++) {
+                    let optionStart = document.createElement('option');
+                    optionStart.value = String(i).padStart(2, '0');
+                    optionStart.textContent = String(i).padStart(2, '0');
+                    startMonthSelect.appendChild(optionStart);
+                    
+                    let optionEnd = document.createElement('option');
+                    optionEnd.value = String(i).padStart(2, '0');
+                    optionEnd.textContent = String(i).padStart(2, '0');
+                    endMonthSelect.appendChild(optionEnd);
+                }
+
+                // Fylla dagväljarna
+                const startDaySelect = document.getElementById('start-day');
+                const endDaySelect = document.getElementById('end-day');
+                for (let i = 1; i <= 31; i++) {
+                    let optionStart = document.createElement('option');
+                    optionStart.value = String(i).padStart(2, '0');
+                    optionStart.textContent = String(i).padStart(2, '0');
+                    startDaySelect.appendChild(optionStart);
+                    
+                    let optionEnd = document.createElement('option');
+                    optionEnd.value = String(i).padStart(2, '0');
+                    optionEnd.textContent = String(i).padStart(2, '0');
+                    endDaySelect.appendChild(optionEnd);
+                }
+            }
+
+            // Funktion för att hämta det valda datumet från rullgardinsmenyerna
+            function getSelectedDate(prefix) {
+                const year = document.getElementById(prefix + '-year').value;
+                const month = document.getElementById(prefix + '-month').value;
+                const day = document.getElementById(prefix + '-day').value;
+                if (!year || !month || !day) return null;
+                return new Date(`${year}-${month}-${day}`);
+            }
+
+            // Huvudfunktion för att ladda CSV-filen
             function loadCSV() {
                 fetch(csvFilePath)
                     .then(response => response.text())
@@ -102,14 +147,15 @@
                             return row.split(';');
                         }).filter(Boolean);
                         
-                        filterTable();
+                        // Ingen initial filtrering
                     })
                     .catch(error => console.error('Kunde inte ladda CSV-filen:', error));
             }
 
+            // Huvudfunktion för att filtrera tabellen
             window.filterTable = function() {
-                const startDate = startDateInput.value ? new Date(startDateInput.value) : null;
-                const endDate = endDateInput.value ? new Date(endDateInput.value) : null;
+                const startDate = getSelectedDate('start');
+                const endDate = getSelectedDate('end');
                 
                 tableBody.innerHTML = ''; 
 
@@ -140,6 +186,7 @@
                 });
             };
 
+            populateDateSelectors();
             loadCSV();
         });
     </script>
