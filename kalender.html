@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+  </head>
+  <body>
+    <h1>Lägg till en kalenderpost</h1>
+    <form id="kalenderForm">
+      <label for="name">Namn:</label><br>
+      <input type="text" id="name" name="name"><br>
+      
+      <label for="date">Datum:</label><br>
+      <input type="date" id="date" name="date"><br>
+
+      <label for="start_time">Starttid:</label><br>
+      <input type="time" id="start_time" name="start_time"><br>
+
+      <label for="end_time">Sluttid:</label><br>
+      <input type="time" id="end_time" name="end_time"><br>
+      
+      <label for="comment">Kommentar:</label><br>
+      <textarea id="comment" name="comment"></textarea><br><br>
+      
+      <input type="submit" value="Skicka">
+    </form>
+
+    <script>
+      document.getElementById('kalenderForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        var form = e.target;
+        var entry = {
+          name: form.name.value,
+          date: form.date.value,
+          start_time: form.start_time.value,
+          end_time: form.end_time.value,
+          comment: form.comment.value
+        };
+
+        google.script.run
+          .withSuccessHandler(function() {
+            alert('Posten har lagts till!');
+            form.reset();
+          })
+          .addEntry(entry);
+      });
+    </script>
+  </body>
+</html>
