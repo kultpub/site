@@ -502,11 +502,11 @@ const aktiviteter = [
   {titel:"Gruppdiskussion kring Julstöket", typ:"Aktivitet", form:"Löpande", mål:"Publika möten", status:"På spår"},
   {titel:"Handlingsplan för fortsatt digitalisering av arkivet", typ:"Aktivitet", form:"Utveckling", mål:"Bevara och utveckla", status:"På spår"},
   {titel:"Historiska uppdrag med volontärerna", typ:"Aktivitet", form:"Löpande", mål:"Publika möten", status:"På spår"},
-  {titel:"Identifiera idéer/aktiviteter för medarbetare", typ:"Aktivitet", form:"Utveckling", mål:"Vi som arbetar här", status:"Ingen"},
+  {titel:"Identifiera idéer/aktiviteter för medarbetare", typ:"Aktivitet", form:"Utveckling", mål:"Vi som arbetar här", status:"Ingen status"},
   {titel:"Kongress medicinhistoria", typ:"Aktivitet", form:"Utveckling", mål:"Bevara och utveckla", status:"På spår"},
   {titel:"Lekfulla tidsresor", typ:"Aktivitet", form:"Löpande", mål:"Publika möten", status:"På spår"},
   {titel:"Lunds stadshistoria och kulturmiljöer", typ:"Aktivitet", form:"Utveckling", mål:"Publika möten", status:"På spår"},
-  {titel:"Malttorkan", typ:"Aktivitet", form:"Utveckling", mål:"Bevara och utveckla", status:"Ingen"},
+  {titel:"Malttorkan", typ:"Aktivitet", form:"Utveckling", mål:"Bevara och utveckla", status:"Ingen status"},
   {titel:"Medlemsvärvning vid evenemang", typ:"Aktivitet", form:"Löpande", mål:"Finansiering", status:"På spår"},
   {titel:"Migrering av kulturmiljöfoto till Carlotta", typ:"Aktivitet", form:"Utveckling", mål:"Bevara och utveckla", status:"Mindre avvikelse"},
   {titel:"Målgruppsanpassad marknadsföring för turister", typ:"Aktivitet", form:"Utveckling", mål:"Finansiering", status:"På spår"},
@@ -516,14 +516,14 @@ const aktiviteter = [
   {titel:"Plan för Hökeriets öppethållande", typ:"Aktivitet", form:"Löpande", mål:"Publika möten", status:"På spår"},
   {titel:"Planera och genomföra Julstöket", typ:"Aktivitet", form:"Löpande", mål:"Publika möten", status:"På spår"},
   {titel:"Planera verkstäder under året", typ:"Aktivitet", form:"Löpande", mål:"Publika möten", status:"På spår"},
-  {titel:"Process för on-/offboarding av medarbetare", typ:"Aktivitet", form:"Utveckling", mål:"Vi som arbetar här", status:"Ingen"},
+  {titel:"Process för on-/offboarding av medarbetare", typ:"Aktivitet", form:"Utveckling", mål:"Vi som arbetar här", status:"Ingen status"},
   {titel:"Program med fokus byggnadsvårdsåret 2025", typ:"Aktivitet", form:"Utveckling", mål:"Publika möten", status:"På spår"},
   {titel:"Projekt i Tegnérmuseet", typ:"Aktivitet", form:"Utveckling", mål:"Bevara och utveckla", status:"På spår"},
   {titel:"Rekrytering av medarbetare", typ:"Aktivitet", form:"Löpande", mål:"Vi som arbetar här", status:"På spår"},
   {titel:"Samarbete med Kulturens restaurang", typ:"Aktivitet", form:"Löpande", mål:"Publika möten", status:"På spår"},
   {titel:"Samverkan Kulturmiljöarbete", typ:"Aktivitet", form:"Löpande", mål:"Publika möten", status:"På spår"},
   {titel:"Se över entrepriserna", typ:"Aktivitet", form:"Utveckling", mål:"Finansiering", status:"På spår"},
-  {titel:"Sjösätta program för utveckling av ledare", typ:"Aktivitet", form:"Utveckling", mål:"Vi som arbetar här", status:"Ingen"},
+  {titel:"Sjösätta program för utveckling av ledare", typ:"Aktivitet", form:"Utveckling", mål:"Vi som arbetar här", status:"Ingen status"},
   {titel:"Skapande skola-program Lomma", typ:"Aktivitet", form:"Löpande", mål:"Publika möten", status:"På spår"},
   {titel:"Skapande skola-program åk 3", typ:"Aktivitet", form:"Utveckling", mål:"Publika möten", status:"På spår"},
   {titel:"Skyltarbete Kulturen i Lund", typ:"Aktivitet", form:"Utveckling", mål:"Publika möten", status:"På spår"},
@@ -619,13 +619,17 @@ function renderTable() {
   const grupper = {};
   filtered.forEach(a => {
     if (!grupper[a.mål]) grupper[a.mål] = {
-      Påspår:0, Mindreavvikelse:0, Störreavvikelse:0, Borttagen:0, Ingen:0
+      Påspår:0,
+      Mindreavvikelse:0,
+      Störreavvikelse:0,
+      Borttagen:0,
+      Ingenstatus:0
     };
     if (a.status === "På spår") grupper[a.mål].Påspår++;
     if (a.status === "Mindre avvikelse") grupper[a.mål].Mindreavvikelse++;
     if (a.status === "Större avvikelse") grupper[a.mål].Störreavvikelse++;
     if (a.status === "Borttagen") grupper[a.mål].Borttagen++;
-    if (a.status === "Ingen") grupper[a.mål].Ingen++;
+    if (a.status === "Ingen status") grupper[a.mål].Ingenstatus++;
   });
 
   // Summeringar
@@ -636,19 +640,19 @@ function renderTable() {
   malOrdning.forEach(mål => {
     if (grupper[mål]) {
       const g = grupper[mål];
-      const total = g.Påspår + g.Mindreavvikelse + g.Störreavvikelse + g.Borttagen + g.Ingen;
+      const total = g.Påspår + g.Mindreavvikelse + g.Störreavvikelse + g.Borttagen + g.Ingenstatus;
       totalPaspar += g.Påspår;
       totalMindre += g.Mindreavvikelse;
       totalStorre += g.Störreavvikelse;
       totalBort += g.Borttagen;
-      totalIngen += g.Ingen;
+      totalIngen += g.Ingenstatus;
       const tr = `<tr>
         <td>${mål}</td>
         <td data-m="${mål}" data-s="På spår">${g.Påspår}</td>
         <td data-m="${mål}" data-s="Mindre avvikelse">${g.Mindreavvikelse}</td>
         <td data-m="${mål}" data-s="Större avvikelse">${g.Störreavvikelse}</td>
         <td data-m="${mål}" data-s="Borttagen">${g.Borttagen}</td>
-        <td data-m="${mål}" data-s="Ingen">${g.Ingen}</td>
+        <td data-m="${mål}" data-s="Ingen status">${g.Ingenstatus}</td>
         <td><strong>${total}</strong></td>
       </tr>`;
       tbody.innerHTML += tr;
