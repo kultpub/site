@@ -180,10 +180,12 @@ td[data-m]:focus {
 /* ==== Statusfärger ==== */
 .status-Påspår { background: #d8f5e0; color:#19692c; font-weight:600; }
 .status-Mindreavvikelse { background: #fff5d9; color:#856404; font-weight:600; }
+.status-Störreavvikelse { background: #ffe0e0; color:#8b0000; font-weight:600; }
 .status-Borttagen { background: #fde2e2; color:#721c24; font-weight:600; }
 .status-Ingen { background: #f1f1f1; color:#383d41; font-weight:600; }
 body.dark .status-Påspår { background: #2e4d38; color:#9fd6af; }
 body.dark .status-Mindreavvikelse { background: #4d4630; color:#ffda75; }
+body.dark .status-Störreavvikelse { background: #662a2a; color:#ff9999; }
 body.dark .status-Borttagen { background: #5c2a2a; color:#f4aaaa; }
 body.dark .status-Ingen { background: #555; color:#aaa; }
 
@@ -420,35 +422,38 @@ body.dark .modal-content {
 
   <div class="table-wrapper">
     <table id="resultTable">
-      <colgroup>
-        <col style="width:18%;">   
-        <col style="width:18%;"> 
-        <col style="width:18%;"> 
-        <col style="width:18%;"> 
-        <col style="width:18%;"> 
-        <col style="width:10%;">   
-      </colgroup>
-      <thead>
-        <tr>
-          <th>Målområde</th>
-          <th class="status-Påspår">På spår</th>
-          <th class="status-Mindreavvikelse">Mindre avvikelse</th>
-          <th class="status-Borttagen">Borttagen</th>
-          <th class="status-Ingen">Ingen status</th>
-          <th>Totalt</th>
-        </tr>
-      </thead>
+<colgroup>
+  <col style="width:17%;">   <!-- Målområde -->
+  <col style="width:13%;">   <!-- På spår -->
+  <col style="width:13%;">   <!-- Mindre avvikelse -->
+  <col style="width:13%;">   <!-- Större avvikelse -->
+  <col style="width:13%;">   <!-- Borttagen -->
+  <col style="width:13%;">   <!-- Ingen status -->
+  <col style="width:8%;">    <!-- Totalt -->
+</colgroup>
+<thead>
+  <tr>
+    <th>Målområde</th>
+    <th class="status-Påspår">På spår</th>
+    <th class="status-Mindreavvikelse">Mindre<br />avvikelse</th>
+    <th class="status-Störreavvikelse">Större<br />avvikelse</th>
+    <th class="status-Borttagen">Borttagen</th>
+    <th class="status-Ingen">Ingen<br />status</th>
+    <th>Totalt</th>
+  </tr>
+</thead>
       <tbody></tbody>
-      <tfoot>
-        <tr>
-          <td>Totalt</td>
-          <td id="sumPaspar"></td>
-          <td id="sumMindre"></td>
-          <td id="sumBorttagen"></td>
-          <td id="sumIngen"></td>
-          <td id="sumTotal"></td>
-        </tr>
-      </tfoot>
+<tfoot>
+  <tr>
+    <td>Totalt</td>
+    <td id="sumPaspar"></td>
+    <td id="sumMindre"></td>
+    <td id="sumStorre"></td>
+    <td id="sumBorttagen"></td>
+    <td id="sumIngen"></td>
+    <td id="sumTotal"></td>
+  </tr>
+</tfoot>
     </table>
   </div>
 
@@ -582,7 +587,7 @@ const aktiviteter = [
   {titel:"Östarp, Kurser och specialvisningar", typ:"Aktivitet", form:"Löpande", mål:"Publika möten", status:"På spår"}
 ];
 
-
+// ==== Filterelement ====
 const filterTypBoxes = document.querySelectorAll(".filterTyp");
 const filterFormBoxes = document.querySelectorAll(".filterForm");
 const filterMal = document.getElementById("filterMal");
@@ -595,45 +600,53 @@ const malOrdning = [
 ];
 
 function renderTable() {
-  // hämta alla valda värden
+  // Hämta alla valda värden
   const typer = [...filterTypBoxes].filter(b => b.checked).map(b => b.value);
   const former = [...filterFormBoxes].filter(b => b.checked).map(b => b.value);
   const mal = filterMal.value;
 
-const filtered = aktiviteter.filter(a =>
-  (typer.length > 0 && typer.includes(a.typ)) &&
-  (former.length > 0 && former.includes(a.form)) &&
-  (mal === "" || a.mål === mal)
-);
+  const filtered = aktiviteter.filter(a =>
+    (typer.length > 0 && typer.includes(a.typ)) &&
+    (former.length > 0 && former.includes(a.form)) &&
+    (mal === "" || a.mål === mal)
+  );
 
-  // nollställ details varje gång tabellen renderas om
+  // Nollställ details varje gång tabellen renderas om
   document.getElementById("details").style.display = "none";
   document.getElementById("list").innerHTML = "";
 
+  // Gruppera efter målområde och status
   const grupper = {};
   filtered.forEach(a => {
-    if (!grupper[a.mål]) grupper[a.mål] = {Påspår:0, Mindreavvikelse:0, Borttagen:0, Ingen:0};
+    if (!grupper[a.mål]) grupper[a.mål] = {
+      Påspår:0, Mindreavvikelse:0, Störreavvikelse:0, Borttagen:0, Ingen:0
+    };
     if (a.status === "På spår") grupper[a.mål].Påspår++;
     if (a.status === "Mindre avvikelse") grupper[a.mål].Mindreavvikelse++;
+    if (a.status === "Större avvikelse") grupper[a.mål].Störreavvikelse++;
     if (a.status === "Borttagen") grupper[a.mål].Borttagen++;
     if (a.status === "Ingen") grupper[a.mål].Ingen++;
   });
 
-  let totalPaspar = 0, totalMindre = 0, totalBort = 0, totalIngen = 0;
+  // Summeringar
+  let totalPaspar = 0, totalMindre = 0, totalStorre = 0, totalBort = 0, totalIngen = 0;
   const tbody = document.querySelector("#resultTable tbody");
   tbody.innerHTML = "";
+
   malOrdning.forEach(mål => {
     if (grupper[mål]) {
       const g = grupper[mål];
-      const total = g.Påspår + g.Mindreavvikelse + g.Borttagen + g.Ingen;
+      const total = g.Påspår + g.Mindreavvikelse + g.Störreavvikelse + g.Borttagen + g.Ingen;
       totalPaspar += g.Påspår;
       totalMindre += g.Mindreavvikelse;
+      totalStorre += g.Störreavvikelse;
       totalBort += g.Borttagen;
       totalIngen += g.Ingen;
       const tr = `<tr>
         <td>${mål}</td>
         <td data-m="${mål}" data-s="På spår">${g.Påspår}</td>
         <td data-m="${mål}" data-s="Mindre avvikelse">${g.Mindreavvikelse}</td>
+        <td data-m="${mål}" data-s="Större avvikelse">${g.Störreavvikelse}</td>
         <td data-m="${mål}" data-s="Borttagen">${g.Borttagen}</td>
         <td data-m="${mål}" data-s="Ingen">${g.Ingen}</td>
         <td><strong>${total}</strong></td>
@@ -642,19 +655,22 @@ const filtered = aktiviteter.filter(a =>
     }
   });
 
+  // Skriv ut summeringar
   document.getElementById("sumPaspar").textContent = totalPaspar;
   document.getElementById("sumMindre").textContent = totalMindre;
+  document.getElementById("sumStorre").textContent = totalStorre;
   document.getElementById("sumBorttagen").textContent = totalBort;
   document.getElementById("sumIngen").textContent = totalIngen;
-  document.getElementById("sumTotal").textContent = totalPaspar + totalMindre + totalBort + totalIngen;
+  document.getElementById("sumTotal").textContent =
+    totalPaspar + totalMindre + totalStorre + totalBort + totalIngen;
 
   // Reset-knappen – nollställ alla filter
-document.getElementById("resetBtn").onclick = () => {
-  filterTypBoxes.forEach(b => b.checked = true);
-  filterFormBoxes.forEach(b => b.checked = true);
-  filterMal.value = "";
-  renderTable();
-};
+  document.getElementById("resetBtn").onclick = () => {
+    filterTypBoxes.forEach(b => b.checked = true);
+    filterFormBoxes.forEach(b => b.checked = true);
+    filterMal.value = "";
+    renderTable();
+  };
 
   // Klickbara celler som öppnar detaljer
   document.querySelectorAll("td[data-m]").forEach(cell => {
@@ -671,7 +687,7 @@ document.getElementById("resetBtn").onclick = () => {
           listEl.appendChild(li);
         });
       } else {
-        listEl.innerHTML = "<li>Det finns ingen post med denna status.</li>";
+        listEl.innerHTML = "<li>Det finns inga poster med denna status.</li>";
       }
       document.getElementById("details").style.display = "block";
       document.querySelector("#details h3").textContent = `${mål} – ${status}`;
@@ -679,6 +695,7 @@ document.getElementById("resetBtn").onclick = () => {
   });
 }
 
+// Initiera tabellen
 renderTable();
 
 // Knyt event på alla filter
