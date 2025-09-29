@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Författarinstruktioner: Kulturens årsbok 2026</title>
+    <style>
+        :root {
+            --background-color: #f4f4f4;
+            --text-color: #333;
+            --header-color: #1a1a1a;
+            --link-color: #0066cc;
+            --link-hover-color: #004488;
+            --border-color: #ddd;
+            --code-bg-color: #e9e9e9;
+            --positive-color: #28a745;
+            --negative-color: #dc3545;
+            --accent-bg: #eef3f8;
+        }
+
+        body.dark-theme {
+            --background-color: #1a1a1a;
+            --text-color: #f4f4f4;
+            --header-color: #fff;
+            --link-color: #66b3ff;
+            --link-hover-color: #aaccff;
+            --border-color: #444;
+            --code-bg-color: #2b2b2b;
+            --accent-bg: #2a2f3a;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 2rem 1rem;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: var(--background-color);
+            border-radius: 8px;
+        }
+
+        h1, h2 {
+            color: var(--header-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+        }
+
+        /* Ny stil för h3 */
+        h3 {
+            font-size: 1.4rem;
+            margin-top: 2rem;
+            margin-bottom: 0.75rem;
+            padding: 0.5rem 0.75rem;
+            background-color: var(--accent-bg);
+            border-left: 5px solid var(--link-color);
+            border-radius: 6px;
+            color: var(--header-color);
+        }
+		
+		/* Grön variant */
+h3.green {
+    font-size: 1.4rem;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    background-color: #e6f7e8;      /* ljusgrön bakgrund */
+    border-left: 6px solid #28a745; /* grön kant */
+    border-radius: 6px;
+    color: #155724;                 /* mörkgrön text */
+}
+
+/* Röd variant */
+h3.red {
+    font-size: 1.4rem;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    background-color: #f8e8e8;      /* ljusröd bakgrund */
+    border-left: 6px solid #dc3545; /* röd kant */
+    border-radius: 6px;
+    color: #721c24;                 /* mörkröd text */
+}
+
+        strong {
+            font-weight: 600;
+        }
+
+        ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+            color: var(--link-hover-color);
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        .toggle-theme-btn {
+            background: none;
+            border: 2px solid var(--text-color);
+            color: var(--text-color);
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            margin-bottom: 2rem;
+        }
+        
+        .toggle-theme-btn:hover {
+            background-color: var(--text-color);
+            color: var(--background-color);
+        }
+
+        .code-block {
+            max-width: 500px;
+            background-color: var(--code-bg-color);
+            padding: 1rem 1.5rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-size: 11pt;
+            margin: 1rem 0;
+            text-align: left;
+            line-height: 1.3;
+        }
+
+        .contact-info {
+            font-style: italic;
+        }
+
+        .comparison-container {
+            display: flex;
+            gap: 20px;
+        }
+
+        .styled-box {
+            flex: 1;
+            padding: 1.5rem;
+            border-radius: 12px;
+        }
+
+        .do-box {
+            background-color: #e6f7e8;
+            border: 2px solid #28a745;
+            color: var(--text-color);
+        }
+
+        .do-box h3 {
+            color: #28a745;
+            margin-top: 0;
+            border-bottom: 1px solid #28a745;
+            padding-bottom: 0.5rem;
+        }
+
+        .dont-box {
+            background-color: #f8e8e8;
+            border: 2px solid #dc3545;
+            color: var(--text-color);
+        }
+
+        .dont-box h3 {
+            color: #dc3545;
+            margin-top: 0;
+            border-bottom: 1px solid #dc3545;
+            padding-bottom: 0.5rem;
+        }
+
+        .styled-box p {
+            margin-bottom: 0.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            .container {
+                padding: 1rem;
+            }
+            .comparison-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button id="theme-toggle" class="toggle-theme-btn">🌙 Växla till mörkt tema</button>
+
+        <h1>Författarinstruktioner: Kulturens årsbok 2026</h1>
+        <p>
+            Välkommen att bidra till Kulturens årsbok 2026! Här hittar du riktlinjer för att säkerställa
+            att din artikel håller högsta möjliga standard för publicering.
+        </p>
+
+        <h2>Målgrupp och syfte</h2>
+        <p>
+            Årsboken vänder sig i första hand till föreningens medlemmar. Målet är att texterna ska vara
+            <strong>lättillgängliga</strong>, <strong>engagerande</strong> och <strong>informativa</strong>,
+            likt populärvetenskapliga tidningsartiklar. Artiklar ska undvika formella stilgrepp och akademisk
+            källhantering. Istället ska de viktigaste källorna och tips på vidare läsning listas i slutet. Se "Källhantering" nedan.
+        </p>
+
+        <h2>Omfattning och format</h2>
+        <h3>Textmängd</h3>
+		Riktmärket för årsbok 2026 är <strong>en artikellängd på 10 sidor (i tryckt format)</strong> varav text 8 sidor. <a href="https://kultpub.github.io/site/textmangd-och-fokus.png" target="_blank" rel="noopener noreferrer">Se förtydligande här!</a><br />Om din textmängd avviker från detta, meddela redaktören i god tid.
+        <h3>Format</h3>
+		Skicka text i <strong>Word-format</strong>. Alla artiklar genomgår omfattande grafisk formgivning – stilmall är därför inte nödvändigt.
+        <h3>Artikelns titel</h3>
+		Titel får innehålla högst <strong>60 tecken</strong> inklusive blanksteg.
+
+        <h2>Språkliga riktlinjer</h2>
+        <div class="comparison-container">
+            <div class="styled-box do-box">
+                <h3 class="green">Skriv</h3>
+                <p><strong>Årtal och årtalsperioder</strong></p>
+                <p>1930-talet, 1800-talet<br>1936–2003<br>1936–42</p>
+
+                <p><strong>Inga förkortningar</strong></p>
+                <p>till exempel, bland annat, det vill säga<br>procent, kvadratmeter, millimeter</p>
+            </div>
+            <div class="styled-box dont-box">
+                <h3 class="red">Skriv inte</h3>
+                <p><strong>&nbsp;</strong></p>
+                <p>trettiotalet, artonhundratalet<br>1936-2003 (kort tankstreck)<br>1936–1942 (samma århundrade upprepat)</p>
+
+                <p><strong>&nbsp;</strong></p>
+                <p>t.ex., bl.a. d.v.s.<br>%, m<sup>2</sup>, mm</p>
+            </div>
+        </div>
+
+        <h3>Citat</h3>
+        <p><strong>Korta citat</strong> skrivs med citattecken i löptext:</p>
+        <div class="code-block">En tid han kallar ”mina hundår”.</div>
+
+        <p><strong>Längre citat</strong> skrivs som blockcitat med blankrad före och efter citat:</p>
+        <div class="code-block">Enligt museets årsbok tog arbetet fart redan 1892:
+
+”Det var först när samlingarna flyttades till stadens hjärta som
+intresset verkligen exploderade.”
+
+Efter flytten skapades nya möjligheter för både forskning och publik verksamhet.</div>
+
+        <p><strong>Utelämnade ord i citat</strong> anges med hakparenteser och tre punkter:</p>
+        <div class="code-block">”Detta […] beror på en längre tids dålig sömn.”</div>
+
+        <h3>Titlar på böcker, tidningar, utställningar m.m.</h3>
+        <p>Titlar och namn ska skrivas <strong>kursivt</strong>:</p>
+        <div class="code-block">Utställningen <em>Dräktmod – folkliga kläder från Skåne</em> är fylld av traditioner och spännande detaljer.</div>
+
+        <h3>Rubriker och rubriknivåer</h3>
+        <p>
+            Använd helst inga rubriker, men om det är nödvändigt får du använda högst två nivåer.<br />Var konsekvent och låt
+            nivåerna framträda tydligt i din text.
+        </p>
+
+        <h2>Illustrationer och bilder</h2>
+        <h3>Tabeller, diagram och figurer</h3>
+        <ul>
+            <li>Skicka allt underlag (data) till redaktören i en Excel-fil eller liknande.</li>
+            <li>Placera illustrationen där du önskar att den ska vara i texten.</li>
+            <li>Skriv en förklarande text under illustrationen.</li>
+        </ul>
+
+        <h3>Bilder</h3>
+        <p>
+            Om du behöver bilder, kontakta Nina och Nelly i god tid (se kontaktuppgifter nedan). De kan hjälpa till att hitta material i Kulturens
+            databaser och arkiv, eller ordna nya bilder.
+        </p>
+        <ul>
+            <li>Ange gärna var i texten du vill att bilderna ska placeras.</li>
+            <li>Skriv tydliga <strong>bildtexter</strong>. <a href="https://kultpub.github.io/site/bild-och-bildtext.jpg" target="_blank" rel="noopener noreferrer">Se exempel här!</a></li>
+            <li>Ange all nödvändig information om bilden: <strong>årtal</strong>, <strong>fotograf</strong>, <strong>källa</strong>, ev. <strong>KM-nummer</strong>.</li>
+        </ul>
+
+        <h3>Kontakter</h3>
+            <strong>Nina Davis</strong> (intendent): <a href="mailto:nina.davis@kulturen.com">nina.davis@kulturen.com</a>,
+            076-539 04 22<br>
+            <strong>Nelly Hercberg</strong> (fotograf): <a href="mailto:nelly.hercberg@kulturen.com">nelly.hercberg@kulturen.com</a>,
+            076-539 04 93
+        </p>
+
+        <h2>Källhantering</h2>
+        <p>
+            Fotnoter används inte. Källor ska istället anges direkt i löptexten, och vid citat ska sidnummer (eller
+            webbadress) anges.
+        </p>
+        <div class="code-block">Berndt Tallerud skriver i sin artikel <i>Pesten i Sverige 1710–13</i> (2010) att ”kropparna i åtskilliga fall fick ligga ojordade länge” (s. 930).</div>
+
+        <p>Artikeln ska avslutas med ett avsnitt med rubriken <strong>"Litteratur och lästips"</strong>, där du listar:</p>
+        <ul>
+            <li>De (max 5) viktigaste källorna som använts.</li>
+            <li>(Max 5) tips för vidare läsning.</li>
+        </ul>
+
+        <h2>Inlämning</h2>
+        <p>Vi praktiserar endast ett inlämningstillfälle.</p>
+            <p><strong>Inlämning senast:</strong> 27 februari 2026.<br>
+            <strong>E-post:</strong> <a href="mailto:johan.hofvendahl@kulturen.com">johan.hofvendahl@kulturen.com</a>
+        </p>
+        <p>
+            Vi förutsätter att den inskickade texten är av hög kvalitet, välstrukturerad och fri från stavfel samt
+            syftningsfel. Även om redaktionen korrekturläser och gör nödvändiga ändringar, är du ansvarig för att din
+            artikel är redo för publicering.
+        </p>
+    </div>
+
+    <script>
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        themeToggleBtn.addEventListener('click', () => {
+            body.classList.toggle('dark-theme');
+            themeToggleBtn.textContent = body.classList.contains('dark-theme')
+                ? '☀ Växla till ljust tema'
+                : '🌙 Växla till mörkt tema';
+        });
+    </script>
+</body>
+
+</html>
