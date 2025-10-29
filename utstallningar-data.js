@@ -8220,7 +8220,7 @@ const utstallningar = [
       id: 914,
       namn: "Lengertz kulturpris",
       typ: "Tillfällig",
-      start: "2011-06-dd",
+      start: "2011-06-04",
       slut: "2011-08-dd",
       lokal: "Vita huset (andra våningen, väggen)",
       kommentar: "Pristagarnas verk visas på Kulturen."
@@ -8256,7 +8256,7 @@ const utstallningar = [
       id: 918,
       namn: "Folkdräktstolkningar",
       typ: "Tillfällig",
-      start: "2011-mm-dd",
+      start: "2011-06-05",
       slut: "åååå-mm-dd",
       lokal: "Uppgift saknas",
       kommentar: "Av Sätergläntans elever."
@@ -9225,6 +9225,7 @@ const utstallningar = [
       kommentar: "En ny medeltida miljö på Dekanhusets andra våning, en rekonstruerad prästbostad från 1500-talet inredd med handtillverkade möbler och textilier."
     }
 ];
+
 
 
 
