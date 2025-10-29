@@ -7041,7 +7041,7 @@ const utstallningar = [
       id: 783,
       namn: "Om minröjning",
       typ: "Tillfällig",
-      start: "2003-11-09",
+      start: "2003-11-02",
       slut: "2003-11-30",
       lokal: "Vita huset (andra våningen, väggen)",
       kommentar: "Samarbete med Lunds Afghanistankommitté"
@@ -9225,5 +9225,6 @@ const utstallningar = [
       kommentar: "En ny medeltida miljö på Dekanhusets andra våning, en rekonstruerad prästbostad från 1500-talet inredd med handtillverkade möbler och textilier."
     }
 ];
+
 
 
