@@ -7399,7 +7399,7 @@ const utstallningar = [
     },
     {
       id: 823,
-      namn: "Amnesty Internationel",
+      namn: "Amnesty International",
       typ: "Tillfällig",
       start: "2005-10-08",
       slut: "2005-10-30",
@@ -9225,6 +9225,7 @@ const utstallningar = [
       kommentar: "En ny medeltida miljö på Dekanhusets andra våning, en rekonstruerad prästbostad från 1500-talet inredd med handtillverkade möbler och textilier."
     }
 ];
+
 
 
 
