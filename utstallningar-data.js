@@ -8283,8 +8283,8 @@ const utstallningar = [
       id: 921,
       namn: "Halle & Lomakka",
       typ: "Tillfällig",
-      start: "2011-mm-dd",
-      slut: "2011-mm-dd",
+      start: "2011-06-05",
+      slut: "2011-08-28",
       lokal: "Uppgift saknas",
       kommentar: "Kim Halle och Barbro Lomakkas gemensamma produktion."
     },
@@ -9225,6 +9225,7 @@ const utstallningar = [
       kommentar: "En ny medeltida miljö på Dekanhusets andra våning, en rekonstruerad prästbostad från 1500-talet inredd med handtillverkade möbler och textilier."
     }
 ];
+
 
 
 
