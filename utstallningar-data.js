@@ -8229,7 +8229,7 @@ const utstallningar = [
       id: 915,
       namn: "Popstad Lund",
       typ: "Tillfällig",
-      start: "2011-10-30",
+      start: "2011-10-27",
       slut: "2013-01-13",
       lokal: "Uppgift saknas",
       kommentar: "Projektet Popstad Lund startade på Facebook med insamling bilder och berättelser kring Lunds musikliv under åren 1971–1996; utställningen bestod av över tusen föremål som privatpersoner lånat ut."
@@ -9225,6 +9225,7 @@ const utstallningar = [
       kommentar: "En ny medeltida miljö på Dekanhusets andra våning, en rekonstruerad prästbostad från 1500-talet inredd med handtillverkade möbler och textilier."
     }
 ];
+
 
 
 
