@@ -8247,8 +8247,8 @@ const utstallningar = [
       id: 917,
       namn: "Påskutställning",
       typ: "Tillfällig",
-      start: "2011-mm-dd",
-      slut: "åååå-mm-dd",
+      start: "2011-04-18",
+      slut: "2011-04-24",
       lokal: "Uppgift saknas",
       kommentar: ""
     },
@@ -9225,6 +9225,7 @@ const utstallningar = [
       kommentar: "En ny medeltida miljö på Dekanhusets andra våning, en rekonstruerad prästbostad från 1500-talet inredd med handtillverkade möbler och textilier."
     }
 ];
+
 
 
 
