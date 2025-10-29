@@ -6753,7 +6753,7 @@ const utstallningar = [
       id: 751,
       namn: "Movements – foto Anders Mattsson",
       typ: "Tillfällig",
-      start: "2002-09-16",
+      start: "2002-09-21",
       slut: "2002-10-27",
       lokal: "Vita huset (andra våningen, väggen)",
       kommentar: "I samarbete med Skånes Dansteater och Anders Matsson."
@@ -9225,3 +9225,4 @@ const utstallningar = [
       kommentar: "En ny medeltida miljö på Dekanhusets andra våning, en rekonstruerad prästbostad från 1500-talet inredd med handtillverkade möbler och textilier."
     }
 ];
+
