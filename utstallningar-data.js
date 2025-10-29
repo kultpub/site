@@ -8238,9 +8238,9 @@ const utstallningar = [
       id: 916,
       namn: "Kulturen ReMix",
       typ: "Tillfällig",
-      start: "2011-mm-dd",
-      slut: "2011-03-11",
-      lokal: "Uppgift saknas",
+      start: "2011-03-08",
+      slut: "2011-05-29",
+      lokal: "Lundahallen",
       kommentar: "Av elever från tre folkhögskolor."
     },
     {
@@ -9225,6 +9225,7 @@ const utstallningar = [
       kommentar: "En ny medeltida miljö på Dekanhusets andra våning, en rekonstruerad prästbostad från 1500-talet inredd med handtillverkade möbler och textilier."
     }
 ];
+
 
 
 
