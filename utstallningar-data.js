@@ -6240,7 +6240,7 @@ const utstallningar = [
       id: 694,
       namn: "Gycklare och drottningar. Klockor i lera av Gunilla Ståhle.",
       typ: "Tillfällig",
-      start: "2000-06-dd",
+      start: "2000-06-04",
       slut: "2000-07-dd",
       lokal: "Vita huset (andra våningen, väggen)",
       kommentar: "\"Sommarutställning\""
@@ -9225,6 +9225,7 @@ const utstallningar = [
       kommentar: "En ny medeltida miljö på Dekanhusets andra våning, en rekonstruerad prästbostad från 1500-talet inredd med handtillverkade möbler och textilier."
     }
 ];
+
 
 
 
