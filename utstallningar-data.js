@@ -7192,21 +7192,21 @@ const utstallningar = [
     },
     {
       id: 800,
+      namn: "Korridoren och andra studentbon",
+      typ: "Tillfällig",
+      start: "2004-09-11",
+      slut: "2004-12-30",
+      lokal: "Uppgift saknas",
+      kommentar: "Med anledning av att AF Bostäder firade 50 år."
+    },     
+    {
+      id: 801,
       namn: "Hemma i Lund",
       typ: "Tillfällig",
       start: "2004-09-12",
       slut: "åååå-mm-dd",
       lokal: "Vita huset (Trädgårdsrummet)",
       kommentar: "I samarbete med Kulturskolan och deras elever."
-    },
-    {
-      id: 801,
-      namn: "Korridoren och andra studentbon",
-      typ: "Tillfällig",
-      start: "2004-09-15",
-      slut: "2004-12-30",
-      lokal: "Uppgift saknas",
-      kommentar: "Med anledning av att AF Bostäder firade 50 år."
     },
     {
       id: 802,
@@ -9225,6 +9225,7 @@ const utstallningar = [
       kommentar: "En ny medeltida miljö på Dekanhusets andra våning, en rekonstruerad prästbostad från 1500-talet inredd med handtillverkade möbler och textilier."
     }
 ];
+
 
 
 
