@@ -7120,7 +7120,7 @@ const utstallningar = [
     },
     {
       id: 792,
-      namn: "Tarlabashi – en multikulturell stadsdel i centrala Istanbul",
+      namn: "Tarlabasi – en multikulturell stadsdel i centrala Istanbul",
       typ: "Tillfällig",
       start: "2004-03-21",
       slut: "2004-04-30",
@@ -9225,6 +9225,7 @@ const utstallningar = [
       kommentar: "En ny medeltida miljö på Dekanhusets andra våning, en rekonstruerad prästbostad från 1500-talet inredd med handtillverkade möbler och textilier."
     }
 ];
+
 
 
 
