@@ -6985,7 +6985,7 @@ const utstallningar = [
     },
     {
       id: 777,
-      namn: "Bernards hus – kvinnodrama från den spanska landsbygden",
+      namn: "Bernardas hus – kvinnodrama från den spanska landsbygden",
       typ: "Tillfällig",
       start: "2003-08-17",
       slut: "2003-09-28",
@@ -9225,4 +9225,5 @@ const utstallningar = [
       kommentar: "En ny medeltida miljö på Dekanhusets andra våning, en rekonstruerad prästbostad från 1500-talet inredd med handtillverkade möbler och textilier."
     }
 ];
+
 
