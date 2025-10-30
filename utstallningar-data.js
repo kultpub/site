@@ -1,22 +1,22 @@
 const utstallningar = [
   { id: "0",
-  namn: "Kulturens första utställning… de första föremålen",
+  namn: "Kulturens första utställning",
   typ: "Tillfällig",
   start: "1882-08-21",
   slut: "åååå-mm-dd",
   lokal: "I ett  vindsrum i Huaröds prästgård",
-  kommentar: "Det saknas kommentar till denna utställning." 
+  kommentar: "De första föremålen." 
   },
 { id: "1",
-  namn: "Kulturens andra utställning… sommarens förvärv",
+  namn: "Kulturens andra utställning",
   typ: "Tillfällig",
   start: "1882-09-28",
   slut: "1882-10-12",
   lokal: "Akademiska föreningen",
-  kommentar: "Det saknas kommentar till denna utställning." 
+  kommentar: "Sommarens förvärv." 
   },
 { id: "2",
-  namn: "Kulturens tredje utställning…",
+  namn: "Kulturens tredje utställning",
   typ: "Basutställning",
   start: "1882-10-21",
   slut: "1884-06-01",
@@ -24,7 +24,7 @@ const utstallningar = [
   kommentar: "\"De kulturhistoriska samlingarna i Lund (i Bibliotekshusets nedre våning) äro mot en afgift af 24 öre tillgängliga för allmänheten…\", Folkets Tidning 1882-10-24." 
   },
 { id: "3",
-  namn: "Kulturens fjärde utställning…",
+  namn: "Kulturens fjärde utställning",
   typ: "Basutställning",
   start: "1883-11-04",
   slut: "1884-mm-dd",
@@ -32,7 +32,7 @@ const utstallningar = [
   kommentar: "Utställning av fornföremål och antikviteter, samlade i en särskild \"antik- och fornsal\"" 
   },
 { id: "4",
-  namn: "Kulturens femte utställning…",
+  namn: "Kulturens femte utställning",
   typ: "Basutställning",
   start: "1883-12-02",
   slut: "1884-mm-dd",
@@ -40,7 +40,7 @@ const utstallningar = [
   kommentar: "En \"synnerligen rik och för ändamålet väl sammansatt samling\" av allmogeföremål" 
   },
 { id: "5",
-  namn: "Kulturens sjätte utställning…",
+  namn: "Kulturens sjätte utställning",
   typ: "Basutställning",
   start: "1884-06-15",
   slut: "1886-08-16",
@@ -8240,4 +8240,5 @@ const utstallningar = [
   kommentar: "Nu visar vi även dräktsilver, som är en särpräglad och viktig del av den skånska dräkten." 
   }
 ];
+
 
