@@ -5,7 +5,7 @@ const utstallningar = [
   start: "1882-08-21",
   slut: "åååå-mm-dd",
   lokal: "I ett  vindsrum i Huaröds prästgård",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "1",
   namn: "Kulturens andra utställning… sommarens förvärv",
@@ -13,15 +13,15 @@ const utstallningar = [
   start: "1882-09-28",
   slut: "1882-10-12",
   lokal: "Akademiska föreningen",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "2",
   namn: "Kulturens tredje utställning…",
   typ: "Basutställning",
   start: "1882-10-21",
   slut: "1884-06-01",
-  lokal: "Några salar i Kungshusets (\"gamla Bibliotekshusets\") nedre våning: \"De kulturhistoriska samlingarna i Lund (i Bibliotekshusets nedre våning) äro mot en afgift af 24 öre tillgängliga för allmänheten…\", Folkets Tidning 1882-10-24",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  lokal: "Några salar i Kungshusets (\"gamla Bibliotekshusets\") nedre våning.",
+  kommentar: "\"De kulturhistoriska samlingarna i Lund (i Bibliotekshusets nedre våning) äro mot en afgift af 24 öre tillgängliga för allmänheten…\", Folkets Tidning 1882-10-24." 
   },
 { id: "3",
   namn: "Kulturens fjärde utställning…",
@@ -45,7 +45,7 @@ const utstallningar = [
   start: "1884-06-15",
   slut: "1886-08-16",
   lokal: "I övre våningen av gamla Universitetshuset (\"Kuggis\").",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "6",
   namn: "Textilutställning",
@@ -221,7 +221,7 @@ const utstallningar = [
   start: "1899-09-01",
   slut: "1899-09-20",
   lokal: "I Karlskrona",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "28",
   namn: "Pariserkollektionen på Kulturen",
@@ -237,7 +237,7 @@ const utstallningar = [
   start: "1900-04-05",
   slut: "1900-04-21",
   lokal: "I Göteborg på Valand",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "30",
   namn: "Pariserkollektionen på turné i Stockholm",
@@ -245,7 +245,7 @@ const utstallningar = [
   start: "1900-04-23",
   slut: "1900-05-10",
   lokal: "I Stockholm vid Kungsträdgården",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "31",
   namn: "Pariserkollektionen på turné i Norrköping",
@@ -253,7 +253,7 @@ const utstallningar = [
   start: "1900-05-18",
   slut: "1900-05-27",
   lokal: "I Norrköping i stadshussalongen",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "32",
   namn: "Konsttextilutställning",
@@ -261,7 +261,7 @@ const utstallningar = [
   start: "1900-11-dd",
   slut: "åååå-mm-dd",
   lokal: "Borgarhuset (Borgarsalen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "33",
   namn: "Dekorativa utkast och kompositioner",
@@ -269,7 +269,7 @@ const utstallningar = [
   start: "1901-02-03",
   slut: "1901-02-17",
   lokal: "Borgarhuset (Borgarsalen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "34",
   namn: "Östra Göingeutställning",
@@ -277,7 +277,7 @@ const utstallningar = [
   start: "1901-04-dd",
   slut: "1901-04-dd",
   lokal: "Borgarhuset (Borgarsalen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "35",
   namn: "Konstutställning",
@@ -285,7 +285,7 @@ const utstallningar = [
   start: "1901-05-26",
   slut: "1901-06-16",
   lokal: "Borgarhuset (Borgarsalen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "36",
   namn: "Allmänna sydsvenska konstslöjdutställningen i Halmstad",
@@ -293,7 +293,7 @@ const utstallningar = [
   start: "1901-09-26",
   slut: "1901-10-09",
   lokal: "I Halmstad",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "37",
   namn: "Den historiska vapenutställningen",
@@ -301,7 +301,7 @@ const utstallningar = [
   start: "1902-11-22",
   slut: "1902-12-31",
   lokal: "Borgarhuset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "38",
   namn: "Allmänna sydsvenska konstslöjdutställningen i Jönköping",
@@ -309,7 +309,7 @@ const utstallningar = [
   start: "1904-06-18",
   slut: "1904-07-10",
   lokal: "I Jönköping",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "39",
   namn: "Egyptiska textila gravfynd",
@@ -317,7 +317,7 @@ const utstallningar = [
   start: "1904-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Herrehuset (Bibliotekssalen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "40",
   namn: "Konstslöjdanstaltens arbeten",
@@ -333,7 +333,7 @@ const utstallningar = [
   start: "1904-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Borgarhuset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "42",
   namn: "Möbelarkitekten C. Andréns utställning",
@@ -341,7 +341,7 @@ const utstallningar = [
   start: "1905-11-25",
   slut: "1905-11-26",
   lokal: "Locus Peccatorum",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "43",
   namn: "Julutställning",
@@ -349,7 +349,7 @@ const utstallningar = [
   start: "1905-12-12",
   slut: "åååå-mm-dd",
   lokal: "Locus Peccatorum",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "44",
   namn: "Förvärven från Hammerska och Nilssonska auktionerna",
@@ -357,7 +357,7 @@ const utstallningar = [
   start: "1906-03-07",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "45",
   namn: "Sydsvenska konstslöjdutställningen i Kristianstad",
@@ -365,7 +365,7 @@ const utstallningar = [
   start: "1906-09-15",
   slut: "1906-10-07",
   lokal: "I Kristianstad, Östra folkskolan",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "46",
   namn: "Konstslöjdanstaltens arbeten",
@@ -413,7 +413,7 @@ const utstallningar = [
   start: "1908-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Friluftsmuseet",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "52",
   namn: "Dekanhuset",
@@ -429,7 +429,7 @@ const utstallningar = [
   start: "1908-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Friluftsmuseet",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "54",
   namn: "Slaget i Sundet 1658",
@@ -437,7 +437,7 @@ const utstallningar = [
   start: "1908-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "55",
   namn: "Konstslöjdanstaltens arbeten",
@@ -453,7 +453,7 @@ const utstallningar = [
   start: "1909-06-04",
   slut: "1909-09-30",
   lokal: "I Stockholm",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "57",
   namn: "Konstslöjdanstaltens arbeten",
@@ -477,7 +477,7 @@ const utstallningar = [
   start: "1910-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Östersund",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "60",
   namn: "Konstslöjdanstaltens arbeten",
@@ -501,7 +501,7 @@ const utstallningar = [
   start: "1911-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Friluftsmuseet",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "63",
   namn: "Konstslöjdanstaltens arbeten",
@@ -517,7 +517,7 @@ const utstallningar = [
   start: "1913-10-03",
   slut: "1913-10-30",
   lokal: "Locus Peccatorum",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "65",
   namn: "Wahlbomska huset",
@@ -525,7 +525,7 @@ const utstallningar = [
   start: "1913-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Friluftsmuseet",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "66",
   namn: "Halmstadstornet",
@@ -533,7 +533,7 @@ const utstallningar = [
   start: "1913-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Friluftsmuseet",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "67",
   namn: "Konstslöjdanstaltens arbeten",
@@ -557,7 +557,7 @@ const utstallningar = [
   start: "1914-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Malmö",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "70",
   namn: "Konstslöjdanstaltens arbeten",
@@ -573,7 +573,7 @@ const utstallningar = [
   start: "1916-12-14",
   slut: "1916-12-16",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "72",
   namn: "Konstslöjdanstaltens arbeten",
@@ -589,7 +589,7 @@ const utstallningar = [
   start: "1916-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "74",
   namn: "Osasiatiska rustningar",
@@ -597,7 +597,7 @@ const utstallningar = [
   start: "1916-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "75",
   namn: "Arkeologiska undersökningar i Lund",
@@ -605,7 +605,7 @@ const utstallningar = [
   start: "1917-06-24",
   slut: "åååå-mm-dd",
   lokal: "Borgarhuset (Gripsholmsrummet)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "76",
   namn: "Konstslöjdanstaltens arbeten",
@@ -629,7 +629,7 @@ const utstallningar = [
   start: "1918-04-dd",
   slut: "åååå-mm-dd",
   lokal: "Lindforska huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "79",
   namn: "Hautelissevävda tapeter, orientaliska mattor, egyptisk-koptiska vävnader",
@@ -637,7 +637,7 @@ const utstallningar = [
   start: "1918-05-dd",
   slut: "1919-06-dd",
   lokal: "Gamla universitetsbiblioteket",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "80",
   namn: "Konstutställning: Anders Montan",
@@ -645,7 +645,7 @@ const utstallningar = [
   start: "1918-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "81",
   namn: "Konstslöjdanstaltens arbeten",
@@ -733,7 +733,7 @@ const utstallningar = [
   start: "1925-08-24",
   slut: "åååå-mm-dd",
   lokal: "Friluftsmuseet",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "92",
   namn: "Konstslöjdanstaltens arbeten",
@@ -749,7 +749,7 @@ const utstallningar = [
   start: "1926-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Thomanderska huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "94",
   namn: "Nya riket till Ptolomæisk tid – egyptisk utställning",
@@ -757,7 +757,7 @@ const utstallningar = [
   start: "1926-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Thomanderska huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "95",
   namn: "Konstslöjdanstaltens arbeten",
@@ -789,7 +789,7 @@ const utstallningar = [
   start: "1929-01-dd",
   slut: "1929-02-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "99",
   namn: "Västra Vrams prästgård",
@@ -845,7 +845,7 @@ const utstallningar = [
   start: "1929-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "106",
   namn: "Onsjöstugan",
@@ -853,7 +853,7 @@ const utstallningar = [
   start: "1929-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Friluftsmuseet",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "107",
   namn: "Helsingborg-Halmstadhuset",
@@ -861,7 +861,7 @@ const utstallningar = [
   start: "1930-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Friluftsmuseet",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "108",
   namn: "Konsttextil vandringsutställning (Tyskland)",
@@ -869,7 +869,7 @@ const utstallningar = [
   start: "1930-mm-dd",
   slut: "1933-05-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "109",
   namn: "Konstslöjdanstaltens arbeten",
@@ -885,7 +885,7 @@ const utstallningar = [
   start: "1930-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Brahehuset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "111",
   namn: "Brahehuset",
@@ -909,7 +909,7 @@ const utstallningar = [
   start: "1931-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "114",
   namn: "Hygien och hälsovård",
@@ -917,7 +917,7 @@ const utstallningar = [
   start: "1931-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Brahehuset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "115",
   namn: "Sjöfart",
@@ -925,7 +925,7 @@ const utstallningar = [
   start: "1931-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Allmogehallen",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "116",
   namn: "Konstslöjdanstaltens arbeten",
@@ -957,7 +957,7 @@ const utstallningar = [
   start: "1932-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "120",
   namn: "Konserveringsutställning",
@@ -965,7 +965,7 @@ const utstallningar = [
   start: "1932-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "121",
   namn: "Gustav II Adolfs utställning",
@@ -973,7 +973,7 @@ const utstallningar = [
   start: "1932-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "122",
   namn: "Orientaliska mattor",
@@ -981,7 +981,7 @@ const utstallningar = [
   start: "1933-06-18",
   slut: "1933-mm-dd",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "123",
   namn: "Konstslöjdanstaltens arbeten",
@@ -997,7 +997,7 @@ const utstallningar = [
   start: "1934-03-04",
   slut: "1934-03-11",
   lokal: "Vita huset (södra överljussalen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "125",
   namn: "Leksaker och barnkläder",
@@ -1005,7 +1005,7 @@ const utstallningar = [
   start: "1934-05-06",
   slut: "åååå-mm-dd",
   lokal: "Vita huset (södra överljussalen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "126",
   namn: "Dockutställning",
@@ -1013,7 +1013,7 @@ const utstallningar = [
   start: "1934-05-06",
   slut: "1934-05-31",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "127",
   namn: "Konstslöjdanstaltens arbeten",
@@ -1037,7 +1037,7 @@ const utstallningar = [
   start: "1937-05-01",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "130",
   namn: "Bonde och bygd",
@@ -1061,7 +1061,7 @@ const utstallningar = [
   start: "1938-06-dd",
   slut: "1940-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "133",
   namn: "Svensk dryckessed",
@@ -1085,7 +1085,7 @@ const utstallningar = [
   start: "1939-08-dd",
   slut: "1939-08-dd",
   lokal: "Rådhuset i Malmö",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "136",
   namn: "Sydsvensk follklig konst",
@@ -1093,7 +1093,7 @@ const utstallningar = [
   start: "1940-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "137",
   namn: "Stolen genom 300 år",
@@ -1101,7 +1101,7 @@ const utstallningar = [
   start: "1941-06-dd",
   slut: "1941-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "138",
   namn: "Folkskolan 100 år",
@@ -1117,7 +1117,7 @@ const utstallningar = [
   start: "1942-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Ystadhuset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "140",
   namn: "Högreståndsdräkter från 1700-talet",
@@ -1133,7 +1133,7 @@ const utstallningar = [
   start: "1942-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "142",
   namn: "Utställning åt Kaninavelsföreningen",
@@ -1149,7 +1149,7 @@ const utstallningar = [
   start: "1943-11-18",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "144",
   namn: "Folkliv på Österlen (Frans Lindbergs akvareller och teckningar)",
@@ -1157,7 +1157,7 @@ const utstallningar = [
   start: "1943-mm-dd",
   slut: "1943-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "145",
   namn: "Korsstygnsbroderier från mormors tid",
@@ -1165,7 +1165,7 @@ const utstallningar = [
   start: "1943-mm-dd",
   slut: "1944-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "146",
   namn: "Oljetryck",
@@ -1173,7 +1173,7 @@ const utstallningar = [
   start: "1943-mm-dd",
   slut: "1944-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "147",
   namn: "Spegeln genom tiderna",
@@ -1181,7 +1181,7 @@ const utstallningar = [
   start: "1943-mm-dd",
   slut: "1944-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "148",
   namn: "Utställning åt Kaninavelsföreningen",
@@ -1189,7 +1189,7 @@ const utstallningar = [
   start: "1944-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "149",
   namn: "Plock bland skrock",
@@ -1197,7 +1197,7 @@ const utstallningar = [
   start: "1945-01-06",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "150",
   namn: "Skånska allmogebroderier på ylle",
@@ -1205,7 +1205,7 @@ const utstallningar = [
   start: "1945-10-30",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "151",
   namn: "Boktryckarekonstens och stilgjuteriets tekniska utveckling",
@@ -1213,7 +1213,7 @@ const utstallningar = [
   start: "1945-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "152",
   namn: "Lundensiskt silversmide",
@@ -1237,7 +1237,7 @@ const utstallningar = [
   start: "1946-09-dd",
   slut: "1946-09-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "155",
   namn: "Utställning av de under kriget evakuerade textilsamlingarna",
@@ -1245,7 +1245,7 @@ const utstallningar = [
   start: "1946-10-30",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "156",
   namn: "Fem fordømte aar",
@@ -1261,7 +1261,7 @@ const utstallningar = [
   start: "1946-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "158",
   namn: "Fröken Ammilons testamentariska gåva",
@@ -1269,7 +1269,7 @@ const utstallningar = [
   start: "1946-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "159",
   namn: "Beredskapsårens vapen",
@@ -1285,7 +1285,7 @@ const utstallningar = [
   start: "1947-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "161",
   namn: "Hylla Smedja",
@@ -1293,7 +1293,7 @@ const utstallningar = [
   start: "1947-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Friluftsmuseet",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "162",
   namn: "Prov på smide ur museets samlingar",
@@ -1309,7 +1309,7 @@ const utstallningar = [
   start: "1948-10-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "164",
   namn: "Museets senaste nyförvärv",
@@ -1317,7 +1317,7 @@ const utstallningar = [
   start: "1948-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "165",
   namn: "Leksaksutställning",
@@ -1325,7 +1325,7 @@ const utstallningar = [
   start: "1948-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "166",
   namn: "Utställning av duvor",
@@ -1349,7 +1349,7 @@ const utstallningar = [
   start: "1949-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "169",
   namn: "Skulptur i natur",
@@ -1373,7 +1373,7 @@ const utstallningar = [
   start: "1952-03-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "172",
   namn: "Säkerhet i hemmet",
@@ -1389,7 +1389,7 @@ const utstallningar = [
   start: "1953-10-17",
   slut: "1953-11-01",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "174",
   namn: "Dockor",
@@ -1397,7 +1397,7 @@ const utstallningar = [
   start: "1953-11-08",
   slut: "1953-11-19",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "175",
   namn: "Moderna textilier",
@@ -1405,7 +1405,7 @@ const utstallningar = [
   start: "1953-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "176",
   namn: "Foton från fyra vänortsstäder",
@@ -1413,7 +1413,7 @@ const utstallningar = [
   start: "1953-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "177",
   namn: "Famla kartor",
@@ -1421,7 +1421,7 @@ const utstallningar = [
   start: "1953-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "178",
   namn: "Glassamlingarna",
@@ -1429,7 +1429,7 @@ const utstallningar = [
   start: "1954-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Borgarhuset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "179",
   namn: "Äldre målningar ur museets samlingar",
@@ -1437,7 +1437,7 @@ const utstallningar = [
   start: "1954-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "180",
   namn: "Stortorgsfynden med föremål från lundagrävningar",
@@ -1445,7 +1445,7 @@ const utstallningar = [
   start: "1954-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "181",
   namn: "Graficus",
@@ -1453,7 +1453,7 @@ const utstallningar = [
   start: "1955-03-27",
   slut: "1955-04-17",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "182",
   namn: "Allmogebonader",
@@ -1461,7 +1461,7 @@ const utstallningar = [
   start: "1955-mm-dd",
   slut: "1955-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "183",
   namn: "De äldsta förvärven (från 1882)",
@@ -1469,7 +1469,7 @@ const utstallningar = [
   start: "1955-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "184",
   namn: "Sydsvenskt folkligt måleri",
@@ -1477,7 +1477,7 @@ const utstallningar = [
   start: "1955-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "185",
   namn: "Peruansk keramik",
@@ -1501,7 +1501,7 @@ const utstallningar = [
   start: "1956-mm-dd",
   slut: "1956-mm-dd",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "188",
   namn: "Koppen genom tiderna",
@@ -1509,7 +1509,7 @@ const utstallningar = [
   start: "1956-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "189",
   namn: "Klassisk terrakotta",
@@ -1517,7 +1517,7 @@ const utstallningar = [
   start: "1956-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "190",
   namn: "Simontorpsutställningen",
@@ -1525,7 +1525,7 @@ const utstallningar = [
   start: "1956-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "191",
   namn: "De första förvärven i Huaröd och Simrishamn",
@@ -1533,7 +1533,7 @@ const utstallningar = [
   start: "1957-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "192",
   namn: "Vagnmakeri",
@@ -1541,7 +1541,7 @@ const utstallningar = [
   start: "1957-mm-dd",
   slut: "1957-mm-dd",
   lokal: "Weibullska huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "193",
   namn: "Ung grafik",
@@ -1573,7 +1573,7 @@ const utstallningar = [
   start: "1958-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "197",
   namn: "Juniormuseet",
@@ -1581,7 +1581,7 @@ const utstallningar = [
   start: "1959-06-dd",
   slut: "åååå-mm-dd",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "198",
   namn: "1809 års regeringsform: 150-årsjubileum",
@@ -1589,7 +1589,7 @@ const utstallningar = [
   start: "1959-11-16",
   slut: "1959-11-31",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "199",
   namn: "Oljetryck från farfars tid",
@@ -1597,7 +1597,7 @@ const utstallningar = [
   start: "1959-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "200",
   namn: "Nyförvärv",
@@ -1605,7 +1605,7 @@ const utstallningar = [
   start: "1959-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "201",
   namn: "Skånskt jordbruk",
@@ -1621,7 +1621,7 @@ const utstallningar = [
   start: "1960-01-01",
   slut: "2022-09-01",
   lokal: "Allmogehallen",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "203",
   namn: "Benkt-Åke Benktssons masker (etnografisk utställning)",
@@ -1629,7 +1629,7 @@ const utstallningar = [
   start: "1960-05-13",
   slut: "1961-mm-dd",
   lokal: "Kulturens Östarp (Östarpshallen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "204",
   namn: "Skånska souvenirer och gammal allmogeslöjd",
@@ -1637,7 +1637,7 @@ const utstallningar = [
   start: "1960-08-dd",
   slut: "1960-09-dd",
   lokal: "Kulturens Östarp (Östarpshallen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "205",
   namn: "Nordiska vävnader",
@@ -1645,7 +1645,7 @@ const utstallningar = [
   start: "1960-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Textilhallen",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "206",
   namn: "Keramik från Andersson & Johansson i Höganäs",
@@ -1653,7 +1653,7 @@ const utstallningar = [
   start: "1961-04-10",
   slut: "1961-07-02",
   lokal: "Kulturens Östarp (Östarpshallen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "207",
   namn: "Tidmätningens historia",
@@ -1661,7 +1661,7 @@ const utstallningar = [
   start: "1961-06-05",
   slut: "åååå-mm-dd",
   lokal: "Vita huset (andra våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "208",
   namn: "Egypten",
@@ -1669,7 +1669,7 @@ const utstallningar = [
   start: "1961-06-05",
   slut: "åååå-mm-dd",
   lokal: "Vita huset (andra våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "209",
   namn: "Trätäljareturnén",
@@ -1701,7 +1701,7 @@ const utstallningar = [
   start: "1961-09-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "213",
   namn: "Stormaktstidens boktryck",
@@ -1717,7 +1717,7 @@ const utstallningar = [
   start: "1961-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Vita huset (andra våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "215",
   namn: "Leksaksutställning",
@@ -1725,7 +1725,7 @@ const utstallningar = [
   start: "1961-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Vita huset (andra våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "216",
   namn: "Kulturens nyheter",
@@ -1733,7 +1733,7 @@ const utstallningar = [
   start: "1961-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "217",
   namn: "Svensk lag 1280–1962",
@@ -1765,7 +1765,7 @@ const utstallningar = [
   start: "1962-08-12",
   slut: "1962-09-30",
   lokal: "Kulturens Östarp (Östarpshallen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "221",
   namn: "Dukade bord",
@@ -1781,7 +1781,7 @@ const utstallningar = [
   start: "1962-mm-dd",
   slut: "1963-02-28",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "223",
   namn: "Glas och konst från Småland",
@@ -1797,7 +1797,7 @@ const utstallningar = [
   start: "1963-04-20",
   slut: "1963-05-06",
   lokal: "Vita huset (översta våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "225",
   namn: "Korgar och textilier",
@@ -1821,7 +1821,7 @@ const utstallningar = [
   start: "1963-06-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "228",
   namn: "Modern grafik",
@@ -1885,7 +1885,7 @@ const utstallningar = [
   start: "1965-04-02",
   slut: "1965-05-02",
   lokal: "I Svenska Handelsbankens lokaler vid Sergels torg",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "236",
   namn: "Gamla schattérsömmar",
@@ -1909,7 +1909,7 @@ const utstallningar = [
   start: "1965-10-01",
   slut: "1965-11-15",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "239",
   namn: "Skånsk stad – Lund, stadsmiljö i förvandling",
@@ -1925,7 +1925,7 @@ const utstallningar = [
   start: "1965-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Textilhallen",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "241",
   namn: "Jugendtextil på Kulturen, KSAL",
@@ -1933,7 +1933,7 @@ const utstallningar = [
   start: "1965-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Textilhallen",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "242",
   namn: "Att överleva",
@@ -1973,7 +1973,7 @@ const utstallningar = [
   start: "1966-05-15",
   slut: "åååå-mm-dd",
   lokal: "Textilhallen",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "247",
   namn: "En hundraårig museisamling",
@@ -1989,7 +1989,7 @@ const utstallningar = [
   start: "1966-07-15",
   slut: "åååå-mm-dd",
   lokal: "Vita huset (mellanvåningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "249",
   namn: "Exotiska dräkter (särskilt från Ostasien)",
@@ -2005,7 +2005,7 @@ const utstallningar = [
   start: "1966-10-17",
   slut: "åååå-mm-dd",
   lokal: "Vita huset, dessförinnan i Östarpshallen",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "251",
   namn: "Hur det var för 50 år sedan",
@@ -2013,7 +2013,7 @@ const utstallningar = [
   start: "1966-11-15",
   slut: "åååå-mm-dd",
   lokal: "Sparbanken i Lund",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "252",
   namn: "Nyförvärv 1966",
@@ -2021,7 +2021,7 @@ const utstallningar = [
   start: "1966-12-dd",
   slut: "1966-12-dd",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "253",
   namn: "Hilding Linnqvists gobelängkartonger",
@@ -2029,7 +2029,7 @@ const utstallningar = [
   start: "1966-mm-dd",
   slut: "1967-10-13",
   lokal: "Textilhallen",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "254",
   namn: "Skarpsinne och fantasti – Carl Adolph Agardh i Lund 1799-1835",
@@ -2037,7 +2037,7 @@ const utstallningar = [
   start: "1966-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "255",
   namn: "Myt och verklighet",
@@ -2053,7 +2053,7 @@ const utstallningar = [
   start: "1967-03-dd",
   slut: "1968-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "257",
   namn: "Textilier",
@@ -2069,7 +2069,7 @@ const utstallningar = [
   start: "1967-04-30",
   slut: "1967-10-01",
   lokal: "Kulturens Östarp (Östarpshallen), sedermera i Vita huset (start okt)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "259",
   namn: "Fantastiska spetsar (gjorda av Milcǎ Půhona-Erimiásǒvá från Prag)",
@@ -2077,7 +2077,7 @@ const utstallningar = [
   start: "1967-07-06",
   slut: "1967-09-dd",
   lokal: "Textilhallen",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "260",
   namn: "Så åkte vi",
@@ -2093,7 +2093,7 @@ const utstallningar = [
   start: "1967-09-30",
   slut: "åååå-mm-dd",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "262",
   namn: "Till Gaudi (fritt broderi för offentlig miljö, Ulla Schumacher-Percy)",
@@ -2101,7 +2101,7 @@ const utstallningar = [
   start: "1967-10-13",
   slut: "åååå-mm-dd",
   lokal: "Textilhallen",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "263",
   namn: "Gammal mässing",
@@ -2109,7 +2109,7 @@ const utstallningar = [
   start: "1967-10-dd",
   slut: "åååå-mm-dd",
   lokal: "Vita huset, dessförinnan i Östarpshallen",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "264",
   namn: "Hantverk under 120 år",
@@ -2133,7 +2133,7 @@ const utstallningar = [
   start: "1967-mm-dd",
   slut: "1967-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "267",
   namn: "Fajanser från Sölvesborg 1773–1798",
@@ -2149,7 +2149,7 @@ const utstallningar = [
   start: "1967-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "269",
   namn: "Hantverksutställning",
@@ -2157,7 +2157,7 @@ const utstallningar = [
   start: "1967-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Schlyterska huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "270",
   namn: "Dynor och täcken",
@@ -2189,7 +2189,7 @@ const utstallningar = [
   start: "1967-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Vita huset (översta våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "274",
   namn: "Bengt Nodenberg",
@@ -2197,7 +2197,7 @@ const utstallningar = [
   start: "1968-02-17",
   slut: "åååå-mm-dd",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "275",
   namn: "Linjer i modet – mannekänguppvisning",
@@ -2229,7 +2229,7 @@ const utstallningar = [
   start: "1968-04-30",
   slut: "1968-10-01",
   lokal: "Kulturens Östarp (Östarpshallen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "279",
   namn: "Damast 1590–1950",
@@ -2237,7 +2237,7 @@ const utstallningar = [
   start: "1968-05-24",
   slut: "1968-08-05",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "280",
   namn: "Lärde lärare",
@@ -2261,7 +2261,7 @@ const utstallningar = [
   start: "1968-09-21",
   slut: "1968-11-15",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "283",
   namn: "Franska barn- och ungdomsböcker",
@@ -2269,7 +2269,7 @@ const utstallningar = [
   start: "1968-11-15",
   slut: "1969-01-06",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "284",
   namn: "Brunnsholk av urholkad ekstam",
@@ -2309,7 +2309,7 @@ const utstallningar = [
   start: "1969-05-01",
   slut: "1969-10-01",
   lokal: "Kulturens Östarp (Östarpshallen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "289",
   namn: "Hemslöjdsalster",
@@ -2341,7 +2341,7 @@ const utstallningar = [
   start: "1969-06-11",
   slut: "1969-09-14",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "293",
   namn: "Den stora Schmitzska keramikutställningen",
@@ -2365,7 +2365,7 @@ const utstallningar = [
   start: "1970-04-20",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "296",
   namn: "Martin Åkessons djur",
@@ -2389,7 +2389,7 @@ const utstallningar = [
   start: "1970-05-20",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "299",
   namn: "Skånskt silver från dansk tid",
@@ -2421,7 +2421,7 @@ const utstallningar = [
   start: "1970-mm-dd",
   slut: "1971-mm-dd",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "303",
   namn: "Konstnären Åke Waldemar Larssons 22 gouacher över kv. Svartbröder",
@@ -2437,7 +2437,7 @@ const utstallningar = [
   start: "1970-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Textilhallen",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "305",
   namn: "Slaget vid Lützen",
@@ -2445,7 +2445,7 @@ const utstallningar = [
   start: "1970-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "306",
   namn: "C. F. Hills målningar och teckningar",
@@ -2461,7 +2461,7 @@ const utstallningar = [
   start: "1971-05-01",
   slut: "1971-10-03",
   lokal: "Kulturens Östarp (Östarpshallen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "308",
   namn: "Hemslöjdsartiklar",
@@ -2493,7 +2493,7 @@ const utstallningar = [
   start: "1971-11-dd",
   slut: "åååå-mm-dd",
   lokal: "Herrehuset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "312",
   namn: "Skolslöjden under 100 år",
@@ -2501,7 +2501,7 @@ const utstallningar = [
   start: "1971-mm-dd",
   slut: "1971-mm-dd",
   lokal: "Textilhallen",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "313",
   namn: "Myntskatten från Skomakaregatan",
@@ -2509,7 +2509,7 @@ const utstallningar = [
   start: "1971-mm-dd",
   slut: "1971-mm-dd",
   lokal: "Herrehuset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "314",
   namn: "Teckningsundervisningens historia",
@@ -2517,7 +2517,7 @@ const utstallningar = [
   start: "1972-01-18",
   slut: "1972-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "315",
   namn: "Östra Torn – miljö i förvandling",
@@ -2549,7 +2549,7 @@ const utstallningar = [
   start: "1972-06-08",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "319",
   namn: "Leve bokskogen",
@@ -2597,7 +2597,7 @@ const utstallningar = [
   start: "1973-03-05",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "325",
   namn: "Kinesiskt porslin i strålande färg",
@@ -2613,7 +2613,7 @@ const utstallningar = [
   start: "1973-05-01",
   slut: "1973-10-01",
   lokal: "Kulturens Östarp (Östarpshallen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "327",
   namn: "Hemslöjdsalster",
@@ -2653,7 +2653,7 @@ const utstallningar = [
   start: "1973-08-02",
   slut: "åååå-mm-dd",
   lokal: "Vita huset, Medeltidshallen",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "332",
   namn: "Polismössor från hela världen",
@@ -2677,7 +2677,7 @@ const utstallningar = [
   start: "1973-12-dd",
   slut: "1973-12-dd",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "335",
   namn: "Hantverkshuset",
@@ -2685,7 +2685,7 @@ const utstallningar = [
   start: "1973-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Schlyterska huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "336",
   namn: "Gamla ting kring mat och dryck",
@@ -2693,7 +2693,7 @@ const utstallningar = [
   start: "1973-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Borgarhuset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "337",
   namn: "Allmogetextilier",
@@ -2701,7 +2701,7 @@ const utstallningar = [
   start: "1973-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Textilhallen (andra våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "338",
   namn: "Så klädde vi oss",
@@ -2717,7 +2717,7 @@ const utstallningar = [
   start: "1973-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Textilhallen (övre våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "340",
   namn: "Litografier av konstnären och grafikern Denis Gelotte",
@@ -2741,7 +2741,7 @@ const utstallningar = [
   start: "1974-05-01",
   slut: "1974-09-30",
   lokal: "Kulturens Östarp (Östarpshallen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "343",
   namn: "Hemslöjdsartiklar",
@@ -2757,7 +2757,7 @@ const utstallningar = [
   start: "1974-09-11",
   slut: "1976-03-07",
   lokal: "Herrehuset (mellanvåningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "345",
   namn: "Nils Månsson Mandelgren – fältforskare, resenär",
@@ -2789,7 +2789,7 @@ const utstallningar = [
   start: "1974-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Herrehuset (översta våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "349",
   namn: "Dagligt bröd och överflöd",
@@ -2813,7 +2813,7 @@ const utstallningar = [
   start: "1974-mm-dd",
   slut: "1977-mm-dd",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "352",
   namn: "Sängutrusning från 1600-talet och framåt",
@@ -2821,7 +2821,7 @@ const utstallningar = [
   start: "1974-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Textilhallen (entréplan)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "353",
   namn: "Kontinentaldrift",
@@ -2845,7 +2845,7 @@ const utstallningar = [
   start: "1975-05-01",
   slut: "1975-09-30",
   lokal: "Kulturens Östarp (Östarpshallen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "356",
   namn: "Hemslöjdsartiklar",
@@ -2869,7 +2869,7 @@ const utstallningar = [
   start: "1975-mm-dd",
   slut: "1976-01-dd",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "359",
   namn: "Bondens hushåll",
@@ -2885,7 +2885,7 @@ const utstallningar = [
   start: "1975-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Textilhallen (entrén)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "361",
   namn: "Fornamerikans keramik",
@@ -2893,7 +2893,7 @@ const utstallningar = [
   start: "1975-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Vita huset (mellanvåningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "362",
   namn: "Sydsvenskt lergods",
@@ -2901,7 +2901,7 @@ const utstallningar = [
   start: "1975-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Vita huset (översta våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "363",
   namn: "Konst från alla världsdelar",
@@ -2909,7 +2909,7 @@ const utstallningar = [
   start: "1976-02-11",
   slut: "1976-03-21",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "364",
   namn: "Lunds Arbetarkommun 75 år",
@@ -2925,7 +2925,7 @@ const utstallningar = [
   start: "1976-05-01",
   slut: "1976-09-30",
   lokal: "Kulturens Östarp (Östarpshallen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "366",
   namn: "Hemslöjdsartiklar",
@@ -2941,7 +2941,7 @@ const utstallningar = [
   start: "1976-05-13",
   slut: "åååå-mm-dd",
   lokal: "Textilhallen",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "368",
   namn: "GAN – Gösta Adrian-Nilsson",
@@ -2949,7 +2949,7 @@ const utstallningar = [
   start: "1976-06-dd",
   slut: "1977-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "369",
   namn: "Byastämman",
@@ -2957,7 +2957,7 @@ const utstallningar = [
   start: "1976-06-dd",
   slut: "åååå-mm-dd",
   lokal: "Allmogehallen",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "370",
   namn: "Keramik 1000–1600",
@@ -2965,7 +2965,7 @@ const utstallningar = [
   start: "1976-10-07",
   slut: "1977-04-dd",
   lokal: "Vita huset (tredje våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "371",
   namn: "Solfjädrar",
@@ -2973,7 +2973,7 @@ const utstallningar = [
   start: "1976-11-dd",
   slut: "1977-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "372",
   namn: "Broderier",
@@ -2981,7 +2981,7 @@ const utstallningar = [
   start: "1976-11-dd",
   slut: "1977-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "373",
   namn: "Oljetryck ur Kulturens samlingar",
@@ -3005,7 +3005,7 @@ const utstallningar = [
   start: "1977-01-dd",
   slut: "åååå-mm-dd",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "376",
   namn: "Vagnar och vagnmakeri",
@@ -3029,7 +3029,7 @@ const utstallningar = [
   start: "1977-06-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "379",
   namn: "Skolutställning: I museets verkstad",
@@ -3037,7 +3037,7 @@ const utstallningar = [
   start: "1977-06-dd",
   slut: "1978-mm-dd",
   lokal: "Lindforska huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "380",
   namn: "Känn på keramik",
@@ -3077,7 +3077,7 @@ const utstallningar = [
   start: "1977-11-dd",
   slut: "åååå-mm-dd",
   lokal: "På banklokal i Lund",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "385",
   namn: "Kinesiska akvareller",
@@ -3085,7 +3085,7 @@ const utstallningar = [
   start: "1978-02-03",
   slut: "1978-07-12",
   lokal: "Weibullska huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "386",
   namn: "Mäta-Rita-Rikta",
@@ -3101,7 +3101,7 @@ const utstallningar = [
   start: "1978-04-21",
   slut: "åååå-mm-dd",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "388",
   namn: "Hantverk på landet",
@@ -3109,7 +3109,7 @@ const utstallningar = [
   start: "1978-05-01",
   slut: "1978-09-30",
   lokal: "Kulturens Östarp (Östarpshallen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "389",
   namn: "Flintgods",
@@ -3117,7 +3117,7 @@ const utstallningar = [
   start: "1978-05-05",
   slut: "1978-10-29",
   lokal: "Weibullska huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "390",
   namn: "Lunds bryggeri – skolutställning",
@@ -3125,7 +3125,7 @@ const utstallningar = [
   start: "1978-05-29",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "391",
   namn: "Oljetryck – älskade bilder",
@@ -3133,7 +3133,7 @@ const utstallningar = [
   start: "1978-10-20",
   slut: "1979-01-15",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "392",
   namn: "Bilden på tallriken",
@@ -3141,7 +3141,7 @@ const utstallningar = [
   start: "1978-11-19",
   slut: "åååå-mm-dd",
   lokal: "Weibullska huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "393",
   namn: "Julseder",
@@ -3149,7 +3149,7 @@ const utstallningar = [
   start: "1978-12-10",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "394",
   namn: "Bilen – det onda och det goda",
@@ -3165,7 +3165,7 @@ const utstallningar = [
   start: "1979-02-28",
   slut: "åååå-mm-dd",
   lokal: "Vita huset (andra våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "396",
   namn: "Jean Eric Rehn tecknar",
@@ -3197,7 +3197,7 @@ const utstallningar = [
   start: "1979-06-09",
   slut: "1979-07-08",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "400",
   namn: "Åke Holm – 50 år som keramiker",
@@ -3205,7 +3205,7 @@ const utstallningar = [
   start: "1979-07-20",
   slut: "1979-11-04",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "401",
   namn: "Gud skapade – Linné ordnade",
@@ -3221,7 +3221,7 @@ const utstallningar = [
   start: "1979-09-27",
   slut: "1979-10-14",
   lokal: "Lindforska huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "403",
   namn: "Vetenskapliga instrument",
@@ -3229,7 +3229,7 @@ const utstallningar = [
   start: "1979-11-10",
   slut: "1980-01-07",
   lokal: "Lindforska huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "404",
   namn: "Jens Nielsens bondgård",
@@ -3245,7 +3245,7 @@ const utstallningar = [
   start: "1980-01-19",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "406",
   namn: "En lifvad påsk",
@@ -3253,7 +3253,7 @@ const utstallningar = [
   start: "1980-03-07",
   slut: "1980-04-13",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "407",
   namn: "Tvåändsstickning",
@@ -3277,7 +3277,7 @@ const utstallningar = [
   start: "1980-06-12",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "410",
   namn: "Skånska textilier",
@@ -3285,7 +3285,7 @@ const utstallningar = [
   start: "1980-06-dd",
   slut: "1980-06-dd",
   lokal: "På Västerås stadsbibliotek",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "411",
   namn: "Haven – en skånsk allmogeträdgård",
@@ -3341,7 +3341,7 @@ const utstallningar = [
   start: "1980-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "418",
   namn: "En lifvad påsk",
@@ -3349,7 +3349,7 @@ const utstallningar = [
   start: "1981-03-16",
   slut: "1981-04-20",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "419",
   namn: "Klut, särk, strumpa",
@@ -3397,7 +3397,7 @@ const utstallningar = [
   start: "1981-11-29",
   slut: "1982-01-06",
   lokal: "Allmogehallen (Skyttsstugan och Mäsingestugan)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "425",
   namn: "Stjärnan, granen, tomten och klappen",
@@ -3405,7 +3405,7 @@ const utstallningar = [
   start: "1981-11-29",
   slut: "1982-01-06",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "426",
   namn: "Leksaker som barnen gjorde förr",
@@ -3437,7 +3437,7 @@ const utstallningar = [
   start: "1982-03-01",
   slut: "1982-04-12",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "430",
   namn: "Bildvävar av Kirsten Hennix",
@@ -3445,7 +3445,7 @@ const utstallningar = [
   start: "1982-04-01",
   slut: "1982-05-02",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "431",
   namn: "Eva Sjögren – keramiker i lergods och porslin",
@@ -3453,7 +3453,7 @@ const utstallningar = [
   start: "1982-04-15",
   slut: "1982-08-15",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "432",
   namn: "Målat och ommålat",
@@ -3501,7 +3501,7 @@ const utstallningar = [
   start: "1982-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "438",
   namn: "En lifvad påsk",
@@ -3509,7 +3509,7 @@ const utstallningar = [
   start: "1983-03-01",
   slut: "1983-04-04",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "439",
   namn: "Renoveringsobjekt",
@@ -3533,7 +3533,7 @@ const utstallningar = [
   start: "1983-05-01",
   slut: "1983-09-30",
   lokal: "Kulturens Östarp (Östarpshallen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "442",
   namn: "Opplötar och särkar från Skåne",
@@ -3589,7 +3589,7 @@ const utstallningar = [
   start: "1984-05-01",
   slut: "1984-09-30",
   lokal: "Kulturens Östarp (Östarpshallen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "449",
   namn: "Garn – stickat – bok",
@@ -3645,7 +3645,7 @@ const utstallningar = [
   start: "1985-01-13",
   slut: "1985-03-10",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "456",
   namn: "En lifvad påsk",
@@ -3653,7 +3653,7 @@ const utstallningar = [
   start: "1985-03-11",
   slut: "1985-04-08",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "457",
   namn: "Av Skånes lera",
@@ -3677,7 +3677,7 @@ const utstallningar = [
   start: "1985-05-10",
   slut: "1985-06-09",
   lokal: "Textilhallen",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "460",
   namn: "Kungagåvan 1095",
@@ -3709,7 +3709,7 @@ const utstallningar = [
   start: "1985-09-29",
   slut: "1985-11-24",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "464",
   namn: "Carl Adolph Agardh – skarpsinne och fantasi",
@@ -3725,7 +3725,7 @@ const utstallningar = [
   start: "1985-11-30",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "466",
   namn: "Sven T. Kjellberg – en kulturhistorikers lek med pennan",
@@ -3893,7 +3893,7 @@ const utstallningar = [
   start: "1987-11-08",
   slut: "1988-02-14",
   lokal: "Lindforska huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "487",
   namn: "Ateljé Larsen",
@@ -3901,7 +3901,7 @@ const utstallningar = [
   start: "1987-12-13",
   slut: "1988-02-25",
   lokal: "Vita huset (tredje våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "488",
   namn: "Kulturimpuls!",
@@ -3917,7 +3917,7 @@ const utstallningar = [
   start: "1988-03-13",
   slut: "1988-04-04",
   lokal: "Lindforska huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "490",
   namn: "Lundagårdstecknare 1920–1988",
@@ -3925,7 +3925,7 @@ const utstallningar = [
   start: "1988-04-10",
   slut: "1988-05-08",
   lokal: "Lindforska huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "491",
   namn: "Prinsessan Eugénie – bilder från en glömd värld",
@@ -3933,7 +3933,7 @@ const utstallningar = [
   start: "1988-04-17",
   slut: "åååå-mm-dd",
   lokal: "Vita huset (tredje våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "492",
   namn: "Bondens bot – om folklig läkekonst",
@@ -3941,7 +3941,7 @@ const utstallningar = [
   start: "1988-05-01",
   slut: "1988-09-30",
   lokal: "Kulturens Östarp (Östarpshallen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "493",
   namn: "Nyupptäckta kalkmålningar i Vombs kyrka",
@@ -3957,7 +3957,7 @@ const utstallningar = [
   start: "1988-05-29",
   slut: "åååå-mm-dd",
   lokal: "Lindforska huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "495",
   namn: "Femton skånska guldsmeder",
@@ -3965,7 +3965,7 @@ const utstallningar = [
   start: "1988-08-07",
   slut: "åååå-mm-dd",
   lokal: "Vita huset (tredje våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "496",
   namn: "Arbetare i Lund för 100 år sedan – typograferna",
@@ -3973,7 +3973,7 @@ const utstallningar = [
   start: "1988-11-22",
   slut: "1989-09-30",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "497",
   namn: "Inspiration och förnyelse – om Carl Malmsten",
@@ -3981,7 +3981,7 @@ const utstallningar = [
   start: "1988-mm-dd",
   slut: "1989-02-05",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "498",
   namn: "Papua Nya Guinea – traditionell konst och traditionellt liv",
@@ -3989,7 +3989,7 @@ const utstallningar = [
   start: "1989-01-15",
   slut: "1989-02-26",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "499",
   namn: "Bondens barn",
@@ -3997,7 +3997,7 @@ const utstallningar = [
   start: "1989-05-01",
   slut: "1989-08-31",
   lokal: "Kulturens Östarp (Östarpshallen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "500",
   namn: "Hemma i konsten – svenska hem i konstnärsögon",
@@ -4021,7 +4021,7 @@ const utstallningar = [
   start: "1989-08-19",
   slut: "1989-09-24",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "503",
   namn: "Lapptäcken",
@@ -4037,7 +4037,7 @@ const utstallningar = [
   start: "1989-09-30",
   slut: "1989-10-29",
   lokal: "Lindforska huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "505",
   namn: "Målningarnas anatomi – material, teknik, bevaring och förfalskning",
@@ -4045,7 +4045,7 @@ const utstallningar = [
   start: "1989-10-08",
   slut: "1990-01-07",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "506",
   namn: "Brev och frimärken",
@@ -4053,7 +4053,7 @@ const utstallningar = [
   start: "1989-11-04",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "507",
   namn: "Julutställning",
@@ -4061,7 +4061,7 @@ const utstallningar = [
   start: "1989-11-26",
   slut: "1990-01-06",
   lokal: "Lindforska huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "508",
   namn: "Skomode under 3 000 år",
@@ -4085,7 +4085,7 @@ const utstallningar = [
   start: "1990-03-18",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "511",
   namn: "Kulturlandskapet",
@@ -4093,7 +4093,7 @@ const utstallningar = [
   start: "1990-05-01",
   slut: "1990-08-31",
   lokal: "Kulturens Östarp (Östarpshallen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "512",
   namn: "Wiwen Nilsson",
@@ -4101,7 +4101,7 @@ const utstallningar = [
   start: "1990-06-17",
   slut: "1990-08-26",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "513",
   namn: "Djuret i broderiet",
@@ -4117,7 +4117,7 @@ const utstallningar = [
   start: "1990-09-30",
   slut: "1990-10-21",
   lokal: "Lindforska huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "515",
   namn: "I glas och lust – Bertil Vallien och Ulrika Hydman-Vallien",
@@ -4125,7 +4125,7 @@ const utstallningar = [
   start: "1990-10-14",
   slut: "1991-01-06",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "516",
   namn: "Estland och Sverige – historiska skatter",
@@ -4141,7 +4141,7 @@ const utstallningar = [
   start: "1990-10-27",
   slut: "1990-11-11",
   lokal: "Lindforska huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "518",
   namn: "Ansikten är också historia",
@@ -4157,7 +4157,7 @@ const utstallningar = [
   start: "1990-11-25",
   slut: "1991-01-06",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "520",
   namn: "Nordiskt ljus vid sjön Racken",
@@ -4165,7 +4165,7 @@ const utstallningar = [
   start: "1991-02-03",
   slut: "1991-04-14",
   lokal: "Vita huset (tredje våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "521",
   namn: "Johannes Collin",
@@ -4181,7 +4181,7 @@ const utstallningar = [
   start: "1991-02-10",
   slut: "1991-04-01",
   lokal: "Wahlbomska huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "523",
   namn: "Ur en lundaprofessors bouppteckning 1668",
@@ -4189,7 +4189,7 @@ const utstallningar = [
   start: "1991-02-17",
   slut: "1991-04-01",
   lokal: "Borgarhuset (Hornsbergssalen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "524",
   namn: "Nils Ferlins sätt att skapa",
@@ -4205,7 +4205,7 @@ const utstallningar = [
   start: "1991-04-06",
   slut: "1991-08-11",
   lokal: "Lindforska huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "526",
   namn: "Kulturlandskapet",
@@ -4213,7 +4213,7 @@ const utstallningar = [
   start: "1991-05-01",
   slut: "1991-08-31",
   lokal: "Kulturens Östarp (Östarpshallen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "527",
   namn: "Dosor dosor dosor",
@@ -4229,7 +4229,7 @@ const utstallningar = [
   start: "1991-09-07",
   slut: "1991-09-08",
   lokal: "Kulturens Östarp",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "529",
   namn: "Broderiskatter i rött och blått",
@@ -4253,7 +4253,7 @@ const utstallningar = [
   start: "1991-10-05",
   slut: "1991-11-03",
   lokal: "Wahlbomska huset (andra våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "532",
   namn: "Fajanserna kring Östersjön",
@@ -4261,7 +4261,7 @@ const utstallningar = [
   start: "1991-10-20",
   slut: "1992-03-01",
   lokal: "Vita huset (tredje våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "533",
   namn: "Från Anders till Knut",
@@ -4277,7 +4277,7 @@ const utstallningar = [
   start: "1991-mm-dd",
   slut: "1991-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "535",
   namn: "100 år men full av liv – skolelevers förslag till jubileumsaffisch",
@@ -4293,7 +4293,7 @@ const utstallningar = [
   start: "1992-03-09",
   slut: "1992-04-26",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "537",
   namn: "En vikingatida handelsstad i Polen – Wolin-Jomsburg",
@@ -4301,7 +4301,7 @@ const utstallningar = [
   start: "1992-03-15",
   slut: "1992-05-17",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "538",
   namn: "Bondens landskap",
@@ -4309,7 +4309,7 @@ const utstallningar = [
   start: "1992-05-01",
   slut: "1992-09-30",
   lokal: "Kulturens Östarp",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "539",
   namn: "Bygd och marknad",
@@ -4317,7 +4317,7 @@ const utstallningar = [
   start: "1992-05-01",
   slut: "1992-09-30",
   lokal: "Kulturens Östarp",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "540",
   namn: "I huvet på en ung student – Kulturens födelse",
@@ -4325,7 +4325,7 @@ const utstallningar = [
   start: "1992-05-10",
   slut: "1992-09-13",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "541",
   namn: "Ökenstämning och skön Anna – konstslöjdanstalten 1897–1933",
@@ -4333,7 +4333,7 @@ const utstallningar = [
   start: "1992-05-30",
   slut: "åååå-mm-dd",
   lokal: "Textilhallen",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "542",
   namn: "Lettland och Sverige – arkivskatter från Riga",
@@ -4341,7 +4341,7 @@ const utstallningar = [
   start: "1992-09-27",
   slut: "1992-10-18",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "543",
   namn: "Isskåp, kommod och fotogenlampa – att leva i Lund för 100 år sedan",
@@ -4349,7 +4349,7 @@ const utstallningar = [
   start: "1992-10-04",
   slut: "1993-01-06",
   lokal: "Lindforska huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "544",
   namn: "Ulrica Fredrica Pasch 1735–1796",
@@ -4357,7 +4357,7 @@ const utstallningar = [
   start: "1992-10-18",
   slut: "1993-01-06",
   lokal: "Vita huset (tredje våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "545",
   namn: "Julutställning",
@@ -4365,7 +4365,7 @@ const utstallningar = [
   start: "1992-11-22",
   slut: "1993-01-06",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "546",
   namn: "Lund efter 1658 – etapp 1",
@@ -4381,7 +4381,7 @@ const utstallningar = [
   start: "1992-12-13",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "548",
   namn: "Ola Terje. Med vänd kikare – byggen i skala",
@@ -4389,7 +4389,7 @@ const utstallningar = [
   start: "1993-02-14",
   slut: "1993-04-12",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "549",
   namn: "En lifvad påsk",
@@ -4397,7 +4397,7 @@ const utstallningar = [
   start: "1993-03-14",
   slut: "1993-04-12",
   lokal: "Lindforska huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "550",
   namn: "Lund efter 1658",
@@ -4405,7 +4405,7 @@ const utstallningar = [
   start: "1993-03-21",
   slut: "åååå-mm-dd",
   lokal: "Wahlbomska huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "551",
   namn: "Skåne mellan Danmark och Sverie",
@@ -4413,7 +4413,7 @@ const utstallningar = [
   start: "1993-03-21",
   slut: "1993-04-12",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "552",
   namn: "Röda stugor – fritt broderi. Ulla Nordin.",
@@ -4421,7 +4421,7 @@ const utstallningar = [
   start: "1993-04-06",
   slut: "1993-05-16",
   lokal: "Vita huset (andra våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "553",
   namn: "TRÄD som TRÄ",
@@ -4437,7 +4437,7 @@ const utstallningar = [
   start: "1993-05-13",
   slut: "1993-10-03",
   lokal: "Vita huset (tredje våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "555",
   namn: "Vardagsbilder från svenskt 1700-tal",
@@ -4477,7 +4477,7 @@ const utstallningar = [
   start: "1993-09-04",
   slut: "1993-09-05",
   lokal: "Kulturens Östarp",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "560",
   namn: "Nära Linné",
@@ -4493,7 +4493,7 @@ const utstallningar = [
   start: "1993-10-17",
   slut: "1994-01-06",
   lokal: "Vita huset (tredje våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "562",
   namn: "Lund efter 1658 – etapp 2",
@@ -4501,7 +4501,7 @@ const utstallningar = [
   start: "1993-10-28",
   slut: "åååå-mm-dd",
   lokal: "Wahlbomska huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "563",
   namn: "Livets träd i vargens käft",
@@ -4509,7 +4509,7 @@ const utstallningar = [
   start: "1994-01-16",
   slut: "1994-02-27",
   lokal: "Vita huset (tredje våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "564",
   namn: "Kraften tar form – barns arbete i lerverkstad",
@@ -4517,7 +4517,7 @@ const utstallningar = [
   start: "1994-01-23",
   slut: "1994-02-27",
   lokal: "Lindforska huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "565",
   namn: "En lifvad påsk",
@@ -4525,7 +4525,7 @@ const utstallningar = [
   start: "1994-03-06",
   slut: "1994-04-04",
   lokal: "Lindforska huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "566",
   namn: "Min bild av Kulturen",
@@ -4541,7 +4541,7 @@ const utstallningar = [
   start: "1994-04-21",
   slut: "1994-05-23",
   lokal: "Vita huset (tredje våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "568",
   namn: "Masker – andra världar",
@@ -4557,7 +4557,7 @@ const utstallningar = [
   start: "1994-05-01",
   slut: "1994-07-31",
   lokal: "Kulturens Östarp",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "570",
   namn: "IKEA:s 1700-tal",
@@ -4573,7 +4573,7 @@ const utstallningar = [
   start: "1994-08-02",
   slut: "1994-09-04",
   lokal: "Kulturens Östarp",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "572",
   namn: "All världens broderier",
@@ -4589,7 +4589,7 @@ const utstallningar = [
   start: "1994-08-28",
   slut: "åååå-mm-dd",
   lokal: "Friluftsmuseet",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "574",
   namn: "Kulturens djur under Karlins tid – fotoutställning",
@@ -4605,7 +4605,7 @@ const utstallningar = [
   start: "1994-10-02",
   slut: "1995-01-06",
   lokal: "Lindforska huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "576",
   namn: "Julinteriörer",
@@ -4613,7 +4613,7 @@ const utstallningar = [
   start: "1994-11-14",
   slut: "1995-01-06",
   lokal: "Västra Vrams prästgård, Thomanderska huset, Dekanhuset, Arbetarbostaden",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "577",
   namn: "Arkitekternas hus",
@@ -4621,7 +4621,7 @@ const utstallningar = [
   start: "1994-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Friluftsmuseet",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "578",
   namn: "Livsstilar – fotoutställning",
@@ -4645,7 +4645,7 @@ const utstallningar = [
   start: "1995-02-12",
   slut: "1995-03-12",
   lokal: "Lindforska huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "581",
   namn: "En lifvad påsk",
@@ -4653,7 +4653,7 @@ const utstallningar = [
   start: "1995-03-20",
   slut: "1995-04-17",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "582",
   namn: "Ull tar gull – Unn Søiland Dale, norsk designer",
@@ -4661,7 +4661,7 @@ const utstallningar = [
   start: "1995-05-17",
   slut: "1995-08-13",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "583",
   namn: "Bokkulturen – från A till Ö",
@@ -4685,7 +4685,7 @@ const utstallningar = [
   start: "1995-09-02",
   slut: "2004-10-01",
   lokal: "Vita huset (andra våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "586",
   namn: "Vita husets historia",
@@ -4693,7 +4693,7 @@ const utstallningar = [
   start: "1995-09-02",
   slut: "1995-09-24",
   lokal: "Vita huset (andra våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "587",
   namn: "Domkyrkobilder av Britt Lundbohm Reuterswärd",
@@ -4701,7 +4701,7 @@ const utstallningar = [
   start: "1995-09-02",
   slut: "1995-09-17",
   lokal: "Dekanhuset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "588",
   namn: "Staden – installationer av Anna-Karin Bylund",
@@ -4709,7 +4709,7 @@ const utstallningar = [
   start: "1995-09-02",
   slut: "åååå-mm-dd",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "589",
   namn: "Heligheter – installationer av kyrklig konst",
@@ -4717,7 +4717,7 @@ const utstallningar = [
   start: "1995-09-02",
   slut: "åååå-mm-dd",
   lokal: "Vita huset (första våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "590",
   namn: "Folkets part 100 år",
@@ -4725,7 +4725,7 @@ const utstallningar = [
   start: "1995-10-01",
   slut: "1995-10-20",
   lokal: "Vita huset (andra våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "591",
   namn: "Den väg som bjudits dig att vandra – röster om judisk kultur",
@@ -4733,7 +4733,7 @@ const utstallningar = [
   start: "1995-10-22",
   slut: "1997-05-04",
   lokal: "Vita huset (tredje våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "592",
   namn: "Hamlet av Mrozek/Ploski",
@@ -4741,7 +4741,7 @@ const utstallningar = [
   start: "1995-10-29",
   slut: "1995-11-17",
   lokal: "Vita huset (andra våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "593",
   namn: "Theresienstadt – kultur och barbari",
@@ -4749,7 +4749,7 @@ const utstallningar = [
   start: "1995-11-12",
   slut: "åååå-mm-dd",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "594",
   namn: "Broderiakademien",
@@ -4757,7 +4757,7 @@ const utstallningar = [
   start: "1995-11-18",
   slut: "1995-11-24",
   lokal: "Vita huset (andra våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "595",
   namn: "Runor – om stenar på landet och klotter i stan",
@@ -4765,7 +4765,7 @@ const utstallningar = [
   start: "1996-05-01",
   slut: "1996-09-01",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "596",
   namn: "Ordvision Smygtittar",
@@ -4781,7 +4781,7 @@ const utstallningar = [
   start: "1996-05-19",
   slut: "1996-05-30",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "598",
   namn: "Sörby gård – i teori och praktik",
@@ -4789,7 +4789,7 @@ const utstallningar = [
   start: "1996-06-02",
   slut: "1996-08-11",
   lokal: "Vita huset (första våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "599",
   namn: "Rosenlängtan",
@@ -4797,7 +4797,7 @@ const utstallningar = [
   start: "1996-06-06",
   slut: "1996-08-15",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "600",
   namn: "Introduktion till Frilandsmuseet i Köpenhamn",
@@ -4805,7 +4805,7 @@ const utstallningar = [
   start: "1996-08-18",
   slut: "1996-09-01",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "601",
   namn: "Sinnenas rum",
@@ -4813,7 +4813,7 @@ const utstallningar = [
   start: "1996-09-01",
   slut: "1996-09-26",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "602",
   namn: "Klädd och oklädd",
@@ -4821,7 +4821,7 @@ const utstallningar = [
   start: "1996-09-15",
   slut: "1996-11-17",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "603",
   namn: "Att åka tåg – lundarallarna",
@@ -4829,7 +4829,7 @@ const utstallningar = [
   start: "1996-09-28",
   slut: "1996-10-06",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "604",
   namn: "Grönsaksutställning (utomhus för barn)",
@@ -4837,7 +4837,7 @@ const utstallningar = [
   start: "1996-10-06",
   slut: "åååå-mm-dd",
   lokal: "Utomhus",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "605",
   namn: "Liv på Kulturen",
@@ -4845,7 +4845,7 @@ const utstallningar = [
   start: "1996-10-08",
   slut: "1996-10-27",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "606",
   namn: "Masker av Eva Härstedt",
@@ -4853,7 +4853,7 @@ const utstallningar = [
   start: "1996-10-29",
   slut: "1996-11-10",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "607",
   namn: "Svenska namn i USA",
@@ -4861,7 +4861,7 @@ const utstallningar = [
   start: "1996-11-17",
   slut: "åååå-mm-dd",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "608",
   namn: "Absalon och hans städer. Roskilde Lund Köpenhamn",
@@ -4869,7 +4869,7 @@ const utstallningar = [
   start: "1996-12-06",
   slut: "1997-04-06",
   lokal: "Drottens kyrkoruin",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "609",
   namn: "Svenskare än Sverige",
@@ -4877,7 +4877,7 @@ const utstallningar = [
   start: "1996-12-19",
   slut: "1997-05-04",
   lokal: "Lundahallen",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "610",
   namn: "Skatter i kyrkan",
@@ -4901,7 +4901,7 @@ const utstallningar = [
   start: "1997-02-23",
   slut: "1997-10-05",
   lokal: "Vita huset (första våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "613",
   namn: "Främlingen – dröm eller hot",
@@ -4909,7 +4909,7 @@ const utstallningar = [
   start: "1997-03-02",
   slut: "1997-06-01",
   lokal: "Vita huset (tredje våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "614",
   namn: "Slå katten ur tunnan och se solen dansa!",
@@ -4917,7 +4917,7 @@ const utstallningar = [
   start: "1997-03-04",
   slut: "1997-03-31",
   lokal: "Vita huset (Trädgårdsrummet)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "615",
   namn: "Barnröster från Theresienstadt",
@@ -4925,7 +4925,7 @@ const utstallningar = [
   start: "1997-03-09",
   slut: "åååå-mm-dd",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "616",
   namn: "Barnasinnet – lin, trä, ull",
@@ -4933,7 +4933,7 @@ const utstallningar = [
   start: "1997-04-01",
   slut: "1997-04-30",
   lokal: "Lekloftet med gård",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "617",
   namn: "Universitetsmuseet",
@@ -4941,7 +4941,7 @@ const utstallningar = [
   start: "1997-04-26",
   slut: "2018-03-18",
   lokal: "Lindforska huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "618",
   namn: "Poesi på Kulturen – fotoutställning",
@@ -4949,7 +4949,7 @@ const utstallningar = [
   start: "1997-05-01",
   slut: "1997-05-20",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "619",
   namn: "Linnea i Kulturens trädgårdar",
@@ -4957,7 +4957,7 @@ const utstallningar = [
   start: "1997-05-25",
   slut: "1997-09-28",
   lokal: "Vita huset (Trädgårdsrummet)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "620",
   namn: "Spelmanstävling i Lund 90 år",
@@ -4965,7 +4965,7 @@ const utstallningar = [
   start: "1997-05-29",
   slut: "1997-06-03",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "621",
   namn: "Den röda stugan som dröm – textila bilder av Ulla Nordin",
@@ -4973,7 +4973,7 @@ const utstallningar = [
   start: "1997-06-05",
   slut: "1997-08-17",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "622",
   namn: "Över tröskeln – hemma i folkhemshus",
@@ -4981,7 +4981,7 @@ const utstallningar = [
   start: "1997-06-12",
   slut: "1998-01-06",
   lokal: "Lundahallen",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "623",
   namn: "Något som jag tycker om i Lund",
@@ -4997,7 +4997,7 @@ const utstallningar = [
   start: "1997-09-25",
   slut: "åååå-mm-dd",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "625",
   namn: "Johanna Karlin – skulptur",
@@ -5005,7 +5005,7 @@ const utstallningar = [
   start: "1997-10-19",
   slut: "1997-11-09",
   lokal: "Vita huset (Trädgårdsrummet)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "626",
   namn: "Baroque't – couture på docka",
@@ -5013,7 +5013,7 @@ const utstallningar = [
   start: "1997-11-16",
   slut: "1998-02-15",
   lokal: "Vita huset (första våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "627",
   namn: "Bonadsmålningar från magasinet",
@@ -5021,7 +5021,7 @@ const utstallningar = [
   start: "1997-11-30",
   slut: "åååå-mm-dd",
   lokal: "Vita huset (Trädgårdsrummet)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "628",
   namn: "Myternas vatten – glaskonstnären Kjell Engman",
@@ -5029,7 +5029,7 @@ const utstallningar = [
   start: "1997-12-14",
   slut: "1998-03-29",
   lokal: "Textilhallen",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "629",
   namn: "Klouóz – fotoutställning av Folkuniversitetets fotolinje",
@@ -5037,7 +5037,7 @@ const utstallningar = [
   start: "1998-01-18",
   slut: "1998-02-15",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "630",
   namn: "ReSpektera – barnet, minnet, myter",
@@ -5053,7 +5053,7 @@ const utstallningar = [
   start: "1998-02-22",
   slut: "1998-03-15",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "632",
   namn: "Påskutställning",
@@ -5061,7 +5061,7 @@ const utstallningar = [
   start: "1998-03-17",
   slut: "1998-04-13",
   lokal: "Vita huset (Trädgårdsrummet)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "633",
   namn: "Människan i centrum",
@@ -5077,7 +5077,7 @@ const utstallningar = [
   start: "1998-04-19",
   slut: "1998-06-07",
   lokal: "Vita huset (Trädgårdsrummet)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "635",
   namn: "Illustratörer",
@@ -5093,7 +5093,7 @@ const utstallningar = [
   start: "1998-05-01",
   slut: "1998-08-31",
   lokal: "Lekloftet",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "637",
   namn: "Snaps – på gott och ont",
@@ -5101,7 +5101,7 @@ const utstallningar = [
   start: "1998-05-02",
   slut: "1998-08-16",
   lokal: "Lundahallen",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "638",
   namn: "En stund i livet – bilden berättar",
@@ -5109,7 +5109,7 @@ const utstallningar = [
   start: "1998-05-05",
   slut: "1998-08-16",
   lokal: "Vita huset (första våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "639",
   namn: "Stadens dag",
@@ -5117,7 +5117,7 @@ const utstallningar = [
   start: "1998-05-15",
   slut: "1998-05-24",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "640",
   namn: "Bokstav – exlibris och kalligrafi",
@@ -5141,7 +5141,7 @@ const utstallningar = [
   start: "1998-06-11",
   slut: "1998-08-16",
   lokal: "Vita huset (Trädgårdsrummet)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "643",
   namn: "Struktur – foto av Sophia Callmer",
@@ -5149,7 +5149,7 @@ const utstallningar = [
   start: "1998-06-13",
   slut: "1998-08-16",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "644",
   namn: "Modernismen – en ny konst, en ny värld",
@@ -5165,7 +5165,7 @@ const utstallningar = [
   start: "1998-09-01",
   slut: "1998-11-01",
   lokal: "Lindforska huset (väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "646",
   namn: "Dammen på Kulturen",
@@ -5173,7 +5173,7 @@ const utstallningar = [
   start: "1998-09-05",
   slut: "1998-09-23",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "647",
   namn: "Lekfullt",
@@ -5181,7 +5181,7 @@ const utstallningar = [
   start: "1998-09-05",
   slut: "1998-11-29",
   lokal: "Vita huset (Trädgårdsrummet)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "648",
   namn: "Tankens bilder – bilder som förklarar världen",
@@ -5189,7 +5189,7 @@ const utstallningar = [
   start: "1998-09-12",
   slut: "1998-11-29",
   lokal: "Lundahallen",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "649",
   namn: "IM – 60 år",
@@ -5197,7 +5197,7 @@ const utstallningar = [
   start: "1998-09-27",
   slut: "1998-10-11",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "650",
   namn: "Drömmen om det främmande – dockor och exotism",
@@ -5205,7 +5205,7 @@ const utstallningar = [
   start: "1998-10-18",
   slut: "1998-11-01",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "651",
   namn: "Limes – kulturella gränser",
@@ -5213,7 +5213,7 @@ const utstallningar = [
   start: "1998-11-05",
   slut: "1998-11-22",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "652",
   namn: "Lars Håkansson – silver",
@@ -5221,7 +5221,7 @@ const utstallningar = [
   start: "1998-12-13",
   slut: "åååå-mm-dd",
   lokal: "Vita huset (Trädgårdsrummet)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "653",
   namn: "Tomas Anagrius – stengods",
@@ -5229,7 +5229,7 @@ const utstallningar = [
   start: "1998-mm-dd",
   slut: "1999-02-14",
   lokal: "Vita huset (Trädgårdsrummet)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "654",
   namn: "Ecce Homo",
@@ -5285,7 +5285,7 @@ const utstallningar = [
   start: "1999-03-15",
   slut: "1999-04-06",
   lokal: "Vita huset (andra våningen, lilla väggen/bildverkstan)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "661",
   namn: "Folkbildning – i rättvisans och solidaritetens namn",
@@ -5317,7 +5317,7 @@ const utstallningar = [
   start: "1999-05-05",
   slut: "1999-05-16",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "665",
   namn: "Inside, outside Africa – målningar i blandteknik, Birgitta Godlund",
@@ -5325,7 +5325,7 @@ const utstallningar = [
   start: "1999-05-15",
   slut: "1999-09-19",
   lokal: "Vita huset (andra våningen, lilla väggen/bildverkstan)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "666",
   namn: "Christian von Sydow – 25 år med glas och lera",
@@ -5341,7 +5341,7 @@ const utstallningar = [
   start: "1999-05-19",
   slut: "1999-06-06",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "668",
   namn: "Små fötter i Linnés fotspår",
@@ -5349,7 +5349,7 @@ const utstallningar = [
   start: "1999-06-10",
   slut: "1999-08-10",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "669",
   namn: "Linnés skånska resa",
@@ -5413,7 +5413,7 @@ const utstallningar = [
   start: "1999-11-05",
   slut: "åååå-mm-dd",
   lokal: "Lindforska huset (Universitetsmuseet)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "677",
   namn: "Metropolis – Lund på medeltiden",
@@ -5445,7 +5445,7 @@ const utstallningar = [
   start: "1999-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Lindforska huset (Universitetsmuseet)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "681",
   namn: "Liv och verk – Albert Levan och lundagenetiken",
@@ -5453,7 +5453,7 @@ const utstallningar = [
   start: "1999-mm-dd",
   slut: "1999-04-dd",
   lokal: "Lindforska huset (väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "682",
   namn: "Oklädda, klädda, omklädda",
@@ -5549,7 +5549,7 @@ const utstallningar = [
   start: "2000-06-10",
   slut: "2000-08-13",
   lokal: "Textilhallen, Lundahallen",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "694",
   namn: "Spets på många sätt",
@@ -5565,7 +5565,7 @@ const utstallningar = [
   start: "2000-07-04",
   slut: "2000-07-06",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "696",
   namn: "Bosnien – ett islamiskt kulturarv i Europa",
@@ -5597,7 +5597,7 @@ const utstallningar = [
   start: "2000-09-24",
   slut: "2000-11-dd",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "700",
   namn: "Folklig knyppling och Vadstenaspets",
@@ -5605,7 +5605,7 @@ const utstallningar = [
   start: "2000-10-08",
   slut: "2000-11-05",
   lokal: "Textilhallen",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "701",
   namn: "Halloween på skånska",
@@ -5629,7 +5629,7 @@ const utstallningar = [
   start: "2000-11-26",
   slut: "åååå-mm-dd",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "704",
   namn: "Humor i Lund",
@@ -5637,7 +5637,7 @@ const utstallningar = [
   start: "2000-mm-dd",
   slut: "2000-mm-dd",
   lokal: "Lindforska huset (väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "705",
   namn: "Om Lundalänken",
@@ -5677,7 +5677,7 @@ const utstallningar = [
   start: "2001-01-25",
   slut: "åååå-mm-dd",
   lokal: "Lindforska huset (Universitetsmuseet)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "710",
   namn: "Unga uttryck",
@@ -5685,7 +5685,7 @@ const utstallningar = [
   start: "2001-02-04",
   slut: "2001-02-25",
   lokal: "Allmogehallen",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "711",
   namn: "Palaver på grenesiska",
@@ -5709,7 +5709,7 @@ const utstallningar = [
   start: "2001-04-15",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "714",
   namn: "Modebubblor – design förr och nu",
@@ -5757,7 +5757,7 @@ const utstallningar = [
   start: "2001-08-19",
   slut: "2001-mm-dd",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "720",
   namn: "Ingeborg Hammarskjöld-Reiz – arkitekt i folkhemmets Lund",
@@ -5765,7 +5765,7 @@ const utstallningar = [
   start: "2001-09-02",
   slut: "2001-09-30",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "721",
   namn: "RÖTT mellan kärlek och revolution. Albert Wiking, fotografier",
@@ -5781,7 +5781,7 @@ const utstallningar = [
   start: "2001-09-15",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "723",
   namn: "Vittringar – glas och textil",
@@ -5805,7 +5805,7 @@ const utstallningar = [
   start: "2001-10-20",
   slut: "2001-10-21",
   lokal: "I samarbete med Amprorail och Lundarallarna",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "726",
   namn: "Att överleva – Alice berättelse och barns reaktioner i bild",
@@ -5813,7 +5813,7 @@ const utstallningar = [
   start: "2001-11-03",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "727",
   namn: "Underbara, fasansfulla människa. Vem har rätt att leva?",
@@ -5829,7 +5829,7 @@ const utstallningar = [
   start: "2001-11-09",
   slut: "åååå-mm-dd",
   lokal: "Lindforska huset (Universitetsmuseet)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "729",
   namn: "Goda människor – målningar av elever från Lindängens grundsärskola",
@@ -5845,7 +5845,7 @@ const utstallningar = [
   start: "2001-11-25",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "731",
   namn: "Arkitektur i pepparkaksdeg",
@@ -5877,7 +5877,7 @@ const utstallningar = [
   start: "2001-mm-dd",
   slut: "2001-mm-dd",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "735",
   namn: "Längtan – systrarna Jonn",
@@ -5909,7 +5909,7 @@ const utstallningar = [
   start: "2002-04-14",
   slut: "2003-01-06",
   lokal: "Textilhallen, Lundahallen",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "739",
   namn: "Struktur – Henrik Enquist",
@@ -5933,7 +5933,7 @@ const utstallningar = [
   start: "2002-05-09",
   slut: "2002-05-20",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "742",
   namn: "Buss 2002. Destination. Identitet",
@@ -5965,7 +5965,7 @@ const utstallningar = [
   start: "2002-06-13",
   slut: "åååå-mm-dd",
   lokal: "Vita huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "746",
   namn: "Transit – Come in, go out",
@@ -5989,7 +5989,7 @@ const utstallningar = [
   start: "2002-09-14",
   slut: "2003-01-27",
   lokal: "Vita huset (Trädgårdsrummet)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "749",
   namn: "Fart – om drömmen att vilja leva snabbt",
@@ -5997,7 +5997,7 @@ const utstallningar = [
   start: "2002-09-15",
   slut: "2003-01-31",
   lokal: "Allmogehallen",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "750",
   namn: "Movements – foto Anders Mattsson",
@@ -6013,7 +6013,7 @@ const utstallningar = [
   start: "2002-09-29",
   slut: "2003-02-02",
   lokal: "Vita huset (andra våningen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "752",
   namn: "Måltiden – installation av Katrine Ussing",
@@ -6037,7 +6037,7 @@ const utstallningar = [
   start: "2002-11-02",
   slut: "2002-12-15",
   lokal: "Vita huset (Trädgårdsrummet)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "755",
   namn: "Fagerdals flyktingförläggning 1994–1995 – fotoutställning",
@@ -6125,7 +6125,7 @@ const utstallningar = [
   start: "2003-02-16",
   slut: "åååå-mm-dd",
   lokal: "Berlingska huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "766",
   namn: "Sida vid sida – ett år i det nya landet",
@@ -6141,7 +6141,7 @@ const utstallningar = [
   start: "2003-02-23",
   slut: "2003-05-15",
   lokal: "Vita huset (Trädgårdsrummet)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "768",
   namn: "Sex visioner – Folkuniversitetets fotolinje",
@@ -6165,7 +6165,7 @@ const utstallningar = [
   start: "2003-05-25",
   slut: "2003-08-31",
   lokal: "Vita huset (Trädgårdsrummet)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "771",
   namn: "Industridesign 03",
@@ -6173,7 +6173,7 @@ const utstallningar = [
   start: "2003-06-05",
   slut: "2003-07-31",
   lokal: "Allmogehallen",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "772",
   namn: "Skånelängans traditionella utformning",
@@ -6189,7 +6189,7 @@ const utstallningar = [
   start: "2003-06-12",
   slut: "åååå-mm-dd",
   lokal: "Gårdshuset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "774",
   namn: "I mannaminne",
@@ -6229,7 +6229,7 @@ const utstallningar = [
   start: "2003-09-28",
   slut: "2003-10-26",
   lokal: "Vita huset (Trädgårdsrummet)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "779",
   namn: "Sue Williamssons kvinnoporträtt av apartheidmotståndare",
@@ -6293,7 +6293,7 @@ const utstallningar = [
   start: "2004-01-29",
   slut: "2004-02-18",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "787",
   namn: "Möt privatdetektiven Ture Sventon och upptäcktsresanden P Karlsson",
@@ -6301,7 +6301,7 @@ const utstallningar = [
   start: "2004-02-22",
   slut: "2004-05-02",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "788",
   namn: "Vem är Du? Vem är Jag? Mellanöstern Här",
@@ -6325,7 +6325,7 @@ const utstallningar = [
   start: "2004-03-14",
   slut: "2004-04-14",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "791",
   namn: "Tarlabashi – en multikulturell stadsdel i centrala Istanbul",
@@ -6333,7 +6333,7 @@ const utstallningar = [
   start: "2004-03-21",
   slut: "2004-04-30",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "792",
   namn: "Småfolklig påsk",
@@ -6421,7 +6421,7 @@ const utstallningar = [
   start: "2004-10-03",
   slut: "åååå-mm-dd",
   lokal: "Lindforska huset (Universitetsmuseet)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "803",
   namn: "Atlantöar – fotoutställning av K G Olsson",
@@ -6429,7 +6429,7 @@ const utstallningar = [
   start: "2004-10-09",
   slut: "2004-11-07",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "804",
   namn: "Go Girls! Vikten av flickors utbildning",
@@ -6493,7 +6493,7 @@ const utstallningar = [
   start: "2005-01-30",
   slut: "2005-05-22",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "812",
   namn: "Gamla leksaker",
@@ -6517,7 +6517,7 @@ const utstallningar = [
   start: "2005-04-03",
   slut: "2005-05-16",
   lokal: "Vita huset (Trädgårdsrummet)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "815",
   namn: "Teckningar från Hiroshima Peace Museum – 60 år efter bomben",
@@ -6525,7 +6525,7 @@ const utstallningar = [
   start: "2005-05-22",
   slut: "2005-08-28",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "816",
   namn: "Jeg er student fra Lund – H.C. Andersen 200 år",
@@ -6533,7 +6533,7 @@ const utstallningar = [
   start: "2005-05-29",
   slut: "2005-09-04",
   lokal: "Vita huset (Trädgårdsrummet)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "817",
   namn: "Lengertz kulturpris",
@@ -6565,7 +6565,7 @@ const utstallningar = [
   start: "2005-09-11",
   slut: "2005-10-02",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "821",
   namn: "Föremålen omkring oss",
@@ -6573,7 +6573,7 @@ const utstallningar = [
   start: "2005-09-11",
   slut: "2006-06-06",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "822",
   namn: "Amnesty Internationel",
@@ -6581,7 +6581,7 @@ const utstallningar = [
   start: "2005-10-08",
   slut: "2005-10-30",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "823",
   namn: "Arbeten på papper",
@@ -6589,7 +6589,7 @@ const utstallningar = [
   start: "2005-11-05",
   slut: "2005-12-30",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "824",
   namn: "Odödlighet. Läkare i Lund porträtterade av Johan Falkman.",
@@ -6605,7 +6605,7 @@ const utstallningar = [
   start: "2006-01-22",
   slut: "2006-02-26",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "826",
   namn: "Leksaker som rör sig. Nytt av gammalt.",
@@ -6613,7 +6613,7 @@ const utstallningar = [
   start: "2006-01-28",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "827",
   namn: "Svart gips – vitt folkhem",
@@ -6621,7 +6621,7 @@ const utstallningar = [
   start: "2006-01-29",
   slut: "2006-02-26",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "828",
   namn: "Minnesvärt – sakernas tillstånd",
@@ -6629,7 +6629,7 @@ const utstallningar = [
   start: "2006-02-26",
   slut: "2006-12-30",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "829",
   namn: "Mellan 4 ögon – fotoutställning",
@@ -6637,7 +6637,7 @@ const utstallningar = [
   start: "2006-03-05",
   slut: "2006-06-11",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "830",
   namn: "South Africa Via Dolorosa – fotoutställning Elisabeth Ohlson Wallin",
@@ -6645,7 +6645,7 @@ const utstallningar = [
   start: "2006-03-12",
   slut: "2006-05-21",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "831",
   namn: "Too much is never enough. Omgjort mode av Bea Szenfeld.",
@@ -6653,7 +6653,7 @@ const utstallningar = [
   start: "2006-04-02",
   slut: "2006-08-20",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "832",
   namn: "Varför spara detta? Föremål och minnen",
@@ -6661,7 +6661,7 @@ const utstallningar = [
   start: "2006-06-11",
   slut: "2006-12-30",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "833",
   namn: "Lengertz kulturpris",
@@ -6685,7 +6685,7 @@ const utstallningar = [
   start: "2006-08-20",
   slut: "2006-10-22",
   lokal: "Borgarhuset (Hornsbergssalen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "836",
   namn: "En livs levande Raine Navin",
@@ -6693,7 +6693,7 @@ const utstallningar = [
   start: "2006-09-02",
   slut: "2006-10-22",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "837",
   namn: "Rädda Barnen i Beirut",
@@ -6701,7 +6701,7 @@ const utstallningar = [
   start: "2006-09-02",
   slut: "2006-09-17",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "838",
   namn: "Memorial – foto John S. Webb",
@@ -6709,7 +6709,7 @@ const utstallningar = [
   start: "2006-09-03",
   slut: "åååå-mm-dd",
   lokal: "Vita huset (Trädgårdsrummet)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "839",
   namn: "Do Redo – gör nytt av gammalt",
@@ -6717,7 +6717,7 @@ const utstallningar = [
   start: "2006-09-10",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "840",
   namn: "Månteatern – 20 år",
@@ -6725,7 +6725,7 @@ const utstallningar = [
   start: "2006-09-23",
   slut: "2006-10-15",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "841",
   namn: "Frukostdags 2020 – installation av Carl Johan De Geer",
@@ -6741,7 +6741,7 @@ const utstallningar = [
   start: "2006-10-15",
   slut: "åååå-mm-dd",
   lokal: "Textilhallen",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "843",
   namn: "Bilder från ungerska revolutionen 1956",
@@ -6749,7 +6749,7 @@ const utstallningar = [
   start: "2006-10-21",
   slut: "2006-10-29",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "844",
   namn: "Minnesbilder – resultat av fototävling",
@@ -6757,7 +6757,7 @@ const utstallningar = [
   start: "2006-11-04",
   slut: "2006-11-26",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "845",
   namn: "Sakligt och visionärt – Bauhaus i Dessau",
@@ -6765,7 +6765,7 @@ const utstallningar = [
   start: "2006-11-05",
   slut: "2007-01-28",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "846",
   namn: "Vantar – resultatet av handarbetstävling",
@@ -6773,7 +6773,7 @@ const utstallningar = [
   start: "2006-12-03",
   slut: "2006-12-30",
   lokal: "Vita huset (andra våningen, väggen)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "847",
   namn: "Fem i Lund",
@@ -6789,7 +6789,7 @@ const utstallningar = [
   start: "2007-01-14",
   slut: "2007-02-25",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "849",
   namn: "Sex – fotoutställning",
@@ -6813,7 +6813,7 @@ const utstallningar = [
   start: "2007-03-04",
   slut: "2007-04-30",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "852",
   namn: "Personligt silver och guld",
@@ -6821,7 +6821,7 @@ const utstallningar = [
   start: "2007-03-18",
   slut: "2007-04-01",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "853",
   namn: "Lustar – drömmar och fantasier",
@@ -6845,7 +6845,7 @@ const utstallningar = [
   start: "2007-04-15",
   slut: "2007-09-30",
   lokal: "Friluftsmuseet",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "856",
   namn: "Sagan om ägget",
@@ -6869,7 +6869,7 @@ const utstallningar = [
   start: "2007-05-06",
   slut: "2007-08-26",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "859",
   namn: "Återinvigning av nyrestaurerade Gamlegård",
@@ -6877,7 +6877,7 @@ const utstallningar = [
   start: "2007-06-16",
   slut: "",
   lokal: "Kulturens Östarp (Gamlegård)",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "860",
   namn: "Lengertz kulturpris",
@@ -6901,7 +6901,7 @@ const utstallningar = [
   start: "2007-09-02",
   slut: "2007-10-28",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "863",
   namn: "A history of sex – fotoutställning Andres Serrano",
@@ -6917,7 +6917,7 @@ const utstallningar = [
   start: "2007-11-04",
   slut: "2008-01-06",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "865",
   namn: "Vapen – makt över liv",
@@ -6957,7 +6957,7 @@ const utstallningar = [
   start: "2008-02-26",
   slut: "2008-03-24",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "870",
   namn: "Uarda – 100 år av spex (1908–2008)",
@@ -6997,7 +6997,7 @@ const utstallningar = [
   start: "2008-09-07",
   slut: "2008-11-16",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "875",
   namn: "Övergivna platser – fotoutställning",
@@ -7005,7 +7005,7 @@ const utstallningar = [
   start: "2008-09-13",
   slut: "2009-01-11",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "876",
   namn: "Trådar från Mittens rike – dockteater i Kina och världen",
@@ -7029,7 +7029,7 @@ const utstallningar = [
   start: "2008-11-25",
   slut: "2009-01-11",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "879",
   namn: "Med skägget i brevlådan",
@@ -7045,7 +7045,7 @@ const utstallningar = [
   start: "2009-01-18",
   slut: "2009-02-28",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "881",
   namn: "Hålkamerabilder i ädeltekniger – fotoutställning",
@@ -7093,7 +7093,7 @@ const utstallningar = [
   start: "2009-05-17",
   slut: "2009-09-27",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "887",
   namn: "Ostrolocus 50 år – Östgöta nationshus historia",
@@ -7109,7 +7109,7 @@ const utstallningar = [
   start: "2009-05-28",
   slut: "2009-12-30",
   lokal: "Friluftsmuseet",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "889",
   namn: "Lengertz kulturpris",
@@ -7133,7 +7133,7 @@ const utstallningar = [
   start: "2009-10-18",
   slut: "2009-12-31",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "892",
   namn: "Folkkonst & Design: Dräktmod",
@@ -7189,7 +7189,7 @@ const utstallningar = [
   start: "2010-01-27",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "899",
   namn: "Bengt Böckman – bilder från ett liv",
@@ -7197,7 +7197,7 @@ const utstallningar = [
   start: "2010-01-31",
   slut: "2010-04-18",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "900",
   namn: "Albrecht Dürer och den stora passionen",
@@ -7205,7 +7205,7 @@ const utstallningar = [
   start: "2010-02-14",
   slut: "2010-06-27",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "901",
   namn: "Påsktraditioner",
@@ -7213,7 +7213,7 @@ const utstallningar = [
   start: "2010-03-09",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "902",
   namn: "Kreativ virkning",
@@ -7221,7 +7221,7 @@ const utstallningar = [
   start: "2010-05-08",
   slut: "2010-06-27",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "903",
   namn: "Karnevalsfilm 100 år",
@@ -7261,7 +7261,7 @@ const utstallningar = [
   start: "2010-10-03",
   slut: "2011-01-30",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "908",
   namn: "Stefan Castas gröna tråd",
@@ -7269,7 +7269,7 @@ const utstallningar = [
   start: "2010-10-12",
   slut: "2011-01-09",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "909",
   namn: "Parkskulpturer",
@@ -7277,7 +7277,7 @@ const utstallningar = [
   start: "2010-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "910",
   namn: "Hållbart – fotoutställning",
@@ -7357,7 +7357,7 @@ const utstallningar = [
   start: "2011-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "920",
   namn: "Yllebroderi – ett urval av Kulturens yllebroderier",
@@ -7373,7 +7373,7 @@ const utstallningar = [
   start: "2011-mm-dd",
   slut: "2011-mm-dd",
   lokal: "Friluftsmuseet",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "922",
   namn: "Strindberg och fotokonsten",
@@ -7389,7 +7389,7 @@ const utstallningar = [
   start: "2012-03-18",
   slut: "2012-04-22",
   lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "924",
   namn: "Alfons Åberg fyller år!",
@@ -7877,7 +7877,7 @@ const utstallningar = [
   start: "2018-11-11",
   slut: "åååå-mm-dd",
   lokal: "Thomanderska huset",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "985",
   namn: "Alla ska passa in",
@@ -7965,7 +7965,7 @@ const utstallningar = [
   start: "2019-10-10",
   slut: "2021-01-10",
   lokal: "Livets museum",
-  kommentar: "Det saknas kommentar till denna utställning. Om du vill lägga till en, kontakta <a href='mailto:johan.hofvendahl@kulturen.com'>johan.hofvendahl@kulturen.com</a>." 
+  kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "996",
   namn: "Elsa Beskows sagovärld",
@@ -8240,3 +8240,4 @@ const utstallningar = [
   kommentar: "Nu visar vi även dräktsilver, som är en särpräglad och viktig del av den skånska dräkten." 
   }
 ];
+
