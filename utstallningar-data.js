@@ -1,14 +1,14 @@
 const utstallningar = [
   { id: "0",
-  namn: "Kulturens första utställning",
+  namn: "Kulturens 1:a utställning",
   typ: "Tillfällig",
   start: "1882-08-21",
   slut: "åååå-mm-dd",
-  lokal: "I ett  vindsrum i Huaröds prästgård",
+  lokal: "I ett vindsrum i Huaröds prästgård",
   kommentar: "De första föremålen." 
   },
 { id: "1",
-  namn: "Kulturens andra utställning",
+  namn: "Kulturens 2:a utställning",
   typ: "Tillfällig",
   start: "1882-09-28",
   slut: "1882-10-12",
@@ -16,7 +16,7 @@ const utstallningar = [
   kommentar: "Sommarens förvärv." 
   },
 { id: "2",
-  namn: "Kulturens tredje utställning",
+  namn: "Kulturens 3:e utställning",
   typ: "Basutställning",
   start: "1882-10-21",
   slut: "1884-06-01",
@@ -24,7 +24,7 @@ const utstallningar = [
   kommentar: "\"De kulturhistoriska samlingarna i Lund (i Bibliotekshusets nedre våning) äro mot en afgift af 24 öre tillgängliga för allmänheten…\", Folkets Tidning 1882-10-24." 
   },
 { id: "3",
-  namn: "Kulturens fjärde utställning",
+  namn: "Kulturens 4:e utställning",
   typ: "Basutställning",
   start: "1883-11-04",
   slut: "1884-mm-dd",
@@ -32,7 +32,7 @@ const utstallningar = [
   kommentar: "Utställning av fornföremål och antikviteter, samlade i en särskild \"antik- och fornsal\"" 
   },
 { id: "4",
-  namn: "Kulturens femte utställning",
+  namn: "Kulturens 5:e utställning",
   typ: "Basutställning",
   start: "1883-12-02",
   slut: "1884-mm-dd",
@@ -40,7 +40,7 @@ const utstallningar = [
   kommentar: "En \"synnerligen rik och för ändamålet väl sammansatt samling\" av allmogeföremål" 
   },
 { id: "5",
-  namn: "Kulturens sjätte utställning",
+  namn: "Kulturens 6:e utställning",
   typ: "Basutställning",
   start: "1884-06-15",
   slut: "1886-08-16",
@@ -85,7 +85,7 @@ const utstallningar = [
   start: "1888-05-18",
   slut: "1888-10-02",
   lokal: "Köpenhamn (Danska Industriföreningens expositionslokal)",
-  kommentar: "Källa redogörelse 1887-1888; på \"Nordisk industri-, lantbruks- och konstutställning\"" 
+  kommentar: "Källa redogörelse 1887–1888; på \"Nordisk industri-, lantbruks- och konstutställning\"" 
   },
 { id: "11",
   namn: "Fynd från grävningar i Falsterbo",
@@ -381,7 +381,7 @@ const utstallningar = [
   start: "1906-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Herrehuset",
-  kommentar: "Först enbart svensk keramik, sedermera (1916+) föremål från flera andra länder, t.ex. Tyskland, nordafrika, Panama, Costa Rica, Nya Mexico, Belgien, Italien, Spanien, Portugal etc." 
+  kommentar: "Först enbart svensk keramik, sedermera (1916+) föremål från flera andra länder, t.ex. Tyskland, Nordafrika, Panama, Costa Rica, Nya Mexiko, Belgien, Italien, Spanien, Portugal etc." 
   },
 { id: "48",
   namn: "Nordenstedtska huset",
@@ -592,7 +592,7 @@ const utstallningar = [
   kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "74",
-  namn: "Osasiatiska rustningar",
+  namn: "Ostasiatiska rustningar",
   typ: "Tillfällig",
   start: "1916-mm-dd",
   slut: "åååå-mm-dd",
@@ -832,7 +832,7 @@ const utstallningar = [
   kommentar: "Livet i de skånska byarna och gårdarna; stuginteriörerna ger en uppfattning om 1700-talets och det tidiga 1800-talets bostadsformer; Kulturens enda bevarade utställning från 1929" 
   },
 { id: "104",
-  namn: "Konstlsöjdanstaltens arbeten",
+  namn: "Konstslöjdanstaltens arbeten",
   typ: "Tillfällig",
   start: "1929-mm-dd",
   slut: "åååå-mm-dd",
@@ -1029,7 +1029,7 @@ const utstallningar = [
   start: "1934-11-17",
   slut: "åååå-mm-dd",
   lokal: "Vita huset",
-  kommentar: "Kullurens enastående samlingar av jordfynd " 
+  kommentar: "\"Kulturens enastående samlingar av jordfynd.\"" 
   },
 { id: "129",
   namn: "Separatutställning av arkivet",
@@ -1088,7 +1088,7 @@ const utstallningar = [
   kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "136",
-  namn: "Sydsvensk follklig konst",
+  namn: "Sydsvensk folklig konst",
   typ: "Tillfällig",
   start: "1940-mm-dd",
   slut: "åååå-mm-dd",
@@ -1208,7 +1208,7 @@ const utstallningar = [
   kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "151",
-  namn: "Boktryckarekonstens och stilgjuteriets tekniska utveckling",
+  namn: "Boktryckarkonstens och stilgjuteriets tekniska utveckling",
   typ: "Tillfällig",
   start: "1945-mm-dd",
   slut: "åååå-mm-dd",
@@ -1757,10 +1757,10 @@ const utstallningar = [
   start: "1962-05-07",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "I samarbete med Kristianstads museum, landsantikvarien i Kristianstads län och Hälsingborgs museum" 
+  kommentar: "I samarbete med Kristianstads museum, landsantikvarien i Kristianstads län och Helsingborgs museum" 
   },
 { id: "220",
-  namn: "Friaregåvor och trolovningsskänker",
+  namn: "Friargåvor och trolovningsskänker",
   typ: "Tillfällig",
   start: "1962-08-12",
   slut: "1962-09-30",
@@ -1773,7 +1773,7 @@ const utstallningar = [
   start: "1962-11-24",
   slut: "1962-11-26",
   lokal: "Vita huset (Auditoriet)",
-  kommentar: "Anordnad av \"10 akademikerfruar … till förmån för Inomeuropeiska missions verksamhet\"" 
+  kommentar: "Anordnad av \"10 akademikerfruar … till förmån för Inomeuropeiska missionsverksamhet\"" 
   },
 { id: "222",
   namn: "Från knävling till hålkort, Håkan Ohlssons boktryckeri 100 år 1962",
@@ -1872,7 +1872,7 @@ const utstallningar = [
   kommentar: "Av Nordiska museet" 
   },
 { id: "234",
-  namn: "Kungl. Svea Hovrätt 1614–1964, 300-årsjubileum",
+  namn: "Kungl. Svea hovrätt 1614–1964, 300-årsjubileum",
   typ: "Tillfällig",
   start: "1965-02-08",
   slut: "1965-03-07",
@@ -1888,7 +1888,7 @@ const utstallningar = [
   kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "236",
-  namn: "Gamla schattérsömmar",
+  namn: "Gamla schattersömmar",
   typ: "Tillfällig",
   start: "1965-04-28",
   slut: "1965-05-16",
@@ -2032,7 +2032,7 @@ const utstallningar = [
   kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "254",
-  namn: "Skarpsinne och fantasti – Carl Adolph Agardh i Lund 1799-1835",
+  namn: "Skarpsinne och fantasi – Carl Adolph Agardh i Lund 1799-1835",
   typ: "Tillfällig",
   start: "1966-mm-dd",
   slut: "åååå-mm-dd",
@@ -2192,7 +2192,7 @@ const utstallningar = [
   kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "274",
-  namn: "Bengt Nodenberg",
+  namn: "Bengt Nordenberg",
   typ: "Tillfällig",
   start: "1968-02-17",
   slut: "åååå-mm-dd",
@@ -2293,7 +2293,7 @@ const utstallningar = [
   start: "1968-mm-dd",
   slut: "1969-03-15",
   lokal: "Uppgift saknas",
-  kommentar: "Lånades från Kristiandstads museum, kan betraktas som ett äreminne över konservatorn vid Töljhusmuseet i Köpenhamn Preben Kannik som avled 1967" 
+  kommentar: "Lånades från Kristianstads museum, kan betraktas som ett äreminne över konservatorn vid Töljhusmuseet i Köpenhamn Preben Kannik som avled 1967" 
   },
 { id: "287",
   namn: "Ölets käril",
@@ -2576,7 +2576,7 @@ const utstallningar = [
   kommentar: "Till Fabriks- och Hantverksföreningens 125-årsjubileum" 
   },
 { id: "322",
-  namn: "Uställning av nyförvärv",
+  namn: "Utställning av nyförvärv",
   typ: "Tillfällig",
   start: "1972-mm-dd",
   slut: "åååå-mm-dd",
@@ -2669,7 +2669,7 @@ const utstallningar = [
   start: "1973-11-08",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "Sammanställd till konung Gustaf VI Adolfs 90-årsdag, andordnad av Statens historiska museum" 
+  kommentar: "Sammanställd till konung Gustaf VI Adolfs 90-årsdag, anordnad av Statens historiska museum" 
   },
 { id: "334",
   namn: "Kulturens samling av Frans Lindberg-målningar",
@@ -2816,7 +2816,7 @@ const utstallningar = [
   kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "352",
-  namn: "Sängutrusning från 1600-talet och framåt",
+  namn: "Sängutrustning från 1600-talet och framåt",
   typ: "Tillfällig",
   start: "1974-mm-dd",
   slut: "åååå-mm-dd",
@@ -3365,7 +3365,7 @@ const utstallningar = [
   start: "1981-05-01",
   slut: "1981-09-27",
   lokal: "Uppgift saknas",
-  kommentar: "Från Helsinborgs museum" 
+  kommentar: "Från Helsingborgs museum" 
   },
 { id: "421",
   namn: "Kungens stenar",
@@ -3797,7 +3797,7 @@ const utstallningar = [
   start: "1986-06-01",
   slut: "1986-06-22",
   lokal: "Lindforska huset, Vita huset (tredje våningen)",
-  kommentar: "Hantverk med tradition. Dalmåleri, smide, trä och rotslö j d, musik, kyrkbåtar, folkdräkter, textilier" 
+  kommentar: "Hantverk med tradition. Dalmåleri, smide, trä- och rotslöjd, musik, kyrkbåtar, folkdräkter, textilier" 
   },
 { id: "475",
   namn: "Småland – Kronobergs län",
@@ -4408,7 +4408,7 @@ const utstallningar = [
   kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "551",
-  namn: "Skåne mellan Danmark och Sverie",
+  namn: "Skåne mellan Danmark och Sverige",
   typ: "Tillfällig",
   start: "1993-03-21",
   slut: "1993-04-12",
@@ -4677,7 +4677,7 @@ const utstallningar = [
   start: "1995-08-27",
   slut: "1995-09-24",
   lokal: "Dekanhuset",
-  kommentar: "I samarbete med ICA-kurireni" 
+  kommentar: "I samarbete med ICA-kuriren" 
   },
 { id: "585",
   namn: "Masker – andra världar (återöppnas)",
@@ -5432,7 +5432,7 @@ const utstallningar = [
   kommentar: "Fältbiologerna i Lund" 
   },
 { id: "679",
-  namn: "2020 – Unga röster i samhlällsdebatten",
+  namn: "2020 – Unga röster i samhällsdebatten",
   typ: "Tillfällig",
   start: "1999-12-12",
   slut: "2000-02-27",
@@ -5797,7 +5797,7 @@ const utstallningar = [
   start: "2001-10-07",
   slut: "2002-01-13",
   lokal: "Textilhallen",
-  kommentar: "I samarbete med Norrköpings konstmuseum och Jönköpings länsmuseum; De Geers ideer om mönster, textilier och heminredning från 1960-talet till det sena 1900-talet" 
+  kommentar: "I samarbete med Norrköpings konstmuseum och Jönköpings länsmuseum; De Geers idéer om mönster, textilier och heminredning från 1960-talet till det sena 1900-talet" 
   },
 { id: "725",
   namn: "Utställning av tåg för stora och små",
@@ -6216,7 +6216,7 @@ const utstallningar = [
   kommentar: "I samarbete med Ulla Nordin" 
   },
 { id: "777",
-  namn: "Kärlek, makt och systerkap – 30 år av kvinnokamp",
+  namn: "Kärlek, makt och systerskap – 30 år av kvinnokamp",
   typ: "Tillfällig",
   start: "2003-08-17",
   slut: "2004-01-06",
@@ -6576,7 +6576,7 @@ const utstallningar = [
   kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "822",
-  namn: "Amnesty Internationel",
+  namn: "Amnesty International",
   typ: "Tillfällig",
   start: "2005-10-08",
   slut: "2005-10-30",
@@ -6893,10 +6893,10 @@ const utstallningar = [
   start: "2007-06-17",
   slut: "2007-09-30",
   lokal: "Uppgift saknas",
-  kommentar: "Producerad av Jönköpings länsmuseum, Högskolan i Borås och Smålands Musik och Teater; om den ofullbordade balletten \"Bergakungen\" samt utklädningsmaterial" 
+  kommentar: "Producerad av Jönköpings länsmuseum, Högskolan i Borås och Smålands Musik och Teater; om den ofullbordade baletten \"Bergakungen\" samt utklädningsmaterial" 
   },
 { id: "862",
-  namn: "Touch me – fotoutstuällning Viveca Ohlsson",
+  namn: "Touch me – fotoutställning Viveca Ohlsson",
   typ: "Tillfällig",
   start: "2007-09-02",
   slut: "2007-10-28",
@@ -6949,7 +6949,7 @@ const utstallningar = [
   start: "2008-02-17",
   slut: "2008-09-28",
   lokal: "Textilhallen",
-  kommentar: "I samarberte med  Tekra Pak; med anledning av att de Olympiska spelen skulle äga rum i Kina och att det publika intresset för landet därmed kunde förväntas vara stort" 
+  kommentar: "I samarbete med Tekra Pak; med anledning av att de Olympiska spelen skulle äga rum i Kina och att det publika intresset för landet därmed kunde förväntas vara stort" 
   },
 { id: "869",
   namn: "Påskutställning",
@@ -7048,7 +7048,7 @@ const utstallningar = [
   kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "881",
-  namn: "Hålkamerabilder i ädeltekniger – fotoutställning",
+  namn: "Hålkamerabilder i ädeltekniker – fotoutställning",
   typ: "Tillfällig",
   start: "2009-02-18",
   slut: "2009-03-29",
@@ -7056,7 +7056,7 @@ const utstallningar = [
   kommentar: "En fotoutställning av Anne-Grethe Holt och Bengt Persson." 
   },
 { id: "882",
-  namn: "Signe Perrson-Melin, keramiker och formgivare",
+  namn: "Signe Persson-Melin, keramiker och formgivare",
   typ: "Tillfällig",
   start: "2009-02-22",
   slut: "2009-08-16",
@@ -7304,7 +7304,7 @@ const utstallningar = [
   kommentar: "Av Lunds Konst- och Designskola" 
   },
 { id: "913",
-  namn: "Folkkonst & Design: Folkonstens skapare",
+  namn: "Folkkonst & Design: Folkkonstens skapare",
   typ: "Basutställning",
   start: "2011-05-08",
   slut: "åååå-mm-dd",
@@ -7765,7 +7765,7 @@ const utstallningar = [
   start: "2017-07-01",
   slut: "2018-02-04",
   lokal: "Lundahallen",
-  kommentar: "I sambarbete med Universitetsbiblioteket i Lund" 
+  kommentar: "I samarbete med Universitetsbiblioteket i Lund" 
   },
 { id: "971",
   namn: "Katja of Sweden",
@@ -8225,7 +8225,7 @@ const utstallningar = [
   },
 { id: "1028",
   namn: "Motstånd",
-  typ: "",
+  typ: "Tillfällig",
   start: "2025-07-01",
   slut: "2026-03-08",
   lokal: "Vita huset",
@@ -8240,5 +8240,3 @@ const utstallningar = [
   kommentar: "Nu visar vi även dräktsilver, som är en särpräglad och viktig del av den skånska dräkten." 
   }
 ];
-
-
