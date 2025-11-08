@@ -92,32 +92,26 @@ header button:hover{background:#27ae60}
 </div>
 
 <script>
-/* === Datakälla === */
-const CSV_URL = "https://corsproxy.io/?https://docs.google.com/spreadsheets/d/e/2PACX-1vRXja3OdkrExI_xKLMdDmR6Bb_7iUKM3w_SJso8txgSLjqTGY0q-LhWTDnp3fo3kNXrYJHllsdd9gOS/pub?gid=0&single=true&output=csv";
+const API = "https://script.google.com/macros/s/AKfycbzM9Kh5pOCnpvRUIJtIHI0DPg0qqZVXOPp6r3PhBh_PoRGNkQfUKHh1Zqsq50heiahLzw/exec";
 
-let shouldCenter = true;
 let exhibitions = [];
+let baseYear = 2025;
 const totalMonths = 36;
 const dayWidth = 3.5;
-let baseYear = 2025;
 
-/* === Hämta från Google Sheet === */
-async function loadFromCSV() {
+/* === LÄS DATA FRÅN GOOGLE SHEET (Apps Script) === */
+async function loadFromSheet() {
   try {
-    const res = await fetch(CSV_URL + "&t=" + Date.now());
-    if (!res.ok) throw new Error("HTTP " + res.status);
-    const text = await res.text();
+    const res = await fetch(API);
+    const json = await res.json();
 
-    console.log("=== Hämtad CSV ===");
-    console.log(text.substring(0, 300)); // visar början i konsolen
+    if (json.role === "none") {
+      alert("Inloggning krävs eller ingen behörighet.");
+      return;
+    }
 
-    // Dela upp korrekt (även med citattecken)
-    const rows = text.trim().split(/\r?\n/).map(r =>
-      r.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g)?.map(c => c.replace(/^"|"$/g, "").trim()) || []
-    );
-
-    const headers = rows.shift();
-    console.log("Headers:", headers);
+    const headers = json.data[0];
+    const rows = json.data.slice(1);
 
     exhibitions = rows.map(row => {
       const obj = {};
@@ -128,131 +122,47 @@ async function loadFromCSV() {
         location: obj["Lokal"],
         start: obj["Startdatum"],
         end: obj["Slutdatum"],
-        approxStart: obj["UngefärligStart"].toLowerCase() === "true",
-        approxEnd: obj["UngefärligtSlut"].toLowerCase() === "true",
+        approxStart: obj["UngefärligStart"] === "TRUE",
+        approxEnd: obj["UngefärligtSlut"] === "TRUE",
         color: obj["Färg"] || "#007acc"
       };
     });
 
-    console.log("✅ Parsed exhibitions:", exhibitions);
     drawTimeline(true);
+
+    // visa knappen endast för redigerare
+    document.querySelector("button[onclick='openModal()']").style.display =
+      json.role === "edit" ? "inline-block" : "none";
+
   } catch (err) {
-    console.error("❌ Fel vid hämtning/tolkning av CSV:", err);
+    console.error("Fel vid hämtning:", err);
   }
 }
 
-
-
-/* === Modalhantering === */
-function openModal(id=null){
-  const bg=document.getElementById("modalBg");bg.style.display="flex";
-  const del=document.getElementById("deleteBtn");
-  if(id){
-    const ex=exhibitions.find(e=>e.id===id);
-    document.getElementById("modalTitle").textContent="Redigera utställning";
-    document.getElementById("editId").value=ex.id;
-    document.getElementById("name").value=ex.name;
-    document.getElementById("location").value=ex.location;
-    document.getElementById("start").value=ex.start;
-    document.getElementById("end").value=ex.end;
-    document.getElementById("color").value=ex.color;
-    document.getElementById("approxStart").checked=ex.approxStart;
-    document.getElementById("approxEnd").checked=ex.approxEnd;
-    del.style.display="inline-block";
-  }else{
-    document.getElementById("modalTitle").textContent="Ny utställning";
-    document.querySelectorAll("#modalBg input").forEach(i=>i.value="");
-    document.getElementById("color").value="#007acc";
-    document.getElementById("approxStart").checked=false;
-    document.getElementById("approxEnd").checked=false;
-    del.style.display="none";
-  }
-}
-function closeModal(){document.getElementById("modalBg").style.display="none";}
-
-/* === Lokala ändringar (endast visuella) === */
-function saveExhibition(){
-  const id=document.getElementById("editId").value||Date.now().toString();
-  const d={
-    id,
-    name:document.getElementById("name").value.trim(),
-    location:document.getElementById("location").value.trim(),
-    start:document.getElementById("start").value,
-    end:document.getElementById("end").value,
-    color:document.getElementById("color").value,
-    approxStart:document.getElementById("approxStart").checked,
-    approxEnd:document.getElementById("approxEnd").checked
+/* === SKRIV TILL GOOGLE SHEET (Apps Script) === */
+async function saveExhibition() {
+  const obj = {
+    Rubrik: document.getElementById("name").value.trim(),
+    Lokal: document.getElementById("location").value.trim(),
+    Startdatum: document.getElementById("start").value,
+    UngefärligStart: document.getElementById("approxStart").checked ? "TRUE" : "",
+    Slutdatum: document.getElementById("end").value,
+    UngefärligtSlut: document.getElementById("approxEnd").checked ? "TRUE" : "",
+    Färg: document.getElementById("color").value
   };
-  const i=exhibitions.findIndex(e=>e.id===id);
-  if(i>=0)exhibitions[i]=d; else exhibitions.push(d);
-  drawTimeline();closeModal();
-}
-function deleteExhibition(){
-  const id=document.getElementById("editId").value;
-  exhibitions=exhibitions.filter(e=>e.id!==id);
-  drawTimeline();closeModal();
-}
 
-/* === Ritlogik === */
-function changeYear(){baseYear=parseInt(document.getElementById("yearSelect").value);shouldCenter=true;drawTimeline();}
-function drawTimeline(){
-  const timeline=document.getElementById("timeline");timeline.innerHTML="";
-  const startAxis=new Date(baseYear-1,0,1);
-  const monthNames=["jan","feb","mar","apr","maj","jun","jul","aug","sep","okt","nov","dec"];
-  for(let i=0;i<totalMonths;i++){
-    const d=new Date(startAxis.getFullYear(),startAxis.getMonth()+i,1);
-    const lbl=document.createElement("div");
-    lbl.className="month-label";
-    lbl.style.left=((d-startAxis)/86400000*dayWidth)+"px";
-    lbl.textContent=monthNames[d.getMonth()]+(d.getMonth()===0?" "+d.getFullYear():"");
-    timeline.appendChild(lbl);
+  const res = await fetch(API, { method: "POST", body: JSON.stringify(obj) });
+  const text = await res.text();
+
+  if (text === "OK") {
+    closeModal();
+    loadFromSheet();
+  } else {
+    alert(text);
   }
-  const grouped={};
-  for(const ex of exhibitions){if(!grouped[ex.location])grouped[ex.location]=[];grouped[ex.location].push(ex);}
-  let locIndex=0;
-  for(const loc in grouped){
-    const g=grouped[loc];g.sort((a,b)=>new Date(a.start)-new Date(b.start));
-    const locLabel=document.createElement("div");
-    locLabel.className="location-label";locLabel.style.top=(100+locIndex*90)+"px";locLabel.textContent=loc;
-    timeline.appendChild(locLabel);
-    g.forEach(ex=>{
-      const s=new Date(ex.start),e=new Date(ex.end);
-      const startRef=new Date(baseYear-1,0,1);
-      const left=(s-startRef)/86400000*dayWidth;
-      const width=(e-s)/86400000*dayWidth;
-      const rowY=70+locIndex*90;
-      const div=document.createElement("div");
-      div.className="exhibition";div.style.left=left+"px";div.style.top=rowY+"px";
-      div.style.width=width+"px";div.style.background=ex.color;div.onclick=()=>openModal(ex.id);
-      const name=document.createElement("div");name.className="name-label";name.textContent=ex.name;div.appendChild(name);
-      const dates=document.createElement("div");dates.className="date-row";
-      const ey=e.getFullYear();const same=ey===s.getFullYear();
-      dates.innerHTML=`<span>${formatDateShort(s,false)}</span><span>${formatDateShort(e,!same)}</span>`;
-      div.appendChild(dates);
-      timeline.appendChild(div);
-    });
-    locIndex++;
-  }
-  initCustomScroll();
-}
-function formatDateShort(d,includeY){const m=["jan","feb","mar","apr","maj","jun","jul","aug","sep","okt","nov","dec"];return d.getDate()+" "+m[d.getMonth()]+(includeY?" "+d.getFullYear():"");}
-
-/* === Scroll === */
-function initCustomScroll(){
-  const wrap=document.getElementById("timeline-wrapper"),thumb=document.getElementById("scrollThumb"),track=document.getElementById("scrollTrack");
-  function update(){const ratio=wrap.scrollLeft/(wrap.scrollWidth-wrap.clientWidth);const max=track.clientWidth-thumb.offsetWidth;thumb.style.left=ratio*max+"px";}
-  wrap.addEventListener("scroll",update);update();
-  let drag=false,startX=0,startL=0;
-  thumb.addEventListener("mousedown",e=>{drag=true;startX=e.clientX;startL=parseFloat(thumb.style.left)||0;document.body.style.userSelect="none";});
-  window.addEventListener("mousemove",e=>{if(!drag)return;const dx=e.clientX-startX;const max=track.clientWidth-thumb.offsetWidth;
-    const newL=Math.min(Math.max(startL+dx,0),max);thumb.style.left=newL+"px";
-    const ratio=newL/max;wrap.scrollLeft=ratio*(wrap.scrollWidth-wrap.clientWidth);});
-  window.addEventListener("mouseup",()=>{if(drag){drag=false;document.body.style.userSelect="";}});
 }
 
-window.onload=loadFromCSV;
+window.onload = loadFromSheet;
 </script>
 </body>
 </html>
-
-
