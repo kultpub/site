@@ -1,0 +1,2535 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bemanning Diabasen</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+<style>
+
+/* =========================================================
+   1. ROOT-VARIABLER (FÄRGER & TEMA)
+   ========================================================= */
+:root {
+	--accent-color: #007acc;
+	--text-primary: #333333;
+	--time-line-color: #a0a0a0;
+	--shift-color: #1a73e8;
+	--shift-text-color: #fff;
+	--header-bg: #005ea5;
+	--row-height: 40px;
+	--shift-bar-height: 26px;
+}
+
+
+/* =========================================================
+   2. GLOBAL LAYOUT, TYPOGRAFI & ENHETER
+   ========================================================= */
+html,
+body {
+	margin: 0;
+	font-family: "Segoe UI", sans-serif;
+	background: #f8f9fa;
+	color: #111;
+	height: 100%;
+	overflow: hidden;
+}
+
+#container {
+	display: flex;
+	flex-direction: column;
+	height: calc(100vh - 110px);
+	padding: 10px 20px 20px 20px;
+	box-sizing: border-box;
+	overflow: hidden;
+}
+
+/* --- TOAST-MEDDELANDE --- */
+#toast {
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+	background: #323232;
+	color: #fff;
+	padding: 10px 18px;
+	border-radius: 6px;
+	box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.4s ease, transform 0.4s ease;
+	transform: translateY(20px);
+	z-index: 100;
+}
+
+
+/* =========================================================
+   3. HEADER & DATUMKONTROLLER
+   ========================================================= */
+header {
+	display: grid;
+	grid-template-columns: 1fr auto 1fr;
+	justify-content: space-between;
+	align-items: center;
+	background: var(--header-bg);
+	color: #fff;
+	padding: 8px 20px;
+	position: relative;
+	z-index: 30;
+	min-height: 46px;
+}
+
+header h1 {
+	margin: 0;
+	font-size: 1.2em;
+	font-weight: 600;
+}
+
+header button {
+	background: #2ecc71;
+	color: #fff;
+	border: none;
+	padding: 6px 12px;
+	border-radius: 6px;
+	font-size: 0.9em;
+	cursor: pointer;
+}
+
+header button:hover {
+	background: #27ae60;
+}
+
+.header-left,
+.header-right,
+.header-center {
+	display: flex;
+	align-items: center;
+}
+
+.header-left {
+	gap: 6px;
+}
+
+.header-center {
+	justify-content: center;
+	pointer-events: none; /* Blockera klick på hela mittensektionen */
+}
+
+.header-right {
+	justify-content: flex-end;
+	gap: 8px;
+}
+
+.header-button-standard {
+    font-size: 0.9em !important;
+}
+
+/* Justering för Logga ut/in-knappen */
+#authBtn {
+	min-width: 110px;
+	margin-right: 50px; /* För att kompensera för Dark Mode-knappen */
+	text-align: center;
+}
+
+/* Dark Mode Toggle Positionering */
+#toggleDarkModeBtn {
+	position: absolute;
+	right: 20px;
+	top: 50%; /* Centrerar vertikalt */
+	transform: translateY(-50%);
+	width: 34px;
+	height: 34px;
+	border-radius: 50%;
+	padding: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: #4a6c8e !important;
+}
+
+#toggleDarkModeBtn:hover {
+	background: #5a7fa3 !important;
+}
+
+#toggleDarkModeBtn i {
+	font-size: 1.1em;
+}
+
+/* --- DATUMKONTROLLER --- */
+#dateControls {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 1em;
+	pointer-events: auto; /* Återaktivera klick på datumkontrollerna */
+}
+
+#dateInput {
+	padding: 6px;
+	border: none;
+	border-radius: 4px;
+	font-size: 0.9em;
+	font-family: inherit;
+	color: var(--text-primary);
+	cursor: pointer;
+}
+
+
+/* =========================================================
+   4. GANTT LAYOUT & SCHEMA-GRID
+   ========================================================= */
+#timeline-wrapper {
+	flex: 1;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	background: #fff;
+	position: relative;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+}
+
+/* --- TIDS-HEADER (Horisontell axel) --- */
+#timeHeader {
+	display: flex;
+	width: 100%;
+	height: 40px;
+	border-bottom: 2px solid var(--accent-color);
+	background: #f1f1f1;
+	z-index: 10;
+}
+
+#timeAxis {
+	flex: 1;
+	display: flex;
+	position: relative;
+	width: 100%;
+}
+
+.hour-label-gantt {
+	flex: 1;
+	text-align: left;
+	line-height: 38px;
+	font-size: 0.85em;
+	font-weight: 600;
+	color: #555;
+	border-left: 1px solid #eee;
+	box-sizing: border-box;
+}
+
+#timeAxis .hour-label-gantt:first-child {
+	border-left: none;
+}
+
+/* --- HUVUDSCHEMA (Grid) --- */
+#staffingGrid {
+	flex: 1;
+	display: block;
+	overflow-y: hidden; /* Tog bort scroll för att matcha JS-logiken */
+	overflow-x: hidden;
+	position: relative;
+}
+
+#staffingArea {
+	width: 100%;
+	position: relative;
+	min-height: 600px;
+}
+
+
+/* =========================================================
+   5. BEMANNINGSSTAPLAR (SHIFT BARS)
+   ========================================================= */
+.shift-bar {
+	position: absolute;
+	height: var(--shift-bar-height);
+	border-radius: 4px;
+	background: #4a6c8e;
+	cursor: pointer;
+	/* Centrerar vertikalt i raden */
+	transform: translateY(calc(var(--row-height) / 2 - var(--shift-bar-height) / 2));
+	z-index: 3;
+	padding: 0 8px;
+	line-height: var(--shift-bar-height);
+	font-size: 0.85em;
+	color: var(--shift-text-color);
+	white-space: nowrap;
+	overflow: hidden;
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	font-weight: 600;
+}
+
+.shift-bar:hover {
+	background-color: #ffb066 !important;
+	background-image: linear-gradient(
+		to bottom,
+		rgba(255,255,255,0.28),
+		rgba(255,255,255,0.00) 45%
+	);
+	color: #424242 !important;
+	z-index: 6;
+
+	transition:
+		background-color 0.12s ease,
+		box-shadow 0.12s ease,
+		background-image 0.12s ease,
+		color 0.12s ease;
+}
+
+
+/* =========================================================
+   6. VERTIKALA OCH HORISONTELLA LINJER
+   ========================================================= */
+
+/* Vertikala timlinjer */
+.vertical-hour-line {
+	position: absolute;
+	top: 0;
+	width: 1px;
+	background: #d0d0d0;
+	pointer-events: none;
+	z-index: 1;
+	height: 100%;
+}
+
+#verticalLines {
+	position: absolute;
+	top: 40px; /* under timeHeader */
+	left: 0;
+	right: 0;
+	bottom: 0;
+	pointer-events: none;
+	z-index: 1;
+}
+
+/* Horisontella radlinjer */
+.staff-row-line {
+	position: absolute;
+	left: 0;
+	right: 0;
+	height: 1px;
+	background: var(--time-line-color);
+	pointer-events: none;
+}
+
+
+/* =========================================================
+   7. MODALER OCH BAKGRUND
+   ========================================================= */
+.modal-bg {
+	display: none;
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.4);
+	justify-content: center;
+	align-items: center;
+}
+
+.modal {
+	background: #fff;
+	border-radius: 10px;
+	box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+	animation: fadeIn 0.25s ease;
+	width: 450px;
+	padding: 26px 30px 22px 30px;
+}
+
+.modal h2 {
+	font-size: 1.25em;
+	font-weight: 600;
+	margin: 0 0 14px 0;
+	text-align: center;
+	color: #111;
+}
+
+.modal-body label {
+	font-size: 0.9em;
+	font-weight: 600;
+	color: #222;
+	display: block;
+	margin-top: 10px;
+}
+
+.modal-body input[type="text"],
+.modal-body input[type="date"],
+.modal-body input[type="time"],
+.modal-body textarea {
+	width: 100%;
+	padding: 7px 8px;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	font-size: 0.9em;
+	box-sizing: border-box;
+	transition: border 0.2s, box-shadow 0.2s;
+	margin-top: 4px;
+	font-family: inherit;
+	resize: none;
+}
+
+.modal-body input:focus, .modal-body textarea:focus {
+	border-color: #007acc;
+	box-shadow: 0 0 3px rgba(0, 122, 204, 0.4);
+	outline: none;
+}
+
+.time-row-inline {
+	display: flex;
+	gap: 15px;
+}
+.time-row-inline > div {
+	flex: 1;
+}
+
+.modal-buttons {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 20px;
+}
+
+.modal-buttons button {
+	padding: 8px 14px;
+	border: none;
+	border-radius: 6px;
+	cursor: pointer;
+	font-size: 0.9em;
+}
+
+.save-btn {
+	background: #005ea5;
+	color: #fff;
+}
+
+.delete-btn {
+	background: #dc3545;
+	color: #fff;
+}
+
+.cancel-btn {
+	background: #ccc;
+	color: #000;
+}
+
+/* HOVER-EFFEKTER FÖR MODALKNAPPAR */
+.modal-buttons button {
+    transition: background 0.2s ease, transform 0.1s; /* Lägg till en mjuk övergång */
+}
+
+.save-btn:hover {
+    background: #004a80; /* Mörkare blå */
+    transform: translateY(-1px);
+}
+
+.delete-btn:hover {
+    background: #c5303c; /* Mörkare röd */
+    transform: translateY(-1px);
+}
+
+.cancel-btn:hover {
+    background: #bbb; /* Mörkare grå */
+    color: #000;
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   8. SPECIFIKA MODALER
+   ========================================================= */
+
+/* --- INLOGGNINGSMODAL --- */
+.login-modal {
+	width: 380px;
+	min-height: 300px;
+	padding: 26px 30px 22px 30px;
+	border-radius: 10px;
+	background: #fff;
+	box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.login-body {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	margin-top: 8px;
+}
+
+.login-body label {
+	font-size: 0.9em;
+	font-weight: 600;
+	color: #222;
+}
+
+.login-body input {
+	padding: 8px 10px;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	font-size: 0.9em;
+	font-family: inherit;
+	transition: border 0.2s, box-shadow 0.2s;
+}
+
+.login-body input:focus {
+	border-color: #007acc;
+	box-shadow: 0 0 3px rgba(0, 122, 204, 0.4);
+	outline: none;
+}
+
+.login-error {
+	color: #dc3545;
+	font-size: 0.85em;
+	display: none;
+	margin-top: 6px;
+}
+
+.login-buttons {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 18px;
+}
+
+/* --- TA BORT MODAL (Delete Modal) --- */
+.delete-modal {
+	width: 420px;
+	padding: 26px 30px 26px 30px;
+	position: relative;
+}
+
+.delete-title {
+	text-align: center;
+	font-size: 1.25em;
+	margin: 0 0 14px 0;
+	font-weight: 600;
+	color: #dc3545;
+}
+
+.delete-text {
+	font-size: 1em;
+	color: #222;
+	margin: 10px 0 20px 0;
+	text-align: center;
+	line-height: 1.4;
+}
+
+.delete-close {
+	position: absolute;
+	top: 12px;
+	right: 14px;
+	font-size: 1.4em;
+	cursor: pointer;
+	transition: transform 0.15s ease;
+}
+
+.delete-close:hover {
+	transform: scale(1.2);
+}
+
+/* --- STÄNGD DAG MODAL (VISUELLT KORT) --- */
+.closed-day-box {
+	min-width: 200px;
+	position: absolute;
+	top: 30%; /* Ligger nu lite högre än mitten */
+	left: 50%;
+	transform: translate(-50%, -50%);
+
+	background: #f44336; /* röd */
+	color: white;
+	padding: 40px 40px;
+	border-radius: 26px;
+	font-size: 1.5em;
+	font-weight: 600;
+	text-align: center;
+
+	box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+	
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 18px;
+}
+
+.closed-day-delete-btn {
+	background: #0a5778;
+	border: none;
+	color: white;
+	padding: 8px 18px;
+	border-radius: 10px;
+	cursor: pointer;
+	font-size: 0.55em;
+	font-weight: 600;
+}
+
+.closed-day-delete-btn:hover {
+	background: #0c6a92;
+}
+
+
+/* =========================================================
+   9. VECKOVY (WEEKVIEW)
+   ========================================================= */
+
+/* --- Bakgrund & själva modalen --- */
+#weekViewBg {
+	display: none;
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.45);
+	justify-content: center;
+	align-items: center;
+}
+
+#weekViewModal {
+	width: 1100px !important;
+	max-height: 80vh;
+	overflow-y: auto;
+	position: relative;
+	background: #fff;
+	border-radius: 10px;
+	padding: 26px 30px 22px 30px;
+	box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+	animation: fadeIn 0.25s ease;
+}
+
+#weekViewModal h2 {
+	margin-top: 0;
+	margin-bottom: 14px;
+	text-align: center;
+	font-size: 1.2em;
+	font-weight: 600;
+	color: #111;
+}
+
+#weekViewContent {
+	padding-top: 10px;
+}
+
+#weekViewClose {
+	position: absolute;
+	top: 12px;
+	right: 14px;
+	font-size: 1.4em;
+	cursor: pointer;
+	transition: transform 0.2s;
+	user-select: none;
+}
+
+#weekViewClose:hover {
+	transform: scale(1.2);
+}
+
+/* --- WeekView Tabell --- */
+.week-table {
+	table-layout: fixed;
+	width: 1100px;
+	border-collapse: collapse;
+	margin-top: 10px;
+	font-size: 0.95em;
+}
+
+.week-table th:nth-child(1),
+.week-table td:nth-child(1) {
+	width: 120px;
+	text-align: right;
+}
+
+.week-table th:nth-child(2),
+.week-table td:nth-child(2) {
+	width: 850px;
+	word-wrap: break-word;
+}
+
+.week-table th {
+	background: #0a5778;
+	color: white;
+	text-align: left;
+	padding: 8px;
+	font-weight: 600;
+}
+
+.week-table td {
+	padding: 8px;
+	border-bottom: 1px solid #d0d6db;
+	background: #eef1f4;
+}
+
+/* --- WeekView Header & Navigering --- */
+#weekViewHeader {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 15px;
+	width: 100%;
+	margin-bottom: 10px;
+	text-align: center;
+}
+
+#weekViewTitle {
+	display: inline-block;
+	width: 140px;
+	text-align: center;
+	white-space: nowrap;
+	transform: translateY(5px);
+}
+
+.week-nav-btn {
+	width: 34px;
+	height: 34px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: #0a5778;
+	color: white;
+	border: none;
+	border-radius: 6px;
+	cursor: pointer;
+	font-size: 1.0em;
+	transition: background 0.2s, transform 0.2s;
+}
+
+.week-nav-btn:hover {
+	background: #0c6a92;
+	transform: scale(1.12);
+}
+
+/* --- Knappar i Veckocellerna --- */
+.week-cell {
+	position: relative;
+	padding-right: 40px; /* Plats för plusknappen */
+}
+
+.week-persons {
+	display: inline-block;
+	padding-right: 10px;
+}
+
+.week-add-btn {
+	position: absolute;
+	right: 8px;
+	top: 50%;
+	transform: translateY(-50%);
+
+	width: 26px;
+	height: 26px;
+	border-radius: 6px;
+
+	background: #2ecc71;
+	border: none;
+	color: white;
+	font-size: 1.1em;
+	cursor: pointer;
+	font-weight: 600;
+
+	transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.week-add-btn:hover {
+	background: #27ae60;
+	transform: translateY(-50%) scale(1.15);
+}
+
+.week-lock-btn {
+	position: absolute;
+	right: 44px; /* Ligger direkt till vänster om plus-knappen */
+	top: 50%;
+	transform: translateY(-50%);
+
+	width: 26px;
+	height: 26px;
+	border-radius: 6px;
+
+	background: #c0392b !important;
+	border: none;
+	color: white;
+	font-size: 1em;
+	cursor: pointer;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	transition: 0.15s ease;
+}
+
+.week-lock-btn:hover {
+	transform: translateY(-50%) scale(1.15);
+	background: #e74c3c !important;
+}
+
+
+/* =========================================================
+   10. SÄRSKILDA DAGAR & INLOGGNINGSSTATUS
+   ========================================================= */
+
+/* --- Röda Dagar (Generellt) --- */
+.weekday-red {
+	color: red !important;
+}
+
+/* --- Automatisk Stängd Dag (Röd Dag) --- */
+.closed-day-auto {
+	color: red;
+	cursor: default;
+	text-decoration: none;
+}
+
+/* --- Manuellt Stängd Dag --- */
+.closed-day-manual {
+	color: red;
+}
+
+.logged-in .closed-day-manual {
+	cursor: pointer;
+}
+:not(.logged-in) .closed-day-manual {
+	cursor: default;
+}
+
+.logged-in .closed-day-text {
+	text-decoration: underline !important;
+	cursor: pointer !important;
+}
+:not(.logged-in) .closed-day-text {
+	text-decoration: none;
+}
+
+
+/* =========================================================
+   11. TOOLTIP
+   ========================================================= */
+#jt-tooltip {
+	position: fixed;
+	border: 1px solid rgba(255, 255, 255, 0.6);
+	padding: 8px 12px;
+	background: #222;
+	color: #fff;
+	font-size: 0.9em;
+	border-radius: 6px;
+	pointer-events: none;
+	z-index: 9999;
+	opacity: 0;
+	transition: opacity 0.12s ease;
+	white-space: pre-wrap;
+	max-width: 350px;
+}
+
+
+/* =========================================================
+   12. Z-INDEX HIERARKI (FIXERAD STRUKTUR)
+   ========================================================= */
+
+/* Högst z-index vinner, oavsett !important, 
+   men !important garanterar att den vinner över 
+   standard-z-index i samma selektor. */
+#jt-tooltip { z-index: 9999 !important; }
+#loginBg { z-index: 3000 !important; }
+#deleteConfirmBg { z-index: 2500 !important; }
+#shiftModalBg { z-index: 2000 !important; }
+#closedDayModalBg { z-index: 1500 !important; }
+/* Åsidosätt z-index 500 från första blocket och ge högre prioritet */
+.closed-day-box { z-index: 1800 !important; } 
+
+#weekViewBg { z-index: 1000 !important; }
+header { z-index: 30; }
+#toast { z-index: 100; }
+.shift-bar:hover { z-index: 6; }
+.shift-bar { z-index: 3; }
+.vertical-hour-line, .staff-row-line { z-index: 1; }
+
+
+/* =========================================================
+   13. DARK MODE ÖVERSKRIVNINGAR
+   ========================================================= */
+body.dark-mode {
+	background: #121212;
+	color: #f0f0f0;
+	--text-primary: #ffffff;
+	--header-bg: #1f1f1f;
+	--shift-color: #4a6c8e;
+	--time-line-color: #3a3a3a;
+}
+
+.dark-mode #timeHeader {
+	background: #252525;
+	border-bottom: 2px solid #5d98d2;
+}
+
+.dark-mode .hour-label-gantt {
+	color: #aaa;
+	border-left: 1px solid #333;
+}
+
+.dark-mode .vertical-hour-line,
+.dark-mode .staff-row-line {
+	background: #3a3a3a;
+}
+
+.dark-mode #dateInput {
+	background: #444;
+	color: #f0f0f0;
+}
+
+.dark-mode #timeline-wrapper {
+	background: #1e1e1e;
+	border: 1px solid #333;
+}
+
+.dark-mode .modal {
+	background: #222;
+}
+
+.dark-mode .modal h2 {
+	color: #eee;
+}
+
+.dark-mode .modal-body label {
+	color: #ccc;
+}
+
+.dark-mode .modal-body input,
+.dark-mode .modal-body textarea {
+	background: #333;
+	border-color: #555;
+	color: #eee;
+}
+
+.dark-mode .modal-body input:focus, .dark-mode .modal-body textarea:focus {
+	border-color: #007acc;
+}
+
+.dark-mode .cancel-btn {
+	background: #444;
+	color: #eee;
+}
+
+/* Dark Mode specifika färger */
+.dark-mode .weekday-red,
+.dark-mode .closed-day-auto,
+.dark-mode .closed-day-manual {
+	color: #ff8080 !important;
+}
+
+.dark-mode .shift-bar:hover {
+	background-color: #6cadff !important;
+	box-shadow: 0 0 8px rgba(108, 173, 255, 0.9);
+}
+
+.dark-mode #toggleDarkModeBtn {
+	background: #888 !important;
+}
+.dark-mode #toggleDarkModeBtn:hover {
+	background: #9a9a9a !important;
+}
+
+.dark-mode #weekViewModal {
+	background: #222;
+	color: #eee;
+	box-shadow: 0 6px 20px rgba(0,0,0,0.55);
+}
+
+.dark-mode #weekViewModal h2 {
+	color: #fafafa;
+}
+
+.dark-mode #weekViewContent {
+	color: #ddd;
+}
+
+.dark-mode #weekViewClose {
+	color: #fff;
+}
+
+.dark-mode .week-nav-btn {
+	background: #444;
+	color: #fff;
+}
+
+.dark-mode .week-nav-btn:hover {
+	background: #666;
+}
+
+.dark-mode .week-table th {
+	background: #333;
+	color: #fff;
+}
+
+.dark-mode .week-table td {
+	background: #222;
+	color: #eee;
+	border-bottom: 1px solid #444;
+}
+
+.dark-mode .week-add-btn {
+	background: #3fa76a;
+}
+
+.dark-mode .week-add-btn:hover {
+	background: #56c48a;
+}
+
+.dark-mode .delete-modal {
+	background: #222;
+}
+
+.dark-mode .delete-title {
+	color: #ff6666;
+}
+
+.dark-mode .delete-text {
+	color: #eee;
+}
+
+.dark-mode .delete-close {
+	color: #fff;
+}
+
+.dark-mode .week-lock-btn {
+	background: #3fa76a;
+}
+
+.dark-mode .week-lock-btn:hover {
+	background: #56c48a;
+}
+</style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <h1>Bemanning Diabasen</h1>
+            <button id="toggleDarkModeBtn" onclick="toggleDarkMode()" class="header-button">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+
+        <div class="header-center">
+            <div id="dateControls">
+                <button onclick="changeDate(-1)" title="Föregående dag">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <input type="date" id="dateInput" onchange="handleDateChange(this.value)">
+                <button onclick="changeDate(1)" title="Nästa dag">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                <button id="todayBtn" class="header-button-standard" onclick="setFocusDate(new Date())">Idag</button>
+
+                <button id="weekViewBtn" class="header-button-standard" onclick="openWeekView()">Veckovy</button>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <button id="closedDayBtn" onclick="openClosedDayModal()" style="display:none;">Ange stängd dag</button>
+            <button id="addShiftBtn" onclick="openModal()" style="display:none;">+ Lägg till</button>
+            <button id="authBtn" onclick="toggleAuth()">Logga in</button>
+        </div>
+    </header>
+
+    <div id="weekdayLabel"
+         style="text-align:center;
+                font-size:1.8em;
+                margin:10px 0 10px -70px;">
+    </div>
+
+    <div id="container">
+        <div id="timeline-wrapper">
+
+            <div id="verticalLines"></div>
+
+            <div id="timeHeader">
+                <div id="timeAxis"></div>
+            </div>
+
+            <div id="staffingGrid">
+                <div id="staffingArea"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="shiftModalBg" class="modal-bg">
+        <div class="modal">
+            <h2 id="modalTitle">Nytt pass</h2>
+            <input type="hidden" id="editId">
+
+            <div class="modal-body">
+                <label for="name">Namn</label>
+                <input type="text" id="name" autocomplete="off" placeholder="För- och efternamn">
+
+                <label for="shiftDate">Datum</label>
+                <input type="date" id="shiftDate" required>
+                
+                <div class="time-row-inline">
+                    <div>
+                        <label for="startTime">Starttid</label>
+                        <input type="time" id="startTime" value="07:00" required min="07:00" max="18:00" step="300">
+                    </div>
+                    <div>
+                        <label for="endTime">Sluttid</label>
+                        <input type="time" id="endTime" value="18:00" required min="07:00" max="18:00" step="300">
+                    </div>
+                </div>
+
+                <label for="comment">
+                    Kommentar (valfritt) 
+                    <span class="info-icon" 
+                          data-jt="Kommentaren syns för alla användare. Den visas<br>när man hovrar posten i Gantt-schemat.">
+                        <i class="fas fa-info-circle"></i>
+                    </span>
+                </label>
+                <textarea id="comment" rows="3" placeholder="Anteckning om passet (syfte, besök etc.)"></textarea>
+
+            </div>
+
+            <div class="modal-buttons">
+                <button class="cancel-btn" onclick="closeModal()">Avbryt</button>
+                <button class="delete-btn" id="deleteBtn" onclick="deleteShift()">Ta bort</button>
+                <button class="save-btn" onclick="saveShift()">Spara</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-bg" id="loginBg">
+        <div class="modal login-modal" id="loginModal" autocomplete="off">
+            <h2>Logga in</h2>
+
+            <div class="login-body">
+                <label for="loginEmail">E-postadress</label>
+                <input type="email" id="loginEmail" placeholder="namn@exempel.se" autocomplete="off" autocapitalize="none" spellcheck="false">
+
+                <label for="loginPassword">Lösenord</label>
+                <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="new-password" autocapitalize="none" spellcheck="false">
+
+                <p id="loginError" class="login-error">Ogiltig e-post eller lösenord.</p>
+            </div>
+
+            <div class="modal-buttons login-buttons">
+                <button class="cancel-btn" onclick="closeLoginModal()">Avbryt</button>
+                <button class="save-btn" onclick="performLogin()">Logga in</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="deleteConfirmBg" class="modal-bg">
+        <div class="modal delete-modal">
+
+            <div class="delete-close" onclick="closeDeleteConfirmModal()">✖</div>
+
+            <h2 class="delete-title">
+                <i class="fas fa-trash-alt"></i> Ta bort pass
+            </h2>
+
+            <p id="deleteConfirmText" class="delete-text">
+                Är du säker på att du vill ta bort passet?
+            </p>
+
+            <input type="hidden" id="confirmDeleteId">
+
+            <div class="modal-buttons">
+                <button class="cancel-btn" onclick="closeDeleteConfirmModal()">Avbryt</button>
+                <button class="delete-btn" onclick="confirmDeleteAction()">Ta bort</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="closedDayModalBg" class="modal-bg">
+        <div class="modal">
+            <h2>Ange nedan datum som stängd dag</h2>
+
+            <div class="modal-body">
+                <label for="closedDayDate">Datum</label>
+                <input type="date" id="closedDayDate">
+            </div>
+
+            <div class="modal-buttons">
+                <button class="cancel-btn" onclick="closeClosedDayModal()">Avbryt</button>
+                <button class="save-btn" onclick="saveClosedDay()">Spara</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="weekViewBg" class="modal-bg">
+        <div class="modal" id="weekViewModal">
+
+            <div id="weekViewClose" onclick="closeWeekView()">
+                ✖
+            </div>
+
+            <div id="weekViewHeader">
+                <button class="week-nav-btn" 
+                        id="weekPrevBtn" 
+                        onclick="changeWeek(-1)"
+                        data-jt="Visa föregående vecka"> <i class="fas fa-chevron-left"></i>
+                </button>
+
+                <h2 id="weekViewTitle">Veckovy</h2>
+
+                <button class="week-nav-btn" 
+                        id="weekNextBtn" 
+                        onclick="changeWeek(1)"
+                        data-jt="Visa nästa vecka"> <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+
+            <div id="weekViewContent">
+                </div>
+
+        </div>
+    </div>
+
+    <div id="jt-tooltip"></div>
+    <div id="toast"></div>
+
+
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+
+<script>
+
+// --- AUTOLOGOUT KONSTANTER & VARIABLER ---
+const INACTIVITY_TIMEOUT_MS = 15 * 60 * 1000; // 15 minuter i millisekunder
+let inactivityTimer; 
+let lastActivityTime = Date.now();
+
+
+// OBS! Firebase-nycklarna är generiska för exempelfunktionalitet.
+const firebaseConfig = {
+  apiKey: "AIzaSyCERuk2lD95H8mHkfRptwExrHP_tKcqWtc",
+  authDomain: "diabasen-aa8aa.firebaseapp.com",
+  projectId: "diabasen-aa8aa",
+  storageBucket: "diabasen-aa8aa.firebasestorage.app",
+  messagingSenderId: "28156516018",
+  appId: "1:28156516018:web:54ec14fc8764a301289bab"
+};
+
+let listenerInitialized = false;
+let weekViewDate = null;
+
+const app = firebase.initializeApp(firebaseConfig);
+const db = app.firestore();
+const auth = app.auth();
+const STAFFING_COLLECTION = "staffing"; 
+
+// --- GANTT KONSTANTER ---
+const START_HOUR = 7;
+const END_HOUR = 18; 
+const TOTAL_HOURS = END_HOUR - START_HOUR; 
+const TOTAL_MINUTES = TOTAL_HOURS * 60; 
+
+const ROW_HEIGHT = 40; 
+const SHIFT_BAR_HEIGHT = 26; 
+
+let shifts = [];
+let currentUser = null;
+let unsubscribeFromShifts = null;
+let focusDate = new Date(); 
+focusDate.setHours(0, 0, 0, 0); 
+
+// --- AUTOLOGOUT FUNKTIONER ---
+
+function resetInactivityTimer() {
+    // 1. Nollställ tiden för senaste aktivitet
+    lastActivityTime = Date.now();
+
+    // 2. Rensa befintlig timer (om den finns)
+    if (inactivityTimer) {
+        clearTimeout(inactivityTimer);
+    }
+
+    // 3. Starta en ny timer
+    // Timer kollar om nuvarande tid - senaste aktivitet > INACTIVITY_TIMEOUT_MS.
+    inactivityTimer = setTimeout(checkInactivity, INACTIVITY_TIMEOUT_MS + 1000); 
+    // Lägger till en extra sekund som buffert
+}
+
+function checkInactivity() {
+    const timeElapsed = Date.now() - lastActivityTime;
+
+    // Jämför tiden som har gått med tidsgränsen
+    if (timeElapsed >= INACTIVITY_TIMEOUT_MS) {
+        
+        // 🚨 Kontrollera att någon faktiskt är inloggad innan vi loggar ut
+        if (currentUser) {
+            
+            // Logga ut via Firebase
+            auth.signOut().then(() => {
+                showToast("Du loggades ut automatiskt på grund av inaktivitet.", "#dc3545");
+            }).catch(error => {
+                console.error("Fel vid utloggning:", error);
+            });
+            
+            // Stäng alla öppna modaler för säkerhets skull
+            closeModal();
+            closeWeekView();
+            closeDeleteConfirmModal();
+            closeClosedDayModal();
+        }
+        
+    } else {
+        // Om timern löpte ut FÖR TIDIGT (p.g.a. webbläsar-throttling eller liknande), 
+        // starta om den med den återstående tiden.
+        const remainingTime = INACTIVITY_TIMEOUT_MS - timeElapsed;
+        inactivityTimer = setTimeout(checkInactivity, remainingTime + 1000);
+    }
+}
+
+// --- HJÄLPFUNKTIONER ---
+
+function openClosedDayModal() {
+	tooltip.style.opacity = 0;
+    if (!currentUser) return;
+
+    const modal = document.getElementById("closedDayModalBg");
+    modal.style.display = "flex";
+
+    const dateStr = formatDate(focusDate);
+    document.getElementById("closedDayDate").value = dateStr;
+
+    // --- NY DEL: Lägg in varning om det finns poster ---
+    const shiftsForDay = shifts.filter(s => s.date === dateStr && s.type !== "closed");
+
+    let warning = document.getElementById("closedDayWarning");
+    if (!warning) {
+        warning = document.createElement("p");
+        warning.id = "closedDayWarning";
+        warning.style.color = "red";
+        warning.style.fontWeight = "600";
+        warning.style.marginTop = "12px";
+        document.querySelector("#closedDayModalBg .modal-body").appendChild(warning);
+    }
+
+    if (shiftsForDay.length > 0) {
+        warning.textContent = `OBS: Denna dag har ${shiftsForDay.length} poster som kommer raderas.`;
+        warning.style.display = "block";
+    } else {
+        warning.style.display = "none";
+    }
+}
+
+function closeClosedDayModal() {
+    document.getElementById("closedDayModalBg").style.display = "none";
+}
+
+function openClosedDayFromWeek(dateStr) {
+	tooltip.style.opacity = 0;
+    if (!currentUser) return;
+
+    const modal = document.getElementById("closedDayModalBg");
+    modal.style.display = "flex";
+
+    document.getElementById("closedDayDate").value = dateStr;
+
+    // --- NY DEL: Lägg in varning om det finns poster ---
+    const shiftsForDay = shifts.filter(s => s.date === dateStr && s.type !== "closed");
+
+    let warning = document.getElementById("closedDayWarning");
+    if (!warning) {
+        warning = document.createElement("p");
+        warning.id = "closedDayWarning";
+        warning.style.color = "red";
+        warning.style.fontWeight = "600";
+        warning.style.marginTop = "12px";
+        document.querySelector("#closedDayModalBg .modal-body").appendChild(warning);
+    }
+
+    if (shiftsForDay.length > 0) {
+        warning.textContent = `OBS: Denna dag har ${shiftsForDay.length} poster som kommer raderas.`;
+        warning.style.display = "block";
+    } else {
+        warning.style.display = "none";
+    }
+}
+
+function getEasterDate(year) {
+    const a = year % 19;
+    const b = Math.floor(year / 100);
+    const c = year % 100;
+    const d = Math.floor(b / 4);
+    const e = b % 4;
+    const f = Math.floor((b + 8) / 25);
+    const g = Math.floor((b - f + 1) / 3);
+    const h = (19 * a + b - d - g + 15) % 30;
+    const i = Math.floor(c / 4);
+    const k = c % 4;
+    const l = (32 + 2 * e + 2 * i - h - k) % 7;
+    const m = Math.floor((a + 11 * h + 22 * l) / 451);
+    const month = Math.floor((h + l - 7 * m + 114) / 31);
+    const day = ((h + l - 7 * m + 114) % 31) + 1;
+
+    return new Date(year, month - 1, day); // mars/april
+}
+
+function getGoodFriday(year) {
+    const easter = getEasterDate(year);
+    const d = new Date(easter);
+    d.setDate(easter.getDate() - 2);
+    return d;
+}
+
+function getEasterMonday(year) {
+    const easter = getEasterDate(year);
+    const d = new Date(easter);
+    d.setDate(easter.getDate() + 1);
+    return d;
+}
+
+function getAscensionDay(year) {
+    const easter = getEasterDate(year);
+    const d = new Date(easter);
+    d.setDate(easter.getDate() + 39);
+    return d;
+}
+
+function isRedDay(dateStr) {
+    const year = Number(dateStr.slice(0, 4));
+    const monthDay = dateStr.slice(4); // "-MM-DD"
+
+    // Samma fasta röda dagar som i övriga scriptet
+    const specialDates = [
+        "-12-24", "-12-25", "-12-26",
+        "-12-31", "-01-01", "-01-06", "-05-01"
+    ];
+
+    // Beräkna rörliga röda dagar (samma logik som i weekView & weekdayLabel)
+    const gf = "-" + formatDate(getGoodFriday(year)).slice(5);
+    const em = "-" + formatDate(getEasterMonday(year)).slice(5);
+    const ad = "-" + formatDate(getAscensionDay(year)).slice(5);
+    const ed = "-" + formatDate(getEasterDate(year)).slice(5); // påskdagen
+
+    // Lägg till de rörliga dagarna
+    specialDates.push(gf, em, ad, ed);
+
+    // Jämför "-MM-DD" med listan
+    return specialDates.includes(monthDay);
+}
+
+function isWeekendDay(date) {
+    const weekday = date.getDay(); // 0 = söndag, 6 = lördag
+
+    if (weekday === 6) return "lördag";
+    if (weekday === 0) return "söndag";
+
+    return null;
+}
+
+function showToast(message, color = "#323232") {
+   const toast = document.getElementById("toast");
+   toast.textContent = message;
+   toast.style.background = color;
+   toast.style.opacity = "1";
+   toast.style.transform = "translateY(0)";
+   setTimeout(() => {
+      toast.style.opacity = "0";
+      toast.style.transform = "translateY(20px)";
+   }, 2500);
+}
+
+// YYYY-MM-DD
+function formatDate(date) {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+}
+
+// Konvertera HH:MM till minuter från start (07:00)
+function parseTime(timeStr) {
+    if (!timeStr) return 0;
+    const [hours, minutes] = timeStr.split(':').map(Number);
+    const totalMinutes = hours * 60 + minutes;
+    const startMinutes = START_HOUR * 60;
+    return totalMinutes - startMinutes; 
+}
+
+function getSwedishWeekNumber(date) {
+    const temp = new Date(date.getTime());
+    temp.setHours(0,0,0,0);
+    temp.setDate(temp.getDate() + 3 - ((temp.getDay() + 6) % 7));
+    const week1 = new Date(temp.getFullYear(), 0, 4);
+    return 1 + Math.round(((temp - week1) / 86400000 - 3 + ((week1.getDay() + 6) % 7)) / 7);
+}
+
+function getWeekDates(date) {
+    const monday = new Date(date);
+    const day = monday.getDay();
+    const diff = (day === 0 ? -6 : 1) - day; // måndag = 1, söndag = 0
+    monday.setDate(monday.getDate() + diff);
+
+    const days = [];
+    for (let i = 0; i < 5; i++) {  // måndag–fredag
+        const d = new Date(monday);
+        d.setDate(monday.getDate() + i);
+        days.push(d);
+    }
+    return days;
+}
+
+function openWeekView() {
+    // Veckovyn ska ALLTID starta från datumet i Gantt-schemat
+    weekViewDate = new Date(focusDate);
+
+    document.getElementById("weekViewBg").style.display = "flex";
+    renderWeekView();
+}
+
+function renderWeekView() {
+    const weekDates = getWeekDates(weekViewDate);
+    const weekNumber = getSwedishWeekNumber(weekViewDate);
+
+    // Fasta röda dagar
+    const specialDates = [
+        "-12-24", "-12-25", "-12-26",
+        "-12-31", "-01-01", "-01-06", "-05-01"
+    ];
+
+    // Rörliga röda dagar
+    const year = weekViewDate.getFullYear();
+    specialDates.push("-" + formatDate(getGoodFriday(year)).slice(5));
+    specialDates.push("-" + formatDate(getEasterMonday(year)).slice(5));
+    specialDates.push("-" + formatDate(getAscensionDay(year)).slice(5));
+
+    let html = `
+        <table class="week-table">
+            <tr>
+                <th style="width:120px;">Datum</th>
+                <th style="width:850px;">Bemanning (mån–fre)</th>
+            </tr>
+    `;
+
+    for (let i = 0; i < weekDates.length; i++) {
+        const date = weekDates[i];
+
+        const dateStr = formatDate(date);
+        const monthDay = dateStr.slice(4);
+
+        const isWeekend = (date.getDay() === 0 || date.getDay() === 6);
+        const isRedDay = isWeekend || specialDates.includes(monthDay);
+        const weekdayClass = isRedDay ? "weekday-red" : "";
+
+        const pretty = date.toLocaleDateString("sv-SE", {
+            weekday: "short",
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit"
+        });
+
+        let cellContent = "";
+        let plusBtn = "";
+        let lockBtn = "";
+
+        // ===============================
+        // 🔒 AUTOMATISK STÄNGD (RÖD DAG)
+        // ===============================
+        if (isRedDay) {
+            cellContent = `
+                <span class="closed-day-auto">
+                    🔒 Röd dag
+                </span>
+            `;
+
+            html += `
+                <tr>
+                    <td class="${weekdayClass}">${pretty}</td>
+                    <td class="week-cell">${cellContent}</td>
+                </tr>
+            `;
+            continue;
+        }
+
+        // ===============================
+        // PASS FÖR DAGEN
+        // ===============================
+        const shiftsForDay = shifts
+            .filter(s => s.date === dateStr)
+            .sort((a, b) => a.name.localeCompare(b.name, "sv"));
+
+        const closed = shiftsForDay.find(s => s.type === "closed");
+
+        // ============================================
+        // 🔒 MANUELLT STÄNGD DAG
+        // ============================================
+        if (closed) {
+            cellContent = `
+                <span class="closed-day-manual" data-id="${closed.id}">
+                    🔒 <span class="closed-day-text">Stängd dag</span>
+                </span>
+            `;
+
+            html += `
+                <tr>
+                    <td class="${weekdayClass}">${pretty}</td>
+                    <td class="week-cell">${cellContent}</td>
+                </tr>
+            `;
+
+            continue;
+        }
+
+        // =====================================
+        // 👤 VANLIG DAG (EJ RÖD, EJ STÄNGD)
+        // =====================================
+        let persons = shiftsForDay
+            .map(s => {
+                if (currentUser) {
+                    return `
+                        <span class="week-person" 
+                            data-id="${s.id}"
+							data-jt="Klicka för att redigera"
+                            style="cursor:pointer;text-decoration:underline;"
+                        >${s.name}</span>`;
+                }
+                return s.name;
+            })
+            .join(", ");
+
+        if (!persons)
+            persons = "<span style='color:#777;'>Obemannad dag</span>";
+
+        cellContent = `<span class="week-persons">${persons}</span>`;
+
+        // ======================================
+        // ➕ + 🔒  (ENDAST OM INLOGGAD)
+        // ======================================
+        if (currentUser) {
+            lockBtn = `
+                <button class="week-lock-btn" onclick="openClosedDayFromWeek('${dateStr}')" 
+						data-jt="Ange stängd dag">
+                    🔒
+                </button>
+            `;
+				plusBtn = `
+					<button class="week-add-btn" 
+							onclick="openModalForDate('${dateStr}')"
+							data-jt="Lägg till person">
+						+
+					</button>
+				`;
+        }
+
+        html += `
+            <tr>
+                <td class="${weekdayClass}">${pretty}</td>
+                <td class="week-cell">${cellContent}${lockBtn}${plusBtn}</td>
+            </tr>
+        `;
+    }
+
+    html += "</table>";
+
+    document.getElementById("weekViewTitle").textContent = "Vecka " + weekNumber;
+    document.getElementById("weekViewContent").innerHTML = html;
+
+    // ============================================================
+    // BLOCKERA ALL KLICKFUNKTION OCH CURSOR FÖR EJ INLOGGADE
+    // ============================================================
+    if (!currentUser) {
+        document.querySelectorAll(".closed-day-manual").forEach(el => {
+            el.style.pointerEvents = "none";
+        });
+    }
+
+    // ============================
+    // KLICKBARA PERSONER (inloggad)
+    // ============================
+    if (currentUser) {
+        document.querySelectorAll(".week-person").forEach(el => {
+            el.addEventListener("click", () => openShiftFromWeek(el.dataset.id));
+        });
+    }
+
+    // ======================================================
+    // KLICKBARA MANUELLA STÄNGDA DAGAR (endast inloggad)
+    // ======================================================
+    document.querySelectorAll(".closed-day-manual").forEach(el => {
+        if (!currentUser) return;
+
+        el.style.pointerEvents = "auto";
+
+        el.addEventListener("click", () => {
+            const shift = shifts.find(s => s.id === el.dataset.id);
+            if (shift) openDeleteClosedDayModal(shift);
+        });
+    });
+}
+
+function openDeleteClosedDayModal(shift) {
+	tooltip.style.opacity = 0;
+	if (!currentUser) return;
+    const modal = document.getElementById("deleteConfirmBg");
+
+    // Sätt z-index så den ligger över allt
+    document.getElementById("confirmDeleteId").value = shift.id;
+
+    document.getElementById("deleteConfirmText").innerHTML =
+        `Är du säker på att du vill ta bort<br>status <strong>Stängd dag</strong> för ${shift.date}?`;
+
+    modal.querySelector(".delete-title").innerHTML =
+        `<i class="fas fa-lock"></i> Ta bort stängd dag`;
+
+    modal.style.display = "flex";
+}
+
+
+function openShiftFromWeek(id) {
+	tooltip.style.opacity = 0;
+    const shift = shifts.find(s => s.id === id);
+    if (!shift || !currentUser) return;
+
+    // Lägg edit-modal ovanpå veckovyn
+    const shiftModal = document.getElementById("shiftModalBg");
+    const weekModal = document.getElementById("weekViewBg");
+
+    shiftModal.style.display = "flex";
+
+    // Fyll i modal-fälten
+    document.getElementById("modalTitle").textContent = "Redigera pass";
+    document.getElementById("editId").value = shift.id;
+    document.getElementById("name").value = shift.name;
+    document.getElementById("shiftDate").value = shift.date;
+    document.getElementById("startTime").value = shift.startTime;
+    document.getElementById("endTime").value = shift.endTime;
+    document.getElementById("comment").value = shift.comment || "";
+
+    // Visa ta bort-knappen
+    document.getElementById("deleteBtn").style.display = "inline-block";
+}
+
+
+function openModalForDate(dateStr) {
+	tooltip.style.opacity = 0;
+    if (!currentUser) return;
+
+    // Lägg passmodal framför veckovyn
+    const shiftModal = document.getElementById("shiftModalBg");
+    const weekModal = document.getElementById("weekViewBg");
+
+    // Öppna modal
+    shiftModal.style.display = "flex";
+
+    // Ställ in modal för nytt pass
+    document.getElementById("modalTitle").textContent = "Lägg till nytt pass";
+    document.getElementById("editId").value = "";
+    document.getElementById("name").value = "";
+
+    // Sätt datumet från veckovyn
+    document.getElementById("shiftDate").value = dateStr;
+
+    // Standardvärden
+    document.getElementById("startTime").value = "08:00";
+    document.getElementById("endTime").value = "17:00";
+    document.getElementById("comment").value = "";
+
+    // Dölj ta bort-knappen (nytt pass)
+    document.getElementById("deleteBtn").style.display = "none";
+}
+
+function changeWeek(direction) {
+    weekViewDate.setDate(weekViewDate.getDate() + direction * 7);
+    renderWeekView();
+}
+
+function closeWeekView() {
+    document.getElementById("weekViewBg").style.display = "none";
+
+    // Återställ interna vecka – så den INTE minns sina egna bläddringar
+    weekViewDate = null;
+}
+
+document.getElementById("weekViewBg").addEventListener("click", (e) => {
+    if (e.target.id === "weekViewBg") closeWeekView();
+});
+
+// --- DATUMNAVIGERING ---
+
+function handleDateChange(dateStr) {
+    if (dateStr) {
+        const newDate = new Date(dateStr);
+        newDate.setMinutes(newDate.getMinutes() + newDate.getTimezoneOffset());
+        setFocusDate(newDate);
+    }
+}
+
+function setFocusDate(newDate) {
+    newDate.setHours(0, 0, 0, 0);
+    focusDate = newDate;
+    updateDateControls();
+    drawTimeline();
+}
+
+function changeDate(days) {
+    const newDate = new Date(focusDate);
+    newDate.setDate(focusDate.getDate() + days);
+    setFocusDate(newDate);
+}
+
+function updateWeekdayLabel(date) {
+    const label = document.getElementById("weekdayLabel");
+    if (!label) return;
+
+    const weekdayNames = [
+        "söndag", "måndag", "tisdag", "onsdag",
+        "torsdag", "fredag", "lördag"
+    ];
+
+    const weekday = weekdayNames[date.getDay()];
+    const dateStr = formatDate(date);      // YYYY-MM-DD
+    const monthDay = dateStr.slice(4);     // -MM-DD
+    const year = date.getFullYear();
+
+    // Fasta röda dagar
+    const specialDates = [
+        "-12-24", "-12-25", "-12-26",
+        "-12-31", "-01-01", "-01-06", "-05-01"
+    ];
+
+    // 🟩 Långfredag
+    const goodFriday = getGoodFriday(year);
+    specialDates.push("-" + formatDate(goodFriday).slice(5));
+
+    // 🟩 Annandag påsk
+    const easterMonday = getEasterMonday(year);
+    specialDates.push("-" + formatDate(easterMonday).slice(5));
+
+    // 🟩 Kristi Himmelsfärdsdag
+    const ascension = getAscensionDay(year);
+    specialDates.push("-" + formatDate(ascension).slice(5));
+
+    const isWeekend = (date.getDay() === 0 || date.getDay() === 6);
+    const isSpecial = specialDates.includes(monthDay);
+
+    label.textContent = weekday;
+
+    if (isWeekend || isSpecial) {
+        label.classList.add("weekday-red");
+    } else {
+        label.classList.remove("weekday-red");
+    }
+}
+
+function updateDateControls() {
+    document.getElementById('dateInput').value = formatDate(focusDate);
+    updateWeekdayLabel(focusDate);
+}
+
+
+// --- INLOGGNING / AUTHENTICATION ---
+function toggleAuth() {
+   if (currentUser) {
+      auth.signOut().then(() => showToast("Du har loggats ut", "#005ea5"));
+   } else {
+	  tooltip.style.opacity = 0;
+      document.getElementById("loginBg").style.display = "flex";
+      document.getElementById("loginEmail").focus();
+   }
+}
+
+function closeLoginModal() {
+   document.getElementById("loginBg").style.display = "none";
+   document.getElementById("loginError").style.display = "none";
+   document.getElementById("loginEmail").value = "";
+   document.getElementById("loginPassword").value = "";
+}
+
+function performLogin() {
+   const email = document.getElementById("loginEmail").value.trim();
+   const password = document.getElementById("loginPassword").value.trim();
+   const errorMsg = document.getElementById("loginError");
+   if (!email || !password) {
+      errorMsg.textContent = "Fyll i både e-post och lösenord.";
+      errorMsg.style.display = "block";
+      return;
+   }
+   auth.signInWithEmailAndPassword(email, password)
+      .then(() => {
+         closeLoginModal();
+         showToast("Inloggning lyckades", "#2ecc71");
+      })
+      .catch(() => {
+         errorMsg.textContent = "Fel e-post eller lösenord.";
+         errorMsg.style.display = "block";
+      });
+}
+
+document.addEventListener("keydown", (event) => {
+   const loginBg = document.getElementById("loginBg");
+   if (loginBg.style.display === "flex" && event.key === "Enter") {
+      event.preventDefault();
+      performLogin();
+   }
+});
+function updateUI(user) {
+   const authBtn = document.getElementById("authBtn");
+   const addBtn = document.getElementById("addShiftBtn");
+   const closedBtn = document.getElementById("closedDayBtn");
+
+   if (user) {
+      currentUser = user;
+      authBtn.textContent = "Logga ut";
+	  closedBtn.style.display = "inline-block";
+      addBtn.style.display = "inline-block";
+      document.body.classList.add("logged-in");
+      
+      // NYTT: Starta inaktivitetsspårning
+      toggleInactivityTracking(true);
+      
+   } else {
+      currentUser = null;
+      authBtn.textContent = "Logga in";
+	  closedBtn.style.display = "none";
+      addBtn.style.display = "none";
+      document.body.classList.remove("logged-in");
+      closeModal();
+      
+      // NYTT: Stoppa inaktivitetsspårning
+      toggleInactivityTracking(false);
+   }
+   drawTimeline();
+}
+
+
+// --- FIREBASE OCH DATALADDNING ---
+
+function loadFromFirebase() {
+   if (unsubscribeFromShifts) unsubscribeFromShifts();
+
+   unsubscribeFromShifts = db.collection(STAFFING_COLLECTION).onSnapshot((snap) => {
+      shifts = [];
+      snap.forEach((doc) => {
+         const shift = doc.data();
+         shift.id = doc.id;
+         shifts.push(shift);
+      });
+
+      if (listenerInitialized === false) {
+          setFocusDate(new Date()); 
+      } else {
+          drawTimeline(); 
+      }
+      listenerInitialized = true;
+
+   }, (error) => {
+      console.error("❌ Fel vid hämtning:", error.message);
+      showToast("Kunde inte ladda data: " + error.message, "#dc3545");
+   });
+}
+
+function saveClosedDay() {
+    const dateStr = document.getElementById("closedDayDate").value;
+
+    // Hitta alla poster för dagen som ska raderas
+    const toDelete = shifts.filter(s => s.date === dateStr && s.type !== "closed");
+
+    // Radera först alla ORD
+    const batch = db.batch();
+    toDelete.forEach(s => {
+        batch.delete(db.collection(STAFFING_COLLECTION).doc(s.id));
+    });
+
+    // Skapa id till stängd dag
+    const id = db.collection(STAFFING_COLLECTION).doc().id;
+
+    const data = {
+        id,
+        name: "Stängd dag",
+        date: dateStr,
+        startTime: "07:00",
+        endTime: "18:00",
+        type: "closed",
+        comment: ""
+    };
+
+    batch.set(db.collection(STAFFING_COLLECTION).doc(id), data);
+
+    batch.commit().then(() => {
+
+        if (toDelete.length > 0) {
+            showToast(`"Stängd dag" tillagd – ${toDelete.length} poster borttagna`, "#dc3545");
+        } else {
+            showToast(`"Stängd dag" tillagd`, "#2ecc71");
+        }
+
+        closeClosedDayModal();
+        drawTimeline();
+
+        if (document.getElementById("weekViewBg").style.display === "flex") {
+            renderWeekView();
+        }
+
+    });
+}
+
+// --- CRUD-FUNKTIONER ---
+
+function openModal(shiftId = null) {
+   tooltip.style.opacity = 0;
+   if (!currentUser) return;
+   
+   document.getElementById("shiftModalBg").style.display = "flex";
+   const delBtn = document.getElementById("deleteBtn");
+   const dateInput = document.getElementById("shiftDate");
+   
+   if (shiftId) {
+      const shift = shifts.find(s => s.id === shiftId);
+      if (!shift) return;
+
+      document.getElementById("modalTitle").textContent = "Redigera pass";
+      document.getElementById("editId").value = shift.id;
+      document.getElementById("name").value = shift.name;
+      dateInput.value = shift.date;
+      document.getElementById("startTime").value = shift.startTime;
+      document.getElementById("endTime").value = shift.endTime;
+      document.getElementById("comment").value = shift.comment || "";
+      
+      delBtn.style.display = "inline-block";
+
+   } else {
+      document.getElementById("modalTitle").textContent = "Lägg till nytt pass";
+      document.getElementById("editId").value = "";
+      document.getElementById("name").value = "";
+      dateInput.value = formatDate(focusDate); 
+      document.getElementById("startTime").value = "08:00";
+      document.getElementById("endTime").value = "17:00";
+      document.getElementById("comment").value = "";
+
+      delBtn.style.display = "none";
+   }
+}
+
+function closeModal() {
+    document.getElementById("shiftModalBg").style.display = "none";
+}
+
+document.getElementById("startTime").addEventListener("change", enforceTimeLogic);
+document.getElementById("endTime").addEventListener("change", enforceTimeLogic);
+
+function enforceTimeLogic() {
+    const startEl = document.getElementById("startTime");
+    const endEl = document.getElementById("endTime");
+
+    const start = startEl.value;
+    const end = endEl.value;
+
+    // Om tiderna är ogiltiga – gör inget
+    if (!start || !end) return;
+
+    // Om sluttiden ligger före eller lika med starttid
+    if (end <= start) {
+        // Justera sluttid automatiskt till 5 min efter start
+        const [h, m] = start.split(":").map(Number);
+        const newMinutes = m + 5;
+        const newHour = newMinutes >= 60 ? h + 1 : h;
+        const minuteVal = (newMinutes % 60).toString().padStart(2, "0");
+
+        endEl.value = `${newHour.toString().padStart(2, "0")}:${minuteVal}`;
+
+        showToast("Sluttiden justerades – den måste vara senare än starttiden.", "#dc3545");
+    }
+}
+
+function saveShift() {
+    if (!currentUser) return;
+
+    const id = document.getElementById("editId").value || db.collection(STAFFING_COLLECTION).doc().id;
+    
+    const data = {
+        name: document.getElementById("name").value.trim(),
+        date: document.getElementById("shiftDate").value,
+        startTime: document.getElementById("startTime").value,
+        endTime: document.getElementById("endTime").value,
+        comment: document.getElementById("comment").value.trim(),
+    };
+
+    if (!data.name || !data.date || !data.startTime || !data.endTime) {
+        showToast("Fyll i Namn, Datum, Starttid och Sluttid.", "#dc3545");
+        return;
+    }
+
+    const startMinutes = parseTime(data.startTime);
+    const endMinutes = parseTime(data.endTime);
+
+    if (startMinutes >= endMinutes) {
+        showToast("Starttiden måste vara före sluttiden.", "#dc3545");
+        return;
+    }
+
+    db.collection(STAFFING_COLLECTION).doc(id).set(data)
+        .then(() => {
+
+            closeModal();
+            showToast("Passet har sparats", "#2ecc71");
+
+            // 🟩 Uppdatera veckovy om den är öppen
+            if (document.getElementById("weekViewBg").style.display === "flex") {
+                renderWeekView();
+            }
+
+            // 🟩 RITA OM GANTT — men byt INTE datum
+            drawTimeline();
+
+        })
+        .catch(err => {
+            console.error("❌ Kunde inte spara:", err);
+            showToast("Kunde inte spara: " + err.message, "#dc3545");
+        });
+}
+
+function deleteShift() {
+   if (!currentUser) return;
+   const id = document.getElementById("editId").value;
+   if (!id) return;
+   closeModal(); 
+   openDeleteConfirmModal(id); 
+}
+
+function openDeleteConfirmModal(shiftId) {
+    tooltip.style.opacity = 0;
+	if (!currentUser) return;
+    const shift = shifts.find(s => s.id === shiftId);
+    if (!shift) return;
+
+    document.getElementById("confirmDeleteId").value = shiftId;
+    document.getElementById("deleteConfirmText").innerHTML =
+        `Är du säker på att du vill ta bort passet för<br><strong>${shift.name}</strong> den ${shift.date}?`;
+
+    document.getElementById("deleteConfirmBg").style.display = "flex";
+}
+
+function closeDeleteConfirmModal() {
+    const del = document.getElementById("deleteConfirmBg");
+
+    del.style.display = "none";
+}
+
+function confirmDeleteAction() {
+	tooltip.style.opacity = 0;
+    const id = document.getElementById("confirmDeleteId").value;
+    if (!id || !currentUser) return;
+
+    // Stäng modal
+    closeDeleteConfirmModal();
+
+    // Hitta objektet innan det tas bort
+    const deletedShift = shifts.find(s => s.id === id);
+
+    db.collection(STAFFING_COLLECTION).doc(id).delete()
+        .then(() => {
+
+            // 🟩 Rätt meddelande beroende på typ
+            if (deletedShift && deletedShift.type === "closed") {
+                showToast('"Stängd dag" borttagen', "#dc3545");
+            } else {
+                showToast("Passet borttaget", "#dc3545");
+            }
+
+            // 🟩 RITA OM GANTT — men gör INGET datumbyte
+            drawTimeline();
+
+            // 🟩 Uppdatera veckovy om den är öppen
+            if (document.getElementById("weekViewBg").style.display === "flex") {
+                renderWeekView();
+            }
+        })
+        .catch(err => {
+            console.error("❌ Kunde inte ta bort:", err);
+            showToast("Kunde inte ta bort: " + err.message, "#dc3545");
+        });
+}
+
+// --- HUVUDRITFUNKTION (GANTT) ---
+
+function drawTimeline() {
+    const verticalLines = document.getElementById("verticalLines");
+    const timeAxis = document.getElementById("timeAxis");
+    const staffingArea = document.getElementById("staffingArea");
+
+    verticalLines.innerHTML = "";
+    timeAxis.innerHTML = "";
+    staffingArea.innerHTML = "";
+
+    // -----------------------------
+    // 1) Rita tidsaxeln
+    // -----------------------------
+    for (let h = START_HOUR; h < END_HOUR; h++) {
+        const lbl = document.createElement("div");
+        lbl.className = "hour-label-gantt";
+        lbl.textContent = `${String(h).padStart(2, "0")}:00`;
+        timeAxis.appendChild(lbl);
+    }
+
+    // -----------------------------
+    // 2) Filtrera pass för aktuell dag
+    // -----------------------------
+    const focusDateStr = formatDate(focusDate);
+    const shiftsForDay = shifts
+        .filter(s => s.date === focusDateStr)
+        .sort((a, b) => {
+            const timeDiff = parseTime(a.startTime) - parseTime(b.startTime);
+            if (timeDiff !== 0) return timeDiff;
+
+            const nameA = a.name.trim().toLowerCase().split(" ")[0];
+            const nameB = b.name.trim().toLowerCase().split(" ")[0];
+            return nameA.localeCompare(nameB, "sv");
+        });
+
+	// -----------------------------
+	// 3a) AUTOMATISK RÖD DAG
+	// -----------------------------
+	if (isRedDay(focusDateStr)) {
+	
+		// Mät bredden och räkna ut skala
+		let width = staffingArea.getBoundingClientRect().width;
+		if (width === 0) {
+			requestAnimationFrame(drawTimeline);
+			return;
+		}
+		const scale = width / TOTAL_MINUTES;
+	
+		// Rita timlinjerna (nu bakom kortet)
+		drawVerticalHourLines(scale);
+	
+		// Lägg ut röda kortet
+		const box = document.createElement("div");
+		box.className = "closed-day-box";
+		box.innerHTML = `<div>🔒 Röd dag</div>`;
+	
+		staffingArea.appendChild(box);
+		staffingArea.style.minHeight = "calc(100vh - 180px)";
+	
+		return;
+	}
+	
+	// -----------------------------
+	// 3b) AUTOMATISK HELGDAG (LÖRDAG/SÖNDAG)
+	// -----------------------------
+	const weekendLabel = isWeekendDay(focusDate);
+	
+	if (weekendLabel) {
+	
+		// Räkna ut skala
+		const width = staffingArea.getBoundingClientRect().width;
+		if (width === 0) {
+			requestAnimationFrame(drawTimeline);
+			return;
+		}
+		const scale = width / TOTAL_MINUTES;
+	
+		// Rita timlinjer
+		drawVerticalHourLines(scale);
+	
+		// Helg-kort
+		const box = document.createElement("div");
+		box.className = "closed-day-box";
+		box.innerHTML = `<div>🔒 ${weekendLabel}</div>`;
+	
+		staffingArea.appendChild(box);
+		staffingArea.style.minHeight = "calc(100vh - 180px)";
+	
+		return;
+	}
+
+	// -----------------------------
+	// 4) MANUELL STÄNGD DAG
+	// -----------------------------
+	const closed = shiftsForDay.find(s => s.type === "closed");
+	
+	if (closed) {
+	
+		// Räkna ut skala
+		const width = staffingArea.getBoundingClientRect().width;
+		if (width === 0) {
+			requestAnimationFrame(drawTimeline);
+			return;
+		}
+		const scale = width / TOTAL_MINUTES;
+	
+		// Rita timlinjer
+		drawVerticalHourLines(scale);
+	
+		// Kortet
+		const box = document.createElement("div");
+		box.className = "closed-day-box";
+		box.innerHTML = `<div>🔒 Stängd dag</div>`;
+	
+		if (currentUser) {
+			const btn = document.createElement("button");
+			btn.className = "closed-day-delete-btn";
+			btn.textContent = "Ta bort";
+			btn.addEventListener("click", (e) => {
+				e.stopPropagation();
+				openDeleteClosedDayModal(closed);
+			});
+			box.appendChild(btn);
+		}
+	
+		staffingArea.appendChild(box);
+		staffingArea.style.minHeight = "calc(100vh - 180px)";
+	
+		return;
+	}
+
+    // -----------------------------
+    // 5) Gruppera pass enligt namn
+    // -----------------------------
+    const grouped = shiftsForDay.reduce((acc, s) => {
+        if (!acc[s.name]) acc[s.name] = [];
+        acc[s.name].push(s);
+        return acc;
+    }, {});
+
+    const staffNames = Object.keys(grouped);
+
+    // Sätt höjd
+    const totalHeight = staffNames.length * ROW_HEIGHT;
+    staffingArea.style.minHeight = totalHeight + "px";
+
+    // Mät bredden (för minuttill-pixel-bredd)
+    let staffingAreaWidth = staffingArea.getBoundingClientRect().width;
+    if (staffingAreaWidth === 0) {
+        requestAnimationFrame(drawTimeline);
+        return;
+    }
+    const MINUTE_WIDTH_SCALE = staffingAreaWidth / TOTAL_MINUTES;
+
+    // -----------------------------
+    // 6) Rita vertikala timlinjer
+    // -----------------------------
+    for (let h = START_HOUR + 1; h <= END_HOUR; h++) {
+        const minutesFromStart = (h - START_HOUR) * 60;
+        const leftPos = minutesFromStart * MINUTE_WIDTH_SCALE;
+
+        const vLine = document.createElement("div");
+        vLine.className = "vertical-hour-line";
+        vLine.style.left = leftPos + "px";
+
+        verticalLines.appendChild(vLine);
+    }
+
+    // -----------------------------
+    // 7) Rita horisontella radlinjer
+    // -----------------------------
+    for (let i = 0; i <= staffNames.length; i++) {
+        const line = document.createElement("div");
+        line.className = "staff-row-line";
+        line.style.top = (i * ROW_HEIGHT) + "px";
+        staffingArea.appendChild(line);
+    }
+
+    // -----------------------------
+    // 8) Rita bemanningsstaplar
+    // -----------------------------
+    staffNames.forEach((name, rowIndex) => {
+        const topPos = rowIndex * ROW_HEIGHT;
+
+        grouped[name].forEach((shift) => {
+            const start = parseTime(shift.startTime);
+            const end = parseTime(shift.endTime);
+
+            const visualStart = Math.max(0, start);
+            const visualEnd = Math.min(TOTAL_MINUTES, end);
+
+            const duration = visualEnd - visualStart;
+            if (duration <= 0) return;
+
+            const left = visualStart * MINUTE_WIDTH_SCALE;
+            const width = duration * MINUTE_WIDTH_SCALE;
+
+            const bar = document.createElement("div");
+            bar.className = "shift-bar";
+            bar.dataset.id = shift.id;
+
+            bar.style.top = topPos + "px";
+            bar.style.left = left + "px";
+            bar.style.width = width + "px";
+
+            // Text vid olika bredd
+            if (width > 120) {
+                bar.textContent = `${name} (${shift.startTime}–${shift.endTime})`;
+            } else if (width > 60) {
+                bar.textContent = name;
+            }
+
+            if (currentUser) {
+                bar.addEventListener("click", (e) => {
+                    e.stopPropagation();
+					tooltip.style.opacity = 0;
+                    openModal(shift.id);
+                });
+            }
+
+            staffingArea.appendChild(bar);
+        });
+    });
+}
+
+// --- TOOLTIP LOGIK ---
+const tooltip = document.getElementById("jt-tooltip");
+
+function drawVerticalHourLines(scale) {
+    verticalLines.innerHTML = "";
+    for (let h = START_HOUR + 1; h <= END_HOUR; h++) {
+        const minutesFromStart = (h - START_HOUR) * 60;
+        const leftPos = minutesFromStart * scale;
+
+        const vLine = document.createElement("div");
+        vLine.className = "vertical-hour-line";
+        vLine.style.left = leftPos + "px";
+
+        verticalLines.appendChild(vLine);
+    }
+}
+
+function getTooltipText(shift) {
+    const start = parseTime(shift.startTime);
+    const end = parseTime(shift.endTime);
+
+    const durationMinutes = end - start;
+    const hours = Math.floor(durationMinutes / 60);
+    const minutes = durationMinutes % 60;
+
+    const hourWord = hours === 1 ? "timme" : "timmar";
+    const minuteWord = minutes === 1 ? "minut" : "minuter";
+
+	let timeText = `${hours} ${hourWord}`;
+	
+	if (minutes > 0) {
+		timeText += ` och ${minutes} ${minuteWord}`;
+	}
+
+    // Lägg till kommentar om den finns
+    if (shift.comment && shift.comment.trim() !== "") {
+        timeText += `<br><br>${shift.comment}`;
+    }
+
+    return timeText;
+}
+
+function toggleDarkMode() {
+    const body = document.body;
+    const btn = document.getElementById("toggleDarkModeBtn");
+
+    body.classList.toggle("dark-mode");
+
+    const enabled = body.classList.contains("dark-mode");
+    localStorage.setItem("darkModeEnabled", enabled ? "true" : "false");
+
+    // Ändra ikon
+    btn.innerHTML = enabled
+        ? '<i class="fas fa-sun"></i>'
+        : '<i class="fas fa-moon"></i>';
+}
+
+document.addEventListener("mousemove", (e) => {
+   let target = e.target;
+   if (!target) {
+      tooltip.style.opacity = 0;
+      return;
+   }
+
+   // Tooltip för element som använder data-jt
+   const jt = target.closest("[data-jt]");
+   if (jt) {
+       tooltip.innerHTML = jt.dataset.jt;
+
+       let x = e.clientX + 12;
+       let y = e.clientY + 12;
+
+       if (x + tooltip.offsetWidth > window.innerWidth) {
+           x = window.innerWidth - tooltip.offsetWidth - 20;
+       }
+
+       tooltip.style.left = x + "px";
+       tooltip.style.top = y + "px";
+       tooltip.style.opacity = 1;
+       return;
+   }
+
+const shiftEl = target.closest(".shift-bar");
+if (!shiftEl) {
+    tooltip.style.opacity = 0;
+    return;
+}
+
+// Hämta rätt shift-objekt från shifts-arrayen
+const shift = shifts.find(s => s.id === shiftEl.dataset.id);
+if (!shift) {
+    tooltip.style.opacity = 0;
+    return;
+}
+
+// Tooltip med timmar + minuter + kommentar
+const text = getTooltipText(shift);
+if (!text) {
+    tooltip.style.opacity = 0;
+    return;
+}
+
+   tooltip.innerHTML = text;
+   
+   let x = e.clientX + 12;
+   let y = e.clientY + 12;
+
+   if (x + tooltip.offsetWidth > window.innerWidth) {
+        x = window.innerWidth - tooltip.offsetWidth - 20;
+   }
+   
+   tooltip.style.left = x + "px";
+   tooltip.style.top = y + "px";
+   tooltip.style.opacity = 1;
+});
+
+
+// --- INITIALISERING ---
+auth.onAuthStateChanged(user => updateUI(user));
+
+window.addEventListener('resize', () => {
+    drawTimeline();
+});
+
+// --- INAKTIVITETS-LYSSNARE ---
+
+// Återställ timern vid de viktigaste användarinteraktionerna
+['mousemove', 'mousedown', 'keypress', 'scroll', 'touchstart'].forEach(eventType => {
+    document.addEventListener(eventType, resetInactivityTimer, true);
+});
+
+// Styr timern beroende på inloggningsstatus
+function toggleInactivityTracking(enabled) {
+    if (enabled) {
+        resetInactivityTimer();
+    } else {
+        if (inactivityTimer) {
+            clearTimeout(inactivityTimer);
+            inactivityTimer = null;
+        }
+    }
+}
+
+window.addEventListener('load', () => {
+    // 1. DARK MODE (MÖRKT TEMA)
+    const isDarkModeEnabled = localStorage.getItem('darkModeEnabled') === 'true';
+    const darkModeBtn = document.getElementById("toggleDarkModeBtn");
+
+    if (isDarkModeEnabled) {
+        document.body.classList.add('dark-mode'); 
+        if (darkModeBtn) {
+            darkModeBtn.innerHTML = '<i class="fas fa-sun"></i>';
+        }
+    } else {
+        if (darkModeBtn) {
+            darkModeBtn.innerHTML = '<i class="fas fa-moon"></i>';
+        }
+    }
+	
+	updateWeekdayLabel(focusDate);
+
+    // 2. DATALADDNING
+    loadFromFirebase(); 
+});
+
+</script>
+
+</body>
+</html>
