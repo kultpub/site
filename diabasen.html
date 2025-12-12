@@ -785,6 +785,17 @@ header button:hover {
 	color: #fff;
 }
 
+/* Låg / ingen bemanning – normal */
+.lowstaff-warning {
+	color: #c0392b;
+	font-weight: 600;
+}
+
+/* Låg / ingen bemanning – dark mode */
+.dark-mode .lowstaff-warning {
+	color: #ff8080;
+}
+
 .modal h2 .info-icon {
     margin-left: 3px;
     font-size: 0.85em;
@@ -1499,7 +1510,7 @@ function renderLowStaff() {
 		row.innerHTML = `
 			<div>
 				<strong>${pretty}</strong><br>
-				<span style="color:#c0392b;">${label}</span>
+				<span class="lowstaff-warning">${label}</span>
 			</div>
 			<button class="lowstaff-goto-btn">Gå till dag</button>
 		`;
