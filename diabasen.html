@@ -1057,51 +1057,340 @@ body.dark-mode {
 .dark-mode .week-lock-btn:hover {
 	background: #56c48a;
 }
+
+/* =========================================================
+   MOBILVY – INTEGRERAD
+   ========================================================= */
+#mobileHamburger {
+    display: none;
+    position: fixed;
+    top: 10px;
+    right: 14px;
+    font-size: 1.6em;
+    color: white;
+    z-index: 40;
+    cursor: pointer;
+}
+
+#mobileMenuBg {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 5000;
+}
+
+#mobileMenu {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 260px;
+    height: 100%;
+    background: #fff;
+    padding: 18px;
+    box-shadow: -4px 0 16px rgba(0,0,0,0.35);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+	align-items: stretch;
+}
+
+.mobile-menu-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.1em;
+}
+
+#mobileMenu button {
+    padding: 10px;
+    font-size: 1em;
+    border-radius: 6px;
+    border: none;
+    background: #005ea5;
+    color: white;
+}
+
+#mobileDayView {
+    display: none;
+    padding: 16px;
+}
+
+.mobile-card {
+    background: white;
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+}
+
+.mobile-name { font-weight: 600; }
+.mobile-time { margin-top: 4px; }
+.mobile-comment { margin-top: 6px; font-size: 0.9em; color: #555; }
+
+@media (max-width: 768px) {
+    #container,
+    #timeline-wrapper,
+    #weekdayLabel {
+        display: none !important;
+    }
+
+    #mobileDayView {
+        display: block;
+    }
+
+    #mobileHamburger {
+        display: block;
+    }
+
+    #dateControls,
+    #addShiftBtn,
+    #closedDayBtn,
+    #authBtn,
+    #toggleDarkModeBtn {      /* 👈 LÄGG TILL DENNA */
+        display: none !important;
+    }
+}
+
+/* =========================================================
+   MOBILVY – DARK MODE
+   ========================================================= */
+
+body.dark-mode #mobileMenu {
+    background: #1e1e1e;
+    color: #f0f0f0;
+}
+
+body.dark-mode .mobile-menu-header {
+    color: #f0f0f0;
+}
+
+body.dark-mode #mobileMenu button {
+    background: #3a6ea5;
+    color: #ffffff;
+}
+
+body.dark-mode #mobileMenu button:hover {
+    background: #4c82bd;
+}
+
+body.dark-mode #mobileMenu hr {
+    border-color: #444;
+}
+
+body.dark-mode #mobileDayView {
+    background: #121212;
+}
+
+body.dark-mode .mobile-card {
+    background: #1f1f1f;
+    color: #f0f0f0;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.7);
+}
+
+body.dark-mode .mobile-name {
+    color: #ffffff;
+}
+
+body.dark-mode .mobile-time {
+    color: #dddddd;
+}
+
+body.dark-mode .mobile-comment {
+    color: #bbbbbb;
+}
+
+body.dark-mode #mobileHamburger {
+    color: #ffffff;
+}
+
+body.dark-mode #mobileMenuBg {
+    background: rgba(0,0,0,0.6);
+}
+
+#mobileDateHeader {
+    font-size: 1.1em;
+    font-weight: 600;
+    margin-bottom: 14px;
+    color: #111;
+	margin-left:5px;
+}
+
+body.dark-mode #mobileDateHeader {
+    color: #f0f0f0;
+}
+
+#mobileSwipeHint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    color: #666;
+    font-size: 0.9em;
+    user-select: none;
+}
+
+.swipe-arrow {
+    font-size: 1.4em;
+    line-height: 1;
+    opacity: 0.7;
+}
+
+.swipe-text {
+    white-space: nowrap;
+    opacity: 0.8;
+}
+
+body.dark-mode #mobileSwipeHint {
+    color: #aaa;
+}
+
+body.dark-mode .swipe-arrow,
+body.dark-mode .swipe-text {
+    opacity: 0.85;
+}
+
+@keyframes swipePulse {
+    0% { transform: translateX(0); opacity: 0.6; }
+    50% { transform: translateX(-4px); opacity: 1; }
+    100% { transform: translateX(0); opacity: 0.6; }
+}
+
+.swipe-arrow.left {
+    animation: swipePulse 2.5s infinite;
+}
+
+.swipe-arrow.right {
+    animation: swipePulse 2.5s infinite reverse;
+}
+
+#mobileDarkModeBtn {
+    display: flex;
+    align-self: center;
+    justify-content: center;
+    font-size: 1.3em;
+    height: 40px;
+    width: 42px;
+    border-radius: 50%;
+    padding: 0;
+}
 </style>
 </head>
 <body>
 
     <header>
-		<div class="header-left">
-			<h1>Bemanning Diabasen</h1>
-		
-			<div id="dateControls">
-				<button onclick="changeDate(-1)" title="Föregående dag">
-					<i class="fas fa-chevron-left"></i>
-				</button>
-		
-				<input type="date" id="dateInput" onchange="handleDateChange(this.value)">
-		
-				<button onclick="changeDate(1)" title="Nästa dag">
-					<i class="fas fa-chevron-right"></i>
-				</button>
-		
-				<button id="todayBtn" class="header-button-standard"
-						onclick="setFocusDate(new Date())">
-					Idag
-				</button>
-		
-				<button id="weekViewBtn" class="header-button-standard"
-						onclick="openWeekView()">
-					Veckovy
-				</button>
-		
-				<button id="lowStaffBtn"
-						class="header-button-standard"
-						onclick="openLowStaffModal()">
-					Låg/ingen bemanning
-				</button>
-			</div>
-		</div>
+        <div class="header-left">
+            <h1>Bemanning Diabasen</h1>
 
+            <div id="dateControls">
+                <button onclick="changeDate(-1)" title="Föregående dag">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+
+                <input
+                    type="date"
+                    id="dateInput"
+                    onchange="handleDateChange(this.value)"
+                >
+
+                <button onclick="changeDate(1)" title="Nästa dag">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+
+                <button
+                    id="todayBtn"
+                    class="header-button-standard"
+                    onclick="setFocusDate(new Date())"
+                >
+                    Idag
+                </button>
+
+                <button
+                    id="weekViewBtn"
+                    class="header-button-standard"
+                    onclick="openWeekView()"
+                >
+                    Veckovy
+                </button>
+
+                <button
+                    id="lowStaffBtn"
+                    class="header-button-standard"
+                    onclick="openLowStaffModal()"
+                >
+                    Låg/ingen bemanning
+                </button>
+            </div>
+        </div>
 
         <div class="header-right">
-            <button id="closedDayBtn" onclick="openClosedDayModal()" style="display:none;">Ange stängd dag</button>
-            <button id="addShiftBtn" onclick="openModal()" style="display:none;">+ Lägg till</button>
-            <button id="authBtn" onclick="toggleAuth()">Logga in</button>
-			<button id="toggleDarkModeBtn" onclick="toggleDarkMode()"><i class="fas fa-moon"></i></button>
+            <button
+                id="closedDayBtn"
+                onclick="openClosedDayModal()"
+                style="display:none;"
+            >
+                Ange stängd dag
+            </button>
+
+            <button
+                id="addShiftBtn"
+                onclick="openModal()"
+                style="display:none;"
+            >
+                + Lägg till
+            </button>
+
+            <button id="authBtn" onclick="toggleAuth()">
+                Logga in
+            </button>
+
+            <button id="toggleDarkModeBtn" onclick="toggleDarkMode()">
+                <i class="fas fa-moon"></i>
+            </button>
         </div>
     </header>
+
+    <!-- MOBIL HAMBURGER -->
+    <div id="mobileHamburger">
+        <i class="fas fa-bars"></i>
+    </div>
+
+    <!-- MOBILMENY -->
+    <div id="mobileMenuBg">
+        <div id="mobileMenu">
+
+            <div class="mobile-menu-header">
+                <strong>Meny</strong>
+                <span id="mobileMenuClose">✕</span>
+            </div>
+
+            <button
+                id="mobileDarkModeBtn"
+                onclick="toggleDarkMode(); closeMobileMenu()"
+                aria-label="Växla mörkt/ljust läge"
+            >
+                <i class="fas fa-moon"></i>
+            </button>
+
+            <button onclick="setFocusDate(new Date()); closeMobileMenu()">
+                Idag
+            </button>
+
+            <label for="mobileDatePicker" style="font-weight:600;">
+                Gå till datum
+            </label>
+
+            <input
+                type="date"
+                id="mobileDatePicker"
+                style="padding:8px; font-size:1em; border-radius:6px; border:1px solid #ccc;"
+            >
+
+        </div>
+    </div>
+
+    <!-- MOBIL DAGVY -->
+    <div id="mobileDayView"></div>
 
     <div id="weekdayLabel"></div>
 
@@ -1121,37 +1410,69 @@ body.dark-mode {
         </div>
     </div>
 
+    <!-- PASSMODAL -->
     <div id="shiftModalBg" class="modal-bg">
         <div class="modal">
+
             <h2 id="modalTitle">Nytt pass</h2>
             <input type="hidden" id="editId">
 
             <div class="modal-body">
+
                 <label for="name">Namn</label>
-                <input type="text" id="name" autocomplete="off" placeholder="För- och efternamn">
+                <input
+                    type="text"
+                    id="name"
+                    autocomplete="off"
+                    placeholder="För- och efternamn"
+                >
 
                 <label for="shiftDate">Datum</label>
                 <input type="date" id="shiftDate" required>
-                
+
                 <div class="time-row-inline">
                     <div>
                         <label for="startTime">Starttid</label>
-                        <input type="time" id="startTime" value="07:00" required min="07:00" max="18:00" step="300">
+                        <input
+                            type="time"
+                            id="startTime"
+                            value="07:00"
+                            required
+                            min="07:00"
+                            max="18:00"
+                            step="300"
+                        >
                     </div>
+
                     <div>
                         <label for="endTime">Sluttid</label>
-                        <input type="time" id="endTime" value="18:00" required min="07:00" max="18:00" step="300">
+                        <input
+                            type="time"
+                            id="endTime"
+                            value="18:00"
+                            required
+                            min="07:00"
+                            max="18:00"
+                            step="300"
+                        >
                     </div>
                 </div>
 
                 <label for="comment">
-                    Kommentar (valfritt) 
-                    <span class="info-icon" 
-                          data-jt="Kommentaren syns för alla användare. Den visas<br>när man hovrar posten i Gantt-schemat.">
+                    Kommentar (valfritt)
+                    <span
+                        class="info-icon"
+                        data-jt="Kommentaren syns för alla användare. Den visas<br>när man hovrar posten i Gantt-schemat."
+                    >
                         <i class="fas fa-info-circle"></i>
                     </span>
                 </label>
-                <textarea id="comment" rows="3" placeholder="Anteckning om passet (syfte, besök etc.)"></textarea>
+
+                <textarea
+                    id="comment"
+                    rows="3"
+                    placeholder="Anteckning om passet (syfte, besök etc.)"
+                ></textarea>
 
             </div>
 
@@ -1160,30 +1481,51 @@ body.dark-mode {
                 <button class="delete-btn" id="deleteBtn" onclick="deleteShift()">Ta bort</button>
                 <button class="save-btn" onclick="saveShift()">Spara</button>
             </div>
+
         </div>
     </div>
 
+    <!-- LOGIN MODAL -->
     <div class="modal-bg" id="loginBg">
         <div class="modal login-modal" id="loginModal" autocomplete="off">
+
             <h2>Logga in</h2>
 
             <div class="login-body">
                 <label for="loginEmail">E-postadress</label>
-                <input type="email" id="loginEmail" placeholder="namn@exempel.se" autocomplete="off" autocapitalize="none" spellcheck="false">
+                <input
+                    type="email"
+                    id="loginEmail"
+                    placeholder="namn@exempel.se"
+                    autocomplete="off"
+                    autocapitalize="none"
+                    spellcheck="false"
+                >
 
                 <label for="loginPassword">Lösenord</label>
-                <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="new-password" autocapitalize="none" spellcheck="false">
+                <input
+                    type="password"
+                    id="loginPassword"
+                    placeholder="••••••••"
+                    autocomplete="new-password"
+                    autocapitalize="none"
+                    spellcheck="false"
+                >
 
-                <p id="loginError" class="login-error">Ogiltig e-post eller lösenord.</p>
+                <p id="loginError" class="login-error">
+                    Ogiltig e-post eller lösenord.
+                </p>
             </div>
 
             <div class="modal-buttons login-buttons">
                 <button class="cancel-btn" onclick="closeLoginModal()">Avbryt</button>
                 <button class="save-btn" onclick="performLogin()">Logga in</button>
             </div>
+
         </div>
     </div>
 
+    <!-- DELETE CONFIRM -->
     <div id="deleteConfirmBg" class="modal-bg">
         <div class="modal delete-modal">
 
@@ -1203,11 +1545,14 @@ body.dark-mode {
                 <button class="cancel-btn" onclick="closeDeleteConfirmModal()">Avbryt</button>
                 <button class="delete-btn" onclick="confirmDeleteAction()">Ta bort</button>
             </div>
+
         </div>
     </div>
 
+    <!-- STÄNGD DAG -->
     <div id="closedDayModalBg" class="modal-bg">
         <div class="modal">
+
             <h2>Ange nedan datum som stängd dag</h2>
 
             <div class="modal-body">
@@ -1219,61 +1564,66 @@ body.dark-mode {
                 <button class="cancel-btn" onclick="closeClosedDayModal()">Avbryt</button>
                 <button class="save-btn" onclick="saveClosedDay()">Spara</button>
             </div>
+
         </div>
     </div>
 
+    <!-- VECKOVY -->
     <div id="weekViewBg" class="modal-bg">
         <div class="modal" id="weekViewModal">
 
-            <div id="weekViewClose" onclick="closeWeekView()">
-                ✖
-            </div>
+            <div id="weekViewClose" onclick="closeWeekView()">✖</div>
 
             <div id="weekViewHeader">
-                <button class="week-nav-btn" 
-                        id="weekPrevBtn" 
-                        onclick="changeWeek(-1)"
-                        data-jt="Visa föregående vecka"> <i class="fas fa-chevron-left"></i>
+                <button
+                    class="week-nav-btn"
+                    id="weekPrevBtn"
+                    onclick="changeWeek(-1)"
+                    data-jt="Visa föregående vecka"
+                >
+                    <i class="fas fa-chevron-left"></i>
                 </button>
 
                 <h2 id="weekViewTitle">Veckovy</h2>
 
-                <button class="week-nav-btn" 
-                        id="weekNextBtn" 
-                        onclick="changeWeek(1)"
-                        data-jt="Visa nästa vecka"> <i class="fas fa-chevron-right"></i>
+                <button
+                    class="week-nav-btn"
+                    id="weekNextBtn"
+                    onclick="changeWeek(1)"
+                    data-jt="Visa nästa vecka"
+                >
+                    <i class="fas fa-chevron-right"></i>
                 </button>
             </div>
 
-            <div id="weekViewContent">
-                </div>
+            <div id="weekViewContent"></div>
 
         </div>
     </div>
-	
-	<div class="modal-bg" id="lowStaffModalBg">
-		<div class="modal" id="lowStaffModal">
-	
-			<div id="lowStaffClose" onclick="closeLowStaffModal()">
-                ✖
-            </div>
-	
-			<h2>
-				Låg / ingen bemanning (30 dagar)
-				<span class="info-icon"
-					data-jt="Visar de dagar, räknat från idag och 30 kalenderdagar framåt, då bemanningen är två personer eller färre.">
-					<i class="fas fa-info-circle"></i>
-				</span>
-			</h2>
-	
-			<div id="lowStaffContent"></div>
-	
-		</div>
-	</div>
+
+    <!-- LÅG BEMANNING -->
+    <div class="modal-bg" id="lowStaffModalBg">
+        <div class="modal" id="lowStaffModal">
+
+            <div id="lowStaffClose" onclick="closeLowStaffModal()">✖</div>
+
+            <h2>
+                Låg / ingen bemanning (30 dagar)
+                <span
+                    class="info-icon"
+                    data-jt="Visar de dagar, räknat från idag och 30 kalenderdagar framåt, då bemanningen är två personer eller färre."
+                >
+                    <i class="fas fa-info-circle"></i>
+                </span>
+            </h2>
+
+            <div id="lowStaffContent"></div>
+
+        </div>
+    </div>
 
     <div id="jt-tooltip"></div>
     <div id="toast"></div>
-
 
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
@@ -1601,8 +1951,8 @@ function isRedDay(dateStr) {
 function isWeekendDay(date) {
     const weekday = date.getDay(); // 0 = söndag, 6 = lördag
 
-    if (weekday === 6) return "lördag";
-    if (weekday === 0) return "söndag";
+    if (weekday === 6) return "Lördag";
+    if (weekday === 0) return "Söndag";
 
     return null;
 }
@@ -1734,9 +2084,23 @@ function renderWeekView() {
         // ===============================
         // PASS FÖR DAGEN
         // ===============================
-        const shiftsForDay = shifts
-            .filter(s => s.date === dateStr)
-            .sort((a, b) => a.name.localeCompare(b.name, "sv"));
+		const shiftsForDay = shifts
+			.filter(s => s.date === dateStr)
+			.sort((a, b) => {
+		
+				// 1. Starttid
+				const timeDiff = parseTime(a.startTime) - parseTime(b.startTime);
+				if (timeDiff !== 0) return timeDiff;
+		
+				// 2. Förnamn
+				const aFirst = a.name.trim().split(/\s+/)[0].toLowerCase();
+				const bFirst = b.name.trim().split(/\s+/)[0].toLowerCase();
+				const firstDiff = aFirst.localeCompare(bFirst, "sv");
+				if (firstDiff !== 0) return firstDiff;
+		
+				// 3. Hela namnet (tiebreaker)
+				return a.name.toLowerCase().localeCompare(b.name.toLowerCase(), "sv");
+			});
 
         const closed = shiftsForDay.find(s => s.type === "closed");
 
@@ -2409,6 +2773,12 @@ function confirmDeleteAction() {
 // --- HUVUDRITFUNKTION (GANTT) ---
 
 function drawTimeline() {
+
+    if (window.innerWidth <= 768) {
+        renderMobileDayUnified();
+        return;
+    }
+
     const verticalLines = document.getElementById("verticalLines");
     const timeAxis = document.getElementById("timeAxis");
     const staffingArea = document.getElementById("staffingArea");
@@ -2676,17 +3046,23 @@ function getTooltipText(shift) {
 
 function toggleDarkMode() {
     const body = document.body;
-    const btn = document.getElementById("toggleDarkModeBtn");
 
+    const desktopBtn = document.getElementById("toggleDarkModeBtn");
+    const mobileBtn  = document.getElementById("mobileDarkModeBtn");
+
+    // Växla läge
     body.classList.toggle("dark-mode");
 
     const enabled = body.classList.contains("dark-mode");
     localStorage.setItem("darkModeEnabled", enabled ? "true" : "false");
 
-    // Ändra ikon
-    btn.innerHTML = enabled
+    // Uppdatera ikoner (om knapparna finns)
+    const icon = enabled
         ? '<i class="fas fa-sun"></i>'
         : '<i class="fas fa-moon"></i>';
+
+    if (desktopBtn) desktopBtn.innerHTML = icon;
+    if (mobileBtn)  mobileBtn.innerHTML  = icon;
 }
 
 document.addEventListener("mousemove", (e) => {
@@ -2763,6 +3139,202 @@ window.addEventListener('resize', () => {
     document.addEventListener(eventType, resetInactivityTimer, true);
 });
 
+/* =========================================================
+   MOBIL DAGVY (ÅTERANVÄNDER shifts)
+   ========================================================= */
+
+function renderMobileDayUnified() {
+    const view = document.getElementById("mobileDayView");
+    if (!view) return;
+
+    view.innerHTML = "";
+
+    const dateStr = formatDate(focusDate);
+
+    /* ============================
+       DATUM + SWIPE (ALLTID)
+       ============================ */
+    const header = document.createElement("div");
+    header.innerHTML = `
+        <div id="mobileDateHeader">
+            ${focusDate.toLocaleDateString("sv-SE", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric"
+            })}
+        </div>
+
+        <div id="mobileSwipeHint">
+            <span class="swipe-arrow left">‹</span>
+            <span class="swipe-text">Swipa för annan dag</span>
+            <span class="swipe-arrow right">›</span>
+        </div>
+    `;
+    view.appendChild(header);
+
+    /* ============================
+       SPECIELLA DAGAR
+       ============================ */
+    if (isRedDay(dateStr)) {
+        view.appendChild(makeMobileLockCard("Röd dag"));
+        return;
+    }
+
+    const weekend = isWeekendDay(focusDate);
+    if (weekend) {
+        view.appendChild(makeMobileLockCard(weekend));
+        return;
+    }
+
+    const closed = shifts.some(
+        s => s.date === dateStr && s.type === "closed"
+    );
+    if (closed) {
+        view.appendChild(makeMobileLockCard("Stängd dag"));
+        return;
+    }
+
+    /* ============================
+       PASS
+       ============================ */
+    const todays = shifts
+        .filter(s => s.date === dateStr && s.type !== "closed")
+        .sort((a, b) => {
+            const t = parseTime(a.startTime) - parseTime(b.startTime);
+            if (t !== 0) return t;
+
+            const aName = a.name.split(" ")[0].toLowerCase();
+            const bName = b.name.split(" ")[0].toLowerCase();
+            return aName.localeCompare(bName, "sv");
+        });
+
+    if (todays.length === 0) {
+        view.appendChild(makeMobileInfoCard("Ingen bemanning"));
+        return;
+    }
+
+    todays.forEach(s => {
+        const card = document.createElement("div");
+        card.className = "mobile-card";
+        card.innerHTML = `
+            <div class="mobile-name">${s.name}</div>
+            <div class="mobile-time">${s.startTime}–${s.endTime}</div>
+            ${s.comment ? `<div class="mobile-comment">Kommentar: ${s.comment}</div>` : ""}
+        `;
+        view.appendChild(card);
+    });
+}
+
+function makeMobileLockCard(text) {
+    const card = document.createElement("div");
+    card.className = "mobile-card";
+    card.innerHTML = `🔒 ${text}`;
+    return card;
+}
+
+function makeMobileInfoCard(text) {
+    const card = document.createElement("div");
+    card.className = "mobile-card";
+    card.textContent = text;
+    return card;
+}
+
+/* =========================================================
+   HAMBURGERMENY
+   ========================================================= */
+/* =========================================================
+   HAMBURGERMENY
+   ========================================================= */
+const mobileMenuBg = document.getElementById("mobileMenuBg");
+
+document.getElementById("mobileHamburger").onclick = () => {
+    const picker = document.getElementById("mobileDatePicker");
+    if (picker) {
+        picker.value = formatDate(focusDate);
+    }
+    mobileMenuBg.style.display = "block";
+};
+
+document.getElementById("mobileMenuClose").onclick = closeMobileMenu;
+
+mobileMenuBg.onclick = e => {
+    if (e.target === mobileMenuBg) closeMobileMenu();
+};
+
+function closeMobileMenu() {
+    mobileMenuBg.style.display = "none";
+}
+
+/* =========================================================
+   DATUMVÄLJARE (MOBIL)
+   ========================================================= */
+const mobileDatePicker = document.getElementById("mobileDatePicker");
+
+if (mobileDatePicker) {
+    mobileDatePicker.addEventListener("change", () => {
+        if (!mobileDatePicker.value) return;
+
+        const d = new Date(mobileDatePicker.value);
+        d.setHours(0, 0, 0, 0);
+
+        setFocusDate(d);
+        closeMobileMenu();
+    });
+}
+
+/* =========================================================
+   MOBIL SWIPE – HELA SKÄRMYTAN
+   ========================================================= */
+
+(function enableGlobalMobileSwipe() {
+    let startX = null;
+    let startY = null;
+
+    const threshold = 60;   // px horisontellt
+    const restraint = 80;  // px vertikalt
+
+    document.addEventListener("touchstart", e => {
+        // Ignorera om mobilmenyn är öppen
+        if (document.getElementById("mobileMenuBg")?.style.display === "block") {
+            return;
+        }
+
+        if (e.touches.length !== 1) return;
+
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+    }, { passive: true });
+
+    document.addEventListener("touchend", e => {
+        if (startX === null || startY === null) return;
+
+        const endX = e.changedTouches[0].clientX;
+        const endY = e.changedTouches[0].clientY;
+
+        const distX = endX - startX;
+        const distY = endY - startY;
+
+        // Tydlig horisontell swipe, inte vertikal scroll
+        if (Math.abs(distX) >= threshold && Math.abs(distY) <= restraint) {
+
+            if (distX < 0) {
+                // Swipe vänster → nästa dag
+                focusDate.setDate(focusDate.getDate() + 1);
+            } else {
+                // Swipe höger → föregående dag
+                focusDate.setDate(focusDate.getDate() - 1);
+            }
+
+            drawTimeline();
+        }
+
+        startX = null;
+        startY = null;
+    }, { passive: true });
+})();
+
+
 // Styr timern beroende på inloggningsstatus
 function toggleInactivityTracking(enabled) {
     if (enabled) {
@@ -2778,28 +3350,30 @@ function toggleInactivityTracking(enabled) {
 window.addEventListener('load', () => {
     // 1. DARK MODE (MÖRKT TEMA)
     const isDarkModeEnabled = localStorage.getItem('darkModeEnabled') === 'true';
-    const darkModeBtn = document.getElementById("toggleDarkModeBtn");
+
+    const desktopBtn = document.getElementById("toggleDarkModeBtn");
+    const mobileBtn  = document.getElementById("mobileDarkModeBtn");
 
     if (isDarkModeEnabled) {
-        document.body.classList.add('dark-mode'); 
-        if (darkModeBtn) {
-            darkModeBtn.innerHTML = '<i class="fas fa-sun"></i>';
-        }
-    } else {
-        if (darkModeBtn) {
-            darkModeBtn.innerHTML = '<i class="fas fa-moon"></i>';
-        }
+        document.body.classList.add('dark-mode');
     }
-	
-	updateWeekdayLabel(focusDate);
 
-    // 2. DATALADDNING
-    loadFromFirebase(); 
+    const icon = isDarkModeEnabled
+        ? '<i class="fas fa-sun"></i>'
+        : '<i class="fas fa-moon"></i>';
+
+    if (desktopBtn) desktopBtn.innerHTML = icon;
+    if (mobileBtn)  mobileBtn.innerHTML  = icon;
+
+    // 2. DATUMRAD (behåll din logik)
+    updateWeekdayLabel(focusDate);
+
+    // 3. DATALADDNING
+    loadFromFirebase();
 });
+
 
 </script>
 
 </body>
 </html>
-
-
