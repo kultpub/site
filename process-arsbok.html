@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instruktion: Process Årsbok</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            line-height: 1.6; 
+            color: #333; 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            background-color: #f4f7f9; 
+        }
+        
+        /* Den självständiga knappen längst upp till höger */
+        .btn-fixed-right { 
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #0078d4; 
+            color: white; 
+            padding: 12px 24px; 
+            text-decoration: none; 
+            border-radius: 4px; 
+            font-weight: bold; 
+            font-size: 0.9em;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            transition: background-color 0.2s, transform 0.1s;
+            z-index: 500;
+        }
+        .btn-fixed-right:hover { 
+            background-color: #005a9e;
+            transform: translateY(-1px);
+        }
+
+        .container { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #0078d4; border-bottom: 2px solid #0078d4; padding-bottom: 10px; }
+        h2 { color: #2b579a; margin-top: 30px; }
+        
+        /* Bilder i dokumentet */
+        .list-image { 
+            width: 100%; 
+            height: auto; 
+            border-radius: 4px; 
+            margin: 15px 0 25px 0; 
+            border: 1px solid #ddd; 
+            cursor: zoom-in; 
+            transition: opacity 0.2s;
+        }
+        .list-image:hover { opacity: 0.9; }
+
+        /* Modal / Lightbox */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.92);
+            cursor: zoom-out;
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 95%;
+            max-height: 95%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: #fff;
+            font-size: 60px;
+            font-weight: 200;
+            transition: transform 0.3s ease-in-out, color 0.3s;
+            cursor: pointer;
+            z-index: 1010;
+            line-height: 50px;
+            width: 60px;
+            height: 60px;
+            text-align: center;
+        }
+        .close-btn:hover {
+            color: #bbb;
+            transform: rotate(90deg);
+        }
+
+        @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
+
+        .logic-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .logic-table th, .logic-table td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        .logic-table th { background-color: #f2f2f2; }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.9em; font-weight: bold; background: #dff6dd; color: #107c10; }
+        .step { background: #eef6fb; padding: 15px; border-left: 5px solid #0078d4; margin: 20px 0; }
+    </style>
+</head>
+<body>
+
+<a href="https://kulturen-my.sharepoint.com/personal/johan_hofvendahl_kulturen_com/Lists/Process%20rsbok/AllItems.aspx?env=WebViewList" target="_blank" class="btn-fixed-right">Öppna SharePoint-listan</a>
+
+<div class="container">
+    <h1>Användarguide: MS-lista "Process årsbok"</h1>
+    <p>Denna lista – <strong>klicka på bilderna nedan för att förstora</strong> – är navet i vårt granskningsarbete. Systemet sköter automatiskt aviseringar via e-post så att rätt person alltid vet när det är dags att agera.</p>
+
+    <img src="lista.png" alt="Översikt av listan" class="list-image" onclick="openModal(this.src)">
+	
+	<p>I listan framgår tydligt vem som är <strong>utsedd som första (och andra och tredje) läsare</strong> till varje text. På varje rad finns också <strong>en direktlänk till aktuell mapp</strong>, där texten ligger.</p>
+
+    <h2>Gör såhär när du är klar med din granskning</h2>
+    <ol>
+	<li>Gå till SharePoint-listan</li>
+	<li>Dubbelklicka på aktuell rad.</li>
+	<li>Ett <strong>redigeringsfönster</strong> öppnas (se bild nedan).</li>
+	<li>Intill ditt namn finns ett klarmarkeringsreglage (se <strong>steg 1</strong> i bild)</li>
+	<li>Avsluta genom att spara (se <strong>steg 2</strong> i bild)</li>
+	</ol>
+    
+    <img src="objektfonster.png" alt="Objektsfönster" class="list-image" onclick="openModal(this.src)">
+
+	<h2>Nu händer detta</h2>
+	<p>När du har klarmarkerat ditt arbete i listan, då händer två saker (se bild nedan):</p>
+	<ol>
+	<li>På raden i listan syns nu en tydlig ✔-symbol vilket gör det enkelt ett följa processen</li>
+	<li><strong>Viktigare</strong>: en notis skickas per automatik till nästa person i realtid (e-post)</li>
+	</ol>
+	<p>Du kan luta dig tillbaka och göra något annat viktigt. 😀 Ett mail går iväg till nästa person med innehållet "Nu är det din tur att granska texten".</p>
+	
+	<img src="lista-uppdaterad.png" alt="Uppdaterad lista" class="list-image" onclick="openModal(this.src)">
+
+    <h2>.. och sådär fortsätter det</h2>
+    <p>tills tredje utsedd läsare har klarmarkerat, för då skickas en notis <strong>till mig</strong> (Johan) med beskedet att "Nu har alla korrläsare granskat [den här texten]".</p>
+
+<h2>Hela flödet i detalj</h2>
+
+    <table class="logic-table">
+        <thead>
+            <tr>
+                <th>Steg</th>
+                <th>Handling</th>
+                <th>Konsekvens</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>1. Uppstart</strong></td>
+                <td>Johan startar processen</td>
+                <td>📧 1:a läsare får notis.</td>
+            </tr>
+            <tr>
+                <td><strong>2. Granskning 1</strong></td>
+                <td>1:a läsare klarmarkerar <span class="badge">✔</span></td>
+                <td>📧 2:a läsare får notis.</td>
+            </tr>
+            <tr>
+                <td><strong>3. Granskning 2</strong></td>
+                <td>2:a läsare klarmarkerar <span class="badge">✔</span></td>
+                <td>📧 3:e läsare får notis.</td>
+            </tr>
+            <tr>
+                <td><strong>4. Granskning 3</strong></td>
+                <td>3:e läsare klarmarkerar <span class="badge">✔</span></td>
+                <td>📧 Johan får notis.</td>
+            </tr>
+        </tbody>
+    </table>
+
+	<h2>Det enda du behöver tänka på – egentligen</h2>
+    <div class="step">
+        Glöm inte att klarmarkera <span class="badge">✔</span> så att ett e-postmeddelande skickas till nästa person.
+    </div>
+	
+<script>
+    function openModal(src) {
+        document.getElementById("modalImg").src = src;
+        document.getElementById("imageModal").style.display = "block";
+        document.body.style.overflow = "hidden";
+    }
+
+    function closeModal() {
+        document.getElementById("imageModal").style.display = "none";
+        document.body.style.overflow = "auto";
+    }
+</script>
+
+</body>
+</html>
