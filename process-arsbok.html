@@ -15,7 +15,6 @@
             background-color: #f4f7f9; 
         }
         
-        /* Den självständiga knappen längst upp till höger */
         .btn-fixed-right { 
             position: fixed;
             top: 20px;
@@ -40,7 +39,6 @@
         h1 { color: #0078d4; border-bottom: 2px solid #0078d4; padding-bottom: 10px; }
         h2 { color: #2b579a; margin-top: 30px; }
         
-        /* Bilder i dokumentet */
         .list-image { 
             width: 100%; 
             height: auto; 
@@ -52,7 +50,6 @@
         }
         .list-image:hover { opacity: 0.9; }
 
-        /* Modal / Lightbox */
         .modal {
             display: none;
             position: fixed;
@@ -91,6 +88,7 @@
             width: 60px;
             height: 60px;
             text-align: center;
+            display: block;
         }
         .close-btn:hover {
             color: #bbb;
@@ -115,29 +113,29 @@
     <p>Denna lista – <strong>klicka på bilderna nedan för att förstora</strong> – är navet i vårt granskningsarbete. Systemet sköter automatiskt aviseringar via e-post så att rätt person alltid vet när det är dags att agera.</p>
 
     <img src="lista.png" alt="Översikt av listan" class="list-image" onclick="openModal(this.src)">
-	
-	<p>I listan framgår tydligt vem som är <strong>utsedd som första (och andra och tredje) läsare</strong> till varje text. På varje rad finns också <strong>en direktlänk till aktuell mapp</strong>, där texten ligger.</p>
+    
+    <p>I listan framgår tydligt vem som är <strong>utsedd som första (och andra och tredje) läsare</strong> till varje text. På varje rad finns också <strong>en direktlänk till aktuell mapp</strong>, där texten ligger.</p>
 
     <h2>Gör såhär när du är klar med din granskning</h2>
     <ol>
-	<li>Gå till SharePoint-listan</li>
-	<li>Dubbelklicka på aktuell rad.</li>
-	<li>Ett <strong>redigeringsfönster</strong> öppnas (se bild nedan).</li>
-	<li>Intill ditt namn finns ett klarmarkeringsreglage (se <strong>steg 1</strong> i bild)</li>
-	<li>Avsluta genom att spara (se <strong>steg 2</strong> i bild)</li>
-	</ol>
+    <li>Gå till SharePoint-listan</li>
+    <li>Dubbelklicka på aktuell rad.</li>
+    <li>Ett <strong>redigeringsfönster</strong> öppnas (se bild nedan).</li>
+    <li>Intill ditt namn finns ett klarmarkeringsreglage (se <strong>steg 1</strong> i bild)</li>
+    <li>Avsluta genom att spara (se <strong>steg 2</strong> i bild)</li>
+    </ol>
     
     <img src="objektfonster.png" alt="Objektsfönster" class="list-image" onclick="openModal(this.src)">
 
-	<h2>Nu händer detta</h2>
-	<p>När du har klarmarkerat ditt arbete i listan, då händer två saker (se bild nedan):</p>
-	<ol>
-	<li>På raden i listan syns nu en tydlig ✔-symbol vilket gör det enkelt ett följa processen</li>
-	<li><strong>Viktigare</strong>: en notis skickas per automatik till nästa person i realtid (e-post)</li>
-	</ol>
-	<p>Du kan luta dig tillbaka och göra något annat viktigt. 😀 Ett mail går iväg till nästa person med innehållet "Nu är det din tur att granska texten".</p>
-	
-	<img src="lista-uppdaterad.png" alt="Uppdaterad lista" class="list-image" onclick="openModal(this.src)">
+    <h2>Nu händer detta</h2>
+    <p>När du har klarmarkerat ditt arbete i listan, då händer två saker (se bild nedan):</p>
+    <ol>
+    <li>På raden i listan syns nu en tydlig ✔-symbol vilket gör det enkelt ett följa processen</li>
+    <li><strong>Viktigare</strong>: en notis skickas per automatik till nästa person i realtid (e-post)</li>
+    </ol>
+    <p>Du kan luta dig tillbaka och göra något annat viktigt. 😀 Ett mail går iväg till nästa person med innehållet "Nu är det din tur att granska texten".</p>
+    
+    <img src="lista-uppdaterad.png" alt="Uppdaterad lista" class="list-image" onclick="openModal(this.src)">
 
     <h2>.. och sådär fortsätter det</h2>
     <p>tills tredje utsedd läsare har klarmarkerat, för då skickas en notis <strong>till mig</strong> (Johan) med beskedet att "Nu har alla korrläsare granskat [den här texten]".</p>
@@ -176,11 +174,17 @@
         </tbody>
     </table>
 
-	<h2>Det enda du behöver tänka på – egentligen</h2>
+    <h2>Det enda du behöver tänka på – egentligen</h2>
     <div class="step">
         Glöm inte att klarmarkera <span class="badge">✔</span> så att ett e-postmeddelande skickas till nästa person.
     </div>
-	
+</div>
+
+<div id="imageModal" class="modal" onclick="closeModal()">
+    <span class="close-btn">&times;</span>
+    <img class="modal-content" id="modalImg">
+</div>
+
 <script>
     function openModal(src) {
         document.getElementById("modalImg").src = src;
