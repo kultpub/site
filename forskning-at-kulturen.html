@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forskning på Kulturen</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --container-bg: #ffffff;
+            --text-color: #2d3436;
+            --accent-color: #2c3e50;
+            --info-btn-border: #2c3e50;
+            --info-btn-text: #2c3e50;
+            --modal-overlay: rgba(0, 0, 0, 0.6);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --container-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --accent-color: #ffffff;
+            --info-btn-border: #636e72;
+            --info-btn-text: #b2bec3;
+        }
+
+        /* Fade-in animation vid laddning */
+        @keyframes pageFadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+body {
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Centrerar vertikalt utan extra padding */
+    height: 100vh; /* Exakt skärmhöjd */
+    overflow: hidden; /* Förhindrar onödig scroll på desktop */
+    transition: background-color 0.3s, color 0.3s;
+    opacity: 0;
+    animation: pageFadeIn 0.8s ease forwards;
+}
+
+        /* Logo Styling */
+        .logo-container {
+            margin-bottom: 40px;
+            transition: var(--transition);
+        }
+
+        .logo-container img {
+            max-width: 350px;
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Top Bar Controls */
+        .controls {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 20px;
+            z-index: 100;
+        }
+
+        .theme-switch {
+            cursor: pointer;
+            font-size: 1.6rem;
+            color: var(--text-color);
+            transition: var(--transition);
+            padding: 5px;
+        }
+
+        .theme-switch:hover { transform: rotate(15deg) scale(1.1); }
+
+        .info-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-info {
+            background: transparent;
+            border: 1px solid var(--info-btn-border);
+            color: var(--info-btn-text);
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .btn-info:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+            background: rgba(128,128,128,0.1);
+        }
+
+        /* Main Menu */
+        .menu-container {
+            text-align: center;
+            width: 90%;
+            max-width: 600px;
+            z-index: 10;
+            margin-bottom: 50px;
+        }
+
+        h1 {
+            font-weight: 300;
+            letter-spacing: 4px;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            font-size: 1.6rem;
+        }
+
+        .main-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            background-color: var(--container-bg);
+            color: var(--text-color);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: var(--transition);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .nav-link:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+            border-color: var(--accent-color);
+        }
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--modal-overlay);
+            backdrop-filter: blur(8px);
+        }
+
+        .modal-content {
+            background-color: var(--container-bg);
+            margin: 8% auto;
+            padding: 50px;
+            border-radius: 20px;
+            width: 85%;
+            max-width: 550px;
+            position: relative;
+            line-height: 1.8;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+            animation: modalFadeIn 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        @keyframes modalFadeIn {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .close-circle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 48px;
+            height: 48px;
+            background: rgba(0,0,0,0.05);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        [data-theme="dark"] .close-circle {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .close-circle i {
+            font-size: 24px;
+            color: var(--text-color);
+            transition: transform 0.4s ease;
+        }
+
+        .close-circle:hover { background: #e74c3c; }
+        .close-circle:hover i { transform: rotate(180deg); color: white; }
+
+        h2 {
+            margin-top: 0;
+            font-weight: 400;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .modal-link { color: #3498db; text-decoration: none; font-weight: 600; }
+        .modal-link:hover { text-decoration: underline; }
+
+        /* MOBILANPASSNING */
+        @media (max-width: 768px) {
+            body { padding-top: 30px; }
+            
+            .controls {
+                position: relative;
+                top: 0;
+                right: 0;
+                align-items: center;
+                width: 100%;
+                margin-bottom: 30px;
+            }
+
+            .info-buttons {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 8px;
+                padding: 0 20px;
+            }
+
+            .btn-info {
+                font-size: 0.75rem;
+                padding: 8px 12px;
+            }
+
+            .logo-container { margin-bottom: 30px; }
+            .logo-container img { max-width: 280px; }
+            
+            .modal-content {
+                padding: 30px;
+                margin: 15% auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="controls">
+        <div class="theme-switch" id="themeToggle" title="Växla läge">
+            <i class="fas fa-moon"></i>
+        </div>
+        <div class="info-buttons">
+            <button class="btn-info" onclick="openModal('modal1')">Om Forskningsgruppen</button>
+            <button class="btn-info" onclick="openModal('modal2')">Om ärendelista</button>
+            <button class="btn-info" onclick="openModal('modal3')">Om lista aktiviteter</button>
+        </div>
+    </div>
+
+    <div class="logo-container">
+        <img id="mainLogo" src="logo-black.png" alt="Kulturen Logotyp">
+    </div>
+
+    <div class="menu-container">
+        <h1>Forskning på Kulturen</h1>
+        <nav class="main-nav">
+            <a href="https://www.kulturen.com/forskning/" target="_blank" class="nav-link">Forskning på webben</a>
+            <a href="https://kulturen.sharepoint.com/sites/forskning/Lists/Forskningsgruppens%20rendelista/AllItems.aspx?env=WebViewList" target="_blank" class="nav-link">Ärendelista till möten</a>
+            <a href="https://kulturen.sharepoint.com/sites/forskning/Lists/Forskning%20Kulturen/AllItems.aspx?env=WebViewList" target="_blank" class="nav-link">Aktuella aktiviteter</a>
+        </nav>
+    </div>
+
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <div class="close-circle close-modal"><i class="fas fa-times"></i></div>
+            <h2>Om Forskningsgruppen</h2>
+            <p>Kulturens Forskningsgrupp utgörs av museichef, avdelningschefer för Kulturmiljö och Samlingar, disputerad personal, aktuella doktorander samt övrig personal med tydlig forskningsanknytning. Gruppen sammanträder tre gånger per år – i februari, maj och oktober – för att behandla planering och uppföljning av forskningsprojekt, publikationer, forskningsresultat samt frågor rörande samarbeten, framtida inriktningar, aktuella utlysningar och ansökningar.</p>
+        </div>
+    </div>
+
+    <div id="modal2" class="modal">
+        <div class="modal-content">
+            <div class="close-circle close-modal"><i class="fas fa-times"></i></div>
+            <h2>Om ärendelista</h2>
+            <p>Till sina möten har Forskningsgruppen en ärendelista, där vem som helst av gruppens medlemmar kan kandidera frågor av annan art är de som gäller aktuella aktiviteter. För att sådana frågor ska kunna behandlas till nästkommande möte, ska de anmälas i god tid. Anmälan görs <a href="https://kulturen.sharepoint.com/sites/forskning/Lists/Forskningsgruppens%20rendelista/AllItems.aspx?env=WebViewList" target="_blank" class="modal-link">📋 här</a>.</p>
+        </div>
+    </div>
+
+    <div id="modal3" class="modal">
+        <div class="modal-content">
+            <div class="close-circle close-modal"><i class="fas fa-times"></i></div>
+            <h2>Om lista aktiviteter</h2>
+            <p>Inför varje möte ska <a href="https://kulturen.sharepoint.com/sites/forskning/Lists/Forskning%20Kulturen/AllItems.aspx?env=WebViewList" target="_blank" class="modal-link">📋 Forskningslistan</a> uppdateras – en levande databas som ger en samlad överblick över genomförda forskningsaktiviteter samt en uppdaterad bild av pågående och kommande aktiviteter. Listan innehåller nyckeldata om projektnamn, ansvariga, medverkande, finansiering, tidsramar, status och kommentarer. Listan utgör alltid en stående punkt på dagordningen och fungerar samtidigt som en strategisk resurs i Kulturens verksamhetsplanering och verksamhetsberättelse.</p>
+        </div>
+    </div>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        const icon = themeToggle.querySelector('i');
+        const logo = document.getElementById('mainLogo');
+
+        // Funktion för att sätta tema
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                body.setAttribute('data-theme', 'dark');
+                icon.classList.replace('fa-moon', 'fa-sun');
+                logo.src = 'logo-white.png';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.removeAttribute('data-theme');
+                icon.classList.replace('fa-sun', 'fa-moon');
+                logo.src = 'logo-black.png';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Ladda sparat tema vid start
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            setTheme(savedTheme);
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+        });
+
+        // Modal Logic
+        function openModal(id) {
+            document.getElementById(id).style.display = 'block';
+            body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modal) {
+            modal.style.display = 'none';
+            body.style.overflow = 'auto';
+        }
+
+        document.querySelectorAll('.close-modal').forEach(btn => {
+            btn.onclick = function() { closeModal(this.closest('.modal')); }
+        });
+
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) { closeModal(event.target); }
+        }
+    </script>
+</body>
+</html>
