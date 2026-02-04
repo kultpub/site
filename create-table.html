@@ -5,8 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Generera tabell → PNG</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Roboto&family=Open+Sans&family=Lato&family=Montserrat&family=Source+Sans+3&family=Merriweather&family=Playfair+Display&family=Oswald&family=Raleway&family=Nunito&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto&family=Open+Sans&family=Lato&family=Montserrat&family=Inter&family=Archivo+Black&family=SN+Pro&family=Merriweather&family=Raleway&family=Nunito&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 <style>
 body {
@@ -63,22 +64,9 @@ input:focus, select:focus {
     box-shadow:0 0 0 2px rgba(31,79,216,0.15);
 }
 
-.w5  { width:5px; }
-.w10 { width:10px; }
-.w20 { width:20px; }
-.w30 { width:30px; }
 .w40 { width:40px; }
-.w50 { width:50px; }
-.w60 { width:60px; }
 .w70 { width:70px; }
-.w80 { width:80px; }
-.w90 { width:90px; }
 .w100 { width:100px; }
-.w110 { width:110px; }
-.w120 { width:120px; }
-.w130 { width:130px; }
-.w140 { width:140px; }
-.w150 { width:150px; }
 .color-input { width:46px; padding:2px; height:32px; }
 
 button {
@@ -97,7 +85,7 @@ button {
 
 .export-transparent:hover {
     background: #1f4fd8;
-	color: #ffffff;
+    color: #ffffff;
 }
 
 #tableWrap {
@@ -110,39 +98,48 @@ button {
     margin:10px auto 0;
 }
 
-table {border-collapse:collapse;}
+/* --- TABELL-STYLING (RENSAD) --- */
+table {
+    border-collapse: collapse;
+}
+
 td {
-    border:1px solid #333;
-    padding:0px 14px;
-    min-width:120px;
-    height:auto;
-	line-height:1.2;
+    padding: 0px 14px;
+    min-width: 120px;
+    height: auto;
+    line-height: 1.2;
+    /* Ingen border här - styrs av JS */
 }
 
 .table-frame table {
     table-layout: auto;
 }
 
-.table-frame td {
-    min-width: 60px;   /* 🔹 STANDARDBREDD */
+.table-frame table:hover td {
+    outline: 1px dashed #bbb;
+    outline-offset: -1px;
 }
 
-.table-frame td { color:#000; }
+.table-frame td:focus-within {
+    outline: 1px solid #1f4fd8 !important;
+    outline-offset: -1px;
+}
+
+.table-frame td {
+    min-width: 60px;
+    color: #000;
+}
+
 td[contenteditable]{outline:none;}
 
-.table-frame{
-    display:inline-block;
-    overflow:hidden;
-    border:1px solid #333;
-    background:#fff;
+.table-frame {
+    display: inline-block;
+    overflow: hidden;
+    background: #fff;
+    /* Ingen border eller border-radius här - styrs av JS */
 }
-.table-frame table{border-collapse:collapse;}
-.table-frame td{border:1px solid #333;}
-.table-frame tr:first-child td{ border-top:0; }
-.table-frame tr:last-child  td{ border-bottom:0; }
-.table-frame td:first-child   { border-left:0; }
-.table-frame td:last-child    { border-right:0; }
 
+/* --- EXPORT-KNAPPAR & ÖVRIGT --- */
 .export-buttons {
     position: fixed;
     top: 20px;
@@ -159,8 +156,8 @@ td[contenteditable]{outline:none;}
 .cell-inner {
     height: 100%;
     display: flex;
-    align-items: center;      /* vertikal centrering */
-    justify-content: flex-end;/* höger som default */
+    align-items: center;      
+    justify-content: flex-end;
 }
 
 .cell-inner span {
@@ -168,6 +165,7 @@ td[contenteditable]{outline:none;}
     width: 100%;
     outline: none;
 }
+
 .export-white {
     background: #ffffff;
     color: #000000;
@@ -176,7 +174,7 @@ td[contenteditable]{outline:none;}
 
 .export-white:hover {
     background: #1f4fd8;
-	color: #ffffff;
+    color: #ffffff;
 }
 
 .export-copy {
@@ -186,7 +184,7 @@ td[contenteditable]{outline:none;}
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 44px; /* Gör knappen kvadratisk */
+    width: 44px;
     height: 44px;
     padding: 0;
 }
@@ -222,7 +220,7 @@ td[contenteditable]{outline:none;}
     background: #ffffff;
     color: #dc3545;
     border: 1px solid #dc3545;
-    height: 32px; /* Samma höjd som input/select */
+    height: 32px;
     padding: 0 12px;
     font-size: 13px;
     border-radius: 6px;
@@ -240,6 +238,88 @@ td[contenteditable]{outline:none;}
     font-size: 18px;
 }
 
+/* Visa stödlinjer vid hover om stilen saknar vertikala linjer */
+.table-frame table:not(.is-editing):hover td {
+    outline: 1px dashed #ccc; /* Vi använder outline för att inte påverka tabellens storlek */
+    outline-offset: -1px;
+}
+
+/* När vi klickar i en cell (fokus), döljer vi alla stödlinjer */
+.table-frame table.is-editing td {
+    outline: none !important;
+}
+
+/* Styling för bild-modal 2x2 */
+.style-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Tvingar 2 kolumner */
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.style-item {
+    cursor: pointer;
+    border: 2px solid #eee;
+    border-radius: 8px;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.2s;
+    overflow: hidden;
+}
+
+.style-item:hover {
+    border-color: #1f4fd8;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.style-item.active {
+    border-color: #1f4fd8;
+    background: #f0f4ff;
+}
+
+.style-img-container {
+    width: 100%;
+    height: 140px;
+    background: #f9f9f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.style-item img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    padding: 5px;
+}
+
+.style-item span {
+    display: block;
+    padding: 5px;
+    font-size: 11px;
+    font-weight: 700;
+    text-align: center;
+    border-top: 1px solid #eee;
+    color: #444;
+}
+
+* Enhetlig styling för alla kontrollknappar */
+#boldBtn, .style-trigger, .export-clear {
+    height: 35px; /* Samma höjd som dina select-boxar och inputs */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 12px;
+    box-sizing: border-box; /* Viktigt: inkluderar border i höjden */
+    vertical-align: bottom;
+}
+
+/* Specifikt för F-knappen så den inte blir för bred */
+#boldBtn {
+    width: 35px;
+    padding: 0;
+}
 </style>
 </head>
 <body>
@@ -262,12 +342,12 @@ td[contenteditable]{outline:none;}
 
     <div class="control">
         <label>Kolumner</label>
-        <input type="number" class="w40" id="cols" min="1" max="12" value="4">
+        <input type="number" class="w40" id="cols" min="1" max="12" value="6">
     </div>
 
     <div class="control">
         <label>Rader</label>
-        <input type="number" class="w40" id="rows" min="1" max="20" value="5">
+        <input type="number" class="w40" id="rows" min="1" max="20" value="6">
     </div>
 
     <div class="control">
@@ -277,28 +357,28 @@ td[contenteditable]{outline:none;}
 
     <div class="control">
         <label>Headerfärg</label>
-        <input type="color" class="color-input" id="headerColor" value="#dbe4ff">
+        <input type="color" class="color-input" id="headerColor" value="#dbe4ff" style="height: 30px;">
     </div>
 
     <div class="control">
         <label>Headertext</label>
-        <input type="color" class="color-input" id="headerTextColor" value="#000000">
+        <input type="color" class="color-input" id="headerTextColor" value="#000000" style="height: 30px;">
     </div>
 
     <div class="control">
         <label>Typsnitt</label>
-        <select class="medium-input" id="fontSelect">
-            <option>Roboto</option>
-            <option>Open Sans</option>
-            <option>Lato</option>
-            <option>Montserrat</option>
-            <option>Source Sans</option>
-            <option>Merriweather</option>
-            <option>Playfair</option>
-            <option>Oswald</option>
-            <option>Raleway</option>
-            <option>Nunito</option>
-        </select>
+		<select class="medium-input" id="fontSelect" style="height: 30px;">
+			<option>SN Pro</option>
+			<option>Inter</option>
+			<option>Archivo Black</option>
+			<option>Montserrat</option>
+			<option selected>Roboto</option>
+			<option>Open Sans</option>
+			<option>Lato</option>
+			<option>Merriweather</option>
+			<option>Raleway</option>
+			<option>Nunito</option>
+		</select>
     </div>
 
     <div class="control">
@@ -307,8 +387,15 @@ td[contenteditable]{outline:none;}
     </div>
 	
 	<div class="control">
+		<label>Format</label>
+		<button type="button" id="boldBtn" onclick="toggleBold()" style="display: inline-flex; align-items: center; justify-content: center; background: white; border: 1px solid #c9ced6; border-radius: 6px; width: 35px; height: 30px; cursor: pointer; transition: all 0.2s; font-family: sans-serif; font-weight: 700; font-size: 14px;">
+			F
+		</button>
+	</div>
+	
+	<div class="control">
     <label>Justering</label>
-    <select class="w100" id="textAlign">
+    <select class="w100" id="textAlign" style="height: 30px;">
         <option value="right" selected>Höger</option>
         <option value="center">Centrerat</option>
         <option value="left">Vänster</option>
@@ -316,24 +403,23 @@ td[contenteditable]{outline:none;}
 	</div>
 
     <div class="control">
-        <label>Tusentalsavgränsare</label>
-        <select class="w120" id="thousandSep">
-            <option value="yes">Ja&nbsp;&nbsp;[# ###]</option>
-            <option value="no">Nej&nbsp;&nbsp;[####]</option>
-        </select>
-    </div>
-
-    <div class="control">
         <label>Hörn</label>
-        <select class="w100" id="radius">
+        <select class="w100" id="radius" style="height: 30px;">
             <option value="0">Raka</option>
             <option value="12">Rundade</option>
         </select>
     </div>
 
+	<div class="control">
+		<label>Utseende</label>
+		<button type="button" class="style-trigger" onclick="openStyleModal()" style="display: inline-flex; align-items: center; gap: 8px; background: white; border: 1px solid #c9ced6; border-radius: 6px; padding: 6px 12px; height: 30px; font-size: 14px; font-weight: 400; cursor: pointer; transition: all 0.2s;">
+			<span class="material-icons" style="font-size: 18px;">palette</span> Stil
+		</button>
+	</div>
+
     <div class="control">
         <label>DPI</label>
-        <select class="w70" id="dpi">
+        <select class="w70" id="dpi" style="height:30px;">
             <option value="300">300</option>
             <option value="600">600</option>
         </select>
@@ -360,7 +446,121 @@ td[contenteditable]{outline:none;}
     </div>
 </div>
 
+<div id="styleModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; align-items:center; justify-content:center;">
+    <div style="background:white; padding:20px; border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,0.2); width:800px;">
+        <h3 style="margin-top:0; text-align:center; font-size:18px;">Välj tabellstil</h3>
+        
+        <div class="style-grid" id="styleOptions">
+            <div class="style-item" onclick="applyStyle('standard')">
+                <div class="style-img-container">
+                    <img src="standard.png" alt="Standard">
+                </div>
+                <span>Standard</span>
+            </div>
+            <div class="style-item" onclick="applyStyle('modern')">
+                <div class="style-img-container">
+                    <img src="modern.png" alt="Modern">
+                </div>
+                <span>Modern</span>
+            </div>
+            <div class="style-item" onclick="applyStyle('column_focus')">
+                <div class="style-img-container">
+                    <img src="kolumn.png" alt="Kolumn">
+                </div>
+                <span>Kolumn</span>
+            </div>
+            <div class="style-item" onclick="applyStyle('forest')">
+                <div class="style-img-container">
+                    <img src="skog.png" alt="Skog">
+                </div>
+                <span>Skogsgrön</span>
+            </div>
+        </div>
+
+        <button onclick="closeStyleModal()" style="width:100%; background:#fff; color:#666; padding:10px; border:1px solid #ccc; border-radius:6px; font-weight:600; cursor:pointer;">
+            Avbryt
+        </button>
+    </div>
+</div>
+
 <script>
+const TABLE_STYLES = {
+    standard: {
+        name: "Standard",
+        headerBg: "#dbe4ff",
+        headerText: "#000000",
+        headerFont: null,
+        headerBorderBottom: null,
+        rowHeight: 35,
+        verticalLines: true,
+        horizontalLines: true,
+        zebra: false,
+        zebraText: "#000000",
+        columnFocus: false,
+        borderColor: "#333333",
+        outerBorder: true,
+        bottomLine: null,
+        radius: 0,
+        fontFamily: "Roboto"
+    },
+    modern: {
+        name: "Modern",
+        headerBg: "#009879",
+        headerText: "#ffffff",
+        headerFont: null,
+        headerBorderBottom: null,
+        rowHeight: 45,
+        verticalLines: false,
+        horizontalLines: true,
+        zebra: "#f3f3f3",
+        zebraText: "#009879",
+        columnFocus: false,
+        borderColor: "#dddddd",
+        outerBorder: true,
+        bottomLine: "#009879",
+        radius: 12,
+        fontFamily: "Montserrat"
+    },
+    column_focus: {
+        name: "Column Focus",
+        headerBg: "#7d12ff",
+        headerText: "#ffffff",
+        headerFont: null,
+        headerBorderBottom: null,
+        rowHeight: 45,
+        verticalLines: false,
+        horizontalLines: true,
+        zebra: false,
+        zebraText: "#000000",
+        columnFocus: "#f5f6ff",
+        borderColor: "#eeeeee",
+        outerBorder: true,
+        bottomLine: "#7d12ff",
+        radius: 12,
+        fontFamily: "Open Sans"
+    },
+forest: {
+        name: "Forest",
+        headerBg: "#59736e",
+        headerText: "#ffffff",
+        headerFont: null,
+        headerBorderBottom: null,
+        rowHeight: 45,
+        verticalLines: false,
+        horizontalLines: true,
+        zebra: "#f3f3f3",
+        zebraText: "#59736e",
+        columnFocus: false,
+        borderColor: "#dddddd",
+        outerBorder: true,
+        bottomLine: "#59736e",
+        radius: 12,
+        fontFamily: "Raleway"
+    }
+};
+
+let currentStyleKey = "standard";
+
 const wrap = document.getElementById("tableWrap");
 const colsInput = document.getElementById("cols");
 const rowsInput = document.getElementById("rows");
@@ -370,7 +570,6 @@ const headerColorInput = document.getElementById("headerColor");
 const headerTextColorInput = document.getElementById("headerTextColor");
 const fontSelect = document.getElementById("fontSelect");
 const radiusInput = document.getElementById("radius");
-const thousandSepSelect = document.getElementById("thousandSep");
 const textAlignSelect = document.getElementById("textAlign");
 
 let activeCell = null;
@@ -380,7 +579,6 @@ colsInput.addEventListener("input", generateTable);
 rowsInput.addEventListener("input", generateTable);
 [rowHeightInput, fontSizeInput, fontSelect, radiusInput, headerColorInput, headerTextColorInput]
     .forEach(el => el.addEventListener("input", updateStyles));
-thousandSepSelect.addEventListener("input", reformatAllNumbers);
 
 textAlignSelect.addEventListener("input", () => {
     if (!activeCell) return;
@@ -388,29 +586,59 @@ textAlignSelect.addEventListener("input", () => {
     const editor = activeCell.querySelector(".cell-inner span");
     if (!editor) return;
 
-    editor.dataset.align = textAlignSelect.value;   // spara på texten
-    applyCellAlignment(activeCell);                 // uppdatera layouten
+    editor.dataset.align = textAlignSelect.value;
+    applyCellAlignment(activeCell);
 });
 
-/* ================= FORMAT ================= */
-function formatIfNumber(text) {
-    const clean = text.replace(/\u00A0/g, " ");
-    const numberPattern = /^-?\d+([.,]\d+)?$/;
+/* ================= STILFUNKTIONER och MODAL ================= */
+function applyStyle(styleKey) {
+    const config = TABLE_STYLES[styleKey];
+    if (!config) return;
 
-    if (numberPattern.test(clean.trim())) {
-        const normalized = clean.replace(",", ".");
-        return thousandSepSelect.value === "yes"
-            ? Number(normalized).toLocaleString("sv-SE")
-            : normalized;
+    currentStyleKey = styleKey;
+
+    // 1. Uppdatera kontrollpanelens synliga inputs
+    headerColorInput.value = config.headerBg;
+    headerTextColorInput.value = config.headerText;
+    rowHeightInput.value = config.rowHeight;
+    radiusInput.value = config.radius;
+    
+    if (config.fontFamily) {
+        fontSelect.value = config.fontFamily;
     }
-    return text;
+
+    // 2. Visuell feedback i modal-rutnätet
+    const items = document.querySelectorAll('.style-item');
+    items.forEach(item => {
+        item.classList.remove('active');
+        if (item.getAttribute('onclick').includes(styleKey)) {
+            item.classList.add('active');
+        }
+    });
+
+    // 3. VERKSTÄLL STILEN
+    // Vi anropar updateStyles för att rita om tabellen med de nya värdena
+    updateStyles();
+    
+    // Stäng modalen
+    closeStyleModal();
 }
 
-function reformatAllNumbers() {
-    document.querySelectorAll(".cell-inner span").forEach(el => {
-        el.innerText = formatIfNumber(el.innerText);
-    });
+function openStyleModal() {
+    document.getElementById("styleModal").style.display = "flex";
 }
+
+function closeStyleModal() {
+    document.getElementById("styleModal").style.display = "none";
+}
+
+// Vi lägger till en lyssnare så man kan stänga även denna modal genom att klicka utanför
+window.addEventListener('click', function(event) {
+    const sModal = document.getElementById("styleModal");
+    if (event.target == sModal) {
+        closeStyleModal();
+    }
+});
 
 /* ================= DATA ================= */
 function getExistingData() {
@@ -422,13 +650,31 @@ function getExistingData() {
         data[r] = [];
         for (let c = 0; c < old.rows[r].cells.length; c++) {
             const editor = old.rows[r].cells[c].querySelector("span");
-            data[r][c] = {
-                text: editor?.innerText || "",
-                align: editor?.dataset.align || "right"
-            };
+			data[r][c] = {
+				text: editor?.innerText || "",
+				align: editor?.dataset.align || "right",
+				bold: editor?.dataset.bold || "false" // 🔹 Lägg till denna rad
+			};
         }
     }
     return data;
+}
+
+function toggleBold() {
+    if (!activeCell) return;
+    const editor = activeCell.querySelector("span");
+    if (!editor) return;
+
+    const isBold = editor.dataset.bold === "true";
+    editor.dataset.bold = !isBold;
+
+    // Uppdatera knappens utseende direkt vid klick
+    const btn = document.getElementById("boldBtn");
+    btn.style.background = !isBold ? "#eef1f5" : "white";
+    btn.style.borderColor = !isBold ? "#1f4fd8" : "#c9ced6";
+    btn.style.color = !isBold ? "#1f4fd8" : "#222";
+
+    updateStyles();
 }
 
 /* ================= TABLE ================= */
@@ -439,7 +685,7 @@ function generateTable() {
 
     const frame = document.createElement("div");
     frame.className = "table-frame";
-    const table = document.createElement("table");
+	const table = document.createElement("table");
 
     for (let r = 0; r < rows; r++) {
         const tr = document.createElement("tr");
@@ -452,18 +698,23 @@ function generateTable() {
 
             const editor = document.createElement("span");
             editor.contentEditable = "true";
+			editor.addEventListener("input", updateStyles);
 
             const saved = existingData[r]?.[c];
             editor.innerText = saved?.text || "";
             editor.dataset.align = saved?.align || "right";
-
-            editor.addEventListener("blur", () => {
-                editor.innerText = formatIfNumber(editor.innerText);
-            });
+			editor.dataset.bold = saved?.bold || "false";
 
 			editor.addEventListener("focus", () => {
 				activeCell = td;
 				textAlignSelect.value = editor.dataset.align || "right";
+				
+				// Visuell feedback: Blå ram och ljusgrå bakgrund om F-knappen är aktiv
+				const isBold = editor.dataset.bold === "true";
+				const btn = document.getElementById("boldBtn");
+				btn.style.background = isBold ? "#eef1f5" : "white";
+				btn.style.borderColor = isBold ? "#1f4fd8" : "#c9ced6";
+				btn.style.color = isBold ? "#1f4fd8" : "#222";
 			});
 
             inner.appendChild(editor);
@@ -481,7 +732,6 @@ function generateTable() {
 }
 
 function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
-    // Dela först upp texten baserat på manuella radbrytningar (Shift+Enter)
     const paragraphs = text.split('\n');
     let lines = [];
 
@@ -494,7 +744,6 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
             let metrics = ctx.measureText(testLine);
             let testWidth = metrics.width;
 
-            // Om ordet är längre än maxbredden, bryt raden (om det inte är första ordet)
             if (testWidth > maxWidth && n > 0) {
                 lines.push(currentLine);
                 currentLine = words[n] + ' ';
@@ -505,7 +754,6 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
         lines.push(currentLine);
     });
 
-    // Rita ut varje rad
     lines.forEach((line, i) => {
         ctx.fillText(line.trim(), x, y + (i * lineHeight) - ((lines.length - 1) * lineHeight) / 2);
     });
@@ -524,53 +772,223 @@ function applyCellAlignment(cell) {
         align === "center" ? "center" :
                              "flex-end";
 
-    editor.style.textAlign = align; // viktigt för markör & textflöde
+    editor.style.textAlign = align;
 }
 
 function updateStyles() {
     const table = document.querySelector(".table-frame table");
     if (!table) return;
 
-    const headerColor = headerColorInput.value;
-    const headerTextColor = headerTextColorInput.value;
-    const font = fontSelect.value;
-    const radius = +radiusInput.value;
-    const rowHeight = +rowHeightInput.value;
-    const fontSize = +fontSizeInput.value;
-
+    const config = TABLE_STYLES[currentStyleKey];
     const frame = document.querySelector(".table-frame");
+    const radius = +radiusInput.value;
+
     frame.style.borderRadius = radius + "px";
-    table.style.fontFamily = font;
-    table.style.fontSize = fontSize + "px";
+    frame.style.border = config.outerBorder ? `1px solid ${config.borderColor}` : "none";
+    
+    table.style.fontFamily = fontSelect.value;
+    table.style.fontSize = fontSizeInput.value + "px";
+    table.style.borderCollapse = "collapse";
 
-	for (let r = 0; r < table.rows.length; r++) {
-		for (let cell of table.rows[r].cells) {
-			cell.style.height = rowHeight + "px";
-	
-			const inner = cell.querySelector(".cell-inner");
-			const editor = inner?.querySelector("span");
-			if (!inner || !editor) continue;
-	
-			inner.style.display = "flex";
-			inner.style.alignItems = "center";
-			inner.style.height = "100%";
-	
-			editor.style.fontWeight = "400";
-			editor.style.color = "#000";
-	
-			applyCellAlignment(cell); // 🔹 HÄR
-		}
-	}
+    const rows = table.rows;
 
-    for (let cell of table.rows[0].cells) {
-        const editor = cell.querySelector("span");
-        cell.style.background = headerColor;
-        if (editor) {
-            editor.style.color = headerTextColor;
-            editor.style.fontWeight = "700";
+    for (let r = 0; r < rows.length; r++) {
+        const tr = rows[r];
+        const isZebraRow = config.zebra && r > 0 && r % 2 === 0;
+        tr.style.backgroundColor = isZebraRow ? config.zebra : "transparent";
+
+        for (let c = 0; c < tr.cells.length; c++) {
+            const cell = tr.cells[c];
+            const isFocusCol = config.columnFocus && c % 2 === 0;
+            
+            cell.style.height = rowHeightInput.value + "px";
+            cell.style.background = "none";
+            cell.style.backgroundColor = "transparent";
+            cell.style.border = "none";
+
+            if (isFocusCol && r > 0) {
+                cell.style.backgroundColor = config.columnFocus;
+            }
+
+            if (config.verticalLines && c < tr.cells.length - 1) {
+                cell.style.borderRight = `1px solid ${config.borderColor}`;
+            }
+            if (config.horizontalLines && r < rows.length - 1) {
+                cell.style.borderBottom = `1px solid ${config.borderColor}`;
+            }
+
+            const editor = cell.querySelector("span");
+            if (!editor) continue;
+
+            if (r === 0) {
+                cell.style.background = headerColorInput.value;
+                editor.style.color = headerTextColorInput.value;
+                editor.style.fontWeight = "700";
+                editor.style.fontFamily = config.headerFont || fontSelect.value;
+                editor.style.textTransform = config.headerFont ? "uppercase" : "none";
+                
+                if (config.headerBorderBottom) {
+                    cell.style.borderBottom = config.headerBorderBottom;
+                }
+            } else {
+                let textColor = (isZebraRow && config.zebraText) ? headerColorInput.value : "#000000";
+
+                // --- IKON-LOGIK & NEGATIVA TAL ---
+                const rawText = editor.textContent.trim().toLowerCase();
+                
+                if (rawText === "...klar") {
+                    editor.innerHTML = '<i class="fa-solid fa-circle-check" style="color: #28a745;"></i>';
+                } else if (rawText === "...obs") {
+                    editor.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="color: #ff9800;"></i>';
+                } else if (rawText === "...stopp") {
+                    editor.innerHTML = '<i class="fa-solid fa-circle-stop" style="color: #dc3545;"></i>';
+                } else if (rawText !== "") {
+                    const cleanText = rawText.replace('%', '').replace(/\s/g, '').replace(',', '.');
+                    const numValue = parseFloat(cleanText);
+                    if (!isNaN(numValue) && numValue < 0) {
+                        textColor = "#dc3545";
+                    }
+                    editor.style.color = textColor;
+                } else {
+                    editor.style.color = textColor;
+                }
+
+                editor.style.fontFamily = fontSelect.value;
+                editor.style.textTransform = "none";
+                editor.style.fontWeight = editor.dataset.bold === "true" ? "700" : "400";
+            }
+            
+            if (config.bottomLine && r === rows.length - 1) {
+                cell.style.borderBottom = `2px solid ${headerColorInput.value}`;
+            }
+
+            applyCellAlignment(cell);
         }
     }
 }
+
+function drawTableOnCanvas(ctx, table, rect, config) {
+    const radius = +radiusInput.value;
+    const headerColor = headerColorInput.value;
+    const headerTextColor = headerTextColorInput.value;
+    const font = fontSelect.value;
+    const fontSize = +fontSizeInput.value;
+
+    ctx.save();
+    if (radius > 0) {
+        roundedRectPath(ctx, 0, 0, rect.width, rect.height, radius);
+        ctx.clip();
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, rect.width, rect.height);
+    }
+
+    const rows = table.rows.length;
+    const cols = table.rows[0].cells.length;
+
+    for (let r = 0; r < rows; r++) {
+        const isZebraRow = config.zebra && r > 0 && r % 2 === 0;
+
+        for (let c = 0; c < cols; c++) {
+            const td = table.rows[r].cells[c];
+            const editor = td.querySelector("span");
+            const cr = td.getBoundingClientRect();
+            const x = cr.left - rect.left;
+            const y = cr.top - rect.top;
+            const w = cr.width;
+            const h = cr.height;
+
+            const isFocusCol = config.columnFocus && c % 2 === 0;
+
+            if (r === 0) {
+                ctx.fillStyle = headerColor;
+            } else if (isZebraRow) {
+                ctx.fillStyle = config.zebra;
+            } else if (isFocusCol) {
+                ctx.fillStyle = config.columnFocus;
+            } else {
+                ctx.fillStyle = "#ffffff";
+            }
+            ctx.fillRect(x, y, w, h);
+
+            ctx.strokeStyle = config.borderColor;
+            ctx.lineWidth = 1;
+
+            if (config.verticalLines && c < cols - 1) {
+                ctx.beginPath(); ctx.moveTo(x + w, y); ctx.lineTo(x + w, y + h); ctx.stroke();
+            }
+            if (config.horizontalLines && r < rows - 1) {
+                ctx.beginPath(); ctx.moveTo(x, y + h); ctx.lineTo(x + w, y + h); ctx.stroke();
+            }
+
+            if (r === 0 && config.headerBorderBottom) {
+                ctx.save(); ctx.strokeStyle = "#000000"; ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.moveTo(x, y + h); ctx.lineTo(x + w, y + h); ctx.stroke(); ctx.restore();
+            }
+
+            if (config.bottomLine && r === rows.length - 1) {
+                ctx.save(); ctx.strokeStyle = headerColor; ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.moveTo(x, y + h); ctx.lineTo(x + w, y + h); ctx.stroke(); ctx.restore();
+            }
+
+            // --- TEXT & IKON RENDERING ---
+            let textValue = editor?.innerText.trim() || "";
+            const align = editor?.dataset.align || "right";
+            let currentFont = font;
+            let currentWeight = editor?.dataset.bold === "true" ? "700 " : "400 ";
+            let isIcon = false;
+
+            if (r === 0) {
+                ctx.fillStyle = headerTextColor;
+                currentFont = config.headerFont || font;
+                currentWeight = "700 ";
+                if (config.headerFont) textValue = textValue.toUpperCase();
+            } else {
+                const checkText = textValue.toLowerCase();
+                // Kolla efter ikoner först
+                if (checkText === "...klar" || editor.querySelector('.fa-circle-check')) {
+                    ctx.fillStyle = "#28a745";
+                    ctx.font = "900 " + fontSize + "px 'Font Awesome 6 Free'";
+                    textValue = "\uf058"; 
+                    isIcon = true;
+                } else if (checkText === "...obs" || editor.querySelector('.fa-triangle-exclamation')) {
+                    ctx.fillStyle = "#ffc107";
+                    ctx.font = "900 " + fontSize + "px 'Font Awesome 6 Free'";
+                    textValue = "\uf071";
+                    isIcon = true;
+                } else if (checkText === "...stopp" || editor.querySelector('.fa-circle-stop')) {
+                    ctx.fillStyle = "#dc3545";
+                    ctx.font = "900 " + fontSize + "px 'Font Awesome 6 Free'";
+                    textValue = "\uf28d"; // Unicode för circle-stop
+                    isIcon = true;
+                } else {
+                    ctx.fillStyle = (isZebraRow && config.zebraText) ? headerColor : "#000000";
+                    const cleanText = textValue.replace('%', '').replace(/\s/g, '').replace(',', '.');
+                    const numValue = parseFloat(cleanText);
+                    if (!isNaN(numValue) && numValue < 0) ctx.fillStyle = "#dc3545";
+                }
+            }
+
+            if (!isIcon) {
+                ctx.font = currentWeight + fontSize + "px " + currentFont;
+            }
+
+            ctx.textBaseline = "middle";
+            ctx.textAlign = align;
+            const tx = align === "left" ? x + 8 : align === "center" ? x + w / 2 : x + w - 8;
+            
+            wrapText(ctx, textValue, tx, y + h / 2, w - 16, fontSize * 1.2);
+        }
+    }
+    ctx.restore();
+
+    if (config.outerBorder) {
+        ctx.save(); ctx.strokeStyle = config.borderColor; ctx.lineWidth = 1;
+        if (radius > 0) { roundedRectPath(ctx, 0.5, 0.5, rect.width - 1, rect.height - 1, radius); }
+        else { ctx.beginPath(); ctx.rect(0.5, 0.5, rect.width - 1, rect.height - 1); }
+        ctx.stroke(); ctx.restore();
+    }
+}
+
 /* ================= Copy ================= */
 async function copyToClipboard() {
     const frame = document.querySelector(".table-frame");
@@ -579,106 +997,35 @@ async function copyToClipboard() {
 
     const rect = frame.getBoundingClientRect();
     const canvas = document.createElement("canvas");
-    
-    // Vi använder 2x skalning för krispigt resultat i urklipp
     const scale = 2; 
     canvas.width = Math.ceil(rect.width * scale);
     canvas.height = Math.ceil(rect.height * scale);
-
     const ctx = canvas.getContext("2d");
     ctx.scale(scale, scale);
 
-    // 1. VIKTIG FIX: Fyll hela ytan med vitt först.
-    // Detta gör att hörnen utanför den rundade tabellen blir vita istället för svarta/tomma i Word.
+    // Fyll hela ytan vit (för Word/Outlook)
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, rect.width, rect.height);
 
-    // 2. Hämta nuvarande inställningar
-    const radius = +radiusInput.value;
-    const headerColor = headerColorInput.value;
-    const headerTextColor = headerTextColorInput.value;
-    const font = fontSelect.value;
-    const fontSize = +fontSizeInput.value;
+    const config = TABLE_STYLES[currentStyleKey];
+    drawTableOnCanvas(ctx, table, rect, config);
 
-    // 3. Rita tabellen
-    ctx.save();
-    if (radius > 0) {
-        roundedRectPath(ctx, 0, 0, rect.width, rect.height, radius);
-        ctx.clip();
-        
-        // Fyll ytan innanför clipping-path med vitt ifall tabellen har transparens
-        ctx.fillStyle = "#ffffff";
-        ctx.fillRect(0, 0, rect.width, rect.height);
-    }
-
-    ctx.textBaseline = "middle";
-    ctx.font = `${fontSize}px ${font}`;
-
-    for (let r = 0; r < table.rows.length; r++) {
-        for (let c = 0; c < table.rows[r].cells.length; c++) {
-            const td = table.rows[r].cells[c];
-            const editor = td.querySelector("span");
-            const cr = td.getBoundingClientRect();
-
-            const x = cr.left - rect.left;
-            const y = cr.top - rect.top;
-            const w = cr.width;
-            const h = cr.height;
-
-            if (r === 0) {
-                ctx.fillStyle = headerColor;
-                ctx.fillRect(x, y, w, h);
-                ctx.fillStyle = headerTextColor;
-            } else {
-                ctx.fillStyle = "#000";
-            }
-
-            ctx.strokeStyle = "#333";
-            ctx.strokeRect(x, y, w, h);
-
-            const align = editor?.dataset.align || "right";
-            ctx.textAlign = align;
-            const tx = align === "left" ? x + 8 : align === "center" ? x + w / 2 : x + w - 8;
-
-            const text = editor?.innerText || "";
-            const padding = 16;
-            wrapText(ctx, text, tx, y + h / 2, w - padding, fontSize * 1.2);
-        }
-    }
-    ctx.restore();
-
-    // Rita ytterramen igen för att säkerställa snygga kanter vid rundning
-    ctx.strokeStyle = "#333";
-    ctx.lineWidth = 1;
-    if (radius > 0) {
-        roundedRectPath(ctx, 0.5, 0.5, rect.width - 1, rect.height - 1, radius);
-        ctx.stroke();
-    } else {
-        ctx.strokeRect(0.5, 0.5, rect.width - 1, rect.height - 1);
-    }
-
-    // 4. Utför själva kopieringen
     canvas.toBlob(async (blob) => {
         try {
             const item = new ClipboardItem({ "image/png": blob });
             await navigator.clipboard.write([item]);
             
-            // Visuell bekräftelse
             const btn = document.querySelector(".export-copy");
             const originalContent = btn.innerHTML;
             btn.innerHTML = '<span class="material-icons">check</span>';
             btn.style.background = "#28a745";
-            btn.style.borderColor = "#28a745";
             
             setTimeout(() => {
                 btn.innerHTML = originalContent;
                 btn.style.background = "#1f4fd8";
-                btn.style.borderColor = "#1f4fd8";
             }, 2000);
-
         } catch (err) {
-            console.error("Clipboard Error:", err);
-            alert("Kunde inte kopiera. Webbläsaren kräver ofta HTTPS för denna funktion.");
+            alert("Kunde inte kopiera. HTTPS krävs.");
         }
     }, "image/png");
 }
@@ -687,7 +1034,6 @@ async function copyToClipboard() {
 const modal = document.getElementById("confirmModal");
 
 function clearTable() {
-    // Öppna modalen istället för browser confirm
     modal.style.display = "flex";
 }
 
@@ -696,21 +1042,24 @@ function closeModal() {
 }
 
 function confirmClear() {
-    // Själva rensningen
     const cells = document.querySelectorAll(".cell-inner span");
     cells.forEach(editor => {
         editor.innerText = "";
         editor.dataset.align = "right";
+        editor.dataset.bold = "false"; // 🔹 Nollställer fetstilen
     });
+
+    // Återställ även F-knappen visuellt om den var aktiv
+    const btn = document.getElementById("boldBtn");
+    btn.style.background = "white";
+    btn.style.borderColor = "#c9ced6";
+    btn.style.color = "#222";
 
     textAlignSelect.value = "right";
     updateStyles();
-    
-    // Stäng modalen
     closeModal();
 }
 
-// Stäng modalen om man klickar utanför den vita rutan
 window.onclick = function(event) {
     if (event.target == modal) {
         closeModal();
@@ -776,12 +1125,6 @@ function downloadPNG(transparent) {
 
     const dpi = +document.getElementById("dpi").value;
     const scale = dpi / 96;
-    const radius = +radiusInput.value;
-    const headerColor = headerColorInput.value;
-    const headerTextColor = headerTextColorInput.value;
-    const font = fontSelect.value;
-    const fontSize = +fontSizeInput.value;
-
     const rect = frame.getBoundingClientRect();
     const canvas = document.createElement("canvas");
     canvas.width = Math.ceil(rect.width * scale);
@@ -790,80 +1133,14 @@ function downloadPNG(transparent) {
     const ctx = canvas.getContext("2d");
     ctx.scale(scale, scale);
 
-    // Vit bakgrund om inte transparent
     if (!transparent) {
         ctx.fillStyle = "#ffffff";
         ctx.fillRect(0, 0, rect.width, rect.height);
     }
 
-    /* ---------------- KLIPP TILL RUNDAD FORM ---------------- */
-    ctx.save();
-    if (radius > 0) {
-        roundedRectPath(ctx, 0, 0, rect.width, rect.height, radius);
-        ctx.clip();
-    }
+    const config = TABLE_STYLES[currentStyleKey];
+    drawTableOnCanvas(ctx, table, rect, config);
 
-    ctx.textBaseline = "middle";
-    ctx.lineWidth = 1;
-    ctx.font = `${fontSize}px ${font}`;
-
-    const rows = table.rows.length;
-    const cols = table.rows[0].cells.length;
-
-    /* ---------------- RITA CELLER ---------------- */
-    for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
-            const td = table.rows[r].cells[c];
-            const editor = td.querySelector("span");
-            const cr = td.getBoundingClientRect();
-
-            const x = cr.left - rect.left;
-            const y = cr.top - rect.top;
-            const w = cr.width;
-            const h = cr.height;
-
-            if (r === 0) {
-                ctx.fillStyle = headerColor;
-                ctx.fillRect(x, y, w, h);
-                ctx.fillStyle = headerTextColor;
-            } else {
-                ctx.fillStyle = "#000";
-            }
-
-            ctx.strokeStyle = "#333";
-            ctx.strokeRect(x, y, w, h);
-
-            const align = editor?.dataset.align || "right";
-            ctx.textAlign = align;
-
-            const tx =
-                align === "left"   ? x + 8 :
-                align === "center" ? x + w / 2 :
-                                    x + w - 8;
-
-            const text = editor?.innerText || "";
-			const padding = 16; // Samma som i din CSS
-			wrapText(ctx, text, tx, y + h / 2, w - padding, fontSize * 1.2);
-        }
-    }
-
-    ctx.restore(); // avsluta clipping
-
-    /* ---------------- RITA YTTERRAM MED RUNDNING ---------------- */
-    ctx.save();
-    ctx.strokeStyle = "#333";
-    ctx.lineWidth = 1;
-
-    if (radius > 0) {
-        roundedRectPath(ctx, 0.5, 0.5, rect.width - 1, rect.height - 1, radius);
-        ctx.stroke();
-    } else {
-        ctx.strokeRect(0.5, 0.5, rect.width - 1, rect.height - 1);
-    }
-
-    ctx.restore();
-
-    /* ---------------- EXPORT MED ÄKTA DPI ---------------- */
     canvas.toBlob(blob => {
         setPNGdpi(blob, dpi).then(finalBlob => {
             const link = document.createElement("a");
@@ -879,4 +1156,3 @@ generateTable();
 
 </body>
 </html>
-
