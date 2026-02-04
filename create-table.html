@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Professionell tabell → PNG</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Roboto&family=Open+Sans&family=Lato&family=Montserrat&family=Source+Sans+3&family=Merriweather&family=Playfair+Display&family=Oswald&family=Raleway&family=Nunito&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<style>
+body {
+    font-family: Roboto, sans-serif;
+    background:#eef1f5;
+    padding:30px;
+    color:#222;
+}
+
+h1 {margin-bottom:20px;}
+
+.panel {
+    background: white;
+    padding: 16px 18px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 1200px; 
+}
+
+.controls-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 18px;
+    align-items: flex-end;
+    justify-content: center; 
+}
+
+.control {
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+}
+
+label {
+    font-size:12px;
+    font-weight:600;
+    color:#555;
+}
+
+input, select {
+    font-size:14px;
+    padding:6px 8px;
+    border:1px solid #c9ced6;
+    border-radius:6px;
+    background:white;
+}
+
+input:focus, select:focus {
+    outline:none;
+    border-color:#1f4fd8;
+    box-shadow:0 0 0 2px rgba(31,79,216,0.15);
+}
+
+.w5  { width:5px; }
+.w10 { width:10px; }
+.w20 { width:20px; }
+.w30 { width:30px; }
+.w40 { width:40px; }
+.w50 { width:50px; }
+.w60 { width:60px; }
+.w70 { width:70px; }
+.w80 { width:80px; }
+.w90 { width:90px; }
+.w100 { width:100px; }
+.w110 { width:110px; }
+.w120 { width:120px; }
+.w130 { width:130px; }
+.w140 { width:140px; }
+.w150 { width:150px; }
+.color-input { width:46px; padding:2px; height:32px; }
+
+button {
+    padding:10px 16px;
+    border:none;
+    border-radius:6px;
+    font-weight:600;
+    cursor:pointer;
+}
+
+.export-transparent {
+    background: #e3e7ef;;
+    color: #000000;
+    border: 1px solid #333;
+}
+
+.export-transparent:hover {
+    background: #1f4fd8;
+	color: #ffffff;
+}
+
+#tableWrap {
+    background:white;
+    padding:30px;
+    border-radius:12px;
+    box-shadow:0 8px 24px rgba(0,0,0,0.08);
+    display:block;
+    width:fit-content;
+    margin:10px auto 0;
+}
+
+table {border-collapse:collapse;}
+td {
+    border:1px solid #333;
+    padding:0px 14px;
+    min-width:120px;
+    height:auto;
+	line-height:1.2;
+}
+
+.table-frame table {
+    table-layout: auto;
+}
+
+.table-frame td {
+    min-width: 60px;   /* 🔹 STANDARDBREDD */
+}
+
+.table-frame td { color:#000; }
+td[contenteditable]{outline:none;}
+
+.table-frame{
+    display:inline-block;
+    overflow:hidden;
+    border:1px solid #333;
+    background:#fff;
+}
+.table-frame table{border-collapse:collapse;}
+.table-frame td{border:1px solid #333;}
+.table-frame tr:first-child td{ border-top:0; }
+.table-frame tr:last-child  td{ border-bottom:0; }
+.table-frame td:first-child   { border-left:0; }
+.table-frame td:last-child    { border-right:0; }
+
+.export-buttons {
+    position: fixed;
+    top: 20px;
+    right: 30px;
+    display: flex;
+    gap: 10px;
+    z-index: 1000;
+}
+
+.export-buttons button {
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.cell-inner {
+    height: 100%;
+    display: flex;
+    align-items: center;      /* vertikal centrering */
+    justify-content: flex-end;/* höger som default */
+}
+
+.cell-inner span {
+    display: inline-block;
+    width: 100%;
+    outline: none;
+}
+.export-white {
+    background: #ffffff;
+    color: #000000;
+    border: 1px solid #333;
+}
+
+.export-white:hover {
+    background: #1f4fd8;
+	color: #ffffff;
+}
+
+.export-copy {
+    background: #1f4fd8;
+    color: #ffffff;
+    border: 1px solid #1f4fd8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px; /* Gör knappen kvadratisk */
+    height: 44px;
+    padding: 0;
+}
+
+.export-buttons .export-copy {
+    min-width: 40px;
+    width: 40px;
+    padding: 0;
+    justify-content: center;
+}
+
+.export-buttons button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start; 
+    gap: 12px;
+    padding: 0 20px;
+    height: 40px;
+    min-width: 40px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.export-buttons .material-icons {
+    font-size: 22px;
+    display: block;
+    line-height: 1;
+}
+
+</style>
+</head>
+<body>
+
+<div class="export-buttons">
+    <button class="export-copy" onclick="copyToClipboard()" title="Kopiera till urklipp">
+        <span class="material-icons">content_copy</span>
+    </button>
+    <button class="export-white" onclick="downloadPNG(false)">
+        <span class="material-icons">file_download</span> PNG vit bakgrund
+    </button>
+    <button class="export-transparent" onclick="downloadPNG(true)">
+        <span class="material-icons">file_download</span> PNG transparent
+    </button>
+</div>
+
+<h1>Tabellgenerator för tryck och digital publicering</h1>
+
+<div class="panel controls-grid">
+
+    <div class="control">
+        <label>Kolumner</label>
+        <input type="number" class="w40" id="cols" min="1" max="12" value="4">
+    </div>
+
+    <div class="control">
+        <label>Rader</label>
+        <input type="number" class="w40" id="rows" min="1" max="20" value="5">
+    </div>
+
+    <div class="control">
+        <label>Radhöjd</label>
+        <input type="number" class="w40" id="rowHeight" min="10" max="120" value="35">
+    </div>
+
+    <div class="control">
+        <label>Headerfärg</label>
+        <input type="color" class="color-input" id="headerColor" value="#dbe4ff">
+    </div>
+
+    <div class="control">
+        <label>Headertext</label>
+        <input type="color" class="color-input" id="headerTextColor" value="#000000">
+    </div>
+
+    <div class="control">
+        <label>Typsnitt</label>
+        <select class="medium-input" id="fontSelect">
+            <option>Roboto</option>
+            <option>Open Sans</option>
+            <option>Lato</option>
+            <option>Montserrat</option>
+            <option>Source Sans 3</option>
+            <option>Merriweather</option>
+            <option>Playfair Display</option>
+            <option>Oswald</option>
+            <option>Raleway</option>
+            <option>Nunito</option>
+        </select>
+    </div>
+
+    <div class="control">
+        <label>Textstorlek</label>
+        <input type="number" class="w40" id="fontSize" min="10" max="40" value="16">
+    </div>
+	
+	<div class="control">
+    <label>Justering</label>
+    <select class="w120" id="textAlign">
+        <option value="right" selected>Höger</option>
+        <option value="center">Centrerat</option>
+        <option value="left">Vänster</option>
+    </select>
+	</div>
+
+    <div class="control">
+        <label>Tusentalsavgränsare</label>
+        <select class="w120" id="thousandSep">
+            <option value="yes">Ja&nbsp;&nbsp;[# ###]</option>
+            <option value="no">Nej&nbsp;&nbsp;[####]</option>
+        </select>
+    </div>
+
+    <div class="control">
+        <label>Hörn</label>
+        <select class="w120" id="radius">
+            <option value="0">Raka</option>
+            <option value="12">Rundade</option>
+        </select>
+    </div>
+
+    <div class="control">
+        <label>DPI</label>
+        <select class="w70" id="dpi">
+            <option value="300">300</option>
+            <option value="600">600</option>
+        </select>
+    </div>
+
+</div>
+
+<div id="tableWrap"></div>
+
+<script>
+const wrap = document.getElementById("tableWrap");
+const colsInput = document.getElementById("cols");
+const rowsInput = document.getElementById("rows");
+const rowHeightInput = document.getElementById("rowHeight");
+const fontSizeInput = document.getElementById("fontSize");
+const headerColorInput = document.getElementById("headerColor");
+const headerTextColorInput = document.getElementById("headerTextColor");
+const fontSelect = document.getElementById("fontSelect");
+const radiusInput = document.getElementById("radius");
+const thousandSepSelect = document.getElementById("thousandSep");
+const textAlignSelect = document.getElementById("textAlign");
+
+let activeCell = null;
+
+/* ================= INIT ================= */
+colsInput.addEventListener("input", generateTable);
+rowsInput.addEventListener("input", generateTable);
+[rowHeightInput, fontSizeInput, fontSelect, radiusInput, headerColorInput, headerTextColorInput]
+    .forEach(el => el.addEventListener("input", updateStyles));
+thousandSepSelect.addEventListener("input", reformatAllNumbers);
+
+textAlignSelect.addEventListener("input", () => {
+    if (!activeCell) return;
+
+    const editor = activeCell.querySelector(".cell-inner span");
+    if (!editor) return;
+
+    editor.dataset.align = textAlignSelect.value;   // spara på texten
+    applyCellAlignment(activeCell);                 // uppdatera layouten
+});
+
+/* ================= FORMAT ================= */
+function formatIfNumber(text) {
+    const clean = text.replace(/\u00A0/g, " ");
+    const numberPattern = /^-?\d+([.,]\d+)?$/;
+
+    if (numberPattern.test(clean.trim())) {
+        const normalized = clean.replace(",", ".");
+        return thousandSepSelect.value === "yes"
+            ? Number(normalized).toLocaleString("sv-SE")
+            : normalized;
+    }
+    return text;
+}
+
+function reformatAllNumbers() {
+    document.querySelectorAll(".cell-inner span").forEach(el => {
+        el.innerText = formatIfNumber(el.innerText);
+    });
+}
+
+/* ================= DATA ================= */
+function getExistingData() {
+    const data = [];
+    const old = document.querySelector(".table-frame table");
+    if (!old) return data;
+
+    for (let r = 0; r < old.rows.length; r++) {
+        data[r] = [];
+        for (let c = 0; c < old.rows[r].cells.length; c++) {
+            const editor = old.rows[r].cells[c].querySelector("span");
+            data[r][c] = {
+                text: editor?.innerText || "",
+                align: editor?.dataset.align || "right"
+            };
+        }
+    }
+    return data;
+}
+
+/* ================= TABLE ================= */
+function generateTable() {
+    const cols = +colsInput.value;
+    const rows = +rowsInput.value;
+    const existingData = getExistingData();
+
+    const frame = document.createElement("div");
+    frame.className = "table-frame";
+    const table = document.createElement("table");
+
+    for (let r = 0; r < rows; r++) {
+        const tr = document.createElement("tr");
+
+        for (let c = 0; c < cols; c++) {
+            const td = document.createElement("td");
+
+            const inner = document.createElement("div");
+            inner.className = "cell-inner";
+
+            const editor = document.createElement("span");
+            editor.contentEditable = "true";
+
+            const saved = existingData[r]?.[c];
+            editor.innerText = saved?.text || "";
+            editor.dataset.align = saved?.align || "right";
+
+            editor.addEventListener("blur", () => {
+                editor.innerText = formatIfNumber(editor.innerText);
+            });
+
+			editor.addEventListener("focus", () => {
+				activeCell = td;
+				textAlignSelect.value = editor.dataset.align || "right";
+			});
+
+            inner.appendChild(editor);
+            td.appendChild(inner);
+            tr.appendChild(td);
+        }
+        table.appendChild(tr);
+    }
+
+    frame.appendChild(table);
+    wrap.innerHTML = "";
+    wrap.appendChild(frame);
+
+    updateStyles();
+}
+
+function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+    // Dela först upp texten baserat på manuella radbrytningar (Shift+Enter)
+    const paragraphs = text.split('\n');
+    let lines = [];
+
+    paragraphs.forEach(paragraph => {
+        const words = paragraph.split(' ');
+        let currentLine = '';
+
+        for (let n = 0; n < words.length; n++) {
+            let testLine = currentLine + words[n] + ' ';
+            let metrics = ctx.measureText(testLine);
+            let testWidth = metrics.width;
+
+            // Om ordet är längre än maxbredden, bryt raden (om det inte är första ordet)
+            if (testWidth > maxWidth && n > 0) {
+                lines.push(currentLine);
+                currentLine = words[n] + ' ';
+            } else {
+                currentLine = testLine;
+            }
+        }
+        lines.push(currentLine);
+    });
+
+    // Rita ut varje rad
+    lines.forEach((line, i) => {
+        ctx.fillText(line.trim(), x, y + (i * lineHeight) - ((lines.length - 1) * lineHeight) / 2);
+    });
+}
+
+/* ================= STYLES ================= */
+function applyCellAlignment(cell) {
+    const inner = cell.querySelector(".cell-inner");
+    const editor = inner?.querySelector("span");
+    if (!inner || !editor) return;
+
+    const align = editor.dataset.align || "right";
+
+    inner.style.justifyContent =
+        align === "left"   ? "flex-start" :
+        align === "center" ? "center" :
+                             "flex-end";
+
+    editor.style.textAlign = align; // viktigt för markör & textflöde
+}
+
+function updateStyles() {
+    const table = document.querySelector(".table-frame table");
+    if (!table) return;
+
+    const headerColor = headerColorInput.value;
+    const headerTextColor = headerTextColorInput.value;
+    const font = fontSelect.value;
+    const radius = +radiusInput.value;
+    const rowHeight = +rowHeightInput.value;
+    const fontSize = +fontSizeInput.value;
+
+    const frame = document.querySelector(".table-frame");
+    frame.style.borderRadius = radius + "px";
+    table.style.fontFamily = font;
+    table.style.fontSize = fontSize + "px";
+
+	for (let r = 0; r < table.rows.length; r++) {
+		for (let cell of table.rows[r].cells) {
+			cell.style.height = rowHeight + "px";
+	
+			const inner = cell.querySelector(".cell-inner");
+			const editor = inner?.querySelector("span");
+			if (!inner || !editor) continue;
+	
+			inner.style.display = "flex";
+			inner.style.alignItems = "center";
+			inner.style.height = "100%";
+	
+			editor.style.fontWeight = "400";
+			editor.style.color = "#000";
+	
+			applyCellAlignment(cell); // 🔹 HÄR
+		}
+	}
+
+    for (let cell of table.rows[0].cells) {
+        const editor = cell.querySelector("span");
+        cell.style.background = headerColor;
+        if (editor) {
+            editor.style.color = headerTextColor;
+            editor.style.fontWeight = "700";
+        }
+    }
+}
+/* ================= Copy ================= */
+async function copyToClipboard() {
+    const frame = document.querySelector(".table-frame");
+    const table = frame?.querySelector("table");
+    if (!table) return alert("Skapa tabellen först.");
+
+    const rect = frame.getBoundingClientRect();
+    const canvas = document.createElement("canvas");
+    
+    // Vi använder 2x skalning för krispigt resultat i urklipp
+    const scale = 2; 
+    canvas.width = Math.ceil(rect.width * scale);
+    canvas.height = Math.ceil(rect.height * scale);
+
+    const ctx = canvas.getContext("2d");
+    ctx.scale(scale, scale);
+
+    // 1. VIKTIG FIX: Fyll hela ytan med vitt först.
+    // Detta gör att hörnen utanför den rundade tabellen blir vita istället för svarta/tomma i Word.
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, rect.width, rect.height);
+
+    // 2. Hämta nuvarande inställningar
+    const radius = +radiusInput.value;
+    const headerColor = headerColorInput.value;
+    const headerTextColor = headerTextColorInput.value;
+    const font = fontSelect.value;
+    const fontSize = +fontSizeInput.value;
+
+    // 3. Rita tabellen
+    ctx.save();
+    if (radius > 0) {
+        roundedRectPath(ctx, 0, 0, rect.width, rect.height, radius);
+        ctx.clip();
+        
+        // Fyll ytan innanför clipping-path med vitt ifall tabellen har transparens
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, rect.width, rect.height);
+    }
+
+    ctx.textBaseline = "middle";
+    ctx.font = `${fontSize}px ${font}`;
+
+    for (let r = 0; r < table.rows.length; r++) {
+        for (let c = 0; c < table.rows[r].cells.length; c++) {
+            const td = table.rows[r].cells[c];
+            const editor = td.querySelector("span");
+            const cr = td.getBoundingClientRect();
+
+            const x = cr.left - rect.left;
+            const y = cr.top - rect.top;
+            const w = cr.width;
+            const h = cr.height;
+
+            if (r === 0) {
+                ctx.fillStyle = headerColor;
+                ctx.fillRect(x, y, w, h);
+                ctx.fillStyle = headerTextColor;
+            } else {
+                ctx.fillStyle = "#000";
+            }
+
+            ctx.strokeStyle = "#333";
+            ctx.strokeRect(x, y, w, h);
+
+            const align = editor?.dataset.align || "right";
+            ctx.textAlign = align;
+            const tx = align === "left" ? x + 8 : align === "center" ? x + w / 2 : x + w - 8;
+
+            const text = editor?.innerText || "";
+            const padding = 16;
+            wrapText(ctx, text, tx, y + h / 2, w - padding, fontSize * 1.2);
+        }
+    }
+    ctx.restore();
+
+    // Rita ytterramen igen för att säkerställa snygga kanter vid rundning
+    ctx.strokeStyle = "#333";
+    ctx.lineWidth = 1;
+    if (radius > 0) {
+        roundedRectPath(ctx, 0.5, 0.5, rect.width - 1, rect.height - 1, radius);
+        ctx.stroke();
+    } else {
+        ctx.strokeRect(0.5, 0.5, rect.width - 1, rect.height - 1);
+    }
+
+    // 4. Utför själva kopieringen
+    canvas.toBlob(async (blob) => {
+        try {
+            const item = new ClipboardItem({ "image/png": blob });
+            await navigator.clipboard.write([item]);
+            
+            // Visuell bekräftelse
+            const btn = document.querySelector(".export-copy");
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<span class="material-icons">check</span>';
+            btn.style.background = "#28a745";
+            btn.style.borderColor = "#28a745";
+            
+            setTimeout(() => {
+                btn.innerHTML = originalContent;
+                btn.style.background = "#1f4fd8";
+                btn.style.borderColor = "#1f4fd8";
+            }, 2000);
+
+        } catch (err) {
+            console.error("Clipboard Error:", err);
+            alert("Kunde inte kopiera. Webbläsaren kräver ofta HTTPS för denna funktion.");
+        }
+    }, "image/png");
+}
+
+/* ================= PNG EXPORT ================= */
+function roundedRectPath(ctx, x, y, w, h, r) {
+    const rr = Math.max(0, Math.min(r, Math.min(w, h) / 2));
+    ctx.beginPath();
+    ctx.moveTo(x + rr, y);
+    ctx.arcTo(x + w, y, x + w, y + h, rr);
+    ctx.arcTo(x + w, y + h, x, y + h, rr);
+    ctx.arcTo(x, y + h, x, y, rr);
+    ctx.arcTo(x, y, x + w, y, rr);
+    ctx.closePath();
+}
+
+function setPNGdpi(blob, dpi) {
+    return blob.arrayBuffer().then(buffer => {
+        const ppm = Math.round(dpi * 39.3701);
+        const data = new Uint8Array(buffer);
+        let offset = 8;
+
+        while (offset < data.length) {
+            const length = (data[offset]<<24)|(data[offset+1]<<16)|(data[offset+2]<<8)|data[offset+3];
+            const type = String.fromCharCode(data[offset+4],data[offset+5],data[offset+6],data[offset+7]);
+            offset += 12 + length;
+            if (type === "IHDR") break;
+        }
+
+        const phys = new Uint8Array(21);
+        const dv = new DataView(phys.buffer);
+        dv.setUint32(0, 9);
+        phys.set([112,72,89,115], 4);
+        dv.setUint32(8, ppm);
+        dv.setUint32(12, ppm);
+        phys[16] = 1;
+
+        function crc32(buf) {
+            let c = ~0;
+            for (let i = 4; i < 17; i++) {
+                c ^= buf[i];
+                for (let k = 0; k < 8; k++)
+                    c = (c>>>1) ^ (0xEDB88320 & -(c&1));
+            }
+            return ~c >>> 0;
+        }
+        dv.setUint32(17, crc32(phys));
+
+        const newData = new Uint8Array(data.length + phys.length);
+        newData.set(data.slice(0, offset), 0);
+        newData.set(phys, offset);
+        newData.set(data.slice(offset), offset + phys.length);
+        return new Blob([newData], {type: "image/png"});
+    });
+}
+
+function downloadPNG(transparent) {
+    const frame = document.querySelector(".table-frame");
+    const table = frame?.querySelector("table");
+    if (!table) return alert("Skapa tabellen först.");
+
+    const dpi = +document.getElementById("dpi").value;
+    const scale = dpi / 96;
+    const radius = +radiusInput.value;
+    const headerColor = headerColorInput.value;
+    const headerTextColor = headerTextColorInput.value;
+    const font = fontSelect.value;
+    const fontSize = +fontSizeInput.value;
+
+    const rect = frame.getBoundingClientRect();
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.ceil(rect.width * scale);
+    canvas.height = Math.ceil(rect.height * scale);
+
+    const ctx = canvas.getContext("2d");
+    ctx.scale(scale, scale);
+
+    // Vit bakgrund om inte transparent
+    if (!transparent) {
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, rect.width, rect.height);
+    }
+
+    /* ---------------- KLIPP TILL RUNDAD FORM ---------------- */
+    ctx.save();
+    if (radius > 0) {
+        roundedRectPath(ctx, 0, 0, rect.width, rect.height, radius);
+        ctx.clip();
+    }
+
+    ctx.textBaseline = "middle";
+    ctx.lineWidth = 1;
+    ctx.font = `${fontSize}px ${font}`;
+
+    const rows = table.rows.length;
+    const cols = table.rows[0].cells.length;
+
+    /* ---------------- RITA CELLER ---------------- */
+    for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+            const td = table.rows[r].cells[c];
+            const editor = td.querySelector("span");
+            const cr = td.getBoundingClientRect();
+
+            const x = cr.left - rect.left;
+            const y = cr.top - rect.top;
+            const w = cr.width;
+            const h = cr.height;
+
+            if (r === 0) {
+                ctx.fillStyle = headerColor;
+                ctx.fillRect(x, y, w, h);
+                ctx.fillStyle = headerTextColor;
+            } else {
+                ctx.fillStyle = "#000";
+            }
+
+            ctx.strokeStyle = "#333";
+            ctx.strokeRect(x, y, w, h);
+
+            const align = editor?.dataset.align || "right";
+            ctx.textAlign = align;
+
+            const tx =
+                align === "left"   ? x + 8 :
+                align === "center" ? x + w / 2 :
+                                    x + w - 8;
+
+            const text = editor?.innerText || "";
+			const padding = 16; // Samma som i din CSS
+			wrapText(ctx, text, tx, y + h / 2, w - padding, fontSize * 1.2);
+        }
+    }
+
+    ctx.restore(); // avsluta clipping
+
+    /* ---------------- RITA YTTERRAM MED RUNDNING ---------------- */
+    ctx.save();
+    ctx.strokeStyle = "#333";
+    ctx.lineWidth = 1;
+
+    if (radius > 0) {
+        roundedRectPath(ctx, 0.5, 0.5, rect.width - 1, rect.height - 1, radius);
+        ctx.stroke();
+    } else {
+        ctx.strokeRect(0.5, 0.5, rect.width - 1, rect.height - 1);
+    }
+
+    ctx.restore();
+
+    /* ---------------- EXPORT MED ÄKTA DPI ---------------- */
+    canvas.toBlob(blob => {
+        setPNGdpi(blob, dpi).then(finalBlob => {
+            const link = document.createElement("a");
+            link.download = transparent ? "tabell_transparent.png" : "tabell_vit.png";
+            link.href = URL.createObjectURL(finalBlob);
+            link.click();
+        });
+    }, "image/png");
+}
+
+generateTable();
+</script>
+
+</body>
+</html>
