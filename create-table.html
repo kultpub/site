@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Professionell tabell → PNG</title>
+<title>Generera tabell → PNG</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Open+Sans&family=Lato&family=Montserrat&family=Source+Sans+3&family=Merriweather&family=Playfair+Display&family=Oswald&family=Raleway&family=Nunito&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -214,10 +214,30 @@ td[contenteditable]{outline:none;}
     cursor: pointer;
 }
 
-.export-buttons .material-icons {
-    font-size: 22px;
-    display: block;
-    line-height: 1;
+.export-clear {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: #ffffff;
+    color: #dc3545;
+    border: 1px solid #dc3545;
+    height: 32px; /* Samma höjd som input/select */
+    padding: 0 12px;
+    font-size: 13px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.export-clear:hover {
+    background: #dc3545;
+    color: #ffffff;
+}
+
+.export-clear .material-icons {
+    font-size: 18px;
 }
 
 </style>
@@ -272,9 +292,9 @@ td[contenteditable]{outline:none;}
             <option>Open Sans</option>
             <option>Lato</option>
             <option>Montserrat</option>
-            <option>Source Sans 3</option>
+            <option>Source Sans</option>
             <option>Merriweather</option>
-            <option>Playfair Display</option>
+            <option>Playfair</option>
             <option>Oswald</option>
             <option>Raleway</option>
             <option>Nunito</option>
@@ -288,7 +308,7 @@ td[contenteditable]{outline:none;}
 	
 	<div class="control">
     <label>Justering</label>
-    <select class="w120" id="textAlign">
+    <select class="w100" id="textAlign">
         <option value="right" selected>Höger</option>
         <option value="center">Centrerat</option>
         <option value="left">Vänster</option>
@@ -297,7 +317,7 @@ td[contenteditable]{outline:none;}
 
     <div class="control">
         <label>Tusentalsavgränsare</label>
-        <select class="w120" id="thousandSep">
+        <select class="w100" id="thousandSep">
             <option value="yes">Ja&nbsp;&nbsp;[# ###]</option>
             <option value="no">Nej&nbsp;&nbsp;[####]</option>
         </select>
@@ -305,7 +325,7 @@ td[contenteditable]{outline:none;}
 
     <div class="control">
         <label>Hörn</label>
-        <select class="w120" id="radius">
+        <select class="w100" id="radius">
             <option value="0">Raka</option>
             <option value="12">Rundade</option>
         </select>
@@ -318,10 +338,27 @@ td[contenteditable]{outline:none;}
             <option value="600">600</option>
         </select>
     </div>
+	<div class="control">
+        <label>&nbsp;</label>
+        <button class="export-clear" onclick="clearTable()" title="Rensa allt innehåll">
+            <span class="material-icons">delete_sweep</span> Rensa
+        </button>
+    </div>
 
 </div>
 
 <div id="tableWrap"></div>
+
+<div id="confirmModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; align-items:center; justify-content:center;">
+    <div style="background:white; padding:25px; border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,0.2); width:320px; text-align:center;">
+        <h3 style="margin-top:0; font-size:18px;">Rensa tabell</h3>
+        <p style="color:#555; font-size:14px; margin-bottom:25px;">Vill du rensa allt innehåll?</p>
+        <div style="display:flex; gap:10px; justify-content:center;">
+            <button onclick="closeModal()" style="background:#eef1f5; color:#222; flex:1;">Avbryt</button>
+            <button onclick="confirmClear()" style="background:#dc3545; color:white; flex:1;">OK</button>
+        </div>
+    </div>
+</div>
 
 <script>
 const wrap = document.getElementById("tableWrap");
@@ -644,6 +681,40 @@ async function copyToClipboard() {
             alert("Kunde inte kopiera. Webbläsaren kräver ofta HTTPS för denna funktion.");
         }
     }, "image/png");
+}
+
+/* ================= MODAL LOGIK ================= */
+const modal = document.getElementById("confirmModal");
+
+function clearTable() {
+    // Öppna modalen istället för browser confirm
+    modal.style.display = "flex";
+}
+
+function closeModal() {
+    modal.style.display = "none";
+}
+
+function confirmClear() {
+    // Själva rensningen
+    const cells = document.querySelectorAll(".cell-inner span");
+    cells.forEach(editor => {
+        editor.innerText = "";
+        editor.dataset.align = "right";
+    });
+
+    textAlignSelect.value = "right";
+    updateStyles();
+    
+    // Stäng modalen
+    closeModal();
+}
+
+// Stäng modalen om man klickar utanför den vita rutan
+window.onclick = function(event) {
+    if (event.target == modal) {
+        closeModal();
+    }
 }
 
 /* ================= PNG EXPORT ================= */
