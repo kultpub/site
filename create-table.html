@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="sv">
 <head>
@@ -42,6 +43,7 @@ h1 {margin-bottom:20px;}
     display:flex;
     flex-direction:column;
     gap:4px;
+	position: relative;
 }
 
 label {
@@ -101,6 +103,24 @@ button {
 /* --- TABELL-STYLING (RENSAD) --- */
 table {
     border-collapse: collapse;
+    user-select: none;
+}
+
+.table-frame td.selected {
+    outline: 2px solid #1f4fd8 !important;
+    outline-offset: -2px;
+    background-color: rgba(31, 79, 216, 0.1) !important;
+    z-index: 5;
+    position: relative;
+}
+
+.table-frame td.selected span {
+    color: inherit !important;
+}
+
+td span:focus {
+    outline: none;
+    border-radius: 2px;
 }
 
 td {
@@ -130,27 +150,62 @@ td {
     color: #000;
 }
 
+.table-frame td span {
+    user-select: none;
+    pointer-events: auto;
+    display: block;
+    width: 100%;
+    min-height: 1.2em;
+    cursor: cell;
+}
+
+.table-frame td:focus-within span {
+    user-select: text;
+	cursor: text;
+}
+
 td[contenteditable]{outline:none;}
 
 .table-frame {
     display: inline-block;
     overflow: hidden;
     background: #fff;
-    /* Ingen border eller border-radius här - styrs av JS */
 }
 
 /* --- EXPORT-KNAPPAR & ÖVRIGT --- */
 .export-buttons {
     position: fixed;
     top: 20px;
-    right: 30px;
+    right: 20px;
     display: flex;
-    gap: 10px;
+    gap: 8px;
     z-index: 1000;
 }
 
 .export-buttons button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 12px !important;
+    height: 40px;
+    min-width: 200px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    cursor: pointer;
     box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.export-buttons button:hover {
+    background: #1f4fd8 !important;
+    color: #ffffff !important;
+    border-color: #1f4fd8 !important;
+}
+
+.export-buttons button:hover .material-icons {
+    color: #ffffff !important;
 }
 
 .cell-inner {
@@ -166,15 +221,16 @@ td[contenteditable]{outline:none;}
     outline: none;
 }
 
-.export-white {
+.export-web {
     background: #ffffff;
     color: #000000;
     border: 1px solid #333;
 }
 
-.export-white:hover {
-    background: #1f4fd8;
-    color: #ffffff;
+.export-white {
+    background: #ffffff;
+    color: #000000;
+    border: 1px solid #333;
 }
 
 .export-copy {
@@ -196,22 +252,6 @@ td[contenteditable]{outline:none;}
     justify-content: center;
 }
 
-.export-buttons button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: flex-start; 
-    gap: 12px;
-    padding: 0 20px;
-    height: 40px;
-    min-width: 40px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 1;
-    transition: all 0.2s;
-    cursor: pointer;
-}
-
 .export-clear {
     display: inline-flex;
     align-items: center;
@@ -229,11 +269,6 @@ td[contenteditable]{outline:none;}
     transition: all 0.2s;
 }
 
-.export-clear:hover {
-    background: #dc3545;
-    color: #ffffff;
-}
-
 .export-clear .material-icons {
     font-size: 18px;
 }
@@ -249,59 +284,91 @@ td[contenteditable]{outline:none;}
     outline: none !important;
 }
 
-/* Styling för bild-modal 2x2 */
+/* --- MODAL-STYLING (UPPDATERAD FÖR CENTRERING) --- */
+.style-modal-content {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    width: fit-content;
+    min-width: 520px;
+    max-width: 95%;
+}
+
 .style-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Tvingar 2 kolumner */
-    gap: 15px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
     margin: 20px 0;
+    justify-items: center; /* Centrerar boxarna horisontellt i gridden */
 }
 
 .style-item {
     cursor: pointer;
     border: 2px solid #eee;
-    border-radius: 8px;
+    border-radius: 10px;
     background: #fff;
     display: flex;
     flex-direction: column;
-    transition: all 0.2s;
+    /* Mjuk övergång för både ram, skugga och transform */
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
     overflow: hidden;
+    width: 230px;
+    position: relative;
 }
 
 .style-item:hover {
-    border-color: #1f4fd8;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    /* Ramen byter färg till din blå huvudfärg */
+    border-color: #1f4fd8; 
+    /* Boxen lyfter en aning från ytan */
+    transform: translateY(-4px); 
+    /* En mjuk skugga läggs till för att förstärka lyftet */
+    box-shadow: 0 8px 20px rgba(31, 79, 216, 0.15); 
 }
 
-.style-item.active {
-    border-color: #1f4fd8;
-    background: #f0f4ff;
+/* Förfina vad som händer med texten vid hover */
+.style-item:hover span {
+    color: #1f4fd8;
+    background: #f8faff;
 }
 
 .style-img-container {
     width: 100%;
     height: 140px;
-    background: #f9f9f9;
+    background: #fdfdfd;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: center; /* Centrerar SVG:n i boxen */
+    padding: 0; /* Rensat padding så SVG:n kan styra själv */
 }
 
-.style-item img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    padding: 5px;
+.style-img-container svg {
+    display: block;
+    width: 200px; /* Matchar ritningens viewBox-bredd */
+    height: 140px; /* Matchar ritningens viewBox-höjd */
+    margin: 0 auto;
 }
 
 .style-item span {
     display: block;
-    padding: 5px;
-    font-size: 11px;
+    padding: 10px;
+    font-size: 13px;
     font-weight: 700;
     text-align: center;
     border-top: 1px solid #eee;
     color: #444;
+}
+
+.style-item.active {
+    border-color: #1f4fd8;
+    background: #f0f4ff;
+    transform: none;
+    box-shadow: none;
+}
+
+.style-item.active span {
+    background: #1f4fd8;
+    color: #fff;
 }
 
 * Enhetlig styling för alla kontrollknappar */
@@ -320,6 +387,63 @@ td[contenteditable]{outline:none;}
     width: 35px;
     padding: 0;
 }
+
+.custom-tooltip {
+    visibility: hidden;
+    width: auto;
+	white-space: nowrap;
+	min-width: max-content;
+    background-color: #1a1a1a;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 7px 10px;
+    position: absolute;
+    z-index: 1001;
+    bottom: 115%; 
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.4;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    pointer-events: none;
+    opacity: 0;
+}
+
+.custom-tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #1a1a1a transparent transparent transparent;
+}
+
+/* Tidslinjen: 1s väntan, tonas in, visas 2s, tonas ut */
+@keyframes tooltip-sequence {
+    0% { opacity: 0; visibility: hidden; }
+    32% { opacity: 0; visibility: hidden; } 
+    33% { opacity: 0; visibility: visible; } /* Startar efter 1,5s */
+    44% { opacity: 1; visibility: visible; } /* Fullt synlig efter totalt 2s (0,5s toning) */
+    89% { opacity: 1; visibility: visible; } /* Visas i 2 sekunder till */
+    100% { opacity: 0; visibility: hidden; } /* Tonas ut under sista 0,5s */
+}
+
+/* Trigger: Startar animationen vid hover */
+.control:hover .custom-tooltip {
+    animation: tooltip-sequence 4.5s forwards;
+}
+
+/* Viktigt: Döda animationen direkt vid klick eller fokus */
+.control:focus-within .custom-tooltip,
+.control:active .custom-tooltip {
+    animation: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
 </style>
 </head>
 <body>
@@ -328,41 +452,56 @@ td[contenteditable]{outline:none;}
     <button class="export-copy" onclick="copyToClipboard()" title="Kopiera till urklipp">
         <span class="material-icons">content_copy</span>
     </button>
-    <button class="export-white" onclick="downloadPNG(false)">
-        <span class="material-icons">file_download</span> PNG vit bakgrund
+
+    <button class="export-web" onclick="downloadPNG(false, 72)">
+        <span class="material-icons">grid_on</span> Webb vit 72 DPI
     </button>
+
+    <button class="export-transparent-web" onclick="downloadPNG(true, 72)" style="background: #e3e7ef; color: #000; border: 1px solid #333;">
+        <span class="material-icons">opacity</span> Webb transp 72 DPI
+    </button>
+
+    <button class="export-white" onclick="downloadPNG(false)">
+        <span class="material-icons">grid_on</span> Office vit PNG
+    </button>
+
     <button class="export-transparent" onclick="downloadPNG(true)">
-        <span class="material-icons">file_download</span> PNG transparent
+        <span class="material-icons">opacity</span> Office transp PNG
     </button>
 </div>
 
-<h1>Tabellgenerator för tryck och digital publicering</h1>
+<h1>Tabellgenerator för webb och Office</h1>
 
 <div class="panel controls-grid">
 
-    <div class="control">
-        <label>Kolumner</label>
-        <input type="number" class="w40" id="cols" min="1" max="12" value="6">
-    </div>
+	<div class="control">
+		<label>Kolumner</label>
+		<input type="number" class="w40" id="cols" min="1" max="12" value="8">
+		<span class="custom-tooltip">Ange tabellens antal kolumner</span>
+	</div>
 
     <div class="control">
         <label>Rader</label>
         <input type="number" class="w40" id="rows" min="1" max="20" value="6">
+		<span class="custom-tooltip">Ange tabellens antal rader</span>
     </div>
 
     <div class="control">
         <label>Radhöjd</label>
         <input type="number" class="w40" id="rowHeight" min="10" max="120" value="35">
+		<span class="custom-tooltip">Ange radernas höjd</span>
     </div>
 
     <div class="control">
         <label>Headerfärg</label>
         <input type="color" class="color-input" id="headerColor" value="#dbe4ff" style="height: 30px;">
+		<span class="custom-tooltip">Ange rubrikradens färg (översta raden)</span>
     </div>
 
     <div class="control">
         <label>Headertext</label>
         <input type="color" class="color-input" id="headerTextColor" value="#000000" style="height: 30px;">
+		<span class="custom-tooltip">Ange rubrikradens textfärg (översta raden)</span>
     </div>
 
     <div class="control">
@@ -393,28 +532,52 @@ td[contenteditable]{outline:none;}
 		</button>
 	</div>
 	
-	<div class="control">
+<div class="control">
     <label>Justering</label>
-    <select class="w100" id="textAlign" style="height: 30px;">
-        <option value="right" selected>Höger</option>
-        <option value="center">Centrerat</option>
-        <option value="left">Vänster</option>
-    </select>
-	</div>
-
-    <div class="control">
-        <label>Hörn</label>
-        <select class="w100" id="radius" style="height: 30px;">
-            <option value="0">Raka</option>
-            <option value="12">Rundade</option>
-        </select>
+    <div class="align-group" style="display: flex; gap: 2px; background: white; border: 1px solid #c9ced6; border-radius: 6px; padding: 2px; height: 30px; box-sizing: border-box;">
+        <button type="button" id="btn-left" onclick="setAlign('left')" title="Vänster" style="flex:1; border:none; background:none; border-radius:4px; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0;">
+            <span class="material-icons" style="font-size: 18px;">format_align_left</span>
+        </button>
+        <button type="button" id="btn-center" onclick="setAlign('center')" title="Centrerat" style="flex:1; border:none; background:none; border-radius:4px; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0;">
+            <span class="material-icons" style="font-size: 18px;">format_align_center</span>
+        </button>
+        <button type="button" id="btn-right" onclick="setAlign('right')" title="Höger" style="flex:1; border:none; background:none; border-radius:4px; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0;">
+            <span class="material-icons" style="font-size: 18px;">format_align_right</span>
+        </button>
+		<span class="custom-tooltip">Välj en cell eller ett område för att justera innehållet</span>
     </div>
+</div>
+
+<div class="control">
+    <label>Form</label>
+    <input type="hidden" id="radius" value="straight">
+    <div class="radius-group" style="display: flex; gap: 2px; background: white; border: 1px solid #c9ced6; border-radius: 6px; padding: 2px; height: 30px; box-sizing: border-box;">
+        
+        <button type="button" id="btn-radius-straight" onclick="setRadius('straight')" title="Raka hörn" style="flex:1; border:none; background:#eef1f5; color:#1f4fd8; border-radius:4px; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0;">
+            <svg width="20" height="20" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3"><rect x="8" y="8" width="32" height="32" rx="0"/></svg>
+        </button>
+
+        <button type="button" id="btn-radius-rounded" onclick="setRadius('rounded')" title="Rundade hörn" style="flex:1; border:none; background:none; color:#555; border-radius:4px; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0;">
+            <svg width="20" height="20" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3"><rect x="8" y="8" width="32" height="32" rx="8"/></svg>
+        </button>
+
+        <button type="button" id="btn-radius-tombstone" onclick="setRadius('tombstone')" title="Rundad topp" style="flex:1; border:none; background:none; color:#555; border-radius:4px; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0;">
+            <svg width="20" height="20" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3"><path d="M40 40H8V18C8 12.4772 12.4772 8 18 8H30C35.5228 8 40 12.4772 40 18V40Z"/></svg>
+        </button>
+
+        <button type="button" id="btn-radius-leaf" onclick="setRadius('leaf')" title="Bladform" style="flex:1; border:none; background:none; color:#555; border-radius:4px; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0;">
+            <svg width="20" height="20" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3"><path d="M8 8H28C34.6274 8 40 13.3726 40 20V40H20C13.3726 40 8 34.6274 8 28V8Z"/></svg>
+        </button>
+		<span class="custom-tooltip">Ange vilken form tabellen ska ha</span>
+    </div>
+</div>
 
 	<div class="control">
 		<label>Utseende</label>
 		<button type="button" class="style-trigger" onclick="openStyleModal()" style="display: inline-flex; align-items: center; gap: 8px; background: white; border: 1px solid #c9ced6; border-radius: 6px; padding: 6px 12px; height: 30px; font-size: 14px; font-weight: 400; cursor: pointer; transition: all 0.2s;">
 			<span class="material-icons" style="font-size: 18px;">palette</span> Stil
 		</button>
+		<span class="custom-tooltip">Välj bland färdiga mallar</span>
 	</div>
 
     <div class="control">
@@ -423,12 +586,15 @@ td[contenteditable]{outline:none;}
             <option value="300">300</option>
             <option value="600">600</option>
         </select>
+	<span class="custom-tooltip">300 DPI lämpar sig för Office</span>	
     </div>
+	
 	<div class="control">
         <label>&nbsp;</label>
         <button class="export-clear" onclick="clearTable()" title="Rensa allt innehåll">
             <span class="material-icons">delete_sweep</span> Rensa
         </button>
+		<span class="custom-tooltip">Återställ hela tabellen</span>
     </div>
 
 </div>
@@ -447,43 +613,97 @@ td[contenteditable]{outline:none;}
 </div>
 
 <div id="styleModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; align-items:center; justify-content:center;">
-    <div style="background:white; padding:20px; border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,0.2); width:800px;">
+    <div class="style-modal-content">
         <h3 style="margin-top:0; text-align:center; font-size:18px;">Välj tabellstil</h3>
         
         <div class="style-grid" id="styleOptions">
-            <div class="style-item" onclick="applyStyle('standard')">
+            <div class="style-item active" onclick="applyStyle('standard')">
                 <div class="style-img-container">
-                    <img src="standard.png" alt="Standard">
+                    <svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="5" y="10" width="190" height="120" fill="white" stroke="#333" stroke-width="1"/>
+                        <rect x="5" y="10" width="190" height="20" fill="#dbe4ff"/>
+                        <g stroke="#333" stroke-width="0.5">
+                            <line x1="5" y1="30" x2="195" y2="30" stroke-width="1"/>
+                            <line x1="5" y1="50" x2="195" y2="50" /><line x1="5" y1="70" x2="195" y2="70" />
+                            <line x1="5" y1="90" x2="195" y2="90" /><line x1="5" y1="110" x2="195" y2="110" />
+                            <line x1="28.75" y1="10" x2="28.75" y2="130" /><line x1="52.5" y1="10" x2="52.5" y2="130" />
+                            <line x1="76.25" y1="10" x2="76.25" y2="130" /><line x1="100" y1="10" x2="100" y2="130" />
+                            <line x1="123.75" y1="10" x2="123.75" y2="130" /><line x1="147.5" y1="10" x2="147.5" y2="130" />
+                            <line x1="171.25" y1="10" x2="171.25" y2="130" />
+                        </g>
+                    </svg>
                 </div>
                 <span>Standard</span>
             </div>
+
             <div class="style-item" onclick="applyStyle('modern')">
                 <div class="style-img-container">
-                    <img src="modern.png" alt="Modern">
+                    <svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 22 Q5 10 17 10 H183 Q195 10 195 22 V118 Q195 130 183 130 H17 Q5 130 5 118 Z" fill="white" stroke="#dddddd" stroke-width="1"/>
+                        <path d="M5 22 Q5 10 17 10 H183 Q195 10 195 22 V30 H5 Z" fill="#009879"/>
+                        <rect x="5" y="50" width="190" height="20" fill="#f3f3f3"/>
+                        <rect x="5" y="90" width="190" height="20" fill="#f3f3f3"/>
+                        <g stroke="#dddddd" stroke-width="0.5">
+                            <line x1="5" y1="30" x2="195" y2="30" /><line x1="5" y1="50" x2="195" y2="50" />
+                            <line x1="5" y1="70" x2="195" y2="70" /><line x1="5" y1="90" x2="195" y2="90" />
+                            <line x1="5" y1="110" x2="195" y2="110" />
+                        </g>
+                        <line x1="17" y1="130" x2="183" y2="130" stroke="#009879" stroke-width="2"/>
+                    </svg>
                 </div>
                 <span>Modern</span>
             </div>
+
             <div class="style-item" onclick="applyStyle('column_focus')">
                 <div class="style-img-container">
-                    <img src="kolumn.png" alt="Kolumn">
+                    <svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 30 Q5 10 25 10 H175 Q195 10 195 30 V130 H5 Z" fill="white" stroke="#eeeeee" stroke-width="1"/>
+                        <path d="M5 30 Q5 10 25 10 H175 Q195 10 195 30 V30 H5 Z" fill="#7d12ff"/>
+                        <rect x="5" y="30" width="23.75" height="100" fill="#f5f6ff"/>
+                        <rect x="52.5" y="30" width="23.75" height="100" fill="#f5f6ff"/>
+                        <rect x="100" y="30" width="23.75" height="100" fill="#f5f6ff"/>
+                        <rect x="147.5" y="30" width="23.75" height="100" fill="#f5f6ff"/>
+                        <g stroke="#eeeeee" stroke-width="0.5">
+                            <line x1="5" y1="30" x2="195" y2="30" /><line x1="5" y1="50" x2="195" y2="50" />
+                            <line x1="5" y1="70" x2="195" y2="70" /><line x1="5" y1="90" x2="195" y2="90" />
+                            <line x1="5" y1="110" x2="195" y2="110" />
+                        </g>
+                        <line x1="5" y1="130" x2="195" y2="130" stroke="#7d12ff" stroke-width="2"/>
+                    </svg>
                 </div>
                 <span>Kolumn</span>
             </div>
+
             <div class="style-item" onclick="applyStyle('forest')">
                 <div class="style-img-container">
-                    <img src="skog.png" alt="Skog">
+                    <svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 10 H175 Q195 10 195 30 V130 H25 Q5 130 5 110 Z" fill="white" stroke="#dddddd" stroke-width="1"/>
+                        <path d="M5 10 H175 Q195 10 195 30 V30 H5 Z" fill="#59736e"/>
+                        <rect x="5" y="50" width="190" height="20" fill="#f3f3f3"/>
+                        <rect x="5" y="90" width="190" height="20" fill="#f3f3f3"/>
+                        <g stroke="#dddddd" stroke-width="0.5">
+                            <line x1="5" y1="30" x2="195" y2="30" /><line x1="5" y1="50" x2="195" y2="50" />
+                            <line x1="5" y1="70" x2="195" y2="70" /><line x1="5" y1="90" x2="195" y2="90" />
+                            <line x1="5" y1="110" x2="195" y2="110" />
+                        </g>
+                        <line x1="25" y1="130" x2="195" y2="130" stroke="#59736e" stroke-width="2"/>
+                    </svg>
                 </div>
                 <span>Skogsgrön</span>
             </div>
         </div>
 
-        <button onclick="closeStyleModal()" style="width:100%; background:#fff; color:#666; padding:10px; border:1px solid #ccc; border-radius:6px; font-weight:600; cursor:pointer;">
+        <button onclick="closeStyleModal()" style="width:100%; background:#f8f9fa; color:#666; padding:12px; border:1px solid #ccc; border-radius:6px; font-weight:600; cursor:pointer;">
             Avbryt
         </button>
     </div>
 </div>
 
 <script>
+let isDragging = false;
+let startCell = null;
+let selectedCells = [];
+
 const TABLE_STYLES = {
     standard: {
         name: "Standard",
@@ -500,7 +720,7 @@ const TABLE_STYLES = {
         borderColor: "#333333",
         outerBorder: true,
         bottomLine: null,
-        radius: 0,
+        radius: "straight",
         fontFamily: "Roboto"
     },
     modern: {
@@ -518,7 +738,7 @@ const TABLE_STYLES = {
         borderColor: "#dddddd",
         outerBorder: true,
         bottomLine: "#009879",
-        radius: 12,
+        radius: "rounded",
         fontFamily: "Montserrat"
     },
     column_focus: {
@@ -536,10 +756,10 @@ const TABLE_STYLES = {
         borderColor: "#eeeeee",
         outerBorder: true,
         bottomLine: "#7d12ff",
-        radius: 12,
+        radius: "tombstone",
         fontFamily: "Open Sans"
     },
-forest: {
+    forest: {
         name: "Forest",
         headerBg: "#59736e",
         headerText: "#ffffff",
@@ -554,7 +774,7 @@ forest: {
         borderColor: "#dddddd",
         outerBorder: true,
         bottomLine: "#59736e",
-        radius: 12,
+        radius: "leaf",
         fontFamily: "Raleway"
     }
 };
@@ -570,25 +790,135 @@ const headerColorInput = document.getElementById("headerColor");
 const headerTextColorInput = document.getElementById("headerTextColor");
 const fontSelect = document.getElementById("fontSelect");
 const radiusInput = document.getElementById("radius");
-const textAlignSelect = document.getElementById("textAlign");
 
 let activeCell = null;
+
+/* ================= HÖRNKNAPPARNA ================= */
+
+function setRadius(value) {
+    radiusInput.value = value;
+    updateRadiusVisuals(value);
+    updateStyles();
+}
+
+function updateRadiusVisuals(activeType) {
+    const types = ['straight', 'rounded', 'tombstone', 'leaf'];
+    types.forEach(type => {
+        const btn = document.getElementById(`btn-radius-${type}`);
+        if (btn) {
+            const isActive = activeType === type;
+            btn.style.background = isActive ? "#eef1f5" : "none";
+            btn.style.color = isActive ? "#1f4fd8" : "#555";
+        }
+    });
+}
+
+/* ================= JUSTERINGSKNAPPARNA ================= */
+
+function setAlign(alignValue) {
+    if (selectedCells.length === 0) return;
+
+    selectedCells.forEach(cell => {
+        const editor = cell.querySelector("span");
+        if (editor) {
+            editor.dataset.align = alignValue;
+            applyCellAlignment(cell);
+        }
+    });
+    
+    updateAlignVisuals(alignValue);
+}
+
+function updateAlignVisuals(activeAlign) {
+    const aligns = ['left', 'center', 'right'];
+    aligns.forEach(a => {
+        const btn = document.getElementById(`btn-${a}`);
+        if (btn) {
+            const isActive = a === activeAlign;
+            btn.style.background = isActive ? "#eef1f5" : "none";
+            btn.style.color = isActive ? "#1f4fd8" : "#555";
+        }
+    });
+}
+
+/* ================= VÄLJ CELLER SOM I EXCEL ================= */
+
+function clearSelection() {
+    selectedCells.forEach(td => td.classList.remove("selected"));
+    selectedCells = [];
+}
+
+function addToSelection(td) {
+    if (!selectedCells.includes(td)) {
+        td.classList.add("selected");
+        selectedCells.push(td);
+    }
+}
+
+function selectRange(start, end) {
+    clearSelection();
+    const table = start.closest("table");
+    const r1 = start.parentNode.rowIndex;
+    const c1 = start.cellIndex;
+    const r2 = end.parentNode.rowIndex;
+    const c2 = end.cellIndex;
+
+    const startR = Math.min(r1, r2);
+    const endR = Math.max(r1, r2);
+    const startC = Math.min(c1, c2);
+    const endC = Math.max(c1, c2);
+
+	for (let i = startR; i <= endR; i++) {
+			for (let j = startC; j <= endC; j++) {
+				addToSelection(table.rows[i].cells[j]);
+			}
+		}
+		updateStyles();
+	}
+
+// Global lyssnare för att sluta markera när man släpper musknappen
+window.addEventListener("mouseup", () => {
+    isDragging = false;
+});
+
+window.addEventListener("mousedown", (e) => {
+    // Om klicket inte är inuti tableWrap eller en av kontrollerna, rensa.
+    if (!document.getElementById("tableWrap").contains(e.target) && 
+        !e.target.closest(".panel")) {
+        clearSelection();
+    }
+});
+
+window.addEventListener("keydown", (e) => {
+    if (e.key === "Delete" || e.key === "Backspace") {
+        
+        const activeNode = document.activeElement;
+        const isEditingText = activeNode.tagName === "SPAN" && activeNode.isContentEditable;
+        
+        if (selectedCells.length > 0) {
+            // Om fler än en cell är vald, eller om vi inte har en blinkande markör i texten
+            if (selectedCells.length > 1 || !isEditingText) {
+                e.preventDefault();
+                
+                selectedCells.forEach(cell => {
+                    const editor = cell.querySelector("span");
+                    if (editor) {
+                        editor.innerText = "";
+                        editor.dataset.bold = "false";
+                    }
+                });
+                
+                updateStyles();
+            }
+        }
+    }
+}, true);
 
 /* ================= INIT ================= */
 colsInput.addEventListener("input", generateTable);
 rowsInput.addEventListener("input", generateTable);
 [rowHeightInput, fontSizeInput, fontSelect, radiusInput, headerColorInput, headerTextColorInput]
     .forEach(el => el.addEventListener("input", updateStyles));
-
-textAlignSelect.addEventListener("input", () => {
-    if (!activeCell) return;
-
-    const editor = activeCell.querySelector(".cell-inner span");
-    if (!editor) return;
-
-    editor.dataset.align = textAlignSelect.value;
-    applyCellAlignment(activeCell);
-});
 
 /* ================= STILFUNKTIONER och MODAL ================= */
 function applyStyle(styleKey) {
@@ -602,6 +932,7 @@ function applyStyle(styleKey) {
     headerTextColorInput.value = config.headerText;
     rowHeightInput.value = config.rowHeight;
     radiusInput.value = config.radius;
+	updateRadiusVisuals(config.radius);
     
     if (config.fontFamily) {
         fontSelect.value = config.fontFamily;
@@ -661,18 +992,24 @@ function getExistingData() {
 }
 
 function toggleBold() {
-    if (!activeCell) return;
-    const editor = activeCell.querySelector("span");
-    if (!editor) return;
+    if (selectedCells.length === 0) return;
+    
+    // Kolla första markerade cellen för att avgöra om vi ska slå på eller av
+    const firstEditor = selectedCells[0].querySelector("span");
+    const newState = firstEditor.dataset.bold !== "true";
 
-    const isBold = editor.dataset.bold === "true";
-    editor.dataset.bold = !isBold;
+    selectedCells.forEach(cell => {
+        const editor = cell.querySelector("span");
+        if (editor) {
+            editor.dataset.bold = newState;
+        }
+    });
 
-    // Uppdatera knappens utseende direkt vid klick
+    // Uppdatera knappen visuellt
     const btn = document.getElementById("boldBtn");
-    btn.style.background = !isBold ? "#eef1f5" : "white";
-    btn.style.borderColor = !isBold ? "#1f4fd8" : "#c9ced6";
-    btn.style.color = !isBold ? "#1f4fd8" : "#222";
+    btn.style.background = newState ? "#eef1f5" : "white";
+    btn.style.borderColor = newState ? "#1f4fd8" : "#c9ced6";
+    btn.style.color = newState ? "#1f4fd8" : "#222";
 
     updateStyles();
 }
@@ -685,37 +1022,81 @@ function generateTable() {
 
     const frame = document.createElement("div");
     frame.className = "table-frame";
-	const table = document.createElement("table");
+    const table = document.createElement("table");
 
     for (let r = 0; r < rows; r++) {
         const tr = document.createElement("tr");
 
         for (let c = 0; c < cols; c++) {
             const td = document.createElement("td");
+            
+            // Markeringslogik
+            td.addEventListener("mousedown", (e) => {
+                const editor = td.querySelector('span');
+                
+                // Om man redan skriver i cellen, låt standardbeteendet vara
+                if (document.activeElement === editor) {
+                    return; 
+                }
+
+                // Stoppa standardbeteendet (textmarkering) för att tillåta cellmarkering
+                e.preventDefault(); 
+            
+                isDragging = true;
+                startCell = td;
+                
+                if (!e.ctrlKey) clearSelection();
+                addToSelection(td);
+                updateStyles();
+
+                // Logik för att skilja på klick (skriva) och drag (markera)
+                const onMouseUp = () => {
+                    if (startCell === td) {
+                        editor.focus();
+                    }
+                    window.removeEventListener("mouseup", onMouseUp);
+                };
+                window.addEventListener("mouseup", onMouseUp);
+            });
+            
+            td.addEventListener("mouseenter", () => {
+                if (isDragging) {
+                    selectRange(startCell, td);
+                }
+            });
 
             const inner = document.createElement("div");
             inner.className = "cell-inner";
 
             const editor = document.createElement("span");
             editor.contentEditable = "true";
-			editor.addEventListener("input", updateStyles);
+            editor.addEventListener("input", updateStyles);
 
             const saved = existingData[r]?.[c];
             editor.innerText = saved?.text || "";
             editor.dataset.align = saved?.align || "right";
-			editor.dataset.bold = saved?.bold || "false";
+            editor.dataset.bold = saved?.bold || "false";
 
-			editor.addEventListener("focus", () => {
-				activeCell = td;
-				textAlignSelect.value = editor.dataset.align || "right";
-				
-				// Visuell feedback: Blå ram och ljusgrå bakgrund om F-knappen är aktiv
-				const isBold = editor.dataset.bold === "true";
-				const btn = document.getElementById("boldBtn");
-				btn.style.background = isBold ? "#eef1f5" : "white";
-				btn.style.borderColor = isBold ? "#1f4fd8" : "#c9ced6";
-				btn.style.color = isBold ? "#1f4fd8" : "#222";
-			});
+            editor.addEventListener("focus", () => {
+                activeCell = td;
+                
+                if (!selectedCells.includes(td)) {
+                    clearSelection();
+                    addToSelection(td);
+                }
+                
+                // --- HÄR ÄR ÄNDRINGEN ---
+                // Vi anropar den nya visuella uppdateringen istället för textAlignSelect.value
+                updateAlignVisuals(editor.dataset.align || "right");
+                
+                const isBold = editor.dataset.bold === "true";
+                const btn = document.getElementById("boldBtn");
+                if (btn) {
+                    btn.style.background = isBold ? "#eef1f5" : "white";
+                    btn.style.borderColor = isBold ? "#1f4fd8" : "#c9ced6";
+                    btn.style.color = isBold ? "#1f4fd8" : "#222";
+                }
+            });
 
             inner.appendChild(editor);
             td.appendChild(inner);
@@ -781,9 +1162,28 @@ function updateStyles() {
 
     const config = TABLE_STYLES[currentStyleKey];
     const frame = document.querySelector(".table-frame");
-    const radius = +radiusInput.value;
+    
+    // --- HÖRNLOGIK START ---
+    const radiusValue = radiusInput.value;
+    
+    switch(radiusValue) {
+        case 'straight':
+            frame.style.borderRadius = "0px";
+            break;
+        case 'rounded':
+            frame.style.borderRadius = "12px";
+            break;
+        case 'tombstone':
+            frame.style.borderRadius = "20px 20px 0 0";
+            break;
+        case 'leaf':
+            frame.style.borderRadius = "0 20px 0 20px";
+            break;
+        default:
+            frame.style.borderRadius = isNaN(radiusValue) ? "0px" : radiusValue + "px";
+    }
+    // --- HÖRNLOGIK SLUT ---
 
-    frame.style.borderRadius = radius + "px";
     frame.style.border = config.outerBorder ? `1px solid ${config.borderColor}` : "none";
     
     table.style.fontFamily = fontSelect.value;
@@ -802,19 +1202,29 @@ function updateStyles() {
             const isFocusCol = config.columnFocus && c % 2 === 0;
             
             cell.style.height = rowHeightInput.value + "px";
-            cell.style.background = "none";
-            cell.style.backgroundColor = "transparent";
-            cell.style.border = "none";
-
-            if (isFocusCol && r > 0) {
-                cell.style.backgroundColor = config.columnFocus;
+            
+            // SÄKRING: Rensa bara bakgrunden om cellen INTE är vald
+            if (!cell.classList.contains("selected")) {
+                cell.style.background = "none";
+                cell.style.backgroundColor = "transparent";
+                
+                if (isFocusCol && r > 0) {
+                    cell.style.backgroundColor = config.columnFocus;
+                }
             }
 
+			// --- VERTIKALA LINJER (KORRIGERAD) ---
             if (config.verticalLines && c < tr.cells.length - 1) {
                 cell.style.borderRight = `1px solid ${config.borderColor}`;
+            } else {
+                cell.style.borderRight = "none"; // Denna rad tvingar bort linjer i Modern/Forest
             }
+
+            // --- HORISONTELLA LINJER (KORRIGERAD) ---
             if (config.horizontalLines && r < rows.length - 1) {
                 cell.style.borderBottom = `1px solid ${config.borderColor}`;
+            } else {
+                cell.style.borderBottom = "none"; // Ser till att vi inte får dubbla linjer av misstag
             }
 
             const editor = cell.querySelector("span");
@@ -832,8 +1242,6 @@ function updateStyles() {
                 }
             } else {
                 let textColor = (isZebraRow && config.zebraText) ? headerColorInput.value : "#000000";
-
-                // --- IKON-LOGIK & NEGATIVA TAL ---
                 const rawText = editor.textContent.trim().toLowerCase();
                 
                 if (rawText === "...klar") {
@@ -858,6 +1266,7 @@ function updateStyles() {
                 editor.style.fontWeight = editor.dataset.bold === "true" ? "700" : "400";
             }
             
+            // SÄKRING: Dynamisk bottenlinje som alltid följer Headerfärg
             if (config.bottomLine && r === rows.length - 1) {
                 cell.style.borderBottom = `2px solid ${headerColorInput.value}`;
             }
@@ -867,20 +1276,45 @@ function updateStyles() {
     }
 }
 
+function customRoundedRect(ctx, x, y, w, h, tl, tr, br, bl) {
+    ctx.beginPath();
+    ctx.moveTo(x + tl, y);
+    ctx.lineTo(x + w - tr, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + tr);
+    ctx.lineTo(x + w, y + h - br);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - br, y + h);
+    ctx.lineTo(x + bl, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - bl);
+    ctx.lineTo(x, y + tl);
+    ctx.quadraticCurveTo(x, y, x + tl, y);
+    ctx.closePath();
+}
+
 function drawTableOnCanvas(ctx, table, rect, config) {
-    const radius = +radiusInput.value;
-    const headerColor = headerColorInput.value;
+    const radiusType = radiusInput.value; 
+    const headerColor = headerColorInput.value; // Denna hämtar nuvarande val
     const headerTextColor = headerTextColorInput.value;
     const font = fontSelect.value;
     const fontSize = +fontSizeInput.value;
 
     ctx.save();
-    if (radius > 0) {
-        roundedRectPath(ctx, 0, 0, rect.width, rect.height, radius);
-        ctx.clip();
-        ctx.fillStyle = "#ffffff";
-        ctx.fillRect(0, 0, rect.width, rect.height);
+    
+    // Clipping för hörn
+    if (radiusType === 'rounded') {
+        customRoundedRect(ctx, 0, 0, rect.width, rect.height, 12, 12, 12, 12);
+    } else if (radiusType === 'tombstone') {
+        customRoundedRect(ctx, 0, 0, rect.width, rect.height, 20, 20, 0, 0);
+    } else if (radiusType === 'leaf') {
+        customRoundedRect(ctx, 0, 0, rect.width, rect.height, 0, 20, 0, 20);
+    } else {
+        ctx.beginPath();
+        ctx.rect(0, 0, rect.width, rect.height);
     }
+    
+    ctx.clip(); 
+    
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, rect.width, rect.height);
 
     const rows = table.rows.length;
     const cols = table.rows[0].cells.length;
@@ -910,14 +1344,21 @@ function drawTableOnCanvas(ctx, table, rect, config) {
             }
             ctx.fillRect(x, y, w, h);
 
-            ctx.strokeStyle = config.borderColor;
+			ctx.strokeStyle = config.borderColor;
             ctx.lineWidth = 1;
 
             if (config.verticalLines && c < cols - 1) {
-                ctx.beginPath(); ctx.moveTo(x + w, y); ctx.lineTo(x + w, y + h); ctx.stroke();
+                ctx.beginPath(); 
+                ctx.moveTo(x + w, y); 
+                ctx.lineTo(x + w, y + h); 
+                ctx.stroke();
             }
+            
             if (config.horizontalLines && r < rows - 1) {
-                ctx.beginPath(); ctx.moveTo(x, y + h); ctx.lineTo(x + w, y + h); ctx.stroke();
+                ctx.beginPath(); 
+                ctx.moveTo(x, y + h); 
+                ctx.lineTo(x + w, y + h); 
+                ctx.stroke();
             }
 
             if (r === 0 && config.headerBorderBottom) {
@@ -925,12 +1366,19 @@ function drawTableOnCanvas(ctx, table, rect, config) {
                 ctx.beginPath(); ctx.moveTo(x, y + h); ctx.lineTo(x + w, y + h); ctx.stroke(); ctx.restore();
             }
 
-            if (config.bottomLine && r === rows.length - 1) {
-                ctx.save(); ctx.strokeStyle = headerColor; ctx.lineWidth = 2;
-                ctx.beginPath(); ctx.moveTo(x, y + h); ctx.lineTo(x + w, y + h); ctx.stroke(); ctx.restore();
+            // SÄKRING: Bottenlinje för export (matchar alltid Headerfärg)
+            if (config.bottomLine && r === rows - 1) { 
+                ctx.save(); 
+                ctx.strokeStyle = headerColor; 
+                ctx.lineWidth = 2;
+                ctx.beginPath(); 
+                ctx.moveTo(x, y + h); 
+                ctx.lineTo(x + w, y + h); 
+                ctx.stroke(); 
+                ctx.restore();
             }
 
-            // --- TEXT & IKON RENDERING ---
+            // Textrendering
             let textValue = editor?.innerText.trim() || "";
             const align = editor?.dataset.align || "right";
             let currentFont = font;
@@ -944,7 +1392,6 @@ function drawTableOnCanvas(ctx, table, rect, config) {
                 if (config.headerFont) textValue = textValue.toUpperCase();
             } else {
                 const checkText = textValue.toLowerCase();
-                // Kolla efter ikoner först
                 if (checkText === "...klar" || editor.querySelector('.fa-circle-check')) {
                     ctx.fillStyle = "#28a745";
                     ctx.font = "900 " + fontSize + "px 'Font Awesome 6 Free'";
@@ -958,7 +1405,7 @@ function drawTableOnCanvas(ctx, table, rect, config) {
                 } else if (checkText === "...stopp" || editor.querySelector('.fa-circle-stop')) {
                     ctx.fillStyle = "#dc3545";
                     ctx.font = "900 " + fontSize + "px 'Font Awesome 6 Free'";
-                    textValue = "\uf28d"; // Unicode för circle-stop
+                    textValue = "\uf28d";
                     isIcon = true;
                 } else {
                     ctx.fillStyle = (isZebraRow && config.zebraText) ? headerColor : "#000000";
@@ -975,17 +1422,30 @@ function drawTableOnCanvas(ctx, table, rect, config) {
             ctx.textBaseline = "middle";
             ctx.textAlign = align;
             const tx = align === "left" ? x + 8 : align === "center" ? x + w / 2 : x + w - 8;
-            
             wrapText(ctx, textValue, tx, y + h / 2, w - 16, fontSize * 1.2);
         }
     }
-    ctx.restore();
+    
+    ctx.restore(); 
 
+    // Yttre ram
     if (config.outerBorder) {
-        ctx.save(); ctx.strokeStyle = config.borderColor; ctx.lineWidth = 1;
-        if (radius > 0) { roundedRectPath(ctx, 0.5, 0.5, rect.width - 1, rect.height - 1, radius); }
-        else { ctx.beginPath(); ctx.rect(0.5, 0.5, rect.width - 1, rect.height - 1); }
-        ctx.stroke(); ctx.restore();
+        ctx.save(); 
+        ctx.strokeStyle = config.borderColor; 
+        ctx.lineWidth = 1;
+        
+        if (radiusType === 'rounded') {
+            customRoundedRect(ctx, 0.5, 0.5, rect.width - 1, rect.height - 1, 12, 12, 12, 12);
+        } else if (radiusType === 'tombstone') {
+            customRoundedRect(ctx, 0.5, 0.5, rect.width - 1, rect.height - 1, 20, 20, 0, 0);
+        } else if (radiusType === 'leaf') {
+            customRoundedRect(ctx, 0.5, 0.5, rect.width - 1, rect.height - 1, 0, 20, 0, 20);
+        } else {
+            ctx.beginPath();
+            ctx.rect(0.5, 0.5, rect.width - 1, rect.height - 1);
+        }
+        ctx.stroke(); 
+        ctx.restore();
     }
 }
 
@@ -1045,17 +1505,19 @@ function confirmClear() {
     const cells = document.querySelectorAll(".cell-inner span");
     cells.forEach(editor => {
         editor.innerText = "";
-        editor.dataset.align = "right";
-        editor.dataset.bold = "false"; // 🔹 Nollställer fetstilen
+        editor.dataset.align = "right"; // Reset till default
+        editor.dataset.bold = "false";
     });
 
-    // Återställ även F-knappen visuellt om den var aktiv
-    const btn = document.getElementById("boldBtn");
-    btn.style.background = "white";
-    btn.style.borderColor = "#c9ced6";
-    btn.style.color = "#222";
+    // Återställ även F-knappen
+    const btnBold = document.getElementById("boldBtn");
+    btnBold.style.background = "white";
+    btnBold.style.borderColor = "#c9ced6";
+    btnBold.style.color = "#222";
 
-    textAlignSelect.value = "right";
+    // Återställ justeringsknapparna till höger (default)
+    updateAlignVisuals("right");
+    
     updateStyles();
     closeModal();
 }
@@ -1118,20 +1580,38 @@ function setPNGdpi(blob, dpi) {
     });
 }
 
-function downloadPNG(transparent) {
+function downloadPNG(transparent, forcedDpi) {
     const frame = document.querySelector(".table-frame");
     const table = frame?.querySelector("table");
     if (!table) return alert("Skapa tabellen först.");
 
-    const dpi = +document.getElementById("dpi").value;
-    const scale = dpi / 96;
+    // --- FILNAMNSLOGIK START ---
+    const nu = new Date();
+    const ÅÅÅÅ = nu.getFullYear();
+    const MM = (nu.getMonth() + 1).toString().padStart(2, '0');
+    const DD = nu.getDate().toString().padStart(2, '0');
+    const timmar = nu.getHours().toString().padStart(2, '0');
+    const minuter = nu.getMinutes().toString().padStart(2, '0');
+    
+    // Skapar formatet: ÅÅÅÅ-MM-DD_kl_16_23
+    const tidsstampel = `${ÅÅÅÅ}-${MM}-${DD}_kl_${timmar}_${minuter}`;
+    
+    // Bestämmer DPI och typ för filnamnet
+    const targetDpi = forcedDpi ? forcedDpi : +document.getElementById("dpi").value;
+    const typNamn = transparent ? "transparent" : "vit";
+    
+    // Slutgiltigt namn: tabell_ÅÅÅÅ-MM-DD_kl_16_23_300DPI_vit.png
+    const filnamn = `tabell_${tidsstampel}_${targetDpi}DPI_${typNamn}.png`;
+    // --- FILNAMNSLOGIK SLUT ---
+
+    const renderScale = Math.max(1.0, targetDpi / 96); 
     const rect = frame.getBoundingClientRect();
     const canvas = document.createElement("canvas");
-    canvas.width = Math.ceil(rect.width * scale);
-    canvas.height = Math.ceil(rect.height * scale);
+    canvas.width = Math.ceil(rect.width * renderScale);
+    canvas.height = Math.ceil(rect.height * renderScale);
 
     const ctx = canvas.getContext("2d");
-    ctx.scale(scale, scale);
+    ctx.scale(renderScale, renderScale);
 
     if (!transparent) {
         ctx.fillStyle = "#ffffff";
@@ -1142,15 +1622,18 @@ function downloadPNG(transparent) {
     drawTableOnCanvas(ctx, table, rect, config);
 
     canvas.toBlob(blob => {
-        setPNGdpi(blob, dpi).then(finalBlob => {
+        setPNGdpi(blob, targetDpi).then(finalBlob => {
             const link = document.createElement("a");
-            link.download = transparent ? "tabell_transparent.png" : "tabell_vit.png";
+            link.download = filnamn;
             link.href = URL.createObjectURL(finalBlob);
             link.click();
+            
+            setTimeout(() => URL.revokeObjectURL(link.href), 100);
         });
     }, "image/png");
 }
 
+updateRadiusVisuals(0);
 generateTable();
 </script>
 
