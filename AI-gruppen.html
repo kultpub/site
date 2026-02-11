@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI-gruppen</title>
+    <title>AI-resurser – Kulturen</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -16,7 +16,6 @@
         --text: #f4f4f5;
         --muted: #a1a1aa;
         --accent: #d4d4d8;
-        --link-hover: #ffffff;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -42,7 +41,7 @@
     }
 
     header { 
-        margin-bottom: 48px; 
+        margin-bottom: 40px; 
         text-align: left;
     }
 
@@ -59,21 +58,20 @@
         color: var(--muted); 
         margin-top: 10px; 
         font-size: 1.1rem;
-        font-weight: 400;
     }
 
-    /* Länk-kort styling */
     .resource-grid {
         display: grid;
         grid-template-columns: 1fr;
-        gap: 16px;
+        gap: 12px; /* Något tätare mellan korten */
     }
 
     .resource-card {
         background: var(--panel);
         border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 24px;
+        border-radius: 14px;
+        /* Höjden justerad genom reducerad padding (ca 90% av tidigare volym) */
+        padding: 18px 24px; 
         text-decoration: none;
         color: var(--text);
         display: flex;
@@ -86,25 +84,18 @@
         border-color: var(--accent);
         background: rgba(255, 255, 255, 0.03);
         transform: translateY(-2px);
-        box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
     }
 
     .resource-card i {
-        font-size: 1.5rem;
-        width: 40px;
-        height: 40px;
+        font-size: 1.3rem;
+        width: 36px;
+        height: 36px;
         background: rgba(255, 255, 255, 0.05);
-        border-radius: 10px;
+        border-radius: 8px;
         display: flex;
         align-items: center;
         justify-content: center;
         color: var(--accent);
-        transition: all 0.3s ease;
-    }
-
-    .resource-card:hover i {
-        background: var(--accent);
-        color: var(--bg);
     }
 
     .resource-info {
@@ -114,8 +105,8 @@
     .resource-title {
         display: block;
         font-weight: 600;
-        font-size: 1.1rem;
-        margin-bottom: 4px;
+        font-size: 1.05rem;
+        margin-bottom: 2px;
     }
 
     .resource-desc {
@@ -125,20 +116,18 @@
     }
 
     .external-icon {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
         color: var(--border);
-        margin-left: auto;
     }
 
     footer {
         margin-top: 40px;
-        padding: 24px;
-        border-radius: 16px;
+        padding: 20px;
+        border-radius: 14px;
         background: rgba(255,255,255,0.02);
         border: 1px dashed var(--border);
         color: var(--muted);
-        text-align: left;
-        font-size: 0.9rem;
+        font-size: 0.85rem;
     }
 
     footer i { margin-right: 8px; color: var(--accent); }
@@ -169,6 +158,15 @@
         <div class="resource-info">
             <span class="resource-title">AI-policy</span>
             <span class="resource-desc">Riktlinjer för vad vi ska, får och inte får göra.</span>
+        </div>
+        <i class="fas fa-arrow-up-right-from-square external-icon"></i>
+    </a>
+
+    <a href="https://kulturen.sharepoint.com/teams/ai/Lists/renden%20AIgruppen/AllItems.aspx?env=WebViewList&npsAction=createList" target="_blank" class="resource-card">
+        <i class="fas fa-list-check"></i>
+        <div class="resource-info">
+            <span class="resource-title">Ärenden</span>
+            <span class="resource-desc">Loggade ärenden och beslut i AI-gruppen (SharePoint).</span>
         </div>
         <i class="fas fa-arrow-up-right-from-square external-icon"></i>
     </a>
