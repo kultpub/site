@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-policy – Kulturen</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+    :root {
+        --bg: #0b0b0c;
+        --panel: #18181b;
+        --border: #2a2a2e;
+        --text: #f4f4f5;
+        --muted: #a1a1aa;
+        --accent: #d4d4d8;
+        --bad: #f87171;
+        --warn: #facc15;
+        --good: #4ade80;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+        overflow-y: scroll;
+        scrollbar-gutter: stable;
+    }
+
+    body {
+        font-family: 'Montserrat', system-ui, sans-serif;
+        background: radial-gradient(circle at top, #111113, var(--bg));
+        color: var(--text);
+        line-height: 1.6;
+        padding: 60px 20px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .container { 
+        width: 100%; 
+        max-width: min(800px, 100%);
+    }
+
+    header { 
+        margin-bottom: 48px; 
+        text-align: left;
+    }
+
+    h1 { 
+        font-size: 2.8rem; 
+        font-weight: 700; 
+        letter-spacing: -0.02em;
+        background: linear-gradient(to right, #fff, var(--muted));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle { 
+        color: var(--muted); 
+        margin-top: 10px; 
+        font-size: 1.1rem;
+        font-weight: 400;
+    }
+
+    details {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        margin-bottom: 16px;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    details[open] { 
+        border-color: var(--accent);
+        box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+    }
+
+    summary {
+        cursor: pointer;
+        padding: 20px 24px;
+        font-weight: 600;
+        list-style: none;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        font-size: 1.05rem;
+    }
+
+    summary i {
+        width: 24px;
+        text-align: center;
+        font-size: 1.2rem;
+    }
+
+    .fa-check-circle { color: var(--good); }
+    .fa-ban { color: var(--bad); }
+    .fa-exclamation-triangle { color: var(--warn); }
+
+    summary::-webkit-details-marker { display: none; }
+
+    .content {
+        height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition: height 0.45s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.25s ease;
+        color: var(--muted);
+        padding: 0 24px;
+    }
+
+    .content-inner {
+        padding-bottom: 24px;
+        border-top: 1px solid rgba(255,255,255,0.05);
+        padding-top: 16px;
+    }
+
+    details[open] .content { opacity: 1; }
+
+    h3 {
+        font-size: 0.75rem;
+        margin: 20px 0 8px;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-weight: 700;
+    }
+
+    h3:first-child { margin-top: 0; }
+
+    ul { list-style: none; }
+
+    li {
+        margin: 8px 0;
+        padding-left: 20px;
+        position: relative;
+        font-size: 0.95rem;
+    }
+
+    li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 10px;
+        width: 6px;
+        height: 1px;
+        background: var(--accent);
+    }
+
+    footer {
+        margin-top: 40px;
+        padding: 24px;
+        border-radius: 16px;
+        background: rgba(255,255,255,0.02);
+        border: 1px dashed var(--border);
+        color: var(--muted);
+        text-align: left;
+        font-size: 0.9rem;
+    }
+
+    footer i { margin-right: 8px; color: var(--accent); }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+<header>
+    <h1>AI-policy för Kulturen</h1>
+    <div class="subtitle">Operativ sammanfattning</div>
+</header>
+
+<details>
+    <summary><i class="fas fa-check-circle"></i> Vad vi ska göra</summary>
+    <div class="content"><div class="content-inner">
+        <ul>
+            <li>Använda AI som stödverktyg, inte ersättning för professionellt omdöme.</li>
+            <li>Säkerställa att användning är laglig, etisk och förenlig med värdegrund.</li>
+            <li>Begränsa användning till AI-tjänster med låg eller minimal risknivå.</li>
+            <li>Upprätthålla mänsklig kontroll och granskning i alla arbetsmoment.</li>
+        </ul>
+    </div></div>
+</details>
+
+<details>
+    <summary><i class="fas fa-check-circle"></i> Vad vi får göra</summary>
+    <div class="content"><div class="content-inner">
+        <h3>Interna tillämpningar</h3>
+        <ul>
+            <li>Mötesdokumentation, transkribering och sammanfattningar</li>
+            <li>Planering, schemaläggning och logistik</li>
+            <li>Strukturering och kvalitetsstöd i Carlotta</li>
+            <li>Bildigenkänning vid digitaliseringsprocesser</li>
+            <li>Statistik, mönsteranalys och rapportutkast</li>
+            <li>Kod och tekniskt stöd (databaser, GIS, visualisering)</li>
+        </ul>
+        <h3>Externt stöd</h3>
+        <ul>
+            <li>Preliminära översättningar (med efterföljande granskning)</li>
+            <li>Språkligt stöd i besöksservice</li>
+            <li>Tillgänglighetsanpassning (lättläst, TTS, syntolkning)</li>
+            <li>Webbplats- och besöksdataanalys</li>
+        </ul>
+    </div></div>
+</details>
+
+<details>
+    <summary><i class="fas fa-ban"></i> Vad vi inte får göra</summary>
+    <div class="content"><div class="content-inner">
+        <h3>Beslutsfattande</h3>
+        <ul>
+            <li>AI får inte fatta beslut rörande anställningar</li>
+            <li>Ekonomiska transaktioner eller budgetprioriteringar</li>
+            <li>Urval eller värdering av kulturhistoriskt material</li>
+        </ul>
+        <h3>Publik röst</h3>
+        <ul>
+            <li>Utställningstexter och permanenta skyltar</li>
+            <li>Ljudguider och officiella publikationer</li>
+            <li>Undervisningsmaterial för skolverksamhet</li>
+            <li>Innehåll i sociala medier under museets namn</li>
+        </ul>
+        <h3>Känslig data</h3>
+        <ul>
+            <li>Hantering av personuppgifter i publika AI-miljöer</li>
+            <li>Användning av upphovsrättsskyddat material utan tillstånd</li>
+        </ul>
+    </div></div>
+</details>
+
+<details>
+    <summary><i class="fas fa-exclamation-triangle"></i> Vad vi måste göra</summary>
+    <div class="content"><div class="content-inner">
+        <ul>
+            <li>Vara transparenta med AI-användning mot kollegor och besökare.</li>
+            <li>Alltid genomföra mänsklig verifiering före publicering.</li>
+            <li>Utföra riskbedömning av nya verktyg före införande.</li>
+            <li>Följa upp och revidera praxis genom årlig översyn.</li>
+        </ul>
+    </div></div>
+</details>
+
+<footer>
+    <i class="fas fa-compass"></i> <strong>Grundregel:</strong> AI är ett stöd – inte en beslutsfattare och inte en röst.
+</footer>
+
+</div>
+
+<script>
+// JavaScriptet är oförändrat då det fungerar utmärkt för logiken
+const sections = document.querySelectorAll("details");
+
+function computeDuration(height) {
+    const min = 160;
+    const max = 900; 
+    const scaled = Math.pow(height, 0.9);
+    return Math.min(min + scaled * 1.5, max);
+}
+
+function openSection(section) {
+    const content = section.querySelector(".content");
+    const inner = section.querySelector(".content-inner");
+    
+    // 1. Mät höjden
+    const height = inner.offsetHeight;
+    const duration = computeDuration(height);
+    
+    content.style.transitionDuration = duration + "ms";
+    
+    // 2. Starta animationen
+    section.setAttribute("open", "");
+    
+    requestAnimationFrame(() => {
+        content.style.height = height + "px";
+    });
+
+    // 3. VIKTIGT: När animationen är klar, sätt höjd till auto
+    // så att den inte "fastnar" på ett gammalt pixelvärde
+    setTimeout(() => {
+        if (section.hasAttribute("open")) {
+            content.style.height = "auto";
+        }
+    }, duration);
+}
+
+function closeSection(section) {
+    const content = section.querySelector(".content");
+    const inner = section.querySelector(".content-inner");
+    
+    // 1. Innan vi stänger måste vi gå från "auto" till faktiska pixlar
+    // annars fattar inte CSS att den ska animera ner till 0
+    content.style.height = inner.offsetHeight + "px";
+    
+    const duration = computeDuration(inner.offsetHeight);
+    content.style.transitionDuration = duration + "ms";
+
+    // 2. Starta stängningen i nästa frame
+    requestAnimationFrame(() => {
+        content.style.height = "0px";
+    });
+
+    // 3. Ta bort "open" efter att animationen spelat klart
+    setTimeout(() => {
+        if (!content.style.height || content.style.height === "0px") {
+            section.removeAttribute("open");
+        }
+    }, duration);
+}
+
+sections.forEach(section => {
+    const summary = section.querySelector("summary");
+    summary.addEventListener("click", e => {
+        e.preventDefault();
+        const isOpen = section.hasAttribute("open");
+        sections.forEach(other => {
+            if (other !== section && other.hasAttribute("open")) {
+                closeSection(other);
+            }
+        });
+        if (isOpen) closeSection(section);
+        else openSection(section);
+    });
+});
+</script>
+
+</body>
+</html>

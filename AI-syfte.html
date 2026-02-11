@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-gruppen – Kulturen</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+    :root {
+        --bg: #0b0b0c;
+        --panel: #18181b;
+        --border: #2a2a2e;
+        --text: #f4f4f5;
+        --muted: #a1a1aa;
+        --accent: #d4d4d8;
+        --bad: #f87171;
+        --warn: #facc15;
+        --good: #4ade80;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+        overflow-y: scroll;
+        scrollbar-gutter: stable;
+    }
+
+    body {
+        font-family: 'Montserrat', system-ui, sans-serif;
+        background: radial-gradient(circle at top, #111113, var(--bg));
+        color: var(--text);
+        line-height: 1.6;
+        padding: 60px 20px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .container { 
+        width: 100%; 
+        max-width: min(800px, 100%);
+    }
+
+    header { 
+        margin-bottom: 48px; 
+        text-align: left;
+    }
+
+    h1 { 
+        font-size: 2.8rem; 
+        font-weight: 700; 
+        letter-spacing: -0.02em;
+        background: linear-gradient(to right, #fff, var(--muted));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle { 
+        color: var(--muted); 
+        margin-top: 10px; 
+        font-size: 1.1rem;
+        font-weight: 400;
+    }
+
+    details {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        margin-bottom: 16px;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    details[open] { 
+        border-color: var(--accent);
+        box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+    }
+
+    summary {
+        cursor: pointer;
+        padding: 20px 24px;
+        font-weight: 600;
+        list-style: none;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        font-size: 1.05rem;
+    }
+
+    summary i {
+        width: 24px;
+        text-align: center;
+        font-size: 1.2rem;
+    }
+
+    .fa-bullseye { color: var(--good); }
+    .fa-eye { color: var(--accent); }
+    .fa-users { color: var(--warn); }
+
+    summary::-webkit-details-marker { display: none; }
+
+    .content {
+        height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition: height 0.45s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.25s ease;
+        color: var(--muted);
+        padding: 0 24px;
+    }
+
+    .content-inner {
+        padding-bottom: 24px;
+        border-top: 1px solid rgba(255,255,255,0.05);
+        padding-top: 16px;
+    }
+
+    details[open] .content { opacity: 1; }
+
+    h3 {
+        font-size: 0.75rem;
+        margin: 20px 0 8px;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-weight: 700;
+    }
+
+    h3:first-child { margin-top: 0; }
+
+    ul { list-style: none; }
+
+    li {
+        margin: 8px 0;
+        padding-left: 20px;
+        position: relative;
+        font-size: 0.95rem;
+    }
+
+    li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 10px;
+        width: 6px;
+        height: 1px;
+        background: var(--accent);
+    }
+
+    footer {
+        margin-top: 40px;
+        padding: 24px;
+        border-radius: 16px;
+        background: rgba(255,255,255,0.02);
+        border: 1px dashed var(--border);
+        color: var(--muted);
+        text-align: center;
+        font-size: 0.9rem;
+    }
+
+    footer i { margin-right: 8px; color: var(--accent); }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+<header>
+    <h1>AI-gruppen</h1>
+    <div class="subtitle">Syfte, vision och deltagare</div>
+</header>
+
+<details>
+    <summary><i class="fas fa-bullseye"></i> Gruppens syfte</summary>
+    <div class="content"><div class="content-inner">
+        <p>Gruppens syfte är att utgöra ett strategiskt stöd för Kulturens arbete med artificiell intelligens genom att:</p>
+        <ul>
+            <li>Formulera riktlinjer för användning.</li>
+            <li>Identifiera möjligheter och tydliggöra begränsningar.</li>
+            <li>Sprida kunskap genom pilotprojekt och erfarenhetsutbyte inom organisationen.</li>
+        </ul>
+    </div></div>
+</details>
+
+<details>
+    <summary><i class="fas fa-eye"></i> Koppling till Kulturens vision</summary>
+    <div class="content"><div class="content-inner">
+        <h3>Vi som arbetar här</h3>
+        <p>Hur vi utvecklar vår interna kultur och vilka som arbetar på Kulturen.</p>
+        <h3>Mål</h3>
+        <ul>
+            <li>I takt med att vi växer och utvecklas tillför vi de resurser och kompetenser som krävs.</li>
+            <li>Vi har etablerat ett ledarskap och medarbetarskap på Kulturen som kännetecknas av utvecklingsglädje, tydlighet och omtanke.</li>
+            <li><strong>Vi har kunskap om AI och är redo att använda det i vår verksamhet.</strong></li>
+        </ul>
+    </div></div>
+</details>
+
+<details>
+    <summary><i class="fas fa-eye"></i> Deltagare</summary>
+    <div class="content"><div class="content-inner">
+        <p>För att säkerställa att AI-arbetet blir relevant för hela organisationen representerar gruppens medlemmar Kulturens olika kärnverksamheter. Genom att kombinera expertis från HR och ekonomi med de specifika behoven inom programverksamhet, samlingar och arkeologi, kan vi identifiera var AI gör störst nytta – från administrativa flöden till avancerad digitalisering av kulturarvet. Denna bredd gör att vi kan möta varje avdelnings unika utmaningar och etiska överväganden på ett träffsäkert sätt.</p>
+    </div></div>
+</details>
+
+</div>
+
+<script>
+const sections = document.querySelectorAll("details");
+
+function computeDuration(height) {
+    const min = 160;
+    const max = 600; 
+    const scaled = Math.pow(height, 0.8);
+    return Math.min(min + scaled * 1.5, max);
+}
+
+function openSection(section) {
+    const content = section.querySelector(".content");
+    const inner = section.querySelector(".content-inner");
+    const height = inner.offsetHeight;
+    const duration = computeDuration(height);
+
+    content.style.transitionDuration = duration + "ms";
+    section.setAttribute("open", "");
+    
+    requestAnimationFrame(() => {
+        content.style.height = height + "px";
+    });
+
+    setTimeout(() => {
+        if (section.hasAttribute("open")) {
+            content.style.height = "auto";
+        }
+    }, duration);
+}
+
+function closeSection(section) {
+    const content = section.querySelector(".content");
+    const inner = section.querySelector(".content-inner");
+    
+    content.style.height = inner.offsetHeight + "px";
+    const duration = computeDuration(inner.offsetHeight);
+    content.style.transitionDuration = duration + "ms";
+
+    requestAnimationFrame(() => {
+        content.style.height = "0px";
+    });
+
+    setTimeout(() => {
+        if (!content.style.height || content.style.height === "0px") {
+            section.removeAttribute("open");
+        }
+    }, duration);
+}
+
+sections.forEach(section => {
+    const summary = section.querySelector("summary");
+    summary.addEventListener("click", e => {
+        e.preventDefault();
+        const isOpen = section.hasAttribute("open");
+        
+        sections.forEach(other => {
+            if (other !== section && other.hasAttribute("open")) {
+                closeSection(other);
+            }
+        });
+
+        if (isOpen) closeSection(section);
+        else openSection(section);
+    });
+});
+</script>
+
+</body>
+</html>

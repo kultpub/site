@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-gruppen</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+    :root {
+        --bg: #0b0b0c;
+        --panel: #18181b;
+        --border: #2a2a2e;
+        --text: #f4f4f5;
+        --muted: #a1a1aa;
+        --accent: #d4d4d8;
+        --link-hover: #ffffff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+        overflow-y: scroll;
+        scrollbar-gutter: stable;
+    }
+
+    body {
+        font-family: 'Montserrat', system-ui, sans-serif;
+        background: radial-gradient(circle at top, #111113, var(--bg));
+        color: var(--text);
+        line-height: 1.6;
+        padding: 60px 20px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .container { 
+        width: 100%; 
+        max-width: min(800px, 100%);
+    }
+
+    header { 
+        margin-bottom: 48px; 
+        text-align: left;
+    }
+
+    h1 { 
+        font-size: 2.8rem; 
+        font-weight: 700; 
+        letter-spacing: -0.02em;
+        background: linear-gradient(to right, #fff, var(--muted));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle { 
+        color: var(--muted); 
+        margin-top: 10px; 
+        font-size: 1.1rem;
+        font-weight: 400;
+    }
+
+    /* Länk-kort styling */
+    .resource-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .resource-card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 24px;
+        text-decoration: none;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .resource-card:hover {
+        border-color: var(--accent);
+        background: rgba(255, 255, 255, 0.03);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+    }
+
+    .resource-card i {
+        font-size: 1.5rem;
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--accent);
+        transition: all 0.3s ease;
+    }
+
+    .resource-card:hover i {
+        background: var(--accent);
+        color: var(--bg);
+    }
+
+    .resource-info {
+        flex: 1;
+    }
+
+    .resource-title {
+        display: block;
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin-bottom: 4px;
+    }
+
+    .resource-desc {
+        display: block;
+        color: var(--muted);
+        font-size: 0.85rem;
+    }
+
+    .external-icon {
+        font-size: 0.8rem;
+        color: var(--border);
+        margin-left: auto;
+    }
+
+    footer {
+        margin-top: 40px;
+        padding: 24px;
+        border-radius: 16px;
+        background: rgba(255,255,255,0.02);
+        border: 1px dashed var(--border);
+        color: var(--muted);
+        text-align: left;
+        font-size: 0.9rem;
+    }
+
+    footer i { margin-right: 8px; color: var(--accent); }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+<header>
+    <h1>Resurser & dokument</h1>
+    <div class="subtitle">Samlade länkar för Kulturens AI-grupp</div>
+</header>
+
+<div class="resource-grid">
+    
+    <a href="https://kultpub.github.io/site/AI-syfte.html" target="_blank" class="resource-card">
+        <i class="fas fa-users-gear"></i>
+        <div class="resource-info">
+            <span class="resource-title">AI-gruppen</span>
+            <span class="resource-desc">Syfte, vision och gruppens sammansättning.</span>
+        </div>
+        <i class="fas fa-arrow-up-right-from-square external-icon"></i>
+    </a>
+
+    <a href="https://kultpub.github.io/site/AI-policy.html" target="_blank" class="resource-card">
+        <i class="fas fa-file-shield"></i>
+        <div class="resource-info">
+            <span class="resource-title">AI-policy</span>
+            <span class="resource-desc">Riktlinjer för vad vi ska, får och inte får göra.</span>
+        </div>
+        <i class="fas fa-arrow-up-right-from-square external-icon"></i>
+    </a>
+
+    <a href="https://kulturen-my.sharepoint.com/shared?id=%2Fteams%2Fai%2FDelade%20dokument%2FGeneral%2FMinnesanteckningar&listurl=https%3A%2F%2Fkulturen%2Esharepoint%2Ecom%2Fteams%2Fai%2FDelade%20dokument" target="_blank" class="resource-card">
+        <i class="fas fa-pen-to-square"></i>
+        <div class="resource-info">
+            <span class="resource-title">Minnesanteckningar</span>
+            <span class="resource-desc">Logg från AI-gruppens möten (SharePoint).</span>
+        </div>
+        <i class="fas fa-arrow-up-right-from-square external-icon"></i>
+    </a>
+
+    <a href="https://kulturen-my.sharepoint.com/shared?id=%2Fteams%2Fai%2FDelade%20dokument%2FGeneral%2FDokument%20och%20resurser&listurl=https%3A%2F%2Fkulturen%2Esharepoint%2Ecom%2Fteams%2Fai%2FDelade%20dokument" target="_blank" class="resource-card">
+        <i class="fas fa-folder-open"></i>
+        <div class="resource-info">
+            <span class="resource-title">Dokument och resurser</span>
+            <span class="resource-desc">Fördjupningsmaterial och arbetsdokument (SharePoint).</span>
+        </div>
+        <i class="fas fa-arrow-up-right-from-square external-icon"></i>
+    </a>
+
+</div>
+
+<footer>
+    <i class="fas fa-lock"></i> Vissa dokument kräver inloggning via Kulturens Microsoft-konto.
+</footer>
+
+</div>
+
+</body>
+</html>
