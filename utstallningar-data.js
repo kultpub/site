@@ -1115,7 +1115,7 @@ const utstallningar = [
   namn: "Betalningsmedlens historia",
   typ: "Tillfällig",
   start: "1942-mm-dd",
-  slut: "åååå-mm-dd",
+  slut: "2008-mm-dd",
   lokal: "Ystadhuset",
   kommentar: "Det saknas kommentar till denna utställning." 
   },
