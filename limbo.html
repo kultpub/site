@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Reception – dagens registrering</title>
+<style>
+/* ── 1. BAS & TYPOGRAFI ── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg: #f8f9fa;
+  --surface: #ffffff;
+  --surface2: #f1f3f5;
+  --text: #1a1a1a;
+  --muted: #6c757d;
+  --border: #e9ecef;
+  --border2: #dee2e6;
+  --accent: #7c4b2a;
+  --accent-dark: #5d3820;
+  --accent-light: #fdf1e8;
+  --success: #2b8a3e;
+  --danger: #c92a2a;
+  --radius: 16px;
+  --radius-md: 12px;
+  --radius-sm: 6px;
+  --shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 15px;
+  color: var(--text);
+  background: var(--bg);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+main {
+  width: min(1100px, 94vw);
+  margin: 0 auto;
+  padding: 40px 0 80px;
+  display: grid;
+  gap: 20px;
+}
+
+/* ── 2. HEADER-CARD (Överst på sidan) ── */
+.header-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 30px;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.header-left .kicker {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.header-left h1 {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin-bottom: 4px;
+}
+
+.header-left .dateline {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* ── 3. STATISTIK-RAD (I headern) ── */
+.stats-row {
+  display: flex;
+  gap: 12px;
+}
+
+.stat-box {
+  background: var(--surface2);
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  text-align: right;
+  min-width: 100px;
+  flex: 1 0 auto;
+}
+
+.stat-box.wide {
+  flex: 1 0 130px;
+}
+
+.stat-num {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: 0;
+  letter-spacing: -0.01em;
+  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: clip; 
+}
+
+.stat-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+
+/* ── 4. PANELER & ACTION GRID (Mitten på sidan) ── */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  box-shadow: var(--shadow);
+}
+
+.panel-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+
+.action-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.action-btn {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  text-align: left;
+  cursor: pointer;
+  color: var(--text);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.action-btn:hover {
+  border-color: var(--accent);
+  background: var(--accent-light);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(124, 75, 42, 0.1);
+}
+
+.action-btn .btn-title {
+  font-size: 16px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.action-btn .btn-desc {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* ── 5. ENTRIES-LISTA (Nedre panelen) ── */
+.entries-list { display: grid; gap: 10px; }
+
+.entry-row {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  animation: slideIn .2s ease;
+}
+
+.entry-row:hover {
+  border-color: var(--accent);
+  background: var(--surface2);
+  transform: translateX(4px);
+}
+
+.entry-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  width: 140px;
+  justify-content: flex-start;
+}
+
+.badge-school  { background: #e7f5ff; color: #1971c2; }
+.badge-group   { background: #ebfbee; color: #2f9e44; }
+.badge-cafe    { background: #fff9db; color: #f08c00; }
+.badge-tickets { background: #fff0f6; color: #d6336c; }
+.badge-sales   { background: #f8f9fa; color: #495057; }
+.badge-daily   { background: #f3f0ff; color: #7048e8; }
+
+.entry-body { flex: 1; min-width: 0; }
+
+.entry-title { 
+  font-size: 15px; 
+  font-weight: 600; 
+  margin-bottom: 4px; 
+  white-space: nowrap;
+}
+
+.entry-title.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+
+.entry-meta  { font-size: 13px; color: var(--muted); }
+
+.entry-time {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  text-align: right;
+  line-height: 1.4;
+}
+
+.entry-time strong {
+  display: block;
+  font-size: 12px;
+  color: var(--text);
+  font-weight: 500;
+}
+
+/* ── 6. MODALER & OVERLAYS ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.4);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 100;
+  backdrop-filter: blur(4px);
+}
+
+.modal-overlay.open { display: flex; }
+
+.modal {
+  background: var(--surface);
+  border-radius: var(--radius);
+  width: min(700px, 96vw);
+  overflow-y: visible;
+  padding: 32px;
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+  animation: modalIn .18s ease;
+}
+
+.modal.narrow { width: min(400px, 96vw); }
+
+.modal-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.modal-top h2 {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.modal-close {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modal-close::before, .modal-close::after {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 2px;
+  background-color: var(--text);
+  border-radius: 2px;
+}
+.modal-close::before { transform: rotate(45deg); }
+.modal-close::after { transform: rotate(-45deg); }
+
+.modal-close:hover {
+  background-color: var(--danger);
+  border-color: var(--danger);
+  transform: rotate(90deg);
+}
+.modal-close:hover::before, .modal-close:hover::after {
+  background-color: #fff;
+}
+
+/* ── 7. FORMULÄR, INPUTS & SELECTS ── */
+.field-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+  margin-top: 16px;
+  display: block;
+}
+
+.field-label:first-child { margin-top: 0; }
+
+select, input, textarea {
+  width: 100%;
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  font-family: inherit;
+  font-size: 15px;
+  transition: all 0.2s;
+}
+
+select:focus, input:focus, textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+textarea { min-height: 120px; resize: vertical; }
+
+input::placeholder, textarea::placeholder {
+  color: var(--muted);
+  opacity: 0.6;
+  font-style: italic;
+}
+
+/* Datum-input specifikt */
+.date-input-container {
+  position: relative;
+  width: 220px;
+  display: flex;
+  align-items: center;
+}
+
+.date-display-field {
+  width: 100% !important;
+  cursor: pointer;
+  background: #fff !important;
+  padding-right: 40px !important;
+}
+
+.date-icon {
+  position: absolute;
+  right: 12px;
+  width: 18px;
+  height: 18px;
+  fill: var(--muted);
+  pointer-events: auto;
+  cursor: pointer;
+  transition: fill 0.2s;
+}
+
+.date-input-container:hover .date-icon {
+  fill: var(--accent);
+}
+
+input[type="date"] {
+  width: 200px;
+  min-width: 150px; 
+}
+
+/* Custom-select komponenter */
+.custom-select-wrapper { position: relative; width: 100%; user-select: none; }
+
+.custom-select-trigger {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px; border: 1px solid var(--border2);
+  border-radius: var(--radius-sm); background: var(--surface);
+  cursor: pointer; font-size: 15px; color: var(--text);
+  transition: border-color 0.2s;
+}
+
+.custom-select-trigger:hover,
+.custom-select-wrapper.open .custom-select-trigger {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+.chevron {
+  width: 16px; height: 16px; fill: var(--muted);
+  transition: transform 0.2s; flex-shrink: 0;
+}
+
+.custom-select-wrapper.open .chevron { transform: rotate(180deg); }
+
+.custom-select-dropdown {
+  display: none; position: absolute; top: calc(100% + 4px); left: 0;
+  min-width: 500px;
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: var(--radius-sm); z-index: 200;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+.custom-select-wrapper.open .custom-select-dropdown { display: block; }
+
+.dropdown-cols { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-flow: column; grid-template-rows: repeat(9, auto); padding: 8px; gap: 2px; }
+.dropdown-cols-2 { display: grid; grid-template-columns: repeat(2, 1fr); grid-auto-flow: column; grid-template-rows: repeat(7, auto); padding: 8px; gap: 2px; }
+.dropdown-cols-2-r4 { display: grid; grid-template-columns: repeat(2, 1fr); grid-auto-flow: column; grid-template-rows: repeat(4, auto); padding: 8px; gap: 2px; }
+
+.dropdown-option {
+  padding: 7px 10px; border-radius: 4px; cursor: pointer;
+  font-size: 14px; color: var(--text); transition: background 0.1s;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.dropdown-option:hover { background: var(--accent-light); color: var(--accent); }
+.dropdown-option.selected { background: var(--accent-light); color: var(--accent); font-weight: 600; }
+
+/* Belopps-wrapper */
+.amount-wrapper { position: relative; }
+
+.amount-prefix {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  font-family: 'Inter', sans-serif; 
+  font-weight: 500;
+  pointer-events: none;
+}
+
+.amount-wrapper input { 
+  padding-left: 36px; 
+  font-family: 'Inter', sans-serif;
+  font-variant-numeric: tabular-nums; 
+}
+
+/* ── 8. FORM-LAYOUT & KNAPPAR ── */
+.form-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.main-field { flex: 0 0 80%; }
+.side-field { flex: 1; }
+
+.form-row .field-label { margin-top: 0; }
+
+.form-row-triple {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  align-items: flex-end;
+}
+
+.col-45 { flex: 0 0 calc(45% - 8px); }
+.col-35 { flex: 0 0 calc(35% - 8px); }
+.col-20 { flex: 0 0 calc(20% - 8px); }
+
+.form-row-triple .field-group { min-width: 0; }
+.form-row-triple .field-label { margin-top: 0; }
+
+.form-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  padding: 10px 24px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s;
+}
+.btn-primary:hover { background: var(--accent-dark); }
+
+.btn-secondary {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  padding: 10px 20px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.btn-danger {
+  color: var(--danger);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  padding: 10px 20px;
+  margin-right: auto;
+  cursor: pointer;
+}
+.btn-danger:hover { background: #fff5f5; border-color: var(--danger); }
+
+/* ── 9. IKONER & ANIMATIONER ── */
+.fa-icon {
+  width: 32px;
+  height: 32px;
+  fill: var(--accent);
+  display: block;
+  margin-bottom: 16px;
+  transition: transform 0.2s ease;
+}
+
+.action-btn:hover .fa-icon { transform: scale(1.1); }
+
+.badge-icon {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(.97) translateY(6px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ── 10. RESPONSIVITET ── */
+@media (max-width: 700px) {
+  .action-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 600px) {
+  .col-45, .col-35, .col-20 {
+    flex: 0 0 100% !important;
+    width: 100%;
+  }
+}
+</style>
+</head>
+<body>
+
+  <main>
+    <!-- 1. Header & Statistik -->
+    <div class="header-card">
+      <div class="header-left">
+        <div class="kicker">Reception</div>
+        <h1>Dagens registrering</h1>
+        <div class="dateline" id="dateline">Laddar…</div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-num" id="statSchool">0</div>
+          <div class="stat-label">Skola</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="statGroup">0</div>
+          <div class="stat-label">Grupper</div>
+        </div>
+        <!-- Lägg till klassen 'wide' på de tre nedan -->
+        <div class="stat-box wide">
+          <div class="stat-num" id="statTickets">0,00 kr</div>
+          <div class="stat-label">Entré</div>
+        </div>
+        <div class="stat-box wide">
+          <div class="stat-num" id="statSales">0,00 kr</div>
+          <div class="stat-label">Butik</div>
+        </div>
+        <div class="stat-box wide">
+          <div class="stat-num" id="statCafe">0,00 kr</div>
+          <div class="stat-label">Kafé</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Action Grid (Registrera händelse) -->
+    <div class="panel">
+      <div class="panel-label">Registrera händelse</div>
+      <div class="action-grid">
+        <button class="action-btn" data-modal="school">
+          <svg class="fa-icon" viewBox="0 0 640 512"><path d="M0 224v272c0 8.84 7.16 16 16 16h80V192H32c-17.67 0-32 14.33-32 32zm360-48h-24v-40c0-4.42-3.58-8-8-8h-16c-4.42 0-8 3.58-8 8v64c0 4.42 3.58 8 8 8h48c4.42 0 8-3.58 8-8v-16c0-4.42-3.58-8-8-8zm137.75-63.96l-160-106.67a32.02 32.02 0 0 0-35.5 0l-160 106.67A32.002 32.002 0 0 0 128 138.66V512h128V368c0-8.84 7.16-16 16-16h96c8.84 0 16 7.16 16 16v144h128V138.67c0-10.7-5.35-20.7-14.25-26.63zM320 256c-44.18 0-80-35.82-80-80s35.82-80 80-80 80 35.82 80 80-35.82 80-80 80zm288-64h-64v320h80c8.84 0 16-7.16 16-16V224c0-17.67-14.33-32-32-32z"/></svg>
+          <span class="btn-title">Skolbesök (enskilda)</span>
+          <span class="btn-desc">Kommun, nivå och antal elever</span>
+        </button>
+
+        <button class="action-btn" data-modal="group">
+          <svg class="fa-icon" viewBox="0 0 640 512"><path d="M96 224c35.3 0 64-28.7 64-64s-28.7-64-64-64-64 28.7-64 64 28.7 64 64 64zm448 0c35.3 0 64-28.7 64-64s-28.7-64-64-64-64 28.7-64 64 28.7 64 64 64zm32 32h-64c-17.6 0-33.5 7.1-45.1 18.6 40.3 22.1 68.9 62 75.1 109.4h66c17.7 0 32-14.3 32-32v-32c0-35.3-28.7-64-64-64zm-256 0c61.9 0 112-50.1 112-112S381.9 32 320 32 208 82.1 208 144s50.1 112 112 112zm76.8 32h-8.3c-20.8 10-43.9 16-68.5 16s-47.6-6-68.5-16h-8.3C179.6 288 128 339.6 128 403.2V432c0 26.5 21.5 48 48 48h288c26.5 0 48-28.8 48-48v-28.8c0-63.6-51.6-115.2-115.2-115.2zm-223.7-13.4C161.5 263.1 145.6 256 128 256H64c-35.3 0-64 28.7-64 64v32c0 17.7 14.3 32 32 32h65.9c6.3-47.4 34.9-87.3 75.2-109.4z"/></svg>
+          <span class="btn-title">Gruppbesök (enskilda)</span>
+          <span class="btn-desc">Visningar, bröllop och bokningar</span>
+        </button>
+
+        <button class="action-btn" data-modal="daily">
+          <svg class="fa-icon" viewBox="0 0 512 512"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"/></svg>
+          <span class="btn-title">Dagsrapport</span>
+          <span class="btn-desc">Logg för dagens händelser</span>
+        </button>
+
+        <button class="action-btn" data-modal="tickets">
+          <svg class="fa-icon" viewBox="0 0 576 512"><path d="M128 160h320v192H128V160zm400 96c0 26.51 21.49 48 48 48v96c0 26.51-21.49 48-48 48H48c-26.51 0-48-21.49-48-48v-96c26.51 0 48-21.49 48-48s-21.49-48-48-48v-96c0-26.51 21.49-48 48-48h480c26.51 0 48 21.49 48 48v96c-26.51 0-48 21.49-48 48zm-48-104c0-13.255-10.745-24-24-24H120c-13.255 0-24 10.745-24 24v208c0 13.255 10.745 24 24 24h336c13.255 0 24-10.745 24-24V152z"/></svg>
+          <span class="btn-title">Entréintäkter (idag)</span>
+          <span class="btn-desc">Total summa idag</span>
+        </button>
+
+        <button class="action-btn" data-modal="sales">
+          <svg class="fa-icon" viewBox="0 0 448 512"><path d="M352 160v-32C352 57.42 294.579 0 224 0 153.42 0 96 57.42 96 128v32H0v272c0 44.183 35.817 80 80 80h288c44.183 0 80-35.817 80-80V160h-96zm-192-32c0-35.29 28.71-64 64-64s64 28.71 64 64v32H160v-32zm160 120c-13.255 0-24-10.745-24-24s10.745-24 24-24 24 10.745 24 24-10.745 24-24 24zm-192 0c-13.255 0-24-10.745-24-24s10.745-24 24-24 24 10.745 24 24-10.745 24-24 24z"/></svg>
+          <span class="btn-title">Butiksförsäljning (idag)</span>
+          <span class="btn-desc">Total summa idag</span>
+        </button>
+
+        <button class="action-btn" data-modal="cafe">
+          <svg class="fa-icon" viewBox="0 0 640 512"><path d="M192 384h192c53 0 96-43 96-96h32c70.6 0 128-57.4 128-128S582.6 32 512 32H120c-13.3 0-24 10.7-24 24v232c0 53 43 96 96 96zM512 96c35.3 0 64 28.7 64 64s-28.7 64-64 64h-32V96h32zm47.7 384H48.3c-47.6 0-61-64-36-64h583.3c25 0 11.8 64-35.9 64z"/></svg>
+          <span class="btn-title">Kaféförsäljning (idag)</span>
+          <span class="btn-desc">Total summa idag</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 3. Loggade händelser -->
+    <div class="panel">
+      <div class="panel-label">Loggade händelser</div>
+      <div class="entries-list" id="entriesList">
+        <div class="empty-state" id="emptyState">Inga händelser registrerade än.</div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 4. Modaler & Overlays -->
+  <!-- Registreringsmodal -->
+  <div class="modal-overlay" id="overlay">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-top">
+        <h2 id="modalTitle">Registrering</h2>
+        <button class="modal-close" id="modalClose" aria-label="Stäng"></button>
+      </div>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- Raderingsmodal -->
+  <div class="modal-overlay" id="deleteOverlay">
+    <div class="modal" style="max-width: 400px; text-align: center;">
+      <div style="width: 56px; height: 56px; border-radius: 50%; background: #fff5f5; border: 1px solid #ffc9c9; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="3 6 5 6 21 6" />
+          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+          <path d="M10 11v6" />
+          <path d="M14 11v6" />
+          <path d="M9 6V4h6v2" />
+        </svg>
+      </div>
+      <h2 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Radera post?</h2>
+      <p style="color: var(--muted); font-size: 14px; margin-bottom: 28px;">Detta går inte att ångra.</p>
+      <div style="display: flex; gap: 10px; justify-content: center;">
+        <button class="btn-secondary" onclick="closeDeleteModal()">Avbryt</button>
+        <button class="btn-danger" style="background: var(--danger); color: #fff; border-radius: 30px; padding: 10px 24px; font-weight: 600; border: none; cursor: pointer; margin-right: 0;" onclick="confirmDelete()">Ja, radera</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+const TYPE_LABELS = {
+  school: "skolbesök",
+  group: "gruppbesök",
+  tickets: "entréintäkt",
+  sales: "butiksförsäljning",
+  cafe: "kaféförsäljning",
+  daily: "dagsrapport"
+};
+// --- DATAKONFIGURATION ---
+const ICONS = {
+  school: '<svg class="badge-icon" viewBox="0 0 640 512"><path fill="currentColor" d="M0 224v272c0 8.84 7.16 16 16 16h80V192H32c-17.67 0-32 14.33-32 32zm360-48h-24v-40c0-4.42-3.58-8-8-8h-16c-4.42 0-8 3.58-8 8v64c0 4.42 3.58 8 8 8h48c4.42 0 8-3.58 8-8v-16c0-4.42-3.58-8-8-8zm137.75-63.96l-160-106.67a32.02 32.02 0 0 0-35.5 0l-160 106.67A32.002 32.002 0 0 0 128 138.66V512h128V368c0-8.84 7.16-16 16-16h96c8.84 0 16 7.16 16 16v144h128V138.67c0-10.7-5.35-20.7-14.25-26.63z"/></svg>',
+  group: '<svg class="badge-icon" viewBox="0 0 640 512"><path fill="currentColor" d="M96 224c35.3 0 64-28.7 64-64s-28.7-64-64-64-64 28.7-64 64 28.7 64 64 64zm448 0c35.3 0 64-28.7 64-64s-28.7-64-64-64-64 28.7-64 64 28.7 64 64 64zM320 256c61.9 0 112-50.1 112-112S381.9 32 320 32 208 82.1 208 144s50.1 112 112 112z"/></svg>',
+  tickets: '<svg class="badge-icon" viewBox="0 0 576 512"><path fill="currentColor" d="M128 160h320v192H128V160zm400 96c0 26.51 21.49 48 48 48v96c0 26.51-21.49 48-48 48H48c-26.51 0-48-21.49-48-48v-96c26.51 0 48-21.49 48-48s-21.49-48-48-48v-96c0-26.51 21.49-48 48-48h480c26.51 0 48 21.49 48 48v96c-26.51 0-48 21.49-48 48z"/></svg>',
+  sales: '<svg class="badge-icon" viewBox="0 0 448 512"><path fill="currentColor" d="M352 160v-32C352 57.42 294.579 0 224 0 153.42 0 96 57.42 96 128v32H0v272c0 44.183 35.817 80 80 80h288c44.183 0 80-35.817 80-80V160h-96z"/></svg>',
+  cafe: '<svg class="badge-icon" viewBox="0 0 640 512"><path fill="currentColor" d="M192 384h192c53 0 96-43 96-96h32c70.6 0 128-57.4 128-128S582.6 32 512 32H120c-13.3 0-24 10.7-24 24v232c0 53 43 96 96 96z"/></svg>',
+  daily: '<svg class="badge-icon" viewBox="0 0 512 512"><path fill="currentColor" d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9z"/></svg>'
+};
+
+const PLACES = ["Bjuv","Bromölla","Burlöv","Båstad","Eslöv","Helsingborg","Hässleholm","Höganäs","Hörby","Höör","Klippan","Kristianstad","Kävlinge","Landskrona","Lomma","Lund","Malmö","Osby","Perstorp","Simrishamn","Sjöbo","Skurup","Staffanstorp","Svalöv","Svedala","Tomelilla","Trelleborg","Vellinge","Ystad","Åstorp","Ängelholm","Örkelljunga","Östra Göinge","Övrigt"];
+const BASE_LEVELS = ["Förskola","Förskoleklass","Åk 1","Åk 2","Åk 3","Åk 4","Åk 5","Åk 6","Åk 7","Åk 8","Åk 9","Gymnasium","Vuxenutbildning"];
+const EXTRA = { Lund:["Lunds universitet"], Helsingborg:["Campus Helsingborg"], Malmö:["Malmö universitet"], Kristianstad:["Högskolan Kristianstad"], Lomma:["SLU"], Övrigt:["Högskola, universitet"] };
+const GROUP_TYPES = ["", "Barnkalas", "Bröllop", "Konferens", "Kostnadsfri lokalupplåtelse", "Visning (mot faktura)", "Visning (ingår i entré)", "Nordenstedtska seminariet", "Övrigt"];
+
+let entries = [];
+let activeModal = null;
+let editingId = null;
+
+// --- HJÄLPFUNKTIONER ---
+function getDayName(dateStr) {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('sv-SE', { weekday: 'long' });
+}
+
+function updateDateDisplay(newDate) {
+  const displayField = document.getElementById('fDateDisplay');
+  if (displayField) {
+    displayField.value = `${newDate} ${getDayName(newDate)}`;
+  }
+}
+
+// Formaterar heltal till "# ###"
+function fmtInt(n) {
+  return Math.round(n).toLocaleString("sv-SE").replace(/\,/g, " ");
+}
+
+// Formaterar belopp till "# ###,##"
+function fmtMoney(n) {
+  return n.toLocaleString("sv-SE", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+}
+
+function swDate() {
+  const now = new Date();
+  const iso = new Intl.DateTimeFormat("sv-SE",{year:"numeric",month:"2-digit",day:"2-digit"}).format(now);
+  return { iso };
+}
+const TODAY = swDate();
+
+function esc(v) { return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+function renderTimeInfo(e) {
+  const visitDate = e.ts.split('T')[0];
+  const visitTime = new Date(e.ts).toLocaleTimeString("sv-SE", {hour:"2-digit", minute:"2-digit"});
+  const logDate = e.logTs.split('T')[0];
+  const logTime = new Date(e.logTs).toLocaleTimeString("sv-SE", {hour:"2-digit", minute:"2-digit"});
+  return `<strong>${visitDate} kl. ${visitTime}</strong><span>Loggat: ${logDate} ${logTime}</span>`;
+}
+
+function updateStats() {
+  const getSum = (type) => entries.filter(e => e.type === type).reduce((s, e) => s + (e.count || 0), 0);
+  const getRev = (type) => entries.filter(e => e.type === type).reduce((s, e) => s + (e.amount || 0), 0);
+
+  // Antal besökare
+  document.getElementById("statSchool").textContent = fmtInt(getSum("school"));
+  document.getElementById("statGroup").textContent  = fmtInt(getSum("group"));
+  
+  // Separata intäkter
+  document.getElementById("statTickets").textContent = fmtMoney(getRev("tickets")) + " kr";
+  document.getElementById("statSales").textContent   = fmtMoney(getRev("sales")) + " kr";
+  document.getElementById("statCafe").textContent    = fmtMoney(getRev("cafe")) + " kr";
+}
+
+function renderEntries() {
+  const list = document.getElementById("entriesList");
+  const empty = document.getElementById("emptyState");
+  list.querySelectorAll(".entry-row").forEach(r=>r.remove());
+  if (!entries.length) { empty.style.display="block"; updateStats(); return; }
+  empty.style.display = "none";
+  const sorted = [...entries].sort((a,b) => new Date(b.logTs) - new Date(a.logTs));
+  sorted.forEach(e => {
+    const row = document.createElement("div");
+    row.className = "entry-row";
+    row.innerHTML = entryHtml(e);
+    row.onclick = () => openEditModal(e);
+    list.appendChild(row);
+  });
+  updateStats();
+}
+
+function entryHtml(e) {
+  const timeInfo = renderTimeInfo(e);
+  const icon = ICONS[e.type] || '';
+  const label = TYPE_LABELS[e.type] || e.type;
+
+  let content = "";
+
+  if (e.type === "school") {
+    content = `
+      <div class="entry-title">${esc(e.school)} – ${esc(e.level)}</div>
+      <div class="entry-meta">${fmtInt(e.count)} pers</div>`;
+  } 
+  else if (e.type === "group") {
+    content = `
+      <div class="entry-title">${esc(e.groupType)}</div>
+      <div class="entry-meta">${fmtInt(e.count)} pers${e.note ? " · " + esc(e.note) : ""}</div>`;
+  } 
+  else if (["tickets", "sales", "cafe"].includes(e.type)) {
+    content = `
+      <div class="entry-title">${fmtMoney(e.amount)} kr</div>
+      <div class="entry-meta">${label}</div>`;
+  } 
+  else if (e.type === "daily") {
+    content = `
+      <div class="entry-title truncate" style="font-weight:400;" title="${esc(e.report)}">${esc(e.report)}</div>
+      <div class="entry-meta">Dagsrapport</div>`;
+  }
+  
+  return `<span class="entry-badge badge-${e.type}">${icon} ${label}</span><div class="entry-body">${content}</div><div class="entry-time">${timeInfo}</div>`;
+}
+
+// --- FORMULÄR ---
+function buildDateField(val) {
+  const dateVal = val || TODAY.iso;
+  const displayVal = `${dateVal} ${getDayName(dateVal)}`;
+  
+  return `
+    <label class="field-label">Avser dag</label>
+    <div class="date-input-container">
+      <input type="text" id="fDateDisplay" value="${displayVal}" readonly 
+             onclick="document.getElementById('fDate').showPicker()" 
+             class="date-display-field">
+      
+      <!-- Kalenderikon -->
+      <svg class="date-icon" viewBox="0 0 448 512" onclick="document.getElementById('fDate').showPicker()">
+        <path d="M128 0c17.7 0 32 14.3 32 32V64H288V32c0-17.7 14.3-32 32-32s32 14.3 32 32V64h48c26.5 0 48 21.5 48 48v48H0V112C0 85.5 21.5 64 48 64H96V32c0-17.7 14.3-32 32-32zM0 192H448V464c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V192zM312 304a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/>
+      </svg>
+      
+      <input type="date" id="fDate" value="${dateVal}" max="${TODAY.iso}" 
+             style="position: absolute; opacity: 0; pointer-events: none;"
+             onchange="updateDateDisplay(this.value)">
+    </div>
+  `;
+}
+
+function buildFormFooter(isEdit) {
+  return `<div class="form-footer"><span class="status-msg" id="formStatus"></span>${isEdit ? `<button class="btn-danger" onclick="deleteEntry()">Radera</button>` : ''}<button class="btn-secondary" onclick="closeModal()">Avbryt</button><button class="btn-primary" id="saveBtn">${isEdit ? 'Spara ändringar' : 'Spara'}</button></div>`;
+}
+
+function buildSchoolForm(e) {
+  const isEdit = !!e;
+  const place = e ? e.place : "Lund";
+  const levels = [...BASE_LEVELS, ...(EXTRA[place] || [])];
+  const selectedLevel = e ? e.level : levels[0];
+
+  return `
+    ${buildDateField(e ? e.ts.split('T')[0] : null)}
+    <div class="form-row-triple">
+      <div class="field-group col-45">
+        <label class="field-label">Ort / kommun</label>
+        <div class="custom-select-wrapper" id="placeSelectWrapper">
+          <div class="custom-select-trigger" id="placeSelectTrigger">
+            <span id="placeSelectLabel">${esc(place)}</span>
+            <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="custom-select-dropdown">
+            <div class="dropdown-cols" id="placeDropdownCols"></div>
+          </div>
+        </div>
+        <input type="hidden" id="fPlace" value="${esc(place)}" />
+      </div>
+      <div class="field-group col-35">
+        <label class="field-label">Skolnivå</label>
+        <div class="custom-select-wrapper" id="levelSelectWrapper">
+          <div class="custom-select-trigger" id="levelSelectTrigger">
+            <span id="levelSelectLabel">${esc(selectedLevel)}</span>
+            <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="custom-select-dropdown">
+            <div class="dropdown-cols-2" id="levelDropdownCols"></div>
+          </div>
+        </div>
+        <input type="hidden" id="fLevel" value="${esc(selectedLevel)}" />
+      </div>
+      <div class="field-group col-20">
+        <label class="field-label">Antal</label>
+        <input type="number" id="fCount" inputmode="numeric" value="${e ? e.count : ''}" />
+      </div>
+    </div>
+    <label class="field-label">Valfri notering</label>
+    <input type="text" id="fSchool" placeholder="Skolans namn..." value="${e ? esc(e.school) : ''}" />
+    ${buildFormFooter(isEdit)}`;
+}
+
+function buildGroupForm(e) {
+  const isEdit = !!e;
+  const sortedTypes = [...GROUP_TYPES].filter(t => t !== "").sort((a,b) => a.localeCompare(b, 'sv'));
+  const selectedType = e ? e.groupType : "";
+
+  return `
+    ${buildDateField(e ? e.ts.split('T')[0] : null)}
+    <div class="form-row">
+      <div class="field-group main-field">
+        <label class="field-label">Typ av grupp</label>
+        <div class="custom-select-wrapper" id="groupTypeWrapper">
+          <div class="custom-select-trigger" id="groupTypeTrigger">
+            <span id="groupTypeLabel">${selectedType ? esc(selectedType) : "Välj typ…"}</span>
+            <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="custom-select-dropdown">
+            <div class="dropdown-cols-2-r4" id="groupTypeDropdownCols"></div>
+          </div>
+        </div>
+        <input type="hidden" id="fGroupType" value="${esc(selectedType)}" />
+      </div>
+      <div class="field-group side-field">
+        <label class="field-label">Antal</label>
+        <input type="number" id="fCount" inputmode="numeric" value="${e ? e.count : ''}" />
+      </div>
+    </div>
+    <label class="field-label">Valfri notering</label>
+    <input type="text" id="fNote" value="${e ? esc(e.note) : ''}" />
+    ${buildFormFooter(isEdit)}`;
+}
+
+function buildAmountForm(e, label) {
+  const isEdit = !!e;
+  const currentAmount = e ? e.amount : "";
+  return `
+    ${buildDateField(e ? e.ts.split('T')[0] : null)}
+    <label class="field-label">Totalbelopp</label>
+    <div class="amount-wrapper">
+      <span class="amount-prefix">kr</span>
+      <input type="number" id="fTotalAmount" inputmode="decimal" placeholder="Ange dagssumma" value="${currentAmount}" style="width: 220px;" />
+    </div>
+    ${buildFormFooter(isEdit)}`;
+}
+
+function buildDailyForm(e) {
+  const isEdit = !!e;
+  return `${buildDateField(e ? e.ts.split('T')[0] : null)}<label class="field-label">Rapport</label><textarea id="fReport">${e ? esc(e.report) : ''}</textarea>${buildFormFooter(isEdit)}`;
+}
+
+// --- LOGIK ---
+function openModal(key, entry = null) {
+  activeModal = key;
+  if (!entry && ["cafe", "tickets", "sales", "daily"].includes(key)) {
+      entry = entries.find(e => e.type === key && e.ts.split('T')[0] === (document.getElementById("fDate")?.value || TODAY.iso));
+  }
+  editingId = entry ? entry.id : null;
+  const builders = { school:buildSchoolForm, group:buildGroupForm, tickets:()=>buildAmountForm(entry,"Entré"), sales:()=>buildAmountForm(entry,"Butik"), cafe:()=>buildAmountForm(entry,"Kafé"), daily:buildDailyForm };
+  const label = TYPE_LABELS[key] || key;
+  document.getElementById("modalTitle").textContent = (entry ? "Redigera " : "Registrera ") + label;
+  document.getElementById("modalBody").innerHTML = builders[key](entry);
+  document.getElementById("overlay").classList.add("open");
+  const modalEl = document.querySelector(".modal");
+  if (["tickets", "sales", "cafe"].includes(key)) {
+    modalEl.classList.add("narrow");
+  } else {
+    modalEl.classList.remove("narrow");
+  }
+if (activeModal === "school") {
+  initPlaceSelect();
+}
+if (activeModal === "group") {
+  initGroupTypeSelect();
+}
+  document.getElementById("saveBtn").addEventListener("click", saveEntry);
+}
+
+function initPlaceSelect() {
+  const wrapper = document.getElementById("placeSelectWrapper");
+  const trigger = document.getElementById("placeSelectTrigger");
+  const labelEl = document.getElementById("placeSelectLabel");
+  const hidden  = document.getElementById("fPlace");
+  const cols    = document.getElementById("placeDropdownCols");
+
+  PLACES.forEach(p => {
+    const opt = document.createElement("div");
+    opt.className = "dropdown-option" + (p === hidden.value ? " selected" : "");
+    opt.textContent = p;
+    opt.addEventListener("click", () => {
+      hidden.value = p;
+      labelEl.textContent = p;
+      wrapper.querySelectorAll(".dropdown-option").forEach(o => o.classList.remove("selected"));
+      opt.classList.add("selected");
+      wrapper.classList.remove("open");
+      const levels = [...BASE_LEVELS, ...(EXTRA[p] || [])];
+      initLevelSelect(levels, null);
+    });
+    cols.appendChild(opt);
+  });
+
+  trigger.addEventListener("click", e => {
+    e.stopPropagation();
+    document.querySelectorAll(".custom-select-wrapper.open")
+      .forEach(w => { if (w !== wrapper) w.classList.remove("open"); });
+    wrapper.classList.toggle("open");
+  });
+
+  wrapper.querySelector(".custom-select-dropdown")
+    .addEventListener("click", e => e.stopPropagation());
+
+  const currentPlace = hidden.value;
+  const levels = [...BASE_LEVELS, ...(EXTRA[currentPlace] || [])];
+  const currentLevel = document.getElementById("fLevel").value || levels[0];
+  initLevelSelect(levels, currentLevel);
+}
+
+function initLevelSelect(levels, selectedLevel) {
+  const wrapper = document.getElementById("levelSelectWrapper");
+  const hidden  = document.getElementById("fLevel");
+  const cols    = document.getElementById("levelDropdownCols");
+
+  // Klona trigger innan vi gör något annat — rensar gamla lyssnare
+  const oldTrigger = document.getElementById("levelSelectTrigger");
+  const newTrigger = oldTrigger.cloneNode(true);
+  oldTrigger.parentNode.replaceChild(newTrigger, oldTrigger);
+
+  // Hämta labelEl från den nya triggern
+  const labelEl = newTrigger.querySelector("#levelSelectLabel");
+
+  cols.innerHTML = "";
+  hidden.value = selectedLevel || "";
+  labelEl.textContent = selectedLevel || "Välj nivå…";
+
+  levels.forEach(l => {
+    const opt = document.createElement("div");
+    opt.className = "dropdown-option" + (l === selectedLevel ? " selected" : "");
+    opt.textContent = l;
+    opt.addEventListener("click", () => {
+      hidden.value = l;
+      labelEl.textContent = l;
+      wrapper.querySelectorAll(".dropdown-option").forEach(o => o.classList.remove("selected"));
+      opt.classList.add("selected");
+      wrapper.classList.remove("open");
+    });
+    cols.appendChild(opt);
+  });
+
+  newTrigger.addEventListener("click", ev => {
+    ev.stopPropagation();
+    document.querySelectorAll(".custom-select-wrapper.open")
+      .forEach(w => { if (w !== wrapper) w.classList.remove("open"); });
+    wrapper.classList.toggle("open");
+  });
+
+  wrapper.querySelector(".custom-select-dropdown")
+    .addEventListener("click", ev => ev.stopPropagation());
+}
+
+function initGroupTypeSelect() {
+  const wrapper = document.getElementById("groupTypeWrapper");
+  const hidden  = document.getElementById("fGroupType");
+  const cols    = document.getElementById("groupTypeDropdownCols");
+
+  const oldTrigger = document.getElementById("groupTypeTrigger");
+  const newTrigger = oldTrigger.cloneNode(true);
+  oldTrigger.parentNode.replaceChild(newTrigger, oldTrigger);
+  const labelEl = newTrigger.querySelector("#groupTypeLabel");
+
+  const sortedTypes = [...GROUP_TYPES].filter(t => t !== "").sort((a,b) => a.localeCompare(b, 'sv'));
+  const selectedType = hidden.value;
+
+  cols.innerHTML = "";
+
+  sortedTypes.forEach(t => {
+    const opt = document.createElement("div");
+    opt.className = "dropdown-option" + (t === selectedType ? " selected" : "");
+    opt.textContent = t;
+    opt.addEventListener("click", () => {
+      hidden.value = t;
+      labelEl.textContent = t;
+      wrapper.querySelectorAll(".dropdown-option").forEach(o => o.classList.remove("selected"));
+      opt.classList.add("selected");
+      wrapper.classList.remove("open");
+    });
+    cols.appendChild(opt);
+  });
+
+  newTrigger.addEventListener("click", ev => {
+    ev.stopPropagation();
+    document.querySelectorAll(".custom-select-wrapper.open")
+      .forEach(w => { if (w !== wrapper) w.classList.remove("open"); });
+    wrapper.classList.toggle("open");
+  });
+
+  wrapper.querySelector(".custom-select-dropdown")
+    .addEventListener("click", ev => ev.stopPropagation());
+}
+
+function openEditModal(entry) { openModal(entry.type, entry); }
+function closeModal() { document.getElementById("overlay").classList.remove("open"); activeModal = null; editingId = null; }
+function deleteEntry() {
+  document.getElementById("deleteOverlay").classList.add("open");
+}
+function closeDeleteModal() {
+  document.getElementById("deleteOverlay").classList.remove("open");
+}
+function confirmDelete() {
+  entries = entries.filter(e => e.id !== editingId);
+  renderEntries();
+  closeDeleteModal();
+  closeModal();
+}
+function setStatus(msg, cls) { const el = document.getElementById("formStatus"); if (el) { el.textContent = msg; el.className = "status-msg " + (cls||""); } }
+
+function saveEntry() {
+  const selectedDate = document.getElementById("fDate").value || TODAY.iso;
+  const now = new Date();
+  const existingDayEntry = (["cafe", "tickets", "sales", "daily"].includes(activeModal)) 
+    ? entries.find(e => e.type === activeModal && e.ts.split('T')[0] === selectedDate) : null;
+  
+  let id = existingDayEntry ? existingDayEntry.id : (editingId || Date.now());
+  let logTs = (editingId || existingDayEntry) ? (entries.find(e=>e.id===id)?.logTs || now.toISOString()) : now.toISOString();
+  const ts = `${selectedDate}T${now.toTimeString().split(' ')[0]}`;
+  let entry = { id, ts, logTs, type: activeModal };
+
+  // Nollställ eventuella tidigare felmarkeringar
+  const resetStyle = (el) => {
+    if (el) {
+      el.style.borderColor = "";
+      el.style.boxShadow = "";
+    }
+  };
+  document.querySelectorAll('input, textarea, .custom-select-trigger').forEach(resetStyle);
+  setStatus("", "");
+
+  // --- VALIDERING & DATAINSLAMLING ---
+
+  if (activeModal === "school") {
+    entry.place = document.getElementById("fPlace").value;
+    entry.school = document.getElementById("fSchool").value.trim() || entry.place;
+    entry.level = document.getElementById("fLevel").value;
+    entry.count = parseInt(document.getElementById("fCount").value) || 0;
+
+    const levelTrigger = document.getElementById("levelSelectWrapper").querySelector(".custom-select-trigger");
+    const countInput = document.getElementById("fCount");
+
+    // Kontroll: Både nivå och antal saknas
+    if (!entry.level && !entry.count) {
+      levelTrigger.style.borderColor = "var(--danger)";
+      levelTrigger.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
+      countInput.style.borderColor = "var(--danger)";
+      countInput.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
+      setStatus("Välj skolnivå och ange antal elever.", "error");
+      return;
+    }
+    // Kontroll: Endast nivå saknas
+    if (!entry.level) {
+      levelTrigger.style.borderColor = "var(--danger)";
+      levelTrigger.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
+      setStatus("Välj en skolnivå.", "error");
+      return;
+    }
+    // Kontroll: Endast antal saknas
+    if (!entry.count) {
+      countInput.style.borderColor = "var(--danger)";
+      countInput.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
+      setStatus("Ange antal elever.", "error");
+      return;
+    }
+
+  } else if (activeModal === "group") {
+    entry.groupType = document.getElementById("fGroupType").value;
+    entry.count = parseInt(document.getElementById("fCount").value) || 0;
+    const groupTrigger = document.getElementById("groupTypeWrapper").querySelector(".custom-select-trigger");
+    const countInput = document.getElementById("fCount");
+
+    // Kontroll: Typ av grupp saknas
+    if (!entry.groupType) {
+      groupTrigger.style.borderColor = "var(--danger)";
+      groupTrigger.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
+      setStatus("Välj typ av grupp.", "error");
+      return;
+    }
+    // Kontroll: Antal saknas
+    if (!entry.count) {
+      countInput.style.borderColor = "var(--danger)";
+      countInput.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
+      setStatus("Ange antal personer.", "error");
+      return;
+    }
+    entry.note = document.getElementById("fNote").value.trim();
+
+  } else if (["cafe", "tickets", "sales"].includes(activeModal)) {
+    const amountInput = document.getElementById("fTotalAmount");
+    const totalVal = parseFloat(amountInput.value);
+
+    // Kontroll: Belopp saknas eller är ogiltigt
+    if (isNaN(totalVal) || totalVal <= 0) {
+      amountInput.style.borderColor = "var(--danger)";
+      amountInput.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
+      setStatus("Ange ett giltigt belopp.", "error");
+      return;
+    }
+    entry.amount = totalVal;
+
+  } else if (activeModal === "daily") {
+    const reportInput = document.getElementById("fReport");
+    entry.report = reportInput.value.trim();
+
+    // Kontroll: Rapport saknas
+    if (!entry.report) {
+      reportInput.style.borderColor = "var(--danger)";
+      reportInput.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
+      setStatus("Rapporten kan inte vara tom.", "error");
+      return;
+    }
+  }
+
+  // --- SPARA ---
+  const idx = entries.findIndex(e => e.id === id);
+  if (idx > -1) entries[idx] = entry; else entries.push(entry);
+  
+  renderEntries(); 
+  closeModal();
+}
+
+document.querySelectorAll(".action-btn").forEach(btn => btn.addEventListener("click", () => openModal(btn.dataset.modal)));
+document.getElementById("modalClose").addEventListener("click", closeModal);
+document.getElementById("overlay").addEventListener("click", e => { if (e.target.id === "overlay") closeModal(); });
+document.getElementById("dateline").textContent = TODAY.iso;
+document.addEventListener("click", () => {
+  document.querySelectorAll(".custom-select-wrapper.open")
+    .forEach(w => w.classList.remove("open"));
+});
+document.getElementById("deleteOverlay").addEventListener("click", e => {
+  if (e.target.id === "deleteOverlay") closeDeleteModal();
+});
+updateStats();
+</script>
+</body>
+</html>
