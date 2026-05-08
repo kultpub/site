@@ -326,6 +326,20 @@ main {
   background-color: #fff;
 }
 
+/* Specifika färger för ikonerna i knapparna */
+.action-btn[data-modal="school"] .fa-icon  { fill: #1971c2; } /* Blå */
+.action-btn[data-modal="group"] .fa-icon   { fill: #2f9e44; } /* Grön */
+.action-btn[data-modal="daily"] .fa-icon   { fill: #7048e8; } /* Lila */
+.action-btn[data-modal="tickets"] .fa-icon { fill: #d6336c; } /* Rosa */
+.action-btn[data-modal="sales"] .fa-icon   { fill: #495057; } /* Grå/Svart */
+.action-btn[data-modal="cafe"] .fa-icon    { fill: #f08c00; } /* Orange */
+
+/* Behåll hover-effekten men se till att den inte skriver över färgerna tråkigt */
+.action-btn:hover .fa-icon { 
+    transform: scale(1.1); 
+    filter: brightness(0.9); /* Gör färgen aningen mörkare vid hover */
+}
+
 /* ── 7. FORMULÄR, INPUTS & SELECTS ── */
 .field-label {
   font-size: 11px;
@@ -765,10 +779,9 @@ function esc(v) { return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").re
 
 function renderTimeInfo(e) {
   const visitDate = e.ts.split('T')[0];
-  const visitTime = new Date(e.ts).toLocaleTimeString("sv-SE", {hour:"2-digit", minute:"2-digit"});
   const logDate = e.logTs.split('T')[0];
   const logTime = new Date(e.logTs).toLocaleTimeString("sv-SE", {hour:"2-digit", minute:"2-digit"});
-  return `<strong>${visitDate} kl. ${visitTime}</strong><span>Loggat: ${logDate} ${logTime}</span>`;
+  return `<strong>${visitDate}</strong><span>Loggat: ${logDate} ${logTime}</span>`;
 }
 
 function updateStats() {
@@ -810,8 +823,19 @@ function entryHtml(e) {
   let content = "";
 
   if (e.type === "school") {
+    const noteRaw = e.school || ""; 
+    const noteTruncated = noteRaw.length > 50 ? noteRaw.substring(0, 50) + "..." : noteRaw;
+    
+    // 1. Börja med den obligatoriska delen
+    let titleString = `${esc(e.place)} – ${esc(e.level)}`;
+    
+    // 2. Lägg bara till bindestreck och notering om det faktiskt finns en notering
+    if (noteTruncated) {
+      titleString += ` – ${esc(noteTruncated)}`;
+    }
+
     content = `
-      <div class="entry-title">${esc(e.school)} – ${esc(e.level)}</div>
+      <div class="entry-title">${titleString}</div>
       <div class="entry-meta">${fmtInt(e.count)} pers</div>`;
   } 
   else if (e.type === "group") {
@@ -902,7 +926,7 @@ function buildSchoolForm(e) {
       </div>
     </div>
     <label class="field-label">Valfri notering</label>
-    <input type="text" id="fSchool" placeholder="Skolans namn..." value="${e ? esc(e.school) : ''}" />
+    <input type="text" id="fSchool" placeholder="Skolans namn / Institution..." value="${e ? esc(e.school) : ''}" />
     ${buildFormFooter(isEdit)}`;
 }
 
@@ -1144,7 +1168,7 @@ function saveEntry() {
 
   if (activeModal === "school") {
     entry.place = document.getElementById("fPlace").value;
-    entry.school = document.getElementById("fSchool").value.trim() || entry.place;
+    entry.school = document.getElementById("fSchool").value.trim();
     entry.level = document.getElementById("fLevel").value;
     entry.count = parseInt(document.getElementById("fCount").value) || 0;
 
