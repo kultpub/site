@@ -1617,3 +1617,550 @@ datum;kommun;skolnivå;antal
 2026-03-31;Staffanstorp;Årskurs 2;28
 2026-03-31;Lund;Årskurs 2;6
 2026-03-31;Lund;Årskurs 2;31
+2026-04-01;Lund;Årskurs 9;25
+2026-04-01;Lund;Vuxenutbildning;6
+2026-04-01;Lund;Årskurs 3;19
+2026-04-01;Lund;Årskurs 3;24
+2026-04-01;Simrishamn;Gymnasium;14
+2026-04-01;Lund;Vuxenutbildning;6
+2026-04-01;Lund;Högskola, universitet;8
+2026-04-02;Lund;Årskurs 3;25
+2026-04-02;Lund;Förskola;25
+2026-04-02;Lund;Årskurs 3;25
+2026-04-02;Lund;Vuxenutbildning;6
+2026-04-02;Kristianstad;Vuxenutbildning;28
+2026-04-03;Lund;Förskola;14
+2026-04-03;Malmö;Årskurs 4;27
+2026-04-03;Malmö;Gymnasium;24
+2026-04-03;Lund;Årskurs 9;61
+2026-04-03;Lund;Vuxenutbildning;18
+2026-04-05;Lund;Förskola;1
+2026-04-07;Staffanstorp;Årskurs 9;25
+2026-04-08;Malmö;Förskola;13
+2026-04-08;Lund;Vuxenutbildning;6
+2026-04-08;Lund;Förskoleklass;9
+2026-04-08;Lund;Vuxenutbildning;3
+2026-04-09;Lund;Gymnasium;20
+2026-04-09;Burlöv;Förskoleklass;24
+2026-04-09;Trelleborg;Årskurs 1;19
+2026-04-09;Övrigt;Gymnasium;25
+2026-04-09;Lund;Vuxenutbildning;6
+2026-04-10;Lund;Högskola, universitet;310
+2026-04-10;Lund;Vuxenutbildning;6
+2026-04-11;Övrigt;Gymnasium;100
+2026-04-14;Lund;Vuxenutbildning;1
+2026-04-14;Lund;Vuxenutbildning;5
+2026-04-15;Lund;Årskurs 1;8
+2026-04-15;Lund;Vuxenutbildning;6
+2026-04-16;Lund;Förskola;17
+2026-04-16;Lund;Högskola, universitet;18
+2026-04-16;Eslöv;Vuxenutbildning;11
+2026-04-16;Lund;Vuxenutbildning;6
+2026-04-17;Lund;Vuxenutbildning;15
+2026-04-18;Lund;Årskurs 1;13
+2026-04-22;Lund;Vuxenutbildning;6
+2026-04-23;Lund;Förskola;18
+2026-04-23;Lund;Högskola, universitet;20
+2026-04-23;Ängelholm;Årskurs 4;16
+2026-04-23;Staffanstorp;Förskola;18
+2026-04-23;Övrigt;Årskurs 8;57
+2026-04-23;Malmö;Årskurs 6;28
+2026-04-23;Malmö;Vuxenutbildning;19
+2026-04-23;Lund;Vuxenutbildning;6
+2026-04-24;Malmö;Årskurs 6;23
+2026-04-24;Lund;Vuxenutbildning;6
+2026-04-24;Simrishamn;Årskurs 6;17
+2026-04-25;Lund;Gymnasium;15
+2026-04-29;Lund;Förskola;27
+2026-04-29;Lund;Gymnasium;28
+2026-04-29;Lund;Vuxenutbildning;6
+2026-04-29;Lund;Gymnasium;25
+2026-04-29;Lund;Vuxenutbildning;7
+2026-04-29;Malmö;Högskola, universitet;27
+2026-04-30;Lomma;Årskurs 6;15
+2026-04-30;Lund;Förskola;22
+2026-05-02;Malmö;Årskurs 8;10
+2026-05-05;Lund;Förskola;16
+2026-05-05;Staffanstorp;Årskurs 9;21
+2026-05-06;Svedala;Förskola;17
+2026-05-06;Lund;Årskurs 3;50
+2026-05-06;Lund;Högskola, universitet;7
+2026-05-06;Lund;Högskola, universitet;10
+2026-05-06;Lund;Årskurs 4;24
+2026-05-06;Lund;Högskola, universitet;6
+2026-05-06;Lund;Vuxenutbildning;6
+2026-05-07;Staffanstorp;Förskola;17
+2026-05-07;Malmö;Förskola;25
+2026-05-07;Lund;Förskola;1
+2026-05-07;Lund;Förskola;9
+2026-05-07;Malmö;Gymnasium;34
+2026-05-07;Lund;Vuxenutbildning;6
+2026-05-08;Lund;Vuxenutbildning;6
+2026-05-08;Höör;Förskoleklass;17
+2026-05-08;Vellinge;Vuxenutbildning;20
+2026-05-08;Vellinge;Årskurs 5;12
+2026-05-08;Vellinge;Vuxenutbildning;27
+2026-05-08;Övrigt;Gymnasium;10
+2026-05-08;Lund;Högskola, universitet;30
+2026-05-08;Lund;Årskurs 9;20
+2026-05-08;Övrigt;Gymnasium;13
+2026-05-09;Lund;Gymnasium;24
+2026-05-09;Övrigt;Vuxenutbildning;10
+2026-05-13;Lund;Gymnasium;32
+2026-05-13;Lund;Förskola;12
+2026-05-13;Lund;Årskurs 1;4
+2026-05-13;Lund;Årskurs 2;5
+2026-05-13;Lund;Årskurs 3;5
+2026-05-13;Malmö;Förskola;34
+2026-05-13;Lund;Gymnasium;30
+2026-05-13;Malmö;Gymnasium;40
+2026-05-13;Lund;Vuxenutbildning;6
+2026-05-14;Lund;Årskurs 5;30
+2026-05-14;Malmö;Gymnasium;20
+2026-05-14;Malmö;Årskurs 2;27
+2026-05-14;Lund;Årskurs 1;25
+2026-05-14;Lund;Vuxenutbildning;10
+2026-05-14;Staffanstorp;Årskurs 1;59
+2026-05-14;Hässleholm;Årskurs 3;25
+2026-05-14;Lund;Högskola, universitet;1
+2026-05-15;Lund;Årskurs 1;23
+2026-05-15;Eslöv;Årskurs 3;25
+2026-05-15;Lund;Gymnasium;4
+2026-05-15;Eslöv;Årskurs 3;24
+2026-05-15;Lund;Högskola, universitet;6
+2026-05-15;Lund;Vuxenutbildning;6
+2026-05-15;Svedala;Gymnasium;18
+2026-05-15;Övrigt;Gymnasium;29
+2026-05-15;Övrigt;Gymnasium;34
+2026-05-16;Lund;Förskola;26
+2026-05-16;Lund;Gymnasium;16
+2026-05-16;Malmö;Förskoleklass;39
+2026-05-16;Lund;Gymnasium;32
+2026-05-16;Lund;Årskurs 1;54
+2026-05-16;Lund;Årskurs 8;38
+2026-05-17;Övrigt;Årskurs 4;22
+2026-05-18;Övrigt;Årskurs 4;22
+2026-05-19;Staffanstorp;Årskurs 7;27
+2026-05-19;Höör;Årskurs 3;24
+2026-05-19;Kävlinge;Förskola;7
+2026-05-19;Lund;Årskurs 1;26
+2026-05-19;Lund;Gymnasium;28
+2026-05-20;Eslöv;Vuxenutbildning;13
+2026-05-20;Övrigt;Vuxenutbildning;5
+2026-05-20;Malmö;Förskola;14
+2026-05-20;Lund;Gymnasium;23
+2026-05-20;Eslöv;Gymnasium;24
+2026-05-20;Lomma;Årskurs 3;24
+2026-05-20;Lund;Gymnasium;22
+2026-05-20;Eslöv;Årskurs 1;31
+2026-05-20;Lund;Gymnasium;1
+2026-05-21;Höör;Årskurs 3;14
+2026-05-21;Kävlinge;Förskola;18
+2026-05-21;Lund;Årskurs 1;20
+2026-05-21;Eslöv;Årskurs 7;35
+2026-05-21;Lund;Årskurs 1;25
+2026-05-21;Eslöv;Årskurs 1;25
+2026-05-21;Ängelholm;Vuxenutbildning;22
+2026-05-22;Lund;Förskoleklass;26
+2026-05-22;Malmö;Förskola;10
+2026-05-22;Lund;Förskoleklass;4
+2026-05-22;Lund;Årskurs 1;35
+2026-05-22;Kristianstad;Gymnasium;32
+2026-05-23;Lund;Gymnasium;27
+2026-05-23;Lund;Förskoleklass;28
+2026-05-23;Lund;Förskola;24
+2026-05-23;Hässleholm;Förskola;17
+2026-05-27;Lund;Förskola;13
+2026-05-27;Höganäs;Årskurs 3;56
+2026-05-27;Lund;Förskola;23
+2026-05-27;Malmö;Årskurs 3;4
+2026-05-27;Kävlinge;Årskurs 6;18
+2026-05-27;Kristianstad;Årskurs 3;24
+2026-05-27;Trelleborg;Gymnasium;15
+2026-05-28;Kävlinge;Årskurs 1;21
+2026-05-28;Eslöv;Förskola;14
+2026-05-28;Vellinge;Vuxenutbildning;15
+2026-05-28;Kristianstad;Gymnasium;28
+2026-05-28;Malmö;Förskoleklass;18
+2026-05-28;Kristianstad;Årskurs 3;57
+2026-05-28;Malmö;Årskurs 4;81
+2026-05-29;Övrigt;Årskurs 5;70
+2026-05-29;Övrigt;Årskurs 7;69
+2026-05-30;Bjuv;Förskoleklass;15
+2026-06-02;Lund;Gymnasium;13
+2026-06-02;Lund;Gymnasium;16
+2026-06-03;Trelleborg;Förskola;30
+2026-06-03;Lund;Gymnasium;11
+2026-06-03;Övrigt;Årskurs 9;22
+2026-06-04;Lund;Förskola;21
+2026-06-04;Lund;Gymnasium;9
+2026-06-04;Malmö;Vuxenutbildning;13
+2026-06-05;Eslöv;Gymnasium;15
+2026-06-05;Eslöv;Gymnasium;15
+2026-06-05;Eslöv;Gymnasium;11
+2026-06-05;Lund;Årskurs 7;25
+2026-06-05;Lund;Årskurs 2;10
+2026-06-05;Lund;Årskurs 3;12
+2026-06-08;Malmö;Årskurs 8;37
+2026-06-08;Lund;Högskola, universitet;1
+2026-06-09;Lund;Förskola;13
+2026-06-09;Lund;Årskurs 9;42
+2026-06-09;Lund;Årskurs 2;22
+2026-06-10;Lund;Årskurs 1;26
+2026-06-10;Malmö;Gymnasium;13
+2026-06-10;Övrigt;Gymnasium;44
+2026-06-10;Lund;Årskurs 5;30
+2026-06-11;Lund;Årskurs 7;16
+2026-06-11;Lund;Årskurs 7;33
+2026-06-11;Kävlinge;Årskurs 8;10
+2026-06-11;Lund;Gymnasium;19
+2026-06-11;Lund;Årskurs 5;21
+2026-06-11;Staffanstorp;Årskurs 3;69
+2026-06-12;Lund;Gymnasium;8
+2026-06-12;Lund;Förskola;18
+2026-06-12;Trelleborg;Årskurs 9;86
+2026-06-12;Lund;Årskurs 8;6
+2026-06-12;Lund;Årskurs 5;22
+2026-06-12;Lund;Högskola, universitet;25
+2026-06-13;Lund;Förskola;14
+2026-06-16;Lund;Årskurs 1;24
+2026-06-16;Lund;Årskurs 3;15
+2026-06-18;Lomma;Vuxenutbildning;55
+2026-06-24;Staffanstorp;Årskurs 5;3
+2026-06-24;Lund;Årskurs 1;10
+2026-06-24;Malmö;Vuxenutbildning;20
+2026-06-26;Lund;Förskola;14
+2026-06-26;Malmö;Förskola;8
+2026-06-27;Lund;Förskola;9
+2026-07-01;Lund;Förskola;11
+2026-07-04;Lund;Årskurs 1;7
+2026-07-08;Lund;Vuxenutbildning;32
+2026-07-08;Lund;Årskurs 4;3
+2026-07-10;Lund;Årskurs 1;2
+2026-07-10;Lund;Årskurs 2;2
+2026-07-10;Lund;Årskurs 3;2
+2026-07-10;Lund;Årskurs 4;2
+2026-07-10;Lund;Årskurs 5;2
+2026-07-10;Lund;Årskurs 6;2
+2026-07-10;Lund;Förskoleklass;23
+2026-07-14;Övrigt;Högskola, universitet;20
+2026-07-15;Malmö;Årskurs 6;4
+2026-07-15;Staffanstorp;Årskurs 3;29
+2026-07-16;Staffanstorp;Årskurs 4;17
+2026-07-24;Lund;Förskola;13
+2026-07-25;Lund;Förskola;17
+2026-07-28;Lund;Vuxenutbildning;53
+2026-07-30;Bjuv;Årskurs 1;18
+2026-07-30;Lund;Förskola;3
+2026-07-30;Lund;Förskoleklass;13
+2026-07-31;Malmö;Vuxenutbildning;35
+2026-08-06;Lund;Årskurs 2;6
+2026-08-06;Lund;Årskurs 5;6
+2026-08-07;Lund;Årskurs 2;7
+2026-08-12;Lund;Förskola;14
+2026-08-12;Malmö;Vuxenutbildning;7
+2026-08-15;Kävlinge;Årskurs 7;30
+2026-08-15;Kävlinge;Årskurs 9;30
+2026-08-19;Lund;Förskola;20
+2026-08-20;Lund;Årskurs 9;9
+2026-08-20;Lund;Gymnasium;24
+2026-08-20;Lund;Gymnasium;65
+2026-08-21;Lund;Gymnasium;32
+2026-08-21;Lund;Förskola;25
+2026-08-22;Malmö;Gymnasium;33
+2026-08-23;Lund;Förskola;1
+2026-08-25;Lund;Gymnasium;32
+2026-08-25;Lund;Vuxenutbildning;11
+2026-08-26;Lund;Förskola;13
+2026-08-26;Lund;Vuxenutbildning;6
+2026-08-26;Lund;Vuxenutbildning;25
+2026-08-27;Lund;Gymnasium;18
+2026-08-27;Lund;Gymnasium;21
+2026-08-27;Lund;Förskoleklass;21
+2026-08-28;Malmö;Förskola;20
+2026-09-02;Lund;Årskurs 8;34
+2026-09-02;Lund;Vuxenutbildning;6
+2026-09-02;Lund;Årskurs 8;29
+2026-09-02;Lund;Vuxenutbildning;6
+2026-09-03;Övrigt;Gymnasium;50
+2026-09-03;Lund;Årskurs 5;43
+2026-09-04;Lund;Årskurs 6;32
+2026-09-04;Lund;Årskurs 8;32
+2026-09-04;Malmö;Förskola;20
+2026-09-04;Lund;Högskola, universitet;3
+2026-09-04;Lund;Gymnasium;9
+2026-09-05;Malmö;Vuxenutbildning;25
+2026-09-08;Lund;Vuxenutbildning;6
+2026-09-09;Lund;Förskola;14
+2026-09-09;Övrigt;Vuxenutbildning;12
+2026-09-09;Lund;Högskola, universitet;15
+2026-09-09;Lund;Gymnasium;32
+2026-09-09;Lund;Vuxenutbildning;6
+2026-09-10;Lund;Högskola, universitet;4
+2026-09-10;Lund;Vuxenutbildning;6
+2026-09-10;Malmö;Gymnasium;22
+2026-09-11;Lund;Vuxenutbildning;12
+2026-09-12;Övrigt;Vuxenutbildning;21
+2026-09-12;Lund;Vuxenutbildning;6
+2026-09-14;Lund;Vuxenutbildning;6
+2026-09-14;Lund;Vuxenutbildning;6
+2026-09-16;Staffanstorp;Årskurs 9;18
+2026-09-16;Lund;Vuxenutbildning;6
+2026-09-16;Lund;Förskola;13
+2026-09-16;Lund;Gymnasium;19
+2026-09-16;Lund;Förskola;15
+2026-09-16;Övrigt;Gymnasium;15
+2026-09-16;Malmö;Förskola;10
+2026-09-16;Lund;Vuxenutbildning;6
+2026-09-17;Lund;Vuxenutbildning;6
+2026-09-17;Malmö;Förskola;19
+2026-09-17;Lund;Årskurs 8;27
+2026-09-17;Lund;Årskurs 8;29
+2026-09-17;Lund;Gymnasium;18
+2026-09-17;Lund;Gymnasium;2
+2026-09-18;Lund;Gymnasium;18
+2026-09-18;Malmö;Vuxenutbildning;15
+2026-09-18;Lund;Gymnasium;16
+2026-09-18;Lund;Vuxenutbildning;21
+2026-09-18;Ängelholm;Vuxenutbildning;32
+2026-09-18;Lund;Vuxenutbildning;2
+2026-09-18;Lund;Gymnasium;30
+2026-09-18;Lund;Vuxenutbildning;6
+2026-09-18;Lund;Vuxenutbildning;6
+2026-09-19;Lund;Årskurs 4;30
+2026-09-19;Lund;Vuxenutbildning;6
+2026-09-19;Lund;Gymnasium;2
+2026-09-23;Staffanstorp;Årskurs 9;23
+2026-09-23;Malmö;Gymnasium;7
+2026-09-23;Lund;Vuxenutbildning;6
+2026-09-23;Lund;Årskurs 3;29
+2026-09-23;Lund;Årskurs 3;27
+2026-09-23;Lund;Vuxenutbildning;6
+2026-09-23;Lund;Gymnasium;34
+2026-09-23;Lund;Gymnasium;4
+2026-09-24;Lund;Årskurs 3;30
+2026-09-24;Lund;Årskurs 3;28
+2026-09-24;Lund;Gymnasium;25
+2026-09-24;Lund;Vuxenutbildning;6
+2026-09-25;Lund;Årskurs 4;3
+2026-09-25;Lund;Gymnasium;47
+2026-09-25;Lund;Vuxenutbildning;6
+2026-09-26;Lund;Högskola, universitet;18
+2026-09-30;Staffanstorp;Årskurs 9;28
+2026-09-30;Lund;Vuxenutbildning;6
+2026-09-30;Lund;Högskola, universitet;59
+2026-09-30;Lund;Vuxenutbildning;6
+2026-09-30;Lund;Årskurs 3;28
+2026-09-30;Lund;Årskurs 3;27
+2026-09-30;Lund;Förskola;15
+2026-09-30;Ystad;Gymnasium;35
+2026-09-30;Lund;Högskola, universitet;20
+2026-10-01;Lund;Årskurs 3;24
+2026-10-01;Lund;Vuxenutbildning;6
+2026-10-01;Lund;Årskurs 3;26
+2026-10-01;Lund;Gymnasium;29
+2026-10-02;Malmö;Årskurs 8;22
+2026-10-02;Lund;Årskurs 3;17
+2026-10-02;Lund;Årskurs 5;101
+2026-10-02;Lund;Årskurs 5;3
+2026-10-02;Lund;Vuxenutbildning;6
+2026-10-02;Lund;Gymnasium;8
+2026-10-02;Malmö;Årskurs 8;25
+2026-10-03;Lund;Årskurs 3;24
+2026-10-03;Lund;Årskurs 3;29
+2026-10-04;Lund;Vuxenutbildning;6
+2026-10-06;Lund;Vuxenutbildning;6
+2026-10-06;Staffanstorp;Årskurs 9;24
+2026-10-07;Lund;Årskurs 5;4
+2026-10-07;Lund;Årskurs 3;40
+2026-10-07;Lund;Vuxenutbildning;6
+2026-10-07;Lomma;Årskurs 6;5
+2026-10-08;Lund;Årskurs 3;33
+2026-10-08;Lund;Årskurs 3;21
+2026-10-08;Lund;Vuxenutbildning;6
+2026-10-08;Lund;Högskola, universitet;37
+2026-10-09;Lund;Förskoleklass;21
+2026-10-09;Simrishamn;Årskurs 8;12
+2026-10-09;Lund;Gymnasium;29
+2026-10-09;Lund;Vuxenutbildning;6
+2026-10-10;Lund;Årskurs 3;38
+2026-10-10;Lund;Förskola;12
+2026-10-10;Kävlinge;Årskurs 3;19
+2026-10-14;Lund;Gymnasium;23
+2026-10-14;Lund;Vuxenutbildning;6
+2026-10-14;Lund;Vuxenutbildning;6
+2026-10-14;Lund;Årskurs 3;55
+2026-10-14;Lund;Förskola;15
+2026-10-14;Kristianstad;Högskola, universitet;36
+2026-10-14;Malmö;Förskola;28
+2026-10-14;Helsingborg;Årskurs 5;24
+2026-10-14;Kristianstad;Vuxenutbildning;27
+2026-10-15;Lund;Årskurs 3;27
+2026-10-15;Lund;Årskurs 3;26
+2026-10-15;Lund;Vuxenutbildning;6
+2026-10-15;Lund;Gymnasium;30
+2026-10-16;Lund;Årskurs 3;25
+2026-10-16;Lund;Gymnasium;24
+2026-10-16;Lund;Årskurs 3;28
+2026-10-16;Malmö;Årskurs 9;30
+2026-10-16;Lund;Gymnasium;21
+2026-10-16;Lund;Vuxenutbildning;1
+2026-10-16;Lund;Vuxenutbildning;5
+2026-10-17;Burlöv;Vuxenutbildning;12
+2026-10-17;Lund;Gymnasium;29
+2026-10-21;Lund;Vuxenutbildning;6
+2026-10-21;Lund;Vuxenutbildning;6
+2026-10-21;Staffanstorp;Årskurs 9;20
+2026-10-22;Lund;Årskurs 3;29
+2026-10-22;Malmö;Vuxenutbildning;7
+2026-10-22;Lund;Vuxenutbildning;6
+2026-10-22;Lund;Årskurs 3;30
+2026-10-22;Helsingborg;Årskurs 7;52
+2026-10-22;Lund;Gymnasium;6
+2026-10-23;Kävlinge;Årskurs 9;10
+2026-10-23;Lund;Vuxenutbildning;6
+2026-10-23;Malmö;Förskola;13
+2026-10-23;Övrigt;Vuxenutbildning;30
+2026-10-23;Lund;Gymnasium;2
+2026-10-24;Kävlinge;Vuxenutbildning;20
+2026-10-24;Lund;Gymnasium;33
+2026-10-24;Lund;Gymnasium;10
+2026-10-27;Lund;Förskoleklass;9
+2026-10-27;Lund;Vuxenutbildning;6
+2026-10-28;Lund;Årskurs 2;12
+2026-10-28;Lund;Årskurs 3;13
+2026-10-28;Lund;Årskurs 2;1
+2026-10-28;Lund;Årskurs 4;3
+2026-10-28;Lund;Årskurs 2;15
+2026-10-28;Lund;Årskurs 3;16
+2026-10-28;Lund;Vuxenutbildning;6
+2026-10-29;Lund;Förskola;6
+2026-10-29;Lund;Vuxenutbildning;6
+2026-10-30;Lund;Vuxenutbildning;6
+2026-10-30;Lund;Årskurs 2;15
+2026-10-30;Lund;Vuxenutbildning;2
+2026-11-04;Lund;Vuxenutbildning;6
+2026-11-04;Lund;Vuxenutbildning;6
+2026-11-04;Ystad;Gymnasium;19
+2026-11-05;Lund;Förskola;12
+2026-11-05;Lund;Förskola;8
+2026-11-05;Lund;Vuxenutbildning;6
+2026-11-05;Eslöv;Gymnasium;25
+2026-11-05;Båstad;Gymnasium;17
+2026-11-05;Lund;Högskola, universitet;12
+2026-11-06;Lund;Gymnasium;8
+2026-11-06;Lund;Vuxenutbildning;6
+2026-11-07;Malmö;Gymnasium;32
+2026-11-11;Lund;Vuxenutbildning;6
+2026-11-11;Lund;Vuxenutbildning;6
+2026-11-11;Helsingborg;Förskola;22
+2026-11-11;Lund;Vuxenutbildning;10
+2026-11-11;Lund;Högskola, universitet;6
+2026-11-11;Lund;Högskola, universitet;19
+2026-11-12;Lund;Vuxenutbildning;6
+2026-11-12;Lund;Förskola;13
+2026-11-12;Skurup;Vuxenutbildning;28
+2026-11-12;Ystad;Gymnasium;14
+2026-11-12;Övrigt;Gymnasium;22
+2026-11-12;Lund;Gymnasium;26
+2026-11-13;Lund;Gymnasium;11
+2026-11-13;Lund;Vuxenutbildning;6
+2026-11-13;Lund;Vuxenutbildning;2
+2026-11-14;Lund;Gymnasium;29
+2026-11-14;Lund;Gymnasium;30
+2026-11-14;Lund;Förskoleklass;15
+2026-11-14;Lund;Gymnasium;1
+2026-11-14;Lund;Gymnasium;18
+2026-11-18;Lund;Vuxenutbildning;6
+2026-11-18;Lund;Vuxenutbildning;6
+2026-11-18;Lund;Årskurs 5;10
+2026-11-18;Lund;Gymnasium;23
+2026-11-18;Lund;Förskoleklass;43
+2026-11-18;Lund;Gymnasium;2
+2026-11-19;Lund;Förskola;24
+2026-11-19;Lund;Vuxenutbildning;6
+2026-11-19;Lund;Högskola, universitet;9
+2026-11-19;Helsingborg;Gymnasium;28
+2026-11-19;Malmö;Vuxenutbildning;20
+2026-11-19;Helsingborg;Gymnasium;31
+2026-11-19;Helsingborg;Gymnasium;23
+2026-11-19;Lund;Årskurs 3;12
+2026-11-19;Övrigt;Vuxenutbildning;10
+2026-11-20;Malmö;Förskoleklass;10
+2026-11-20;Malmö;Årskurs 3;10
+2026-11-20;Malmö;Årskurs 5;8
+2026-11-20;Svalöv;Vuxenutbildning;5
+2026-11-20;Lund;Vuxenutbildning;6
+2026-11-20;Lund;Gymnasium;6
+2026-11-21;Lund;Högskola, universitet;18
+2026-11-21;Lund;Gymnasium;24
+2026-11-21;Lund;Gymnasium;26
+2026-11-21;Lund;Årskurs 9;23
+2026-11-21;Lund;Gymnasium;29
+2026-11-25;Lomma;Förskola;18
+2026-11-25;Lund;Vuxenutbildning;6
+2026-11-25;Lund;Gymnasium;30
+2026-11-25;Malmö;Årskurs 2;18
+2026-11-25;Malmö;Årskurs 3;18
+2026-11-25;Övrigt;Högskola, universitet;53
+2026-11-25;Övrigt;Högskola, universitet;21
+2026-11-25;Lund;Gymnasium;30
+2026-11-25;Lund;Högskola, universitet;18
+2026-11-26;Lund;Förskola;15
+2026-11-26;Lund;Vuxenutbildning;6
+2026-11-27;Lund;Vuxenutbildning;6
+2026-11-27;Lund;Vuxenutbildning;25
+2026-11-27;Tomelilla;Vuxenutbildning;11
+2026-11-27;Lund;Gymnasium;18
+2026-12-02;Lund;Vuxenutbildning;6
+2026-12-02;Lund;Gymnasium;15
+2026-12-02;Lund;Vuxenutbildning;22
+2026-12-02;Lund;Gymnasium;17
+2026-12-02;Lund;Årskurs 1;21
+2026-12-03;Lund;Gymnasium;7
+2026-12-04;Eslöv;Årskurs 2;32
+2026-12-04;Eslöv;Årskurs 5;24
+2026-12-04;Lund;Årskurs 2;28
+2026-12-04;Lund;Gymnasium;16
+2026-12-05;Lund;Förskoleklass;26
+2026-12-05;Lund;Årskurs 1;27
+2026-12-05;Skurup;Vuxenutbildning;26
+2026-12-05;Malmö;Gymnasium;60
+2026-12-09;Kävlinge;Vuxenutbildning;38
+2026-12-09;Lund;Förskoleklass;28
+2026-12-09;Lund;Årskurs 2;44
+2026-12-09;Lund;Årskurs 5;4
+2026-12-10;Kävlinge;Vuxenutbildning;42
+2026-12-10;Lund;Årskurs 2;25
+2026-12-10;Lund;Förskola;22
+2026-12-10;Lund;Förskola;8
+2026-12-11;Lund;Gymnasium;17
+2026-12-11;Lomma;Årskurs 2;52
+2026-12-11;Lund;Förskoleklass;24
+2026-12-11;Lund;Högskola, universitet;5
+2026-12-11;Kristianstad;Gymnasium;6
+2026-12-11;Lund;Högskola, universitet;18
+2026-12-11;Burlöv;Vuxenutbildning;6
+2026-12-11;Malmö;Vuxenutbildning;5
+2026-12-12;Övrigt;Gymnasium;16
+2026-12-12;Lund;Högskola, universitet;11
+2026-12-12;Lund;Gymnasium;27
+2026-12-12;Lund;Gymnasium;20
+2026-12-12;Svalöv;Vuxenutbildning;11
+2026-12-13;Malmö;Gymnasium;33
+2026-12-16;Malmö;Förskola;20
+2026-12-16;Lund;Gymnasium;28
+2026-12-16;Kävlinge;Årskurs 7;50
+2026-12-16;Båstad;Gymnasium;16
+2026-12-17;Malmö;Gymnasium;18
+2026-12-17;Lund;Högskola, universitet;27
+2026-12-18;Lund;Årskurs 2;23
+2026-12-18;Lund;Årskurs 2;21
+2026-12-18;Lund;Årskurs 2;25
+2026-12-18;Svalöv;Årskurs 8;32
+2026-12-18;Bjuv;Årskurs 8;8
+2026-12-18;Svalöv;Årskurs 8;30
+2026-12-18;Svalöv;Årskurs 8;30
+2026-12-22;Lund;Årskurs 2;5
+2026-12-22;Lund;Årskurs 4;5
+2026-12-29;Lund;Årskurs 3;7
