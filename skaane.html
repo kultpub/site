@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skåne – karta</title>
+
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    margin: 0;
+    width: 100%;
+    min-height: 100%;
+    background: #ffffff;
+  }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: #fff;
+  overflow: hidden;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.app {
+  display: grid;
+  grid-template-columns: 220px min(76vw, 82vh) 180px;
+  gap: 28px;
+  align-items: center;
+}
+
+.map-wrap {
+  width: min(76vw, 82vh);
+  height: min(76vw, 82vh);
+}
+
+.summary-panel {
+  align-self: center;
+  padding: 20px 18px;
+  border: 1px solid #e2e2e2;
+  border-radius: 16px;
+  background: #fafafa;
+  color: #222;
+}
+
+.summary-label {
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 4px;
+}
+
+.summary-total {
+  font-size: 38px;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  margin-bottom: 22px;
+}
+
+.summary-row {
+  border-top: 1px solid #e1e1e1;
+  padding-top: 12px;
+  margin-top: 12px;
+}
+
+.summary-row .label {
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 3px;
+}
+
+.summary-row .value {
+  font-size: 24px;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+}
+
+.summary-percent {
+  font-size: 15px;
+  font-weight: 600;
+  color: #777;
+  letter-spacing: normal;
+  margin-left: 4px;
+}
+
+svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.controls button {
+  border: 1px solid #ddd;
+  background: #f5f5f5;
+  color: #222;
+  padding: 10px 12px;
+  font-size: 15px;
+  text-align: left;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.controls button.active {
+  background: #2f2f2f;
+  color: #fff;
+  border-color: #2f2f2f;
+}
+
+.visit-label {
+  font-size: 18px;
+  font-weight: 700;
+  fill: #ffffff;
+  paint-order: stroke;
+  stroke: #000000;
+  stroke-width: 4px;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+.callout-line {
+  stroke: #111;
+  stroke-width: 1.5;
+  pointer-events: none;
+}
+
+path[data-name] {
+  cursor: pointer;
+}
+
+path[data-name]:hover {
+  fill: #444444 !important;
+}
+
+.map-tooltip {
+  position: fixed;
+  z-index: 1000;
+  padding: 7px 11px;
+  background: rgba(20, 20, 20, 0.94);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 999px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -115%);
+  transition: opacity 120ms ease, transform 120ms ease;
+  white-space: nowrap;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.22);
+}
+
+.map-tooltip.visible {
+  opacity: 1;
+  transform: translate(-50%, -130%);
+}
+
+.highlight-controls {
+  position: fixed;
+  top: 22px;
+  right: 24px;
+  z-index: 900;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #222;
+  user-select: none;
+}
+
+.toggle input {
+  display: none;
+}
+
+.toggle-track {
+  width: 42px;
+  height: 24px;
+  border-radius: 999px;
+  background: #d6d6d6;
+  position: relative;
+  transition: background 160ms ease;
+}
+
+.toggle-track::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  transition: transform 160ms ease;
+}
+
+.toggle input:checked + .toggle-track {
+  background: #f28c28;
+}
+
+.toggle input:checked + .toggle-track::after {
+  transform: translateX(18px);
+}
+
+path.highlighted-municipality {
+  fill: #f28c28 !important;
+}
+
+path.highlighted-municipality:hover {
+  fill: #ff9f3a !important;
+}
+
+.ff-filter {
+  position: fixed;
+  top: 22px;
+  left: 24px;
+  z-index: 900;
+  width: 220px;
+}
+
+.custom-select-wrapper {
+  position: relative;
+  width: 100%;
+  user-select: none;
+}
+
+.custom-select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #f5f5f5;
+  cursor: pointer;
+  font-size: 15px;
+  color: #222;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.custom-select-trigger:hover,
+.custom-select-wrapper.open .custom-select-trigger {
+  border-color: #2f2f2f;
+  box-shadow: 0 0 0 3px rgba(47, 47, 47, 0.08);
+}
+
+.chevron {
+  width: 16px;
+  height: 16px;
+  fill: #777;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+
+.custom-select-wrapper.open .chevron {
+  transform: rotate(180deg);
+}
+
+.custom-select-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 560px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  z-index: 1000;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.14);
+}
+
+.custom-select-wrapper.open .custom-select-dropdown {
+  display: block;
+}
+
+.dropdown-cols-ff {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-flow: column;
+  grid-template-rows: repeat(7, auto);
+  padding: 8px;
+  gap: 2px;
+}
+
+.dropdown-option {
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #222;
+  white-space: nowrap;
+}
+
+.dropdown-option:hover {
+  background: #f1f1f1;
+}
+
+.dropdown-option.selected {
+  background: #2f2f2f;
+  color: #fff;
+  font-weight: 600;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="ff-filter">
+  <div class="custom-select-wrapper" id="ffSelectWrapper">
+    <div class="custom-select-trigger" id="ffSelectTrigger">
+      <span id="ffSelectLabel">All data</span>
+		<svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+			<path d="M6 9l6 6 6-6"/>
+		</svg>
+    </div>
+
+    <div class="custom-select-dropdown">
+      <div class="dropdown-cols-ff" id="ffDropdownCols"></div>
+    </div>
+  </div>
+
+  <input type="hidden" id="ffFilter" value="All data">
+</div>
+
+<div class="highlight-controls">
+  <label class="toggle">
+    <input type="checkbox" id="toggleLund">
+    <span class="toggle-track"></span>
+    Lund
+  </label>
+
+  <label class="toggle">
+    <input type="checkbox" id="toggleLundRegion">
+    <span class="toggle-track"></span>
+    Lund + kranskommuner
+  </label>
+</div>
+
+<div class="app">
+
+<div class="summary-panel">
+  <div class="summary-label">Totalt</div>
+  <div class="summary-total" id="summaryTotal">0</div>
+
+  <div class="summary-row">
+    <div class="label">Lund</div>
+	<div class="value">
+		<span id="summaryLund">0</span>
+		<span class="summary-percent" id="summaryLundPercent">(0 %)</span>
+	</div>
+  </div>
+
+  <div class="summary-row">
+    <div class="label">Lund + kranskommuner</div>
+	<div class="value">
+		<span id="summaryLundRegion">0</span>
+		<span class="summary-percent" id="summaryLundRegionPercent">(0 %)</span>
+	</div>
+  </div>
+
+  <div class="summary-row">
+	<div class="label">Övrigt</div>
+	<div class="value">
+		<span id="summaryOther">0</span>
+		<span class="summary-percent" id="summaryOtherPercent">(0 %)</span>
+	</div>
+  </div>
+</div>
+  <div class="map-wrap">
+
+<svg class="map-svg"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="204.80949mm"
+   height="204.3459mm"
+   viewBox="0 0 725.70293 724.06028"
+   id="svg4555"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="skane-aengelholms-map.svg">
+  <defs
+     id="defs4557" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.1480296"
+     inkscape:cx="182.00444"
+     inkscape:cy="337.59502"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1027"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     showguides="true"
+     inkscape:guide-bbox="true" />
+  <metadata
+     id="metadata4560">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-7.7316976,-10.337905)">
+<path
+   style="fill:#333333;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+   d="m 611.68449,133.73099 4.92891,-14.78667 11.50072,-3.28593 9.04288,14.78667 -9.85777,10.67269 0.81489,18.90064 43.54509,-6.57185 -33.68729,15.60158 -11.50075,20.54361 -8.21482,36.14517 -19.71556,13.95865 -18.07258,3.2859 -8.21481,13.14372 -40.24604,-13.14372 -4.11397,-19.71554 -4.92888,-18.88752 5.75692,-30.40138 0,-33.67417 32.03122,-23.00148 14.78668,-3.28593 0,0 14.78665,-41.074075 15.61472,-11.50074 10.6727,9.857778 -12.31566,46.002967 z"
+   id="1256"
+   data-name="Östra Göinge"
+   inkscape:connector-curvature="0" />
+
+<path
+   style="fill:#333333;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+   d="m 714.37627,313.62888 3.28593,-17.24455 13.1437,-6.57186 -5.75695,-69.83249 -7.38675,-15.60159 -19.71556,3.28593 -17.2577,-7.3999 -10.67268,13.97176 0.81491,30.38825 0,0 6.57184,33.6873 -17.24452,18.0726 -3.28593,18.8875 30.38824,7.3999 z"
+   id="1272"
+   data-name="Bromölla"
+   inkscape:connector-curvature="0" />
+
+<path
+   style="fill:#333333;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+   d="m 580.46821,28.581356 -10.6727,-15.614719 -13.1437,0.828052 -3.28593,16.42963 -13.1437,21.358518 -29.57333,0 -20.5436,10.672689 -27.10234,-0.814911 -28.75841,12.315652 14.78667,23.829533 48.47398,-9.857778 1.64295,10.672689 -4.92888,13.971759 14.78668,8.21481 -1.64298,18.88751 21.35851,0.82805 32.03122,-23.00148 14.78668,-3.28593 14.78665,-41.074075 15.61472,-11.50074 10.6727,9.857778 -12.31566,46.002967 7.38675,16.42963 4.92891,-14.78667 11.50072,-3.28593 9.04288,14.78667 -9.85777,10.67269 0.81489,18.90064 43.54509,-6.57185 -7.3999,-21.35852 8.21482,-31.21629 19.71556,-4.928893 0,0 18.90064,-33.687311 -36.14519,-14.786667 -54.21777,-15.601577 -5.75695,7.386763 z"
+   id="1273"
+   data-name="Osby"
+   inkscape:connector-curvature="0" />
+
+<path
+   style="fill:#333333;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+   d="m 670.83117,244.62443 -0.81491,-30.38825 10.67268,-13.97176 -2.45786,-27.10232 -6.57187,-19.71556 -33.68729,15.60158 -11.50075,20.54361 -8.21482,36.14517 -19.71556,13.95865 -18.07258,3.2859 -8.21481,13.14372 -40.24604,-13.14372 -9.85777,21.35854 4.10085,13.97174 -29.57335,42.71705 -21.35852,6.57184 -9.85777,-12.32879 -18.88752,27.11546 8.21482,15.60157 -16.42963,8.21481 24.64444,32.85926 22.17345,-18.07258 9.85777,6.57186 3.28593,27.93035 -13.1437,21.35854 9.04286,15.61472 13.1437,-3.28593 1.64298,20.53047 13.95861,17.25767 16.42963,-3.28593 4.92888,-10.68583 11.50075,2.47101 3.28593,9.02973 32.85926,0.82807 4.11397,-41.90214 25.45936,-46.00296 14.78665,-7.38675 11.50074,-27.11546 26.28743,-15.60159 0,0 13.14369,-24.64445 -30.38824,-7.3999 3.28593,-18.8875 17.24452,-18.0726 z"
+   id="1290"
+   data-name="Kristianstad"
+   inkscape:connector-curvature="0" />
+
+<path
+   style="fill:#333333;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+   d="m 479.43254,479.56813 13.95864,8.21481 15.61472,-18.07258 -1.64298,-20.53047 -13.1437,3.28593 -9.04286,-15.61472 13.1437,-21.35854 -3.28593,-27.93035 -9.85777,-6.57186 -22.17345,18.07258 -24.64444,-32.85926 -14.78665,-6.57183 -24.64445,-2.45787 -9.04288,8.21481 0.82807,15.60157 -13.1437,14.78668 -8.21482,18.07258 2.45787,23.82953 5.75695,11.50075 18.07258,-1.64296 0,9.02971 -13.97176,18.90064 7.3999,13.95862 17.24454,9.04287 0,0 10.68584,-9.04287 20.53047,1.64297 -2.45787,-11.50074 13.1437,-10.67268 z"
+   id="1266"
+   data-name="Hörby"
+   inkscape:connector-curvature="0" />
+
+<path
+   style="fill:#333333;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+   d="m 338.95265,707.93999 37.78815,1.64295 19.71556,-23.81638 -9.8578,-17.25769 12.32881,-16.42963 -0.82806,-31.21631 -30.38824,-11.50072 -13.1437,-23.00149 -8.21482,4.11397 -2.47101,16.42963 -5.7438,13.14372 -8.21482,-0.82806 -0.82806,24.64444 0,0 6.57186,8.21482 -2.45787,16.42963 -7.3999,13.1437 10.68583,6.57186 z"
+   id="1264"
+   data-name="Skurup"
+   inkscape:connector-curvature="0" />
+
+<path
+   style="fill:#333333;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+   d="m 416.99996,489.4259 20.53047,1.64297 -2.45787,-11.50074 13.1437,-10.67268 31.21628,10.67268 13.95864,8.21481 -6.57186,16.42963 23.82953,35.33028 2.45787,17.24454 -24.64445,26.2874 -12.31563,-2.45787 -4.92891,14.78668 -14.78665,-3.28593 -13.1437,15.60156 -16.42963,9.04288 -28.75844,4.10082 -30.38824,-11.50072 -13.1437,-23.00149 8.21481,-30.38824 19.71556,-1.64296 2.45787,-9.85779 0,0 4.11397,-9.85777 -18.07258,-18.0726 18.07258,-27.11546 17.24454,9.04287 z"
+   id="1265"
+   data-name="Sjöbo"
+   inkscape:connector-curvature="0" />
+
+<path
+   style="fill:#333333;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+   d="m 369.35404,413.84961 8.21482,-18.07258 13.1437,-14.78668 -0.82807,-15.60157 9.04288,-8.21481 9.85777,-16.42963 4.10085,-34.50224 -28.74529,-9.04285 -4.11397,-20.53048 -18.8875,4.10085 -5.75695,16.42963 -13.95861,6.57184 -3.28593,20.54362 -26.2874,-0.82806 8.21482,23.82953 -3.28594,14.78667 17.24455,13.95862 9.04285,18.90064 -13.97176,4.10082 0.82806,27.93038 -3.28593,12.32881 0,0 13.1437,23.00146 18.88752,-1.64295 2.47102,-17.25769 10.67268,-5.7438 z"
+   id="1267"
+   data-name="Höör"
+   inkscape:connector-curvature="0" />
+
+<path
+   style="fill:#333333;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+   d="m 573.08144,505.85553 -21.35852,12.3288 -4.92888,38.60306 33.67417,8.21482 4.11397,23.00146 -16.42963,3.28593 -4.92888,36.14519 -10.68583,22.18658 -24.64445,-2.47102 -15.60159,9.04286 -27.11544,-23.00147 0.82804,-13.1437 -14.78667,-24.64444 4.92891,-14.78668 12.31563,2.45787 24.64445,-26.2874 -2.45787,-17.24454 -23.82953,-35.33028 6.57186,-16.42963 15.61472,-18.07258 13.95861,17.25767 16.42963,-3.28593 0,0 4.92888,-10.68583 11.50075,2.47101 3.28593,9.02973 0,13.1437 z"
+   id="1270"
+   data-name="Tomelilla"
+   inkscape:connector-curvature="0" />
+
+<path
+   style="fill:#333333;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+   d="m 564.03858,648.79331 -11.50074,0.82806 -24.64445,-2.47102 -15.60159,9.04286 -27.11544,-23.00147 0.82804,-13.1437 -14.78667,-24.64444 -14.78665,-3.28593 -13.1437,15.60156 -16.42963,9.04288 -28.75844,4.10082 0.82806,31.21631 -12.32881,16.42963 9.8578,17.25769 18.07258,0 12.32881,-7.39992 39.43109,3.28593 23.0015,-4.92889 13.95861,5.75695 35.33027,27.10231 14.78666,-1.64295 0,0 30.38826,4.92888 6.57184,-11.50074 -23.81638,-30.38825 -7.3999,-9.04287 z"
+   id="1286"
+   data-name="Ystad"
+   inkscape:connector-curvature="0" />
+
+<path
+   style="fill:#333333;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+   d="m 608.39859,668.50887 -18.07261,32.85926 -23.81638,-30.38825 -7.3999,-9.04287 4.92888,-13.1437 -11.50074,0.82806 10.68583,-22.18658 4.92888,-36.14519 16.42963,-3.28593 -4.11397,-23.00146 -33.67417,-8.21482 4.92888,-38.60306 21.35852,-12.3288 -13.97174,-8.21482 0,-13.1437 32.85926,0.82807 4.92888,40.24601 20.5436,13.97176 0,0 5.7438,35.31712 18.07261,16.42963 4.11397,27.11547 -11.50075,23.00149 z"
+   id="1291"
+   data-name="Simrishamn"
+   inkscape:connector-curvature="0" />
+   
+<path
+   style="fill:#333333;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+   d="m 347.99551,150.16062 9.85779,6.57185 5.7438,-14.78667 1.64295,-32.04435 23.82953,-14.786665 1.64298,-11.50074 -27.11546,-1.642963 -13.1437,-13.143704 -12.31566,10.685829 -13.97176,-1.642963 -26.2874,15.601578 -20.53048,19.715558 -14.78665,14.78666 -29.57335,36.97324 -0.82804,22.17343 25.47248,20.54361 0,0 9.8578,-15.61472 14.78665,4.92889 27.10233,-35.31713 25.47249,5.7438 z"
+   id="1257"
+   data-name="Örkelljunga"
+   inkscape:connector-curvature="0" />
+
+<path
+   style="fill:#333333;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+   d="m 339.78069,218.337 6.57186,-14.78665 -11.50074,-36.14519 -25.47249,-5.7438 -27.10233,35.31713 0.81491,18.0726 12.32881,13.97174 -4.92891,5.7438 9.02973,16.42964 0,0 20.54363,0 16.42962,13.14372 11.50073,-22.17345 0,-11.50073 z"
+   id="1275"
+   data-name="Perstorp"
+   inkscape:connector-curvature="0" />
+
+<path
+   style="fill:#333333;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+   d="m 341.42367,303.77109 13.95861,-6.57184 5.75695,-16.42963 -4.92891,-5.74382 -10.68583,5.74382 -9.02971,-16.42963 -16.42962,-13.14372 -20.54363,0 -9.02973,-16.42964 4.92891,-5.7438 -12.32881,-13.97174 -0.81491,-18.0726 -14.78665,-4.92889 -9.8578,15.61472 -25.47248,-20.54361 -13.95862,8.21482 -27.93038,-3.28593 4.10085,17.25767 24.64444,20.53048 3.28591,38.61621 20.54363,13.95861 9.02973,25.47251 12.32878,6.57184 11.50075,-3.28593 0,0 23.00147,1.64297 4.10084,8.21482 9.04288,2.45787 26.2874,0.82806 z"
+   id="1276"
+   data-name="Klippan"
+   inkscape:connector-curvature="0" />
+
+<path
+   style="fill:#333333;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+   d="m 390.71256,83.614045 -1.64298,11.50074 -23.82953,14.786665 -1.64295,32.04435 -5.7438,14.78667 -9.85779,-6.57185 -13.1437,17.24454 11.50074,36.14519 -6.57186,14.78665 8.21482,12.32881 0,11.50073 -11.50073,22.17345 9.02971,16.42963 10.68583,-5.74382 4.92891,5.74382 18.8875,-4.10085 4.11397,20.53048 28.74529,9.04285 -4.10085,34.50224 -9.85777,16.42963 24.64445,2.45787 14.78665,6.57183 16.42963,-8.21481 -8.21482,-15.60157 18.88752,-27.11546 9.85777,12.32879 21.35852,-6.57184 29.57335,-42.71705 -4.10085,-13.97174 9.85777,-21.35854 -4.11397,-19.71554 -4.92888,-18.88752 5.75692,-30.40138 0,-33.67417 -21.35851,-0.82805 1.64298,-18.88751 -14.78668,-8.21481 0,0 L 499.1481,98.400711 497.50515,87.728022 449.03117,97.5858 434.2445,73.756267 Z"
+   id="1293"
+   data-name="Hässleholm"
+   inkscape:connector-curvature="0" />
+
+<path
+   style="fill:#333333;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+   d="m 207.51561,564.18729 9.85776,0 3.28593,-2.47101 5.75696,7.3999 0,19.71556 -10.68584,5.74379 5.75695,9.85777 -10.68583,10.68583 -18.07261,0 -3.28593,7.38678 -37.78814,4.11397 -6.57184,-16.42963 -1.64298,-15.61472 0,-11.50074 6.57186,-6.57184 18.07258,-10.6727 0,0 10.68584,-7.39991 13.95861,-3.28593 2.47102,-7.38675 6.57186,7.38675 z"
+   id="1280"
+   data-name="Malmö"
+   inkscape:connector-curvature="0" />
+
+<path
+   style="fill:#333333;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+   d="m 229.70219,457.3947 24.64445,-2.47102 5.74379,-18.07258 -5.74379,-12.31566 -25.47251,0.81491 -30.38825,-6.57186 -9.04288,11.50075 -32.85926,0 1.64298,31.2163 -4.10085,3.28591 -4.92888,6.57186 4.92888,9.04288 9.85779,-4.92891 4.10082,9.02973 -4.10082,6.57186 5.7438,2.47102 8.21482,0 8.21481,-15.61472 0,0 12.32879,-1.64297 10.67268,7.3999 10.68583,-4.11397 6.57187,0.82806 z"
+   id="1261"
+   data-name="Kävlinge"
+   inkscape:connector-curvature="0" />
+
+<path
+   style="fill:#333333;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+   d="m 219.01635,549.40062 8.21483,-9.85777 -9.02974,-6.57186 -4.92889,-0.82804 -2.47101,2.47101 0,4.92889 -15.60159,1.64295 0,6.57186 6.57186,7.38675 5.7438,9.04288 9.85776,0 3.28593,-2.47101 0,0 2.47102,-4.10085 -9.04288,-2.47102 -3.2859,-4.92888 3.2859,-0.81491 z"
+   id="1231"
+   data-name="Burlöv"
+   data-callout="true"
+   inkscape:connector-curvature="0" />
+
+<path
+   style="fill:#333333;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+   d="m 298.70662,312.81396 -23.00147,-1.64297 -11.50075,3.28593 -12.32878,-6.57184 -9.02973,-25.47251 -20.54363,-13.95861 -13.1437,9.85777 -15.60157,20.53047 2.45787,26.2874 -15.60157,11.50075 -1.64297,13.97176 -10.68584,5.7438 -1.64295,13.14369 14.78665,16.42963 -4.10082,13.97177 11.50075,6.57186 5.7438,-4.92891 4.11397,17.24454 30.38825,6.57186 4.11397,-10.67268 -5.75692,-5.75694 0,-14.78668 11.50072,-8.21482 10.68583,2.47102 0,0 17.24454,-9.04285 18.07261,-1.64298 -3.28593,-21.35851 21.35851,-35.31713 z"
+   id="1214"
+   data-name="Svalöv"
+   inkscape:connector-curvature="0" />
+
+<path
+   style="fill:#333333;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+   d="m 285.56292,560.07332 -4.92889,9.04286 -8.21481,-8.21482 -6.57186,-2.47102 -9.04286,4.92889 -13.14369,-2.45787 -3.28594,7.38678 -13.95861,0.82804 -5.75696,-7.3999 2.47102,-4.10085 -9.04288,-2.47102 -3.2859,-4.92888 3.2859,-0.81491 4.92891,0 8.21483,-9.85777 -9.02974,-6.57186 1.64295,-14.78666 -4.11397,-4.92888 2.47102,-5.75695 10.67269,-0.81491 9.04288,14.78668 10.67268,-5.75695 2.47102,8.21481 22.17342,-4.92888 0,0 12.32879,24.64444 11.50074,8.21482 0.81492,11.50072 -7.38678,2.47102 z"
+   id="1230"
+   data-name="Staffanstorp"
+   inkscape:connector-curvature="0" />
+   
+<path
+   style="fill:#333333;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+   d="m 189.443,622.50591 3.28593,-7.38678 18.07261,0 11.50072,22.17343 9.8578,1.64298 -2.45787,3.28593 -1.64297,6.57184 -9.85778,9.85779 -11.50075,-6.57186 -7.3999,0.82806 -3.28593,-1.64298 -6.57186,0.81492 2.47102,18.90064 3.28593,5.7438 -9.85777,4.11397 -10.68583,15.60159 -12.31566,-9.02973 -10.68583,2.45787 -4.92889,2.47102 -1.64295,4.92888 -5.7438,0 -4.92891,-5.75692 -6.57184,-1.64298 -20.54362,7.3999 18.07261,-36.97323 1.64295,4.11397 3.28593,13.14373 9.85777,4.10082 8.21481,1.64297 4.114,-7.38677 0,0 4.92888,-13.97176 1.64296,-13.95862 -3.28591,-10.68583 -4.11399,-10.67268 z"
+   id="1233"
+   data-name="Vellinge"
+   inkscape:connector-curvature="0" />
+
+<path
+   style="fill:#333333;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+   d="m 223.13032,495.18284 -5.75695,6.57186 0.82807,5.7438 -2.47102,5.75695 4.11397,4.92888 -1.64295,14.78666 -4.92889,-0.82804 -2.47101,2.47101 0,4.92889 -15.60159,1.64295 0,-4.11397 4.92888,-12.31566 0,-4.92888 -4.11397,-12.32879 -5.7438,-4.10084 -12.32878,-9.85777 8.21481,-15.61472 0,0 12.32879,-1.64297 10.67268,7.3999 10.68583,-4.11397 6.57187,0.82806 z"
+   id="1262"
+   data-name="Lomma"
+   inkscape:connector-curvature="0" />
+
+<path
+   style="fill:#333333;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+   d="m 310.20736,614.29109 -7.3999,-17.24454 -9.02973,2.45787 -13.1437,-30.38824 -8.21481,-8.21482 -6.57186,-2.47102 -9.04286,4.92889 -13.14369,-2.45787 -3.28594,7.38678 -13.95861,0.82804 0,19.71556 -10.68584,5.74379 5.75695,9.85777 -10.68583,10.68583 11.50072,22.17343 9.8578,1.64298 -2.45787,3.28593 15.60157,4.11397 3.28593,-5.75695 7.3999,-0.81491 -0.82806,7.38677 5.75694,1.64296 11.50075,-6.57184 7.38675,5.75692 0,0 25.47251,-0.82804 12.31566,-14.78667 6.57184,-8.21482 5.75694,-4.92888 z"
+   id="1263"
+   data-name="Svedala"
+   inkscape:connector-curvature="0" />
+
+<path
+   style="fill:#333333;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+   d="m 285.56292,560.07332 -4.92889,9.04286 13.1437,30.38824 9.02973,-2.45787 7.3999,17.24454 19.71556,4.92889 8.21482,0.82806 5.7438,-13.14372 2.47101,-16.42963 8.21482,-4.11397 8.21481,-30.38824 19.71556,-1.64296 2.45787,-9.85779 4.11397,-9.85777 -18.07258,-18.0726 -10.68583,-3.28591 -23.0015,-18.90065 -11.50072,-1.64297 -13.95861,-8.21482 -19.71556,-4.92888 -9.85779,1.64295 1.64298,-10.67268 -4.92889,-7.3999 -12.32881,3.28593 -8.21481,-10.67268 -4.10082,-0.82807 -24.64445,2.47102 -3.28593,23.00149 -3.28594,14.78665 -5.75695,6.57186 0.82807,5.7438 10.67269,-0.81491 9.04288,14.78668 10.67268,-5.75695 2.47102,8.21481 22.17342,-4.92888 0,0 12.32879,24.64444 11.50074,8.21482 0.81492,11.50072 -7.38678,2.47102 z"
+   id="1281"
+   data-name="Lund"
+   inkscape:connector-curvature="0" />
+
+<path
+   style="fill:#333333;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+   d="m 177.12736,399.891 11.50075,6.57186 5.7438,-4.92891 4.11397,17.24454 -9.04288,11.50075 -32.85926,0 -6.57184,-23.00149 -23.8164,-5.7438 -18.07259,-55.86073 13.95862,-1.64297 6.57186,12.31566 0,0 17.25767,-5.7438 13.1437,6.57186 7.38677,12.31563 14.78665,16.42963 z"
+   id="1282"
+   data-name="Landskrona"
+   inkscape:connector-curvature="0" />
+
+<path
+   style="fill:#333333;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+   d="m 377.56886,449.17989 18.07258,-1.64296 0,9.02971 -13.97176,18.90064 7.3999,13.95862 -18.07258,27.11546 -10.68583,-3.28591 -23.0015,-18.90065 -11.50072,-1.64297 -13.95861,-8.21482 -19.71556,-4.92888 -9.85779,1.64295 1.64298,-10.67268 -4.92889,-7.3999 -12.32881,3.28593 -8.21481,-10.67268 -4.10082,-0.82807 5.74379,-18.07258 -5.74379,-12.31566 -25.47251,0.81491 4.11397,-10.67268 -5.75692,-5.75694 0,-14.78668 11.50072,-8.21482 10.68583,2.47102 17.24454,-9.04285 18.07261,-1.64298 -3.28593,-21.35851 21.35851,-35.31713 9.04288,2.45787 8.21482,23.82953 -3.28594,14.78667 17.24455,13.95862 9.04285,18.90064 -13.97176,4.10082 0.82806,27.93038 -3.28593,12.32881 0,0 13.1437,23.00146 18.88752,-1.64295 2.47102,-17.25769 10.67268,-5.7438 z"
+   id="1285"
+   data-name="Eslöv"
+   inkscape:connector-curvature="0" />
+
+<path
+   style="fill:#333333;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+   d="m 338.95265,707.93999 -11.50074,4.11397 -11.50075,9.02973 -13.95861,0.82804 -15.61472,9.85779 -5.7438,-6.57186 -11.50074,1.64298 -8.21482,-3.28594 -17.25766,-9.85779 -32.03123,-8.21481 -12.32879,2.45789 -8.21481,0 -16.42963,-11.50075 10.68583,-15.60159 9.85777,-4.11397 -3.28593,-5.7438 -2.47102,-18.90064 6.57186,-0.81492 3.28593,1.64298 7.3999,-0.82806 11.50075,6.57186 9.85778,-9.85779 1.64297,-6.57184 15.60157,4.11397 3.28593,-5.75695 7.3999,-0.81491 -0.82806,7.38677 5.75694,1.64296 11.50075,-6.57184 7.38675,5.75692 25.47251,-0.82804 12.31566,-14.78667 6.57184,-8.21482 5.75694,-4.92888 -0.82806,24.64444 0,0 6.57186,8.21482 -2.45787,16.42963 -7.3999,13.1437 10.68583,6.57186 z"
+   id="1287"
+   data-name="Trelleborg"
+   inkscape:connector-curvature="0" />
+
+<path
+   style="fill:#333333;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+   d="m 180.41329,252.02433 -7.39992,-5.75695 -24.64445,10.68583 9.8578,32.85926 5.75694,17.24455 -12.3288,5.75694 15.61471,24.64445 13.14372,-0.82806 0,0 15.60157,-11.50075 -2.45787,-26.2874 15.60157,-20.53047 -16.42963,-23.82953 z"
+   id="1260"
+   data-name="Bjuv"
+   inkscape:connector-curvature="0" />
+
+<path
+   style="fill:#333333;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+   d="m 192.72893,254.4822 -12.31564,-2.45787 -7.39992,-5.75695 -24.64445,10.68583 -13.14369,-16.42963 22.18657,-8.21482 16.42963,-3.28593 0.81492,-9.04285 0,0 19.71556,-10.67271 24.64444,20.53048 3.28591,38.61621 -13.1437,9.85777 z"
+   id="1277"
+   data-name="Åstorp"
+   inkscape:connector-curvature="0" />
+
+<path
+   style="fill:#333333;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+   d="M 163.98366,53.2258 144.2681,61.440615 127.83847,49.111822 105.6519,39.254045 89.222268,45.825896 71.977724,59.797652 l 1.642978,23.816393 18.072583,5.75694 16.429625,14.786665 7.38676,22.17343 0,0 29.57335,-6.57185 16.42963,-24.644445 15.61471,5.756945 9.02973,-32.859263 z"
+   id="1278"
+   data-name="Båstad"
+   inkscape:connector-curvature="0" />
+
+<path
+   style="fill:#333333;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+   d="m 178.77032,350.60211 1.64297,-13.97176 -13.14372,0.82806 -15.61471,-24.64445 12.3288,-5.75694 -5.75694,-17.24455 -9.8578,-32.85926 -13.14369,-16.42963 -13.95862,-15.61472 13.1437,-14.78667 -13.97174,-19.71555 -8.21481,-2.45787 -7.38678,13.14369 -24.644441,17.24454 0.814914,9.85779 -32.859259,6.57184 11.500745,13.14373 13.143699,21.35851 16.42963,20.5436 13.143702,25.45936 5.75694,30.40139 13.95862,-1.64297 6.57186,12.31566 0,0 17.25767,-5.7438 13.1437,6.57186 7.38677,12.31563 1.64295,-13.14369 z"
+   id="1283"
+   data-name="Helsingborg"
+   inkscape:connector-curvature="0" />
+
+<path
+   style="fill:#333333;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+   d="m 80.192539,218.337 24.644441,-17.24454 7.38678,-13.14369 -11.50075,-4.11398 -9.857789,0 -8.214815,-13.14371 -26.287398,-15.60157 -30.388242,-20.54361 -15.614716,1.64296 13.971763,11.50074 10.672682,19.71556 0,0 4.11397,18.90064 5.743798,37.78815 3.285931,10.67268 32.859259,-6.57184 z"
+   id="1284"
+   data-name="Höganäs"
+   inkscape:connector-curvature="0" />
+
+<path
+   style="fill:#333333;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;fill-opacity:1"
+   d="m 191.91402,104.97256 -14.78666,-4.10083 -15.61471,-5.756945 -16.42963,24.644445 -29.57335,6.57185 16.42962,17.25769 9.04288,19.71555 -7.3999,18.07259 -13.1437,9.02973 13.97174,19.71555 -13.1437,14.78667 13.95862,15.61472 22.18657,-8.21482 16.42963,-3.28593 0.81492,-9.04285 19.71556,-10.67271 -4.10085,-17.25767 27.93038,3.28593 0,0 13.95862,-8.21482 0.82804,-22.17343 29.57335,-36.97324 -16.42963,-13.95861 z"
+   id="1292"
+   data-name="Ängelholm"
+   inkscape:connector-curvature="0" />
+</g>
+</svg>
+</div>
+
+  <div class="controls">
+    <button class="active" data-period="today">Idag</button>
+    <button data-period="week">Denna vecka</button>
+    <button data-period="month">Denna månad</button>
+    <button data-period="previousMonth">Föregående månad</button>
+    <button data-period="yearToDate">Sedan årets början</button>
+    <button data-period="lastYear">Förra året</button>
+  </div>
+
+</div>
+
+<div class="map-tooltip" id="mapTooltip"></div>
+
+<script>
+let visitRows = [];
+let visitData = {};
+let currentPeriod = "today";
+let currentFF = "All data";
+const svg = document.querySelector("svg.map-svg");
+const buttons = document.querySelectorAll(".controls button");
+const SVG_NS = "http://www.w3.org/2000/svg";
+const tooltip = document.getElementById("mapTooltip");
+const summaryTotal = document.getElementById("summaryTotal");
+const summaryLund = document.getElementById("summaryLund");
+const summaryLundPercent = document.getElementById("summaryLundPercent");
+const summaryLundRegion = document.getElementById("summaryLundRegion");
+const summaryLundRegionPercent = document.getElementById("summaryLundRegionPercent");
+const summaryOther = document.getElementById("summaryOther");
+const summaryOtherPercent = document.getElementById("summaryOtherPercent");
+
+const lundRegionMunicipalities = [
+  "Lund",
+  "Eslöv",
+  "Sjöbo",
+  "Skurup",
+  "Svedala",
+  "Staffanstorp",
+  "Lomma",
+  "Kävlinge",
+  "Burlöv",
+  "Malmö"
+];
+
+const toggleLund = document.getElementById("toggleLund");
+const toggleLundRegion = document.getElementById("toggleLundRegion");
+
+const FF_OPTIONS = [
+  "All data",
+  "Förskola",
+  "Förskoleklass",
+  "Årskurs 1",
+  "Årskurs 2",
+  "Årskurs 3",
+  "Årskurs 4",
+  "Årskurs 5",
+  "Årskurs 6",
+  "Årskurs 7",
+  "Årskurs 8",
+  "Årskurs 9",
+  "Gymnasium",
+  "Vuxenutbildning",
+  "Högskola, universitet",
+  "Lågstadiet",
+  "Mellanstadiet",
+  "Högstadiet",
+  "Grundskola",
+  "Skola barn",
+  "Skola vuxen"
+];
+
+function parseCSV(text) {
+  const lines = text.trim().split(/\r?\n/);
+  const headers = lines.shift().split(";").map(h => h.trim());
+
+  return lines
+    .filter(line => line.trim())
+    .map(line => {
+      const values = line.split(";").map(v => v.trim());
+      const row = {};
+
+      headers.forEach((header, index) => {
+        row[header] = values[index];
+      });
+
+      return {
+        datum: row.datum,
+        kommun: row.kommun,
+        skolnivå: normaliseSchoolLevel(row.skolnivå),
+        antal: Number(row.antal) || 0
+      };
+    });
+}
+
+function normaliseSchoolLevel(level) {
+  if (!level) return "";
+
+  return level
+    .replace(/^Åk\s*/i, "Årskurs ")
+    .replace(/^År\s*/i, "Årskurs ")
+    .trim();
+}
+
+function getSelectedFFLevels() {
+  if (currentFF === "All data") return null;
+
+  const groups = {
+    "Lågstadiet": ["Förskoleklass", "Årskurs 1", "Årskurs 2", "Årskurs 3"],
+    "Mellanstadiet": ["Årskurs 4", "Årskurs 5", "Årskurs 6"],
+    "Högstadiet": ["Årskurs 7", "Årskurs 8", "Årskurs 9"],
+    "Grundskola": [
+      "Förskoleklass",
+      "Årskurs 1", "Årskurs 2", "Årskurs 3",
+      "Årskurs 4", "Årskurs 5", "Årskurs 6",
+      "Årskurs 7", "Årskurs 8", "Årskurs 9"
+    ],
+    "Skola barn": [
+      "Förskola",
+      "Förskoleklass",
+      "Årskurs 1", "Årskurs 2", "Årskurs 3",
+      "Årskurs 4", "Årskurs 5", "Årskurs 6",
+      "Årskurs 7", "Årskurs 8", "Årskurs 9",
+      "Gymnasium"
+    ],
+    "Skola vuxen": ["Vuxenutbildning", "Högskola, universitet"]
+  };
+
+  return groups[currentFF] || [currentFF];
+}
+
+function isRowIncludedByFF(row) {
+  const selectedLevels = getSelectedFFLevels();
+
+  if (!selectedLevels) return true;
+
+  return selectedLevels.includes(row.skolnivå);
+}
+
+function dateOnly(date) {
+  return date.toISOString().slice(0, 10);
+}
+
+function getPeriodKey(dateString) {
+  const today = new Date();
+  const date = new Date(dateString + "T00:00:00");
+
+  const todayStr = dateOnly(today);
+
+  const startOfWeek = new Date(today);
+  const day = startOfWeek.getDay() || 7;
+  startOfWeek.setDate(today.getDate() - day + 1);
+  startOfWeek.setHours(0, 0, 0, 0);
+
+  const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  const startOfPreviousMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+  const endOfPreviousMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+
+  const startOfYear = new Date(today.getFullYear(), 0, 1);
+  const startOfLastYear = new Date(today.getFullYear() - 1, 0, 1);
+  const endOfLastYear = new Date(today.getFullYear() - 1, 11, 31);
+
+  return {
+    today: dateString === todayStr,
+    week: date >= startOfWeek && date <= today,
+    month: date >= startOfMonth && date <= today,
+    previousMonth: date >= startOfPreviousMonth && date <= endOfPreviousMonth,
+    yearToDate: date >= startOfYear && date <= today,
+    lastYear: date >= startOfLastYear && date <= endOfLastYear
+  };
+}
+
+function buildVisitData() {
+  const periods = {
+    today: {},
+    week: {},
+    month: {},
+    previousMonth: {},
+    yearToDate: {},
+    lastYear: {}
+  };
+
+  visitRows
+    .filter(isRowIncludedByFF)
+    .forEach(row => {
+      const periodMatch = getPeriodKey(row.datum);
+
+      Object.keys(periods).forEach(period => {
+        if (!periodMatch[period]) return;
+
+        periods[period][row.kommun] =
+          (periods[period][row.kommun] || 0) + row.antal;
+      });
+    });
+
+  visitData = periods;
+}
+
+async function loadCSVData() {
+  try {
+    const response = await fetch("skoldata.csv");
+
+    if (!response.ok) {
+      throw new Error(`Kunde inte läsa skoldata.csv: ${response.status}`);
+    }
+
+    const text = await response.text();
+
+    visitRows = parseCSV(text);
+    buildVisitData();
+    renderVisits(currentPeriod);
+  } catch (error) {
+    console.error(error);
+    alert("Kunde inte läsa skoldata.csv. Kontrollera filnamn, sökväg och att sidan körs via lokal server.");
+  }
+}
+
+function initFFSelect() {
+  const wrapper = document.getElementById("ffSelectWrapper");
+  const trigger = document.getElementById("ffSelectTrigger");
+  const labelEl = document.getElementById("ffSelectLabel");
+  const hidden = document.getElementById("ffFilter");
+  const cols = document.getElementById("ffDropdownCols");
+
+  cols.innerHTML = "";
+
+  FF_OPTIONS.forEach(option => {
+    const opt = document.createElement("div");
+    opt.className = "dropdown-option" + (option === hidden.value ? " selected" : "");
+    opt.textContent = option;
+
+    opt.addEventListener("click", () => {
+      hidden.value = option;
+      labelEl.textContent = option;
+
+      wrapper.querySelectorAll(".dropdown-option").forEach(o => {
+        o.classList.remove("selected");
+      });
+
+      opt.classList.add("selected");
+      wrapper.classList.remove("open");
+
+      // Här kopplar vi senare dropdownvalet till kartans datafilter.
+      currentFF = option;
+	  buildVisitData();
+	  renderVisits(currentPeriod);
+    });
+
+    cols.appendChild(opt);
+  });
+
+  trigger.addEventListener("click", event => {
+    event.stopPropagation();
+
+    document.querySelectorAll(".custom-select-wrapper.open").forEach(w => {
+      if (w !== wrapper) w.classList.remove("open");
+    });
+
+    wrapper.classList.toggle("open");
+  });
+
+  wrapper.querySelector(".custom-select-dropdown").addEventListener("click", event => {
+    event.stopPropagation();
+  });
+}
+
+document.addEventListener("click", () => {
+  document.querySelectorAll(".custom-select-wrapper.open").forEach(w => {
+    w.classList.remove("open");
+  });
+});
+
+initFFSelect();
+
+function clearMunicipalityHighlights() {
+  svg.querySelectorAll("path[data-name]").forEach(path => {
+    path.classList.remove("highlighted-municipality");
+  });
+}
+
+function highlightMunicipalities(names) {
+  names.forEach(name => {
+    const path = svg.querySelector(`path[data-name="${name}"]`);
+    if (path) {
+      path.classList.add("highlighted-municipality");
+    }
+  });
+}
+
+function updateMunicipalityHighlights() {
+  clearMunicipalityHighlights();
+
+  if (toggleLundRegion.checked) {
+    highlightMunicipalities(lundRegionMunicipalities);
+    return;
+  }
+
+  if (toggleLund.checked) {
+    highlightMunicipalities(["Lund"]);
+  }
+}
+
+toggleLund.addEventListener("change", () => {
+  if (toggleLund.checked) {
+    toggleLundRegion.checked = false;
+  }
+
+  updateMunicipalityHighlights();
+});
+
+toggleLundRegion.addEventListener("change", () => {
+  if (toggleLundRegion.checked) {
+    toggleLund.checked = false;
+  }
+
+  updateMunicipalityHighlights();
+});
+
+function sumMunicipalities(data, names) {
+  return names.reduce((sum, name) => sum + (data[name] || 0), 0);
+}
+
+function updateSummary(period) {
+  const data = visitData[period] || {};
+
+  const total = Object.values(data).reduce((sum, value) => sum + value, 0);
+  const lund = data["Lund"] || 0;
+  const lundRegion = sumMunicipalities(data, lundRegionMunicipalities);
+  const other = data["Övrigt"] || 0;
+
+  summaryTotal.textContent = formatSwedishNumber(total);
+
+  summaryLund.textContent = formatSwedishNumber(lund);
+  summaryLundPercent.textContent = `(${formatPercent(lund, total)})`;
+
+  summaryLundRegion.textContent = formatSwedishNumber(lundRegion);
+  summaryLundRegionPercent.textContent = `(${formatPercent(lundRegion, total)})`;
+
+  summaryOther.textContent = formatSwedishNumber(other);
+  summaryOtherPercent.textContent = `(${formatPercent(other, total)})`;
+}
+
+function showMunicipalityTooltip(path) {
+  const name = path.dataset.name;
+  if (!name) return;
+
+  const box = path.getBBox();
+  const point = svg.createSVGPoint();
+
+  point.x = box.x + box.width / 2;
+  point.y = box.y + box.height / 2;
+
+  const screenPoint = point.matrixTransform(path.getScreenCTM());
+
+  tooltip.textContent = name;
+  tooltip.style.left = `${screenPoint.x}px`;
+  tooltip.style.top = `${screenPoint.y}px`;
+  tooltip.classList.add("visible");
+}
+
+function formatPercent(part, total) {
+  if (!total) return "0 %";
+  return new Intl.NumberFormat("sv-SE", {
+    maximumFractionDigits: 1
+  }).format((part / total) * 100) + " %";
+}
+
+function hideMunicipalityTooltip() {
+  tooltip.classList.remove("visible");
+}
+
+svg.querySelectorAll("path[data-name]").forEach(path => {
+  path.addEventListener("mouseenter", () => {
+    showMunicipalityTooltip(path);
+  });
+
+  path.addEventListener("mouseleave", () => {
+    hideMunicipalityTooltip();
+  });
+});
+
+function formatSwedishNumber(value) {
+  return new Intl.NumberFormat("sv-SE").format(value);
+}
+
+function clearVisitLabels() {
+  svg.querySelectorAll(".visit-label, .callout-line").forEach(el => el.remove());
+}
+
+function getMunicipalityCenter(path) {
+  const box = path.getBBox();
+
+  return {
+    x: box.x + box.width / 2,
+    y: box.y + box.height / 2,
+    width: box.width,
+    height: box.height
+  };
+}
+
+function shouldUseCallout(path, center) {
+  return (
+    path.dataset.callout === "true" ||
+    center.width < 34 ||
+    center.height < 24
+  );
+}
+
+function addText(x, y, value) {
+  const text = document.createElementNS(SVG_NS, "text");
+  text.setAttribute("x", x);
+  text.setAttribute("y", y);
+  text.setAttribute("class", "visit-label");
+  text.setAttribute("text-anchor", "middle");
+  text.setAttribute("dominant-baseline", "middle");
+  text.textContent = formatSwedishNumber(value);
+  svg.appendChild(text);
+}
+
+function addLine(x1, y1, x2, y2) {
+  const line = document.createElementNS(SVG_NS, "line");
+  line.setAttribute("x1", x1);
+  line.setAttribute("y1", y1);
+  line.setAttribute("x2", x2);
+  line.setAttribute("y2", y2);
+  line.setAttribute("class", "callout-line");
+  svg.insertBefore(line, svg.firstChild);
+}
+
+const labelPositions = {
+  "Burlöv": { callout: true, x: -120, y: -20, lineEndY: -8 },
+  "Kävlinge": { x: -10, y: -12 },  
+  "Lund": { x: 15, y: -15 },
+  "Lomma": { callout: true, x: -120, y: -20, lineEndY: -8 },
+  "Malmö": { x: -12, y: -5 },
+  "Staffanstorp": { x: -10, y: -4 },
+  "Svedala": { x: -18, y: -7 },  
+  "Vellinge": { callout: true, x: -120, y: -20, lineEndY: -8 },   
+  "Ängelholm": { x: -15, y: -15 },  
+};
+
+function renderVisits(period) {
+  clearVisitLabels();
+  updateSummary(period);
+
+  const data = visitData[period] || {};
+  const paths = svg.querySelectorAll("path[data-name]");
+
+  paths.forEach(path => {
+    const name = path.dataset.name;
+    const value = data[name];
+
+    if (value === undefined || value === null) return;
+
+    const center = getMunicipalityCenter(path);
+    const pos = labelPositions[name] || {};
+
+    const useCallout =
+      pos.callout === true ||
+      shouldUseCallout(path, center);
+
+    if (!useCallout) {
+      const labelX = center.x + (pos.x || 0);
+      const labelY = center.y + (pos.y || 0);
+
+      addText(labelX, labelY, value);
+      return;
+    }
+
+    const mapMiddleX = 360;
+
+    const defaultOffsetX = center.x < mapMiddleX ? -46 : 46;
+    const defaultOffsetY = -18;
+
+    const offsetX = pos.x ?? defaultOffsetX;
+    const offsetY = pos.y ?? defaultOffsetY;
+
+    const labelX = center.x + offsetX;
+    const labelY = center.y + offsetY;
+
+    const lineEndX = center.x + (pos.lineEndX || 0);
+    const lineEndY = center.y + (pos.lineEndY || 0);
+
+    addLine(labelX, labelY, lineEndX, lineEndY);
+    addText(labelX, labelY, value);
+  });
+}
+
+buttons.forEach(button => {
+  button.addEventListener("click", () => {
+    buttons.forEach(b => b.classList.remove("active"));
+    button.classList.add("active");
+
+    currentPeriod = button.dataset.period;
+    renderVisits(currentPeriod);
+  });
+});
+
+loadCSVData();
+</script>
+
+</body>
+</html>
