@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Skåne – karta</title>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
 <style>
   * {
     box-sizing: border-box;
@@ -18,329 +20,550 @@
     background: #ffffff;
   }
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  display: grid;
-  place-items: center;
-  background: #fff;
-  overflow: hidden;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    background: #fff;
+    overflow: hidden;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+.highlight-controls {
+    position: fixed;
+    top: 22px;
+    right: 24px;
+    z-index: 1000; /* Högre z-index för att ligga över allt */
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+    background: #fff;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    min-width: 200px; /* Ger en stabil bas för X-position */
+}
+
+/* Knapp-styling */
+.save-btn {
+  width: 100%; /* Tar hela behållarens bredd för att linjera med togglarna */
+  padding: 10px 15px;
+  background: #2f2f2f;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 8px;
+}
+
+.save-btn:hover {
+  background: #000;
 }
 
 .app {
   display: grid;
-  grid-template-columns: 220px min(76vw, 82vh) 180px;
+  grid-template-columns: 220px min(76vw, 82vh); /* Tog bort den tredje kolumnen */
   gap: 28px;
   align-items: center;
 }
 
-.map-wrap {
-  width: min(76vw, 82vh);
-  height: min(76vw, 82vh);
-}
+  .map-wrap {
+    width: min(76vw, 82vh);
+    height: min(76vw, 82vh);
+  }
 
 .summary-panel {
   align-self: center;
-  padding: 20px 18px;
+  padding: 24px 22px; /* Lite mer luft för de större texterna */
   border: 1px solid #e2e2e2;
   border-radius: 16px;
   background: #fafafa;
   color: #222;
 }
 
-.summary-label {
-  font-size: 13px;
-  color: #777;
-  margin-bottom: 4px;
+.summary-label, 
+.summary-row .label {
+  font-size: 20px; /* Tidigare 13px */
+  color: #666;
+  margin-bottom: 6px;
+  font-weight: 500;
 }
 
 .summary-total {
-  font-size: 38px;
+  font-size: 46px; /* Tidigare 38px */
   line-height: 1;
   font-weight: 800;
   letter-spacing: -0.04em;
-  margin-bottom: 22px;
+  margin-bottom: 28px;
 }
 
 .summary-row {
   border-top: 1px solid #e1e1e1;
-  padding-top: 12px;
-  margin-top: 12px;
+  padding-top: 16px;
+  margin-top: 16px;
 }
-
-.summary-row .label {
-  font-size: 13px;
-  color: #777;
-  margin-bottom: 3px;
-}
+  .summary-row .label {
+    font-size: 20px;
+    color: #777;
+    margin-bottom: 3px;
+  }
 
 .summary-row .value {
-  font-size: 24px;
-  font-weight: 750;
-  letter-spacing: -0.03em;
+  font-size: 28px; /* Tidigare 24px */
+  font-weight: 800;
+  display: flex;
+  align-items: baseline;
 }
 
 .summary-percent {
-  font-size: 15px;
+  font-size: 20px; /* Tidigare 15px */
   font-weight: 600;
   color: #777;
-  letter-spacing: normal;
-  margin-left: 4px;
+  margin-left: 6px;
 }
 
-svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-  overflow: visible;
-}
+  svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    overflow: visible;
+  }
 
-.controls {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
+  /* --- NYA KONTROLLER FÖR DATUM --- */
+  .controls {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Ökat gap för att separera Från/Till grupperna */
+  }
 
-.controls button {
-  border: 1px solid #ddd;
-  background: #f5f5f5;
-  color: #222;
-  padding: 10px 12px;
-  font-size: 15px;
-  text-align: left;
-  border-radius: 8px;
-  cursor: pointer;
-}
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
 
-.controls button.active {
-  background: #2f2f2f;
-  color: #fff;
-  border-color: #2f2f2f;
-}
+  /* Specifik bredd för datum-dropdowns så de inte blir lika breda som FF-filtret */
+  .controls .custom-select-wrapper {
+    width: 180px;
+  }
 
-.visit-label {
-  font-size: 18px;
-  font-weight: 700;
-  fill: #ffffff;
-  paint-order: stroke;
-  stroke: #000000;
-  stroke-width: 4px;
-  stroke-linejoin: round;
-  pointer-events: none;
-}
+  .controls .custom-select-dropdown {
+    min-width: 180px;
+  }
 
-.callout-line {
-  stroke: #111;
-  stroke-width: 1.5;
-  pointer-events: none;
-}
+  .dropdown-cols-date {
+    display: flex;
+    flex-direction: column;
+    max-height: 250px; /* Gör listan scrollbar om det finns många år/månader */
+    overflow-y: auto;
+    padding: 6px;
+  }
 
-path[data-name] {
-  cursor: pointer;
-}
+  /* Scrollbar-styling för en snyggare känsla */
+  .dropdown-cols-date::-webkit-scrollbar {
+    width: 6px;
+  }
+  .dropdown-cols-date::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+  }
+  /* ------------------------------- */
 
-path[data-name]:hover {
-  fill: #444444 !important;
-}
+  .visit-label {
+    font-size: 18px;
+    font-weight: 700;
+    fill: #ffffff;
+    paint-order: stroke;
+    stroke: #000000;
+    stroke-width: 4px;
+    stroke-linejoin: round;
+    pointer-events: none;
+    transition: fill 0.2s ease;
+  }
 
-.map-tooltip {
-  position: fixed;
-  z-index: 1000;
-  padding: 7px 11px;
-  background: rgba(20, 20, 20, 0.94);
-  color: #fff;
-  font-size: 14px;
-  font-weight: 600;
-  border-radius: 999px;
-  pointer-events: none;
-  opacity: 0;
-  transform: translate(-50%, -115%);
-  transition: opacity 120ms ease, transform 120ms ease;
-  white-space: nowrap;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.22);
-}
+  .callout-line {
+    stroke: #111;
+    stroke-width: 1.5;
+    pointer-events: none;
+  }
 
-.map-tooltip.visible {
-  opacity: 1;
-  transform: translate(-50%, -130%);
-}
+  path[data-name] {
+    cursor: pointer;
+    transition: fill 180ms ease;
+  }
 
-.highlight-controls {
-  position: fixed;
-  top: 22px;
-  right: 24px;
-  z-index: 900;
-  display: flex;
-  gap: 14px;
-  align-items: center;
-}
+  path[data-name]:hover {
+    fill: #777777 !important;
+  }
+
+  .map-tooltip {
+    position: fixed;
+    z-index: 1000;
+    padding: 7px 11px;
+    background: rgba(20, 20, 20, 0.94);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 999px;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, -115%);
+    transition: opacity 120ms ease, transform 120ms ease;
+    white-space: nowrap;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.22);
+  }
+
+  .map-tooltip.visible {
+    opacity: 1;
+    transform: translate(-50%, -130%);
+  }
+
+  .highlight-controls {
+    position: fixed;
+    top: 22px;
+    right: 24px;
+    z-index: 900;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+  }
 
 .toggle {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #222;
-  user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    width: 100%; /* Fyller ut boxen */
 }
 
-.toggle input {
-  display: none;
-}
+  .toggle input {
+    display: none;
+  }
 
-.toggle-track {
-  width: 42px;
-  height: 24px;
-  border-radius: 999px;
-  background: #d6d6d6;
-  position: relative;
-  transition: background 160ms ease;
-}
+  .toggle-track {
+    width: 42px;
+    height: 24px;
+    border-radius: 999px;
+    background: #d6d6d6;
+    position: relative;
+    transition: background 160ms ease;
+  }
 
-.toggle-track::after {
-  content: "";
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
-  transition: transform 160ms ease;
-}
+  .toggle-track::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+    transition: transform 160ms ease;
+  }
 
-.toggle input:checked + .toggle-track {
-  background: #f28c28;
-}
+  .toggle input:checked + .toggle-track {
+    background: #f28c28;
+  }
 
-.toggle input:checked + .toggle-track::after {
-  transform: translateX(18px);
-}
+  .toggle input:checked + .toggle-track::after {
+    transform: translateX(18px);
+  }
 
-path.highlighted-municipality {
-  fill: #f28c28 !important;
-}
+  path.highlighted-municipality {
+    fill: #f28c28 !important;
+  }
 
-path.highlighted-municipality:hover {
-  fill: #ff9f3a !important;
-}
+  path.highlighted-municipality:hover {
+    fill: #ff9f3a !important;
+  }
 
 .ff-filter {
   position: fixed;
   top: 22px;
   left: 24px;
   z-index: 900;
-  width: 220px;
-}
-
-.custom-select-wrapper {
-  position: relative;
-  width: 100%;
-  user-select: none;
-}
-
-.custom-select-trigger {
+  width: 230px; /* Gjorde den lite bredare för att rymma års-dropdownen snyggt */
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 11px 12px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background: #f5f5f5;
-  cursor: pointer;
-  font-size: 15px;
-  color: #222;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  flex-direction: column;
 }
 
-.custom-select-trigger:hover,
-.custom-select-wrapper.open .custom-select-trigger {
-  border-color: #2f2f2f;
-  box-shadow: 0 0 0 3px rgba(47, 47, 47, 0.08);
-}
+  .custom-select-wrapper {
+    position: relative;
+    width: 100%;
+    user-select: none;
+  }
 
-.chevron {
-  width: 16px;
-  height: 16px;
-  fill: #777;
-  transition: transform 0.2s;
-  flex-shrink: 0;
-}
+  .custom-select-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #f5f5f5;
+    cursor: pointer;
+    font-size: 15px;
+    color: #222;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
 
-.custom-select-wrapper.open .chevron {
-  transform: rotate(180deg);
-}
+  .custom-select-trigger:hover,
+  .custom-select-wrapper.open .custom-select-trigger {
+    border-color: #2f2f2f;
+    box-shadow: 0 0 0 3px rgba(47, 47, 47, 0.08);
+  }
 
-.custom-select-dropdown {
-  display: none;
-  position: absolute;
-  top: calc(100% + 6px);
-  left: 0;
-  min-width: 560px;
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  z-index: 1000;
-  box-shadow: 0 12px 28px rgba(0,0,0,0.14);
-}
+  .chevron {
+    width: 16px;
+    height: 16px;
+    fill: #777;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
 
-.custom-select-wrapper.open .custom-select-dropdown {
-  display: block;
-}
+  .custom-select-wrapper.open .chevron {
+    transform: rotate(180deg);
+  }
 
-.dropdown-cols-ff {
+  .custom-select-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    min-width: 560px; /* Standard för bred FF-dropdown */
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    z-index: 1000;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.14);
+  }
+
+  .custom-select-wrapper.open .custom-select-dropdown {
+    display: block;
+  }
+
+  .dropdown-cols-ff {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-flow: column;
+    grid-template-rows: repeat(7, auto);
+    padding: 8px;
+    gap: 2px;
+  }
+
+  .dropdown-option {
+    padding: 8px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #222;
+    white-space: nowrap;
+  }
+
+  .dropdown-option:hover {
+    background: #f1f1f1;
+  }
+
+  .dropdown-option.selected {
+    background: #2f2f2f;
+    color: #fff;
+    font-weight: 600;
+  }
+
+  svg.hover-active .visit-label[data-for-municipality="active"] {
+    fill: #f28c28;
+    stroke: #000000;
+  }
+
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    backdrop-filter: blur(2px);
+  }
+
+  .modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    position: relative;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    text-align: center;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 12px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: #777;
+    transition: transform 0.2s ease, color 0.2s ease;
+    line-height: 1;
+  }
+
+  .modal-close:hover {
+    transform: rotate(90deg);
+    color: #222;
+  }
+
+  .modal-content h3 {
+    margin: 0 0 10px 0;
+    font-size: 22px;
+  }
+
+  .modal-content p {
+    color: #555;
+    margin: 0;
+    font-size: 16px;
+  }
+  
+.date-small { width: 90px !important; }
+.date-medium { width: 130px !important; }
+.controls .custom-select-dropdown { min-width: auto !important; width: 100%; }
+
+/* Behållare för år (3 kolumner) */
+.dropdown-grid-years {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-auto-flow: column;
-  grid-template-rows: repeat(7, auto);
+  grid-template-rows: repeat(4, auto); /* Tvingar 4 rader */
+  grid-auto-flow: column;              /* Fyller uppifrån och ned, sen nästa kolumn */
+  gap: 8px;
+  padding: 10px;
+  min-width: 280px;
+}
+
+/* Behållare för månader (3 kolumner, 4 rader) */
+.dropdown-grid-months {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(4, auto);
+  grid-auto-flow: column; /* Gör att Jan-Apr hamnar i första kolumnen */
+  gap: 4px;
   padding: 8px;
-  gap: 2px;
+  min-width: 220px;
 }
 
-.dropdown-option {
-  padding: 8px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-  color: #222;
-  white-space: nowrap;
+/* Justering för att dropdown-rutan ska anpassa sig efter innehållet */
+.controls .custom-select-dropdown {
+  width: auto !important;
+  min-width: max-content;
 }
 
-.dropdown-option:hover {
-  background: #f1f1f1;
+/* Snyggare knappar i rutnätet */
+.dropdown-grid-years .dropdown-option,
+.dropdown-grid-months .dropdown-option {
+  text-align: center;
+  padding: 6px 4px;
 }
 
-.dropdown-option.selected {
-  background: #2f2f2f;
-  color: #fff;
-  font-weight: 600;
-}
 
 </style>
 </head>
 
 <body>
 
-<div class="ff-filter">
-  <div class="custom-select-wrapper" id="ffSelectWrapper">
-    <div class="custom-select-trigger" id="ffSelectTrigger">
-      <span id="ffSelectLabel">All data</span>
-		<svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-			<path d="M6 9l6 6 6-6"/>
-		</svg>
-    </div>
-
-    <div class="custom-select-dropdown">
-      <div class="dropdown-cols-ff" id="ffDropdownCols"></div>
+  <div id="dataModal" class="modal-overlay">
+    <div class="modal-content">
+      <button class="modal-close" id="closeModal">&times;</button>
+      <h3>Data saknas</h3>
+      <p id="modalMessage"></p>
     </div>
   </div>
 
-  <input type="hidden" id="ffFilter" value="All data">
-</div>
+  <!-- VÄNSTERPANEL: FILTER OCH DATUM -->
+  <div class="ff-filter">
+    <!-- Skolnivå-väljare -->
+    <div class="custom-select-wrapper" id="ffSelectWrapper" style="margin-bottom: 20px;">
+      <div class="custom-select-trigger" id="ffSelectTrigger">
+        <span id="ffSelectLabel">All data</span>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 9l6 6 6-6" />
+        </svg>
+      </div>
+      <div class="custom-select-dropdown">
+        <div class="dropdown-cols-ff" id="ffDropdownCols"></div>
+      </div>
+    </div>
+    <input type="hidden" id="ffFilter" value="All data">
 
+    <!-- Datumväljare (Flyttade hit under All data) -->
+    <div class="controls">
+      <!-- FRÅN SEKTION -->
+      <div class="filter-group">
+        <label class="summary-label">Från och med</label>
+        <div style="display: flex; gap: 8px;">
+          <!-- År -->
+          <div class="custom-select-wrapper date-small" id="fromYearWrapper">
+            <div class="custom-select-trigger" id="fromYearTrigger">
+              <span id="fromYearLabel">År</span>
+              <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" /></svg>
+            </div>
+            <div class="custom-select-dropdown">
+              <div class="dropdown-cols-date" id="fromYearCols"></div>
+            </div>
+          </div>
+          <!-- Månad -->
+          <div class="custom-select-wrapper date-medium" id="fromMonthWrapper">
+            <div class="custom-select-trigger" id="fromMonthTrigger">
+              <span id="fromMonthLabel">Månad</span>
+              <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" /></svg>
+            </div>
+            <div class="custom-select-dropdown">
+              <div class="dropdown-cols-date" id="fromMonthCols"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TILL SEKTION -->
+      <div class="filter-group">
+        <label class="summary-label">Till och med</label>
+        <div style="display: flex; gap: 8px;">
+          <!-- År -->
+          <div class="custom-select-wrapper date-small" id="toYearWrapper">
+            <div class="custom-select-trigger" id="toYearTrigger">
+              <span id="toYearLabel">År</span>
+              <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" /></svg>
+            </div>
+            <div class="custom-select-dropdown">
+              <div class="dropdown-cols-date" id="toYearCols"></div>
+            </div>
+          </div>
+          <!-- Månad -->
+          <div class="custom-select-wrapper date-medium" id="toMonthWrapper">
+            <div class="custom-select-trigger" id="toMonthTrigger">
+              <span id="toMonthLabel">Månad</span>
+              <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" /></svg>
+            </div>
+            <div class="custom-select-dropdown">
+              <div class="dropdown-cols-date" id="toMonthCols"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HÖGERPANEL: TOGGLES (Lund etc) -->
 <div class="highlight-controls">
   <label class="toggle">
     <input type="checkbox" id="toggleLund">
@@ -351,41 +574,44 @@ path.highlighted-municipality:hover {
   <label class="toggle">
     <input type="checkbox" id="toggleLundRegion">
     <span class="toggle-track"></span>
-    Lund + kranskommuner
+    Lund + omnejd
   </label>
+
+  <button class="save-btn" id="saveImage">Spara bild</button>
 </div>
 
-<div class="app">
+  <!-- HUVUDYTA: PANEL OCH KARTA -->
+  <div class="app">
+    <div class="summary-panel">
+      <div class="summary-label">Totalt</div>
+      <div class="summary-total" id="summaryTotal">0</div>
 
-<div class="summary-panel">
-  <div class="summary-label">Totalt</div>
-  <div class="summary-total" id="summaryTotal">0</div>
+      <div class="summary-row">
+        <div class="label">Lund</div>
+        <div class="value">
+          <span id="summaryLund">0</span>
+          <span class="summary-percent" id="summaryLundPercent">(0 %)</span>
+        </div>
+      </div>
 
-  <div class="summary-row">
-    <div class="label">Lund</div>
-	<div class="value">
-		<span id="summaryLund">0</span>
-		<span class="summary-percent" id="summaryLundPercent">(0 %)</span>
-	</div>
-  </div>
+      <div class="summary-row">
+        <div class="label">Lund + omnejd</div>
+        <div class="value">
+          <span id="summaryLundRegion">0</span>
+          <span class="summary-percent" id="summaryLundRegionPercent">(0 %)</span>
+        </div>
+      </div>
 
-  <div class="summary-row">
-    <div class="label">Lund + kranskommuner</div>
-	<div class="value">
-		<span id="summaryLundRegion">0</span>
-		<span class="summary-percent" id="summaryLundRegionPercent">(0 %)</span>
-	</div>
-  </div>
+      <div class="summary-row">
+        <div class="label">Övrigt</div>
+        <div class="value">
+          <span id="summaryOther">0</span>
+          <span class="summary-percent" id="summaryOtherPercent">(0 %)</span>
+        </div>
+      </div>
+    </div>
 
-  <div class="summary-row">
-	<div class="label">Övrigt</div>
-	<div class="value">
-		<span id="summaryOther">0</span>
-		<span class="summary-percent" id="summaryOtherPercent">(0 %)</span>
-	</div>
-  </div>
-</div>
-  <div class="map-wrap">
+    <div class="map-wrap">
 
 <svg class="map-svg"
    xmlns:dc="http://purl.org/dc/elements/1.1/"
@@ -679,27 +905,21 @@ path.highlighted-municipality:hover {
 </g>
 </svg>
 </div>
-
-  <div class="controls">
-    <button class="active" data-period="today">Idag</button>
-    <button data-period="week">Denna vecka</button>
-    <button data-period="month">Denna månad</button>
-    <button data-period="previousMonth">Föregående månad</button>
-    <button data-period="yearToDate">Sedan årets början</button>
-    <button data-period="lastYear">Förra året</button>
   </div>
 
-</div>
-
-<div class="map-tooltip" id="mapTooltip"></div>
+  <div class="map-tooltip" id="mapTooltip"></div>
 
 <script>
 let visitRows = [];
-let visitData = {};
-let currentPeriod = "today";
 let currentFF = "All data";
+
+// --- Globala variabler för datum ---
+let startYear, startMonth, endYear, endMonth;
+let availableYears = [];
+const monthMap = { "Jan":0, "Feb":1, "Mar":2, "Apr":3, "Maj":4, "Jun":5, "Jul":6, "Aug":7, "Sep":8, "Okt":9, "Nov":10, "Dec":11 };
+const monthNamesLong = ["Januari", "Februari", "Mars", "April", "Maj", "Juni", "Juli", "Augusti", "September", "Oktober", "November", "December"];
+
 const svg = document.querySelector("svg.map-svg");
-const buttons = document.querySelectorAll(".controls button");
 const SVG_NS = "http://www.w3.org/2000/svg";
 const tooltip = document.getElementById("mapTooltip");
 const summaryTotal = document.getElementById("summaryTotal");
@@ -710,62 +930,27 @@ const summaryLundRegionPercent = document.getElementById("summaryLundRegionPerce
 const summaryOther = document.getElementById("summaryOther");
 const summaryOtherPercent = document.getElementById("summaryOtherPercent");
 
-const lundRegionMunicipalities = [
-  "Lund",
-  "Eslöv",
-  "Sjöbo",
-  "Skurup",
-  "Svedala",
-  "Staffanstorp",
-  "Lomma",
-  "Kävlinge",
-  "Burlöv",
-  "Malmö"
-];
-
+const lundRegionMunicipalities = ["Lund", "Eslöv", "Sjöbo", "Skurup", "Svedala", "Staffanstorp", "Lomma", "Kävlinge", "Burlöv", "Malmö", "Höör", "Hörby", "Trelleborg", "Vellinge"];
 const toggleLund = document.getElementById("toggleLund");
 const toggleLundRegion = document.getElementById("toggleLundRegion");
+const FF_OPTIONS = ["All data", "Förskola", "Förskoleklass", "Årskurs 1", "Årskurs 2", "Årskurs 3", "Årskurs 4", "Årskurs 5", "Årskurs 6", "Årskurs 7", "Årskurs 8", "Årskurs 9", "Gymnasium", "Vuxenutbildning", "Högskola, universitet", "Lågstadiet", "Mellanstadiet", "Högstadiet", "Grundskola", "Skola barn", "Skola vuxen"];
 
-const FF_OPTIONS = [
-  "All data",
-  "Förskola",
-  "Förskoleklass",
-  "Årskurs 1",
-  "Årskurs 2",
-  "Årskurs 3",
-  "Årskurs 4",
-  "Årskurs 5",
-  "Årskurs 6",
-  "Årskurs 7",
-  "Årskurs 8",
-  "Årskurs 9",
-  "Gymnasium",
-  "Vuxenutbildning",
-  "Högskola, universitet",
-  "Lågstadiet",
-  "Mellanstadiet",
-  "Högstadiet",
-  "Grundskola",
-  "Skola barn",
-  "Skola vuxen"
-];
+// --- CSV & Parsing ---
 
 function parseCSV(text) {
   const lines = text.trim().split(/\r?\n/);
-  const headers = lines.shift().split(";").map(h => h.trim());
+  const headers = lines.shift().split(";").map(h => h.trim().replace(/^\uFEFF/, ""));
 
   return lines
     .filter(line => line.trim())
     .map(line => {
       const values = line.split(";").map(v => v.trim());
       const row = {};
-
-      headers.forEach((header, index) => {
-        row[header] = values[index];
-      });
+      headers.forEach((header, index) => { row[header] = values[index]; });
 
       return {
-        datum: row.datum,
+        år: parseInt(row.år),
+        månad: row.månad,
         kommun: row.kommun,
         skolnivå: normaliseSchoolLevel(row.skolnivå),
         antal: Number(row.antal) || 0
@@ -775,406 +960,307 @@ function parseCSV(text) {
 
 function normaliseSchoolLevel(level) {
   if (!level) return "";
-
-  return level
-    .replace(/^Åk\s*/i, "Årskurs ")
-    .replace(/^År\s*/i, "Årskurs ")
-    .trim();
+  return level.trim().replace(/^\uFEFF/, "")
+    .replace(/^Åk\.?\s*(\d)$/i, "Årskurs $1")
+    .replace(/^År\s+(\d)$/i, "Årskurs $1")
+    .replace(/^Årskurs\s*(\d)$/i, "Årskurs $1");
 }
 
-function getSelectedFFLevels() {
-  if (currentFF === "All data") return null;
+// --- Datumlogik & Dropdowns ---
 
+// Uppdatera månadsnamnen till kortform högst upp i skriptet
+const monthNamesShort = ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"];
+
+function initDateSelects() {
+    availableYears = [...new Set(visitRows.map(r => r.år))].sort((a, b) => b - a);
+    
+    // Hitta senaste datumet i datan för "Till och med"
+    const latestRow = [...visitRows].sort((a, b) => (b.år * 12 + monthMap[b.månad]) - (a.år * 12 + monthMap[a.månad]))[0];
+    
+    // Sätt aktuellt år från datan (eller innevarande år), men tvinga Januari på "Från"
+    const currentYear = latestRow ? latestRow.år : new Date().getFullYear();
+    
+    startYear = currentYear;
+    startMonth = 0; // 0 = Januari
+    
+    endYear = currentYear;
+    endMonth = latestRow ? monthMap[latestRow.månad] : 11; // Senaste månaden i datan eller December
+
+    // Rendera dropdowns (samma anrop som tidigare)
+    renderDatePart("fromYear", availableYears, "dropdown-grid-years", (val) => { startYear = val; syncDates(); });
+    renderDatePart("toYear", availableYears, "dropdown-grid-years", (val) => { endYear = val; syncDates(); });
+    renderDatePart("fromMonth", monthNamesShort, "dropdown-grid-months", (val, idx) => { startMonth = idx; syncDates(); });
+    renderDatePart("toMonth", monthNamesShort, "dropdown-grid-months", (val, idx) => { endMonth = idx; syncDates(); });
+
+    syncDates();
+}
+
+// Hjälpfunktion för att stänga alla dropdowns
+function closeAllSelects() {
+    document.querySelectorAll('.custom-select-wrapper').forEach(w => w.classList.remove('open'));
+}
+
+function renderDatePart(idPrefix, list, gridClass, callback) {
+    const wrapper = document.getElementById(`${idPrefix}Wrapper`);
+    const trigger = document.getElementById(`${idPrefix}Trigger`);
+    const cols = document.getElementById(`${idPrefix}Cols`);
+
+    cols.className = gridClass;
+
+    trigger.onclick = (e) => {
+        e.stopPropagation();
+        const isOpen = wrapper.classList.contains('open');
+        closeAllSelects(); // Stäng alla först
+        if (!isOpen) wrapper.classList.add('open'); // Öppna bara om den inte redan var öppen
+    };
+
+    cols.innerHTML = "";
+    list.forEach((item, idx) => {
+        const opt = document.createElement("div");
+        opt.className = "dropdown-option";
+        opt.textContent = item;
+        opt.onclick = () => {
+            callback(item, idx);
+            wrapper.classList.remove('open');
+        };
+        cols.appendChild(opt);
+    });
+}
+
+function syncDates() {
+    const startVal = startYear * 12 + startMonth;
+    const endVal = endYear * 12 + endMonth;
+
+    // Om start är efter slut, justera slutet så det matchar starten
+    if (startVal > endVal) {
+        endYear = startYear;
+        endMonth = startMonth;
+    }
+    
+    updateDateLabels();
+    renderCustomRange();
+}
+
+function updateDateLabels() {
+    document.getElementById("fromYearLabel").textContent = startYear;
+    document.getElementById("fromMonthLabel").textContent = monthNamesShort[startMonth];
+    document.getElementById("toYearLabel").textContent = endYear;
+    document.getElementById("toMonthLabel").textContent = monthNamesShort[endMonth];
+}
+
+// --- Rendering & Kartritning ---
+
+function renderCustomRange() {
+    clearVisitLabels();
+    const startTotal = startYear * 12 + startMonth;
+    const endTotal = endYear * 12 + endMonth;
+
+    const filteredData = {};
+    visitRows.filter(isRowIncludedByFF).forEach(row => {
+        const rowTotal = row.år * 12 + monthMap[row.månad];
+        if (rowTotal >= startTotal && rowTotal <= endTotal) {
+            filteredData[row.kommun] = (filteredData[row.kommun] || 0) + row.antal;
+        }
+    });
+
+    updateSummaryManual(filteredData);
+    drawMapData(filteredData);
+}
+
+function updateSummaryManual(data) {
+    const total = Object.values(data).reduce((sum, v) => sum + v, 0);
+    const lund = data["Lund"] || 0;
+    const lundRegion = lundRegionMunicipalities.reduce((s, n) => s + (data[n] || 0), 0);
+    const other = data["Övrigt"] || 0;
+
+    summaryTotal.textContent = formatSwedishNumber(total);
+    summaryLund.textContent = formatSwedishNumber(lund);
+    summaryLundPercent.textContent = `(${formatPercent(lund, total)})`;
+    summaryLundRegion.textContent = formatSwedishNumber(lundRegion);
+    summaryLundRegionPercent.textContent = `(${formatPercent(lundRegion, total)})`;
+    summaryOther.textContent = formatSwedishNumber(other);
+    summaryOtherPercent.textContent = `(${formatPercent(other, total)})`;
+}
+
+function drawMapData(data) {
+    svg.querySelectorAll("path[data-name]").forEach(path => {
+        const name = path.dataset.name;
+        const value = data[name];
+        if (value === undefined || value === 0) return;
+
+        const center = getMunicipalityCenter(path);
+        const pos = labelPositions[name] || {};
+        const useCallout = pos.callout === true || shouldUseCallout(path, center);
+
+        if (!useCallout) {
+            addText(center.x + (pos.x || 0), center.y + (pos.y || 0), value, name, false);
+        } else {
+            const labelX = center.x + (pos.x ?? (center.x < 360 ? -46 : 46));
+            const labelY = center.y + (pos.y ?? -18);
+            addLine(labelX, labelY, center.x + (pos.lineEndX || 0), center.y + (pos.lineEndY || 0));
+            addText(labelX, labelY, value, name, true);
+        }
+    });
+}
+
+// --- Hjälpfunktioner ---
+
+function formatSwedishNumber(v) { return new Intl.NumberFormat("sv-SE").format(v); }
+function formatPercent(p, t) { return t === 0 ? "0 %" : new Intl.NumberFormat("sv-SE", { maximumFractionDigits: 1 }).format((p / t) * 100) + " %"; }
+function clearVisitLabels() { svg.querySelectorAll(".visit-label, .callout-line").forEach(el => el.remove()); }
+function getMunicipalityCenter(p) { const b = p.getBBox(); return { x: b.x + b.width / 2, y: b.y + b.height / 2, width: b.width, height: b.height }; }
+function shouldUseCallout(p, c) { return p.dataset.callout === "true" || c.width < 34 || c.height < 24; }
+
+function addText(x, y, v, name, isC) {
+    const t = document.createElementNS(SVG_NS, "text");
+    t.setAttribute("x", x); t.setAttribute("y", y); t.setAttribute("class", "visit-label");
+    t.setAttribute("data-municipality", name);
+    if (isC) t.setAttribute("data-is-callout", "true");
+    t.setAttribute("text-anchor", "middle"); t.setAttribute("dominant-baseline", "middle");
+    t.textContent = formatSwedishNumber(v);
+    svg.appendChild(t);
+}
+
+function addLine(x1, y1, x2, y2) {
+    const l = document.createElementNS(SVG_NS, "line");
+    l.setAttribute("x1", x1); l.setAttribute("y1", y1); l.setAttribute("x2", x2); l.setAttribute("y2", y2);
+    l.setAttribute("class", "callout-line");
+    svg.insertBefore(l, svg.firstChild);
+}
+
+function isRowIncludedByFF(row) {
+  if (currentFF === "All data") return true;
   const groups = {
     "Lågstadiet": ["Förskoleklass", "Årskurs 1", "Årskurs 2", "Årskurs 3"],
     "Mellanstadiet": ["Årskurs 4", "Årskurs 5", "Årskurs 6"],
     "Högstadiet": ["Årskurs 7", "Årskurs 8", "Årskurs 9"],
-    "Grundskola": [
-      "Förskoleklass",
-      "Årskurs 1", "Årskurs 2", "Årskurs 3",
-      "Årskurs 4", "Årskurs 5", "Årskurs 6",
-      "Årskurs 7", "Årskurs 8", "Årskurs 9"
-    ],
-    "Skola barn": [
-      "Förskola",
-      "Förskoleklass",
-      "Årskurs 1", "Årskurs 2", "Årskurs 3",
-      "Årskurs 4", "Årskurs 5", "Årskurs 6",
-      "Årskurs 7", "Årskurs 8", "Årskurs 9",
-      "Gymnasium"
-    ],
+    "Grundskola": ["Förskoleklass", "Årskurs 1", "Årskurs 2", "Årskurs 3", "Årskurs 4", "Årskurs 5", "Årskurs 6", "Årskurs 7", "Årskurs 8", "Årskurs 9"],
+    "Skola barn": ["Förskola", "Förskoleklass", "Årskurs 1", "Årskurs 2", "Årskurs 3", "Årskurs 4", "Årskurs 5", "Årskurs 6", "Årskurs 7", "Årskurs 8", "Årskurs 9", "Gymnasium"],
     "Skola vuxen": ["Vuxenutbildning", "Högskola, universitet"]
   };
-
-  return groups[currentFF] || [currentFF];
-}
-
-function isRowIncludedByFF(row) {
-  const selectedLevels = getSelectedFFLevels();
-
-  if (!selectedLevels) return true;
-
+  const selectedLevels = groups[currentFF] || [currentFF];
   return selectedLevels.includes(row.skolnivå);
 }
 
-function dateOnly(date) {
-  return date.toISOString().slice(0, 10);
-}
+// --- Positioner & Verktyg ---
 
-function getPeriodKey(dateString) {
-  const today = new Date();
-  const date = new Date(dateString + "T00:00:00");
+const labelPositions = { "Bjuv": { x: -7, y: -20 }, "Bromölla": { x: -2, y: -10 }, "Burlöv": { callout: true, x: -120, y: -20, lineEndY: -8 }, "Båstad": { x: -5, y: -6 }, "Eslöv": { x: -28, y: -12 }, "Helsingborg": { x: -7, y: -15 }, "Hässleholm": { x: -7, y: -15 }, "Höganäs": { x: -3, y: 3 }, "Hörby": { x: -15, y: -15 }, "Höör": { x: -10, y: -25 }, "Klippan": { x: -7, y: 4 }, "Kristianstad": { x: 0, y: 15 }, "Kävlinge": { x: -10, y: -12 }, "Landskrona": { x: -12, y: -7 }, "Lund": { x: 15, y: -10 }, "Lomma": { callout: true, x: -120, y: -20, lineEndY: -8 }, "Malmö": { x: -12, y: -5 }, "Osby": { x: -36, y: -10 }, "Perstorp": { x: -7, y: -10 }, "Simrishamn": { x: 0, y: 10 }, "Sjöbo": { x: -5, y: -5 }, "Skurup": { x: -8, y: -5 }, "Staffanstorp": { x: -10, y: -4 }, "Svalöv": { x: -15, y: -5 }, "Svedala": { x: -18, y: -7 }, "Tomelilla": { x: -7, y: 25 }, "Vellinge": { callout: true, x: -120, y: -20, lineEndY: -8 }, "Ystad": { x: -45, y: -12 }, "Åstorp": { x: 5, y: -14 }, "Ängelholm": { x: -15, y: -15 }, "Örkelljunga": { x: -7, y: -15 }, "Östra Göinge": { x: -30, y: 15 }};
+const tooltipPositions = { "Bjuv": { x: 0, y: -20 }, "Bromölla": { x: 5, y: -10 }, "Burlöv": { x: 0, y: -5 }, "Båstad": { x: 0, y: -10 }, "Eslöv": { x: -20, y: -15 }, "Helsingborg": { x: 0, y: -20 }, "Hässleholm": { x: 5, y: -20 }, "Hörby": { x: -5, y: -20 }, "Höör": { x: 0, y: -30 }, "Kristianstad": { x: 10, y: 10 }, "Kävlinge": { x: 0, y: -12 }, "Landskrona": { x: -5, y: -13 }, "Lomma": { x: 0, y: -15 }, "Lund": { x: 20, y: -15 }, "Malmö": { x: 0, y: -15 }, "Osby": { x: -25, y: -15 }, "Perstorp": { x: 0, y: -15 }, "Simrishamn": { x: 10, y: 5 }, "Sjöbo": { x: 3, y: -8 }, "Skurup": { x: 0, y: -15 }, "Staffanstorp": { x: 0, y: -10 }, "Svalöv": { x: -7, y: -8 }, "Svedala": { x: -5, y: -10 }, "Tomelilla": { x: 0, y: 10 }, "Trelleborg": { x: 10, y: -5 }, "Vellinge": { x: 0, y: -10 }, "Ystad": { x: -35, y: -16 }, "Åstorp": { x: 10, y: -15 }, "Ängelholm": { x: 0, y: -20 }, "Örkelljunga": { x: 3, y: -15 }, "Östra Göinge": { x: -20, y: 5 }};
 
-  const todayStr = dateOnly(today);
-
-  const startOfWeek = new Date(today);
-  const day = startOfWeek.getDay() || 7;
-  startOfWeek.setDate(today.getDate() - day + 1);
-  startOfWeek.setHours(0, 0, 0, 0);
-
-  const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-  const startOfPreviousMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-  const endOfPreviousMonth = new Date(today.getFullYear(), today.getMonth(), 0);
-
-  const startOfYear = new Date(today.getFullYear(), 0, 1);
-  const startOfLastYear = new Date(today.getFullYear() - 1, 0, 1);
-  const endOfLastYear = new Date(today.getFullYear() - 1, 11, 31);
-
-  return {
-    today: dateString === todayStr,
-    week: date >= startOfWeek && date <= today,
-    month: date >= startOfMonth && date <= today,
-    previousMonth: date >= startOfPreviousMonth && date <= endOfPreviousMonth,
-    yearToDate: date >= startOfYear && date <= today,
-    lastYear: date >= startOfLastYear && date <= endOfLastYear
-  };
-}
-
-function buildVisitData() {
-  const periods = {
-    today: {},
-    week: {},
-    month: {},
-    previousMonth: {},
-    yearToDate: {},
-    lastYear: {}
-  };
-
-  visitRows
-    .filter(isRowIncludedByFF)
-    .forEach(row => {
-      const periodMatch = getPeriodKey(row.datum);
-
-      Object.keys(periods).forEach(period => {
-        if (!periodMatch[period]) return;
-
-        periods[period][row.kommun] =
-          (periods[period][row.kommun] || 0) + row.antal;
-      });
-    });
-
-  visitData = periods;
-}
-
-async function loadCSVData() {
-  try {
-    const response = await fetch("skoldata.csv");
-
-    if (!response.ok) {
-      throw new Error(`Kunde inte läsa skoldata.csv: ${response.status}`);
-    }
-
-    const text = await response.text();
-
-    visitRows = parseCSV(text);
-    buildVisitData();
-    renderVisits(currentPeriod);
-  } catch (error) {
-    console.error(error);
-    alert("Kunde inte läsa skoldata.csv. Kontrollera filnamn, sökväg och att sidan körs via lokal server.");
-  }
-}
+// --- Interaktion ---
 
 function initFFSelect() {
   const wrapper = document.getElementById("ffSelectWrapper");
-  const trigger = document.getElementById("ffSelectTrigger");
   const labelEl = document.getElementById("ffSelectLabel");
-  const hidden = document.getElementById("ffFilter");
   const cols = document.getElementById("ffDropdownCols");
 
   cols.innerHTML = "";
-
   FF_OPTIONS.forEach(option => {
     const opt = document.createElement("div");
-    opt.className = "dropdown-option" + (option === hidden.value ? " selected" : "");
+    opt.className = "dropdown-option" + (option === currentFF ? " selected" : "");
     opt.textContent = option;
-
-    opt.addEventListener("click", () => {
-      hidden.value = option;
+    opt.onclick = () => {
+      currentFF = option;
       labelEl.textContent = option;
-
-      wrapper.querySelectorAll(".dropdown-option").forEach(o => {
-        o.classList.remove("selected");
-      });
-
+      wrapper.querySelectorAll(".dropdown-option").forEach(o => o.classList.remove("selected"));
       opt.classList.add("selected");
       wrapper.classList.remove("open");
-
-      // Här kopplar vi senare dropdownvalet till kartans datafilter.
-      currentFF = option;
-	  buildVisitData();
-	  renderVisits(currentPeriod);
-    });
-
+      renderCustomRange();
+    };
     cols.appendChild(opt);
   });
 
-  trigger.addEventListener("click", event => {
-    event.stopPropagation();
+document.getElementById("ffSelectTrigger").onclick = e => {
+        e.stopPropagation();
+        const isOpen = wrapper.classList.contains('open');
+        closeAllSelects(); // Stäng alla andra
+        if (!isOpen) wrapper.classList.add("open");
+    };
+}
 
-    document.querySelectorAll(".custom-select-wrapper.open").forEach(w => {
-      if (w !== wrapper) w.classList.remove("open");
+document.getElementById('saveImage').onclick = function() {
+    const target = document.querySelector(".app");
+    const btn = this;
+    
+    // Inaktivera knappen tillfälligt så användaren ser att något händer
+    btn.disabled = true;
+    btn.textContent = "Skapar bild...";
+
+    html2canvas(target, {
+        backgroundColor: "#ffffff",
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        // Denna del är viktig för att SVG ska ritas ut korrekt i vissa webbläsare
+        onclone: (clonedDoc) => {
+            const svgElement = clonedDoc.querySelector('.map-svg');
+            if (svgElement) {
+                svgElement.style.width = '100%';
+                svgElement.style.height = '100%';
+            }
+        }
+    }).then(canvas => {
+        const link = document.createElement('a');
+        const dateStr = new Date().toISOString().slice(0, 10);
+        link.download = `skane-statistik-${currentFF.replace(/[^a-z0-9]/gi, '_')}-${dateStr}.jpg`;
+        link.href = canvas.toDataURL("image/jpeg", 0.95);
+        link.click();
+        
+        btn.disabled = false;
+        btn.textContent = "Spara bild";
+    }).catch(err => {
+        console.error("Kunde inte spara bild:", err);
+        btn.disabled = false;
+        btn.textContent = "Fel vid sparning";
     });
-
-    wrapper.classList.toggle("open");
-  });
-
-  wrapper.querySelector(".custom-select-dropdown").addEventListener("click", event => {
-    event.stopPropagation();
-  });
-}
-
-document.addEventListener("click", () => {
-  document.querySelectorAll(".custom-select-wrapper.open").forEach(w => {
-    w.classList.remove("open");
-  });
-});
-
-initFFSelect();
-
-function clearMunicipalityHighlights() {
-  svg.querySelectorAll("path[data-name]").forEach(path => {
-    path.classList.remove("highlighted-municipality");
-  });
-}
-
-function highlightMunicipalities(names) {
-  names.forEach(name => {
-    const path = svg.querySelector(`path[data-name="${name}"]`);
-    if (path) {
-      path.classList.add("highlighted-municipality");
-    }
-  });
-}
-
-function updateMunicipalityHighlights() {
-  clearMunicipalityHighlights();
-
-  if (toggleLundRegion.checked) {
-    highlightMunicipalities(lundRegionMunicipalities);
-    return;
-  }
-
-  if (toggleLund.checked) {
-    highlightMunicipalities(["Lund"]);
-  }
-}
-
-toggleLund.addEventListener("change", () => {
-  if (toggleLund.checked) {
-    toggleLundRegion.checked = false;
-  }
-
-  updateMunicipalityHighlights();
-});
-
-toggleLundRegion.addEventListener("change", () => {
-  if (toggleLundRegion.checked) {
-    toggleLund.checked = false;
-  }
-
-  updateMunicipalityHighlights();
-});
-
-function sumMunicipalities(data, names) {
-  return names.reduce((sum, name) => sum + (data[name] || 0), 0);
-}
-
-function updateSummary(period) {
-  const data = visitData[period] || {};
-
-  const total = Object.values(data).reduce((sum, value) => sum + value, 0);
-  const lund = data["Lund"] || 0;
-  const lundRegion = sumMunicipalities(data, lundRegionMunicipalities);
-  const other = data["Övrigt"] || 0;
-
-  summaryTotal.textContent = formatSwedishNumber(total);
-
-  summaryLund.textContent = formatSwedishNumber(lund);
-  summaryLundPercent.textContent = `(${formatPercent(lund, total)})`;
-
-  summaryLundRegion.textContent = formatSwedishNumber(lundRegion);
-  summaryLundRegionPercent.textContent = `(${formatPercent(lundRegion, total)})`;
-
-  summaryOther.textContent = formatSwedishNumber(other);
-  summaryOtherPercent.textContent = `(${formatPercent(other, total)})`;
-}
-
-function showMunicipalityTooltip(path) {
-  const name = path.dataset.name;
-  if (!name) return;
-
-  const box = path.getBBox();
-  const point = svg.createSVGPoint();
-
-  point.x = box.x + box.width / 2;
-  point.y = box.y + box.height / 2;
-
-  const screenPoint = point.matrixTransform(path.getScreenCTM());
-
-  tooltip.textContent = name;
-  tooltip.style.left = `${screenPoint.x}px`;
-  tooltip.style.top = `${screenPoint.y}px`;
-  tooltip.classList.add("visible");
-}
-
-function formatPercent(part, total) {
-  if (!total) return "0 %";
-  return new Intl.NumberFormat("sv-SE", {
-    maximumFractionDigits: 1
-  }).format((part / total) * 100) + " %";
-}
-
-function hideMunicipalityTooltip() {
-  tooltip.classList.remove("visible");
-}
-
-svg.querySelectorAll("path[data-name]").forEach(path => {
-  path.addEventListener("mouseenter", () => {
-    showMunicipalityTooltip(path);
-  });
-
-  path.addEventListener("mouseleave", () => {
-    hideMunicipalityTooltip();
-  });
-});
-
-function formatSwedishNumber(value) {
-  return new Intl.NumberFormat("sv-SE").format(value);
-}
-
-function clearVisitLabels() {
-  svg.querySelectorAll(".visit-label, .callout-line").forEach(el => el.remove());
-}
-
-function getMunicipalityCenter(path) {
-  const box = path.getBBox();
-
-  return {
-    x: box.x + box.width / 2,
-    y: box.y + box.height / 2,
-    width: box.width,
-    height: box.height
-  };
-}
-
-function shouldUseCallout(path, center) {
-  return (
-    path.dataset.callout === "true" ||
-    center.width < 34 ||
-    center.height < 24
-  );
-}
-
-function addText(x, y, value) {
-  const text = document.createElementNS(SVG_NS, "text");
-  text.setAttribute("x", x);
-  text.setAttribute("y", y);
-  text.setAttribute("class", "visit-label");
-  text.setAttribute("text-anchor", "middle");
-  text.setAttribute("dominant-baseline", "middle");
-  text.textContent = formatSwedishNumber(value);
-  svg.appendChild(text);
-}
-
-function addLine(x1, y1, x2, y2) {
-  const line = document.createElementNS(SVG_NS, "line");
-  line.setAttribute("x1", x1);
-  line.setAttribute("y1", y1);
-  line.setAttribute("x2", x2);
-  line.setAttribute("y2", y2);
-  line.setAttribute("class", "callout-line");
-  svg.insertBefore(line, svg.firstChild);
-}
-
-const labelPositions = {
-  "Burlöv": { callout: true, x: -120, y: -20, lineEndY: -8 },
-  "Kävlinge": { x: -10, y: -12 },  
-  "Lund": { x: 15, y: -15 },
-  "Lomma": { callout: true, x: -120, y: -20, lineEndY: -8 },
-  "Malmö": { x: -12, y: -5 },
-  "Staffanstorp": { x: -10, y: -4 },
-  "Svedala": { x: -18, y: -7 },  
-  "Vellinge": { callout: true, x: -120, y: -20, lineEndY: -8 },   
-  "Ängelholm": { x: -15, y: -15 },  
 };
 
-function renderVisits(period) {
-  clearVisitLabels();
-  updateSummary(period);
-
-  const data = visitData[period] || {};
-  const paths = svg.querySelectorAll("path[data-name]");
-
-  paths.forEach(path => {
+svg.querySelectorAll("path[data-name]").forEach(path => {
+  path.onmouseenter = () => {
     const name = path.dataset.name;
-    const value = data[name];
+    const box = path.getBBox();
+    const point = svg.createSVGPoint();
+    point.x = box.x + box.width / 2; point.y = box.y + box.height / 2;
+    const screenPoint = point.matrixTransform(path.getScreenCTM());
+    const pos = tooltipPositions[name] || {};
+    tooltip.textContent = name;
+    tooltip.style.left = `${screenPoint.x + (pos.x || 0)}px`;
+    tooltip.style.top = `${screenPoint.y + (pos.y || 0)}px`;
+    tooltip.classList.add("visible");
 
-    if (value === undefined || value === null) return;
-
-    const center = getMunicipalityCenter(path);
-    const pos = labelPositions[name] || {};
-
-    const useCallout =
-      pos.callout === true ||
-      shouldUseCallout(path, center);
-
-    if (!useCallout) {
-      const labelX = center.x + (pos.x || 0);
-      const labelY = center.y + (pos.y || 0);
-
-      addText(labelX, labelY, value);
-      return;
+    const label = svg.querySelector(`.visit-label[data-municipality="${name}"]`);
+    if (label && label.getAttribute("data-is-callout") === "true") {
+      svg.classList.add("hover-active");
+      label.setAttribute("data-for-municipality", "active");
     }
+  };
+  path.onmouseleave = () => {
+    tooltip.classList.remove("visible");
+    svg.classList.remove("hover-active");
+    svg.querySelectorAll(".visit-label").forEach(l => l.removeAttribute("data-for-municipality"));
+  };
+});
 
-    const mapMiddleX = 360;
+toggleLund.onchange = () => { if (toggleLund.checked) toggleLundRegion.checked = false; updateHighlights(); };
+toggleLundRegion.onchange = () => { if (toggleLundRegion.checked) toggleLund.checked = false; updateHighlights(); };
 
-    const defaultOffsetX = center.x < mapMiddleX ? -46 : 46;
-    const defaultOffsetY = -18;
-
-    const offsetX = pos.x ?? defaultOffsetX;
-    const offsetY = pos.y ?? defaultOffsetY;
-
-    const labelX = center.x + offsetX;
-    const labelY = center.y + offsetY;
-
-    const lineEndX = center.x + (pos.lineEndX || 0);
-    const lineEndY = center.y + (pos.lineEndY || 0);
-
-    addLine(labelX, labelY, lineEndX, lineEndY);
-    addText(labelX, labelY, value);
-  });
+function updateHighlights() {
+  svg.querySelectorAll("path[data-name]").forEach(p => p.classList.remove("highlighted-municipality"));
+  if (toggleLund.checked) svg.querySelector('path[data-name="Lund"]')?.classList.add("highlighted-municipality");
+  if (toggleLundRegion.checked) lundRegionMunicipalities.forEach(n => svg.querySelector(`path[data-name="${n}"]`)?.classList.add("highlighted-municipality"));
 }
 
-buttons.forEach(button => {
-  button.addEventListener("click", () => {
-    buttons.forEach(b => b.classList.remove("active"));
-    button.classList.add("active");
+document.addEventListener("click", () => document.querySelectorAll(".custom-select-wrapper").forEach(w => w.classList.remove("open")));
 
-    currentPeriod = button.dataset.period;
-    renderVisits(currentPeriod);
-  });
-});
+async function loadCSVData() {
+  try {
+    const response = await fetch("https://kultpub.github.io/site/skoldata.csv");
+    const text = await response.text();
+    visitRows = parseCSV(text);
+    initFFSelect();
+    initDateSelects();
+  } catch (e) { console.error(e); }
+}
 
 loadCSVData();
 </script>
