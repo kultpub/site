@@ -376,6 +376,26 @@
     color: #fff;
     font-weight: 600;
   }
+  
+.reset-btn {
+  width: 100%;
+  margin-top: 20px;
+  padding: 10px;
+  background: transparent;
+  color: #666;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.reset-btn:hover {
+  background: #f0f0f0;
+  color: #222;
+  border-color: #999;
+}  
 
   svg.hover-active .visit-label[data-for-municipality="active"] {
     fill: #f28c28;
@@ -561,6 +581,7 @@
         </div>
       </div>
     </div>
+	<button class="reset-btn" id="resetFilters">Återställ filter</button>
   </div>
 
   <!-- HÖGERPANEL: TOGGLES (Lund etc) -->
@@ -1249,6 +1270,35 @@ function updateHighlights() {
   if (toggleLund.checked) svg.querySelector('path[data-name="Lund"]')?.classList.add("highlighted-municipality");
   if (toggleLundRegion.checked) lundRegionMunicipalities.forEach(n => svg.querySelector(`path[data-name="${n}"]`)?.classList.add("highlighted-municipality"));
 }
+
+document.getElementById("resetFilters").onclick = function() {
+    // 1. Återställ Skolnivå (Dropdown)
+    currentFF = "All data";
+    document.getElementById("ffSelectLabel").textContent = "All data";
+    document.querySelectorAll("#ffDropdownCols .dropdown-option").forEach(opt => {
+        opt.classList.remove("selected");
+        if (opt.textContent === "All data") opt.classList.add("selected");
+    });
+
+    // 2. Återställ Toggles (Lund / Region)
+    toggleLund.checked = false;
+    toggleLundRegion.checked = false;
+    updateHighlights();
+
+    // 3. Återställ Datum till ursprungsläget
+    // Vi använder samma logik som i initDateSelects
+    const latestRow = [...visitRows].sort((a, b) => (b.år * 12 + monthMap[b.månad]) - (a.år * 12 + monthMap[a.månad]))[0];
+    const defaultYear = latestRow ? latestRow.år : new Date().getFullYear();
+    
+    startYear = defaultYear;
+    startMonth = 0; // Januari
+    endYear = defaultYear;
+    endMonth = latestRow ? monthMap[latestRow.månad] : 11;
+
+    // 4. Uppdatera UI och rita om kartan
+    updateDateLabels();
+    renderCustomRange();
+};
 
 document.addEventListener("click", () => document.querySelectorAll(".custom-select-wrapper").forEach(w => w.classList.remove("open")));
 
