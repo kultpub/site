@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dagsrapporter</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --bg: #f3f4f6;
+    --surface: #ffffff;
+    --surface-soft: #f8fafc;
+    --text: #111827;
+    --muted: #6b7280;
+    --muted-light: #9ca3af;
+    --border: #e5e7eb;
+    --border-strong: #d1d5db;
+    --accent: #2563eb;
+    --accent-soft: #eff6ff;
+    --weekend-bg: #fff7ed;
+    --weekend-border: #ed7117;
+    --weekend-text: #c2410c;
+    --shadow: 0 20px 45px rgba(15, 23, 42, 0.08);
+    --radius: 18px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    min-height: 100%;
+}
+
+html {
+    scrollbar-gutter: stable;
+}
+
+body {
+    font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.08), transparent 32rem),
+        var(--bg);
+    color: var(--text);
+    padding: 36px 20px;
+}
+
+/* Layout */
+
+.app-container {
+    width: 100%;
+    max-width: 980px;
+    margin: 0 auto;
+}
+
+.page-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+/* Header */
+
+header {
+    padding: 36px 40px 30px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, #ffffff 0%, #f9fafb 100%);
+}
+
+.eyebrow {
+    margin: 0 0 10px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+}
+
+h1 {
+    margin: 0;
+    font-size: clamp(30px, 4vw, 44px);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+}
+
+.header-text {
+    max-width: 650px;
+    margin: 16px 0 0;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+/* Toolbar */
+
+.toolbar {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    align-items: flex-end; /* Ändra från center till flex-end */
+    padding: 24px 40px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+}
+
+.search-box {
+    position: relative;
+}
+
+.search-box i.fa-magnifying-glass {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted-light);
+    font-size: 14px;
+}
+
+input,
+select {
+    width: 100%;
+    height: 46px;
+    border: 1px solid var(--border-strong);
+    border-radius: 12px;
+    background: #fff;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
+}
+
+input {
+    padding: 0 44px 0 42px;
+}
+
+select {
+    padding: 0 38px 0 14px;
+}
+
+input:focus,
+select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+#clearSearch {
+    position: absolute;
+    right: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--muted-light);
+    transition: background 0.18s, color 0.18s;
+}
+
+#clearSearch:hover {
+    background: var(--surface-soft);
+    color: var(--text);
+}
+
+.filter-group {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end; /* Justerar väljarna så de står på samma bottenlinje */
+    width: auto;
+}
+
+/* List */
+
+.report-list {
+    min-height: 280px;
+}
+
+.report-row {
+    display: grid;
+    grid-template-columns: 90px 46px 1fr auto;
+    gap: 16px;
+    align-items: center;
+    padding: 22px 40px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.18s;
+    position: relative;
+}
+
+.report-row:last-child {
+    border-bottom: none;
+}
+
+.report-row:hover {
+    background: var(--accent-soft);
+}
+
+.date-block {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.col-date {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: #374151;
+    letter-spacing: -0.03em;
+}
+
+.col-day {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted-light);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.col-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 17px;
+    transition: color 0.18s, border-color 0.18s, background 0.18s, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Förstora ikonen när raden hovras */
+.report-row:hover .col-icon i {
+    transform: scale(1.25);
+}
+
+/* Säkerställ att ikonen inuti har en mjuk transition */
+.col-icon i {
+    transition: transform 0.2s ease;
+    display: inline-block; /* Krävs för att transform ska fungera korrekt */
+}
+
+.col-preview {
+    color: #374151;
+    font-size: 15px;
+    line-height: 1.55;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.row-action {
+    color: var(--muted-light);
+    font-size: 13px;
+}
+
+.report-row:hover .row-action {
+    color: var(--accent);
+}
+
+/* Weekend */
+
+.weekend-row {
+    background: var(--weekend-bg);
+}
+
+.weekend-row:hover {
+    background: #ffedd5;
+}
+
+.weekend-row .col-day,
+.weekend-row .row-action {
+    color: var(--weekend-text);
+}
+
+.weekend-row .col-icon {
+    color: var(--weekend-text);
+    background: #fff;
+}
+
+/* Empty/error */
+
+.no-results {
+    padding: 70px 30px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 15px;
+}
+
+/* Modal */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.58);
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    padding: 24px;
+}
+
+.modal.active {
+    display: block;
+    opacity: 1;
+}
+
+.modal-content {
+    background: white;
+    width: min(760px, 100%);
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+    margin: 40px auto;
+    padding: 42px 48px 48px;
+    position: relative;
+    border-radius: 20px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.28);
+}
+
+.modal-date {
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 12px;
+    display: block;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.modal-title {
+    margin: 0 0 24px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--border);
+    font-size: 28px;
+    letter-spacing: -0.03em;
+}
+
+.modal-text {
+    font-size: 17px;
+    line-height: 1.8;
+    color: #1f2937;
+    white-space: pre-wrap;
+}
+
+.close-modal {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px; /* Mjukare kvadratisk form istället för cirkel */
+    border: 1px solid var(--border);
+    background: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.close-modal i {
+    font-size: 18px;
+    transition: transform 0.2s ease;
+}
+
+.close-modal:hover {
+    background: #fef2f2; /* Subtil röd ton för "stäng" */
+    color: #ef4444;     /* Modern röd färg */
+    border-color: #fee2e2;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.12);
+}
+
+.close-modal:hover i {
+    transform: rotate(90deg); /* Snygg rotation vid hovring */
+}
+
+.close-modal:active {
+    transform: scale(0.95); /* Taktil feedback vid klick */
+}
+
+/* Röda dagar */
+.holiday-row {
+    background: #fef2f2;
+    border-left: 5px solid #ef4444;
+}
+
+.holiday-row:hover {
+    background: #fee2e2;
+}
+
+.holiday-row .col-day,
+.holiday-row .row-action {
+    color: #b91c1c;
+}
+
+.holiday-row .col-icon {
+    color: #b91c1c;
+    background: #fff;
+    transform: translate(-4px, 0px);
+}
+
+/* Custom Select Styling */
+.custom-select-wrapper {
+    position: relative;
+    width: 100%;
+    user-select: none;
+}
+
+.custom-select-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 14px;
+    height: 46px;
+    border: 1px solid var(--border-strong);
+    border-radius: 12px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text);
+    transition: all 0.2s;
+}
+
+.custom-select-trigger:hover, 
+.custom-select-wrapper.open .custom-select-trigger {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+.chevron {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: var(--muted-light);
+    stroke-width: 2;
+    transition: transform 0.2s;
+}
+
+.custom-select-wrapper.open .chevron {
+    transform: rotate(180deg);
+}
+
+.custom-select-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    z-index: 1000;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+    padding: 8px;
+}
+
+.custom-select-wrapper.open .custom-select-dropdown {
+    display: block;
+}
+
+/* Grid-layouter för valen */
+.dropdown-grid-years, .dropdown-grid-months {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(4, auto);
+    grid-auto-flow: column;
+    gap: 4px;
+    padding: 8px;
+}
+
+.dropdown-grid-years {
+    min-width: 200px;
+}
+
+.dropdown-grid-months {
+    min-width: 240px;
+}
+
+.dropdown-option {
+    padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    text-align: center;
+    color: var(--text);
+    transition: background 0.1s;
+}
+
+.dropdown-option:hover {
+    background: var(--surface-soft);
+}
+
+.dropdown-option.selected {
+    background: var(--accent);
+    color: #fff;
+    font-weight: 600;
+}
+
+/* Layout-justering för toolbar */
+.filter-group {
+    display: flex;
+    gap: 12px;
+    width: auto;
+}
+
+.date-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted-light);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.date-box-group {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Responsive */
+
+@media (max-width: 760px) {
+    body {
+        padding: 18px 12px;
+    }
+
+    header {
+        padding: 28px 22px 24px;
+    }
+
+    .toolbar {
+        grid-template-columns: 1fr;
+        padding: 20px 22px;
+    }
+
+    .filter-group {
+        width: 100%;
+    }
+
+    .report-row {
+        grid-template-columns: 1fr 38px;
+        gap: 12px;
+        padding: 20px 22px;
+    }
+
+    .date-block {
+        grid-column: 1 / -1;
+        flex-direction: row;
+        align-items: baseline;
+        gap: 12px;
+    }
+
+    .col-icon {
+        display: none;
+    }
+
+    .col-preview {
+        white-space: normal;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+
+    .modal-content {
+        margin: 18px auto;
+        padding: 34px 26px 34px;
+        max-height: calc(100vh - 36px);
+    }
+
+    .modal-title {
+        font-size: 24px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app-container">
+    <div class="page-card">
+        <header>
+            <p class="eyebrow">Receptionens</p>
+            <h1>Dagsrapporter</h1>
+            <p class="header-text">
+                Sök, filtrera och läs arkiverade dagsrapporter från receptionen.
+            </p>
+        </header>
+
+        <div class="toolbar">
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="searchInput" placeholder="Sök i rapporterna">
+                <div id="clearSearch" title="Rensa sökning">
+                    <i class="fa-solid fa-xmark"></i>
+                </div>
+            </div>
+
+<div class="filter-group">
+    <!-- FRÅN -->
+    <div class="date-box-group">
+        <span class="date-label">Från</span>
+        <div style="display: flex; gap: 6px;">
+            <div class="custom-select-wrapper" id="fromYearWrapper" style="width: 80px;">
+                <div class="custom-select-trigger" id="fromYearTrigger">
+                    <span id="fromYearLabel">År</span>
+                    <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="currentColor"/></svg>
+                </div>
+                <div class="custom-select-dropdown"><div id="fromYearCols" class="dropdown-grid-years"></div></div>
+            </div>
+            <div class="custom-select-wrapper" id="fromMonthWrapper" style="width: 110px;">
+                <div class="custom-select-trigger" id="fromMonthTrigger">
+                    <span id="fromMonthLabel">Månad</span>
+                    <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="currentColor"/></svg>
+                </div>
+                <div class="custom-select-dropdown"><div id="fromMonthCols" class="dropdown-grid-months"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TILL -->
+    <div class="date-box-group">
+        <span class="date-label">Till</span>
+        <div style="display: flex; gap: 6px;">
+            <div class="custom-select-wrapper" id="toYearWrapper" style="width: 80px;">
+                <div class="custom-select-trigger" id="toYearTrigger">
+                    <span id="toYearLabel">År</span>
+                    <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="currentColor"/></svg>
+                </div>
+                <div class="custom-select-dropdown"><div id="toYearCols" class="dropdown-grid-years"></div></div>
+            </div>
+            <div class="custom-select-wrapper" id="toMonthWrapper" style="width: 110px;">
+                <div class="custom-select-trigger" id="toMonthTrigger">
+                    <span id="toMonthLabel">Månad</span>
+                    <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="currentColor"/></svg>
+                </div>
+                <div class="custom-select-dropdown"><div id="toMonthCols" class="dropdown-grid-months"></div></div>
+            </div>
+        </div>
+    </div>
+</div>
+        </div>
+
+        <div id="reportList" class="report-list">
+            <div class="no-results">Hämtar arkiv...</div>
+        </div>
+    </div>
+</div>
+
+<div id="reportModal" class="modal">
+    <div class="modal-content">
+        <button id="closeBtn" class="close-modal" aria-label="Stäng">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <span class="modal-date" id="modalDate"></span>
+        <h2 class="modal-title">Dagsrapport</h2>
+        <div class="modal-text" id="modalText"></div>
+    </div>
+</div>
+
+<script>
+let allReports = [];
+const csvUrl = "https://kultpub.github.io/site/dagsrapporter.csv";
+const dayNames = ["sön", "mån", "tis", "ons", "tor", "fre", "lör"];
+
+// Globala datumtillstånd för de anpassade dropdown-menyerna
+let startYear, startMonth, endYear, endMonth;
+const monthNamesShort = ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"];
+
+function parseCSV(text) {
+    const rows = [];
+    const lines = text.trim().split(/\r?\n/);
+    for (let i = 1; i < lines.length; i++) {
+        const line = lines[i];
+        if (!line) continue;
+        const index = line.indexOf(";");
+        if (index !== -1) {
+            const date = line.substring(0, index).trim();
+            const reportText = line.substring(index + 1).trim();
+            rows.push({ date, text: reportText });
+        }
+    }
+    return rows;
+}
+
+function escapeHTML(str) {
+    return str.replace(/[&<>"']/g, char => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
+    }[char]));
+}
+
+async function loadData() {
+    try {
+        const response = await fetch(csvUrl);
+        if (!response.ok) throw new Error("Kunde inte läsa filen.");
+        const csvText = await response.text();
+        allReports = parseCSV(csvText);
+        allReports.sort((a, b) => b.date.localeCompare(a.date));
+
+        initCustomFilters(); // Initierar de nya dropdown-menyerna
+        render();
+    } catch (error) {
+        document.getElementById("reportList").innerHTML =
+            `<div class="no-results">Fel vid hämtning av arkivet.</div>`;
+    }
+}
+
+// --- LOGIK FÖR ANPASSADE DROPDOWNS ---
+
+function initCustomFilters() {
+    // Hämta unika år från datan
+    const years = [...new Set(allReports.map(r => parseInt(r.date.split("-")[0])))].sort((a, b) => b - a);
+    
+    // Hämta dagens datum för slutvärden (Till)
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonthIdx = now.getMonth(); // 0-11
+
+    // --- ÄNDRING HÄR: Sätt fasta default-värden för "Från" ---
+    startYear = 2019; 
+    startMonth = 0; // Januari (index 0)
+    
+    // Sätt "Till" till aktuellt år/månad (eller senaste i listan om 2026 inte finns än)
+    endYear = years.includes(currentYear) ? currentYear : years[0];
+    endMonth = currentMonthIdx;
+
+    // Rendera dropdown-menyerna
+    renderDropdown("fromYear", years, (val) => { startYear = val; syncDates(); });
+    renderDropdown("toYear", years, (val) => { endYear = val; syncDates(); });
+    renderDropdown("fromMonth", monthNamesShort, (val, idx) => { startMonth = idx; syncDates(); });
+    renderDropdown("toMonth", monthNamesShort, (val, idx) => { endMonth = idx; syncDates(); });
+
+    syncDates();
+}
+
+function renderDropdown(idPrefix, list, callback) {
+    const wrapper = document.getElementById(`${idPrefix}Wrapper`);
+    const trigger = document.getElementById(`${idPrefix}Trigger`);
+    const cols = document.getElementById(`${idPrefix}Cols`);
+
+    trigger.onclick = (e) => {
+        e.stopPropagation();
+        const isOpen = wrapper.classList.contains('open');
+        document.querySelectorAll('.custom-select-wrapper').forEach(w => w.classList.remove('open'));
+        if (!isOpen) wrapper.classList.add('open');
+    };
+
+    cols.innerHTML = "";
+    list.forEach((item, idx) => {
+        const opt = document.createElement("div");
+        opt.className = "dropdown-option";
+        opt.textContent = item;
+        opt.onclick = () => {
+            callback(item, idx);
+            wrapper.classList.remove('open');
+        };
+        cols.appendChild(opt);
+    });
+}
+
+function syncDates() {
+    const startVal = startYear * 12 + startMonth;
+    const endVal = endYear * 12 + endMonth;
+
+    // Om användaren råkar sätta "Från" efter "Till", korrigera automatiskt
+    if (startVal > endVal) {
+        endYear = startYear;
+        endMonth = startMonth;
+    }
+
+    // Uppdatera texterna i knapparna
+    document.getElementById("fromYearLabel").textContent = startYear;
+    document.getElementById("fromMonthLabel").textContent = monthNamesShort[startMonth];
+    document.getElementById("toYearLabel").textContent = endYear;
+    document.getElementById("toMonthLabel").textContent = monthNamesShort[endMonth];
+    
+    render();
+}
+
+// --- RENDERING ---
+
+function render() {
+    const searchInput = document.getElementById("searchInput");
+    const clearSearch = document.getElementById("clearSearch");
+    const search = searchInput.value.toLowerCase().trim();
+    const listContainer = document.getElementById("reportList");
+
+    clearSearch.style.display = search ? "flex" : "none";
+
+    const startVal = startYear * 12 + startMonth;
+    const endVal = endYear * 12 + endMonth;
+
+    const filtered = allReports.filter(report => {
+        const parts = report.date.split("-");
+        const reportVal = parseInt(parts[0]) * 12 + (parseInt(parts[1]) - 1);
+        
+        const matchesSearch = report.text.toLowerCase().includes(search) || report.date.includes(search);
+        const matchesDate = reportVal >= startVal && reportVal <= endVal;
+
+        return matchesSearch && matchesDate;
+    });
+
+    listContainer.innerHTML = "";
+
+    if (filtered.length === 0) {
+        listContainer.innerHTML = `<div class="no-results">Inga träffar för valt datumintervall.</div>`;
+        return;
+    }
+
+    filtered.forEach(report => {
+        const row = document.createElement("div");
+        row.className = "report-row";
+
+        const reportDate = new Date(report.date);
+        const dayOfWeek = reportDate.getDay();
+        const dayShortName = dayNames[dayOfWeek];
+
+        const monthDay = report.date.substring(5);
+        const holidays = ["01-01", "12-24", "12-25", "12-31"];
+        
+        if (holidays.includes(monthDay)) {
+            row.classList.add("holiday-row");
+        } else if (dayOfWeek === 0 || dayOfWeek === 6) {
+            row.classList.add("weekend-row");
+        }
+
+        const previewText = report.text.replace(/\r?\n|\r/g, " ").substring(0, 170);
+
+        row.innerHTML = `
+            <div class="date-block">
+                <div class="col-date">${escapeHTML(report.date)}</div>
+                <div class="col-day">${escapeHTML(dayShortName)}</div>
+            </div>
+            <div class="col-icon">
+                <i class="fa-regular fa-pen-to-square"></i>
+            </div>
+            <div class="col-preview">${escapeHTML(previewText)}...</div>
+            <div class="row-action">
+                <i class="fa-solid fa-chevron-right"></i>
+            </div>
+        `;
+
+        row.onclick = () => openModal(report);
+        listContainer.appendChild(row);
+    });
+}
+
+// --- MODAL & EVENT LISTENERS ---
+
+function openModal(report) {
+    const modal = document.getElementById("reportModal");
+    const reportDate = new Date(report.date);
+    const dayLong = reportDate.toLocaleDateString("sv-SE", { weekday: "long" });
+    const formattedDay = dayLong.charAt(0).toUpperCase() + dayLong.slice(1);
+
+    document.getElementById("modalDate").textContent = `${formattedDay} ${report.date}`;
+    document.getElementById("modalText").textContent = report.text;
+
+    modal.style.display = "block";
+    requestAnimationFrame(() => { modal.classList.add("active"); });
+}
+
+function closeModal() {
+    const modal = document.getElementById("reportModal");
+    modal.classList.remove("active");
+    setTimeout(() => { modal.style.display = "none"; }, 250);
+}
+
+document.getElementById("searchInput").addEventListener("input", render);
+
+document.getElementById("clearSearch").addEventListener("click", () => {
+    const input = document.getElementById("searchInput");
+    input.value = "";
+    input.focus();
+    render();
+});
+
+document.getElementById("closeBtn").addEventListener("click", closeModal);
+
+// Stäng dropdowns om man klickar utanför
+window.addEventListener("click", event => {
+    if (!event.target.closest('.custom-select-wrapper')) {
+        document.querySelectorAll('.custom-select-wrapper').forEach(w => w.classList.remove('open'));
+    }
+    if (event.target === document.getElementById("reportModal")) {
+        closeModal();
+    }
+});
+
+window.addEventListener("keydown", event => {
+    if (event.key === "Escape") closeModal();
+});
+
+loadData();
+</script>
+
+</body>
+</html>
