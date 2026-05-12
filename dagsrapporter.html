@@ -870,7 +870,7 @@ select:focus {
         <div class="toolbar">
             <div class="search-box">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="searchInput" placeholder="Sök i rapporterna">
+                <input type="text" id="searchInput" placeholder="Sök i rapporterna" autocomplete="off">
                 <div id="clearSearch" title="Rensa sökning">
                     <i class="fa-solid fa-xmark"></i>
                 </div>
@@ -1092,13 +1092,31 @@ function syncDates() {
 function render() {
     const searchInput = document.getElementById("searchInput");
     const clearSearch = document.getElementById("clearSearch");
-    const search = searchInput.value.toLowerCase().trim();
-    const listContainer = document.getElementById("reportList");
+    const rawSearch = searchInput.value.toLowerCase().trim();
     
+    const listContainer = document.getElementById("reportList");
     const sortOldestFirst = document.getElementById("toggleSortOrder").checked;
     const showOnlyLastSeven = document.getElementById("toggleLastSeven").checked;
 
-    clearSearch.style.display = search ? "flex" : "none";
+    clearSearch.style.display = searchInput.value ? "flex" : "none";
+    const quoteCount = (rawSearch.split('"').length - 1) % 2 !== 0;
+    const normalizedSearch = quoteCount ? rawSearch + '"' : rawSearch;
+    const searchTerms = [];
+    const regex = /"([^"]*)"|\S+/g;
+    let match;
+
+while ((match = regex.exec(normalizedSearch)) !== null) {
+    if (match[1] !== undefined) {
+        const wasAutoCompleted = quoteCount && normalizedSearch.endsWith('"') 
+            && match.index + match[0].length === normalizedSearch.length;
+        searchTerms.push({
+            text: match[1],
+            isExact: !wasAutoCompleted && match[1].length > 0
+        });
+    } else {
+        searchTerms.push({ text: match[0], isExact: false });
+    }
+}
 
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
@@ -1108,72 +1126,67 @@ function render() {
     const endVal = endYear * 12 + endMonth;
 
     let filtered = allReports.filter(report => {
+        const reportTextLower = report.text.toLowerCase();
+        const reportDate = report.date;
         const reportDateObj = new Date(report.date);
         const parts = report.date.split("-");
         const reportVal = parseInt(parts[0]) * 12 + (parseInt(parts[1]) - 1);
-        
-        const matchesSearch = report.text.toLowerCase().includes(search) || report.date.includes(search);
-        
-        let matchesDate = false;
-        if (showOnlyLastSeven) {
-            matchesDate = reportDateObj >= sevenDaysAgo;
-        } else {
-            matchesDate = reportVal >= startVal && reportVal <= endVal;
-        }
+
+        const matchesSearch = searchTerms.length === 0 || searchTerms.every(term => {
+            const t = term.text;
+            
+            if (reportTextLower.includes(t) || reportDate.includes(t)) return true;
+
+            if (!term.isExact) {
+                if ((t === "pers" || t.startsWith("person")) && (/\bpers\b/.test(reportTextLower) || reportTextLower.includes("person"))) return true;
+                if ((/^åk\d/.test(t) || t === "åk" || t === "årskurs") && (reportTextLower.includes("årskurs") || reportTextLower.includes("åk"))) return true;
+                if ((t === "lu" || t === "universitet" || t === "lunds universitet") && (reportTextLower.includes("lunds universitet") || /\blu\b/.test(reportTextLower))) return true;
+                if ((t.includes("cafe") || t.includes("café") || t.includes("kafe") || t.includes("kafé")) && (reportTextLower.includes("kafé") || reportTextLower.includes("kafe"))) return true;
+            }
+            return false;
+        });
+
+        const matchesDate = showOnlyLastSeven
+            ? reportDateObj >= sevenDaysAgo
+            : reportVal >= startVal && reportVal <= endVal;
 
         return matchesSearch && matchesDate;
     });
 
-    if (sortOldestFirst) {
-        filtered.sort((a, b) => a.date.localeCompare(b.date));
-    } else {
-        filtered.sort((a, b) => b.date.localeCompare(a.date));
-    }
+    filtered.sort((a, b) => sortOldestFirst ? a.date.localeCompare(b.date) : b.date.localeCompare(a.date));
 
     listContainer.innerHTML = "";
     if (filtered.length === 0) {
         listContainer.innerHTML = `<div class="no-results">Inga träffar hittades.</div>`;
         return;
     }
-	
-	currentFilteredReports = filtered;
+    
+    currentFilteredReports = filtered;
 
     filtered.forEach(report => {
         const row = document.createElement("div");
         row.className = "report-row";
-
         const reportDate = new Date(report.date);
-        const dayOfWeek = reportDate.getDay();
-        const dayShortName = dayNames[dayOfWeek];
-
+        const dayShortName = dayNames[reportDate.getDay()];
         const monthDay = report.date.substring(5);
         const holidays = ["01-01", "12-24", "12-25", "12-31"];
         
-        if (holidays.includes(monthDay)) {
-            row.classList.add("holiday-row");
-        } else if (dayOfWeek === 0 || dayOfWeek === 6) {
-            row.classList.add("weekend-row");
-        }
+        if (holidays.includes(monthDay)) row.classList.add("holiday-row");
+        else if (reportDate.getDay() === 0 || reportDate.getDay() === 6) row.classList.add("weekend-row");
 
-        const previewText = report.text.substring(0, 1000);
-
-row.innerHTML = `
-    <div class="date-block">
-        <div class="col-date">${escapeHTML(report.date)}</div>
-        <div class="col-day">${escapeHTML(dayShortName)}</div>
-    </div>
-    <div class="col-icon">
-        <i class="fa-regular fa-pen-to-square"></i>
-    </div>
-    <div class="col-preview">${escapeHTML(previewText)}...</div>
-    <div class="row-action">
-        ${/* Här är din nya SVG-ikon */ ''}
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="action-icon">
-            <path fill="currentColor" d="M528.3 46.5H388.5c-48.1 0-89.9 33.3-100.4 80.3-10.6-47-52.3-80.3-100.4-80.3H48c-26.5 0-48 21.5-48 48v245.8c0 26.5 21.5 48 48 48h89.7c102.2 0 132.7 24.4 147.3 75 .7 2.8 5.2 2.8 6 0 14.7-50.6 45.2-75 147.3-75H528c26.5 0 48-21.5 48-48V94.6c0-26.4-21.3-47.9-47.7-48.1zM242 311.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5V289c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5-1.5 3.5-3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V251zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm259.3 121.7c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5V228c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.8c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V190z"/>
-        </svg>
-    </div>
-`;
-
+        row.innerHTML = `
+            <div class="date-block">
+                <div class="col-date">${escapeHTML(report.date)}</div>
+                <div class="col-day">${escapeHTML(dayShortName)}</div>
+            </div>
+            <div class="col-icon"><i class="fa-regular fa-pen-to-square"></i></div>
+            <div class="col-preview">${escapeHTML(report.text.substring(0, 1000))}...</div>
+            <div class="row-action">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="action-icon">
+                    <path fill="currentColor" d="M528.3 46.5H388.5c-48.1 0-89.9 33.3-100.4 80.3-10.6-47-52.3-80.3-100.4-80.3H48c-26.5 0-48 21.5-48 48v245.8c0 26.5 21.5 48 48 48h89.7c102.2 0 132.7 24.4 147.3 75 .7 2.8 5.2 2.8 6 0 14.7-50.6 45.2-75 147.3-75H528c26.5 0 48-21.5 48-48V94.6c0-26.4-21.3-47.9-47.7-48.1zM242 311.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5V289c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5-1.5 3.5-3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V251zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm259.3 121.7c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5V228c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.8c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V190z"/>
+                </svg>
+            </div>
+        `;
         row.onclick = () => openModal(report);
         listContainer.appendChild(row);
     });
