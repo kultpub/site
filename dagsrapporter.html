@@ -52,6 +52,67 @@ body {
 
 /* Layout */
 
+.highlight-controls {
+    position: fixed;
+    top: 22px;
+    right: 24px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+    background: #fff;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    min-width: 200px;
+}
+
+.toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    width: 100%;
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 14px;
+}
+
+.toggle input {
+    display: none;
+}
+
+.toggle-track {
+    width: 42px;
+    height: 24px;
+    border-radius: 999px;
+    background: #d6d6d6;
+    position: relative;
+    transition: background 160ms ease;
+}
+
+.toggle-track::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+    transition: transform 160ms ease;
+}
+
+.toggle input:checked + .toggle-track {
+    background: #f28c28;
+}
+
+.toggle input:checked + .toggle-track::after {
+    transform: translateX(18px);
+}
+
 .app-container {
     width: 100%;
     max-width: 980px;
@@ -186,6 +247,61 @@ select:focus {
     min-height: 280px;
 }
 
+/* Container-växling */
+.report-list.grid-mode {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: min-content;
+    gap: 20px;
+    padding: 30px 40px;
+    align-items: start;
+}
+
+/* Kort-styling: Exakt kvadratisk */
+.report-list.grid-mode .report-row {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 32px;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 20px;
+    aspect-ratio: 1 / 1; 
+    overflow: hidden;
+    
+    gap: 16px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.report-list.grid-mode .report-row:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    border-color: var(--accent);
+}
+
+/* Texten i kvadraten */
+.report-list.grid-mode .col-preview {
+    white-space: pre-wrap;
+    display: block;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #374151;
+    
+    /* Maskering för att texten inte ska sluta tvärt vid kanten */
+    mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+}
+
+.report-list.grid-mode .date-block {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    border-bottom: 2px solid var(--accent-soft);
+    padding-bottom: 15px;
+    flex-shrink: 0; /* Hindrar rubriken från att tryckas ihop */
+}
+
 .report-row {
     display: grid;
     grid-template-columns: 90px 46px 1fr auto;
@@ -239,6 +355,10 @@ select:focus {
     justify-content: center;
     color: var(--muted);
     font-size: 17px;
+    
+    /* Lägg till denna rad: */
+    flex-shrink: 0; 
+    
     transition: color 0.18s, border-color 0.18s, background 0.18s, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -328,6 +448,17 @@ select:focus {
     position: relative;
     border-radius: 20px;
     box-shadow: 0 30px 80px rgba(0, 0, 0, 0.28);
+    
+    /* Animation: Väldigt mjuk fade */
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* När vi tonar ut */
+.modal-content.fade-out {
+    opacity: 0;
+    transform: scale(0.98); /* Krymper en aning för mjukare känsla */
 }
 
 .modal-date {
@@ -531,6 +662,118 @@ select:focus {
     flex-direction: column;
 }
 
+.share-modal-btn {
+    position: absolute;
+    top: 20px;
+    right: 75px; /* Placerad till vänster om stäng-knappen som har right: 20px */
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    transition: all 0.2s ease;
+}
+
+.share-modal-btn:hover {
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+.reset-btn {
+    width: 100%;
+    margin-top: 8px;
+    padding: 10px;
+    background: #f3f4f6;
+    color: #4b5563;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.reset-btn:hover {
+    background: #e5e7eb;
+    color: #111827;
+    border-color: #9ca3af;
+}
+
+.reset-btn:active {
+    transform: scale(0.97);
+}
+
+/* Styling för den nya SVG-ikonen */
+.action-icon {
+    width: 20px;
+    height: 20px;
+    display: block;
+    transition: transform 0.2s ease;
+}
+
+/* Gör ikonen lite större i kortvyn och placera den snyggt */
+.report-list.grid-mode .row-action {
+    display: block; /* Vi visar den nu, tidigare var den döljd */
+    position: absolute;
+    bottom: 24px;
+    right: 24px;
+    color: var(--accent);
+    opacity: 0.6;
+}
+
+.report-row:hover .action-icon {
+    transform: scale(1.15);
+    color: var(--accent);
+}
+
+.report-list.grid-mode .report-row:hover .row-action {
+    opacity: 1;
+}
+
+.modal-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+}
+
+.nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--text);
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nav-btn:hover:not(:disabled) {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.nav-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
 /* Responsive */
 
 @media (max-width: 760px) {
@@ -589,6 +832,30 @@ select:focus {
 </head>
 
 <body>
+
+<div class="highlight-controls">
+  <label class="toggle">
+    <input type="checkbox" id="toggleSortOrder">
+    <span class="toggle-track"></span>
+    Äldst först
+  </label>
+
+  <label class="toggle">
+    <input type="checkbox" id="toggleLastSeven">
+    <span class="toggle-track"></span>
+    Senaste 7
+  </label>
+  
+<label class="toggle">
+  <input type="checkbox" id="toggleGridView">
+  <span class="toggle-track"></span>
+  Kortvy
+</label>
+
+<button id="resetFilters" class="reset-btn">
+    Återställ
+  </button>
+</div>
 
 <div class="app-container">
     <div class="page-card">
@@ -662,6 +929,11 @@ select:focus {
 
 <div id="reportModal" class="modal">
     <div class="modal-content">
+        <!-- DELA-KNAPPEN (Ny) -->
+        <button id="shareBtn" class="share-modal-btn" title="Dela via e-post">
+            <i class="fa-solid fa-share-nodes"></i>
+        </button>
+
         <button id="closeBtn" class="close-modal" aria-label="Stäng">
             <i class="fa-solid fa-xmark"></i>
         </button>
@@ -669,11 +941,20 @@ select:focus {
         <span class="modal-date" id="modalDate"></span>
         <h2 class="modal-title">Dagsrapport</h2>
         <div class="modal-text" id="modalText"></div>
+		<div class="modal-navigation">
+    <button id="prevReport" class="nav-btn" title="Föregående rapport">
+        <i class="fa-solid fa-chevron-left"></i> Föregående
+    </button>
+    <button id="nextReport" class="nav-btn" title="Nästa rapport">
+        Nästa <i class="fa-solid fa-chevron-right"></i>
+    </button>
+</div>
     </div>
 </div>
 
 <script>
 let allReports = [];
+let currentFilteredReports = []; // Håller reda på listan som visas just nu
 const csvUrl = "https://kultpub.github.io/site/dagsrapporter.csv";
 const dayNames = ["sön", "mån", "tis", "ons", "tor", "fre", "lör"];
 
@@ -711,34 +992,51 @@ async function loadData() {
         allReports = parseCSV(csvText);
         allReports.sort((a, b) => b.date.localeCompare(a.date));
 
-        initCustomFilters(); // Initierar de nya dropdown-menyerna
+        initCustomFilters(); 
         render();
+
+        // --- SMART LÄNK LOGIK (Nytt) ---
+        const urlParams = new URLSearchParams(window.location.search);
+        const sharedDate = urlParams.get('date');
+        if (sharedDate) {
+            const reportToOpen = allReports.find(r => r.date === sharedDate);
+            if (reportToOpen) openModal(reportToOpen);
+        }
     } catch (error) {
         document.getElementById("reportList").innerHTML =
             `<div class="no-results">Fel vid hämtning av arkivet.</div>`;
     }
 }
 
+// Hämta element
+const toggleGridView = document.getElementById("toggleGridView");
+const reportList = document.getElementById("reportList");
+
+toggleGridView.onchange = () => {
+    if (toggleGridView.checked) {
+        reportList.classList.add("grid-mode");
+    } else {
+        reportList.classList.remove("grid-mode");
+    }
+    // Vi anropar render för att säkerställa att allt ser rätt ut, 
+    // men CSS sköter det mesta av magin nu.
+    render(); 
+};
+
 // --- LOGIK FÖR ANPASSADE DROPDOWNS ---
 
 function initCustomFilters() {
-    // Hämta unika år från datan
     const years = [...new Set(allReports.map(r => parseInt(r.date.split("-")[0])))].sort((a, b) => b - a);
-    
-    // Hämta dagens datum för slutvärden (Till)
     const now = new Date();
     const currentYear = now.getFullYear();
-    const currentMonthIdx = now.getMonth(); // 0-11
+    const currentMonthIdx = now.getMonth();
 
-    // --- ÄNDRING HÄR: Sätt fasta default-värden för "Från" ---
     startYear = 2019; 
-    startMonth = 0; // Januari (index 0)
+    startMonth = 0; 
     
-    // Sätt "Till" till aktuellt år/månad (eller senaste i listan om 2026 inte finns än)
     endYear = years.includes(currentYear) ? currentYear : years[0];
     endMonth = currentMonthIdx;
 
-    // Rendera dropdown-menyerna
     renderDropdown("fromYear", years, (val) => { startYear = val; syncDates(); });
     renderDropdown("toYear", years, (val) => { endYear = val; syncDates(); });
     renderDropdown("fromMonth", monthNamesShort, (val, idx) => { startMonth = idx; syncDates(); });
@@ -776,13 +1074,11 @@ function syncDates() {
     const startVal = startYear * 12 + startMonth;
     const endVal = endYear * 12 + endMonth;
 
-    // Om användaren råkar sätta "Från" efter "Till", korrigera automatiskt
     if (startVal > endVal) {
         endYear = startYear;
         endMonth = startMonth;
     }
 
-    // Uppdatera texterna i knapparna
     document.getElementById("fromYearLabel").textContent = startYear;
     document.getElementById("fromMonthLabel").textContent = monthNamesShort[startMonth];
     document.getElementById("toYearLabel").textContent = endYear;
@@ -798,28 +1094,49 @@ function render() {
     const clearSearch = document.getElementById("clearSearch");
     const search = searchInput.value.toLowerCase().trim();
     const listContainer = document.getElementById("reportList");
+    
+    const sortOldestFirst = document.getElementById("toggleSortOrder").checked;
+    const showOnlyLastSeven = document.getElementById("toggleLastSeven").checked;
 
     clearSearch.style.display = search ? "flex" : "none";
+
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    sevenDaysAgo.setHours(0, 0, 0, 0);
 
     const startVal = startYear * 12 + startMonth;
     const endVal = endYear * 12 + endMonth;
 
-    const filtered = allReports.filter(report => {
+    let filtered = allReports.filter(report => {
+        const reportDateObj = new Date(report.date);
         const parts = report.date.split("-");
         const reportVal = parseInt(parts[0]) * 12 + (parseInt(parts[1]) - 1);
         
         const matchesSearch = report.text.toLowerCase().includes(search) || report.date.includes(search);
-        const matchesDate = reportVal >= startVal && reportVal <= endVal;
+        
+        let matchesDate = false;
+        if (showOnlyLastSeven) {
+            matchesDate = reportDateObj >= sevenDaysAgo;
+        } else {
+            matchesDate = reportVal >= startVal && reportVal <= endVal;
+        }
 
         return matchesSearch && matchesDate;
     });
 
-    listContainer.innerHTML = "";
+    if (sortOldestFirst) {
+        filtered.sort((a, b) => a.date.localeCompare(b.date));
+    } else {
+        filtered.sort((a, b) => b.date.localeCompare(a.date));
+    }
 
+    listContainer.innerHTML = "";
     if (filtered.length === 0) {
-        listContainer.innerHTML = `<div class="no-results">Inga träffar för valt datumintervall.</div>`;
+        listContainer.innerHTML = `<div class="no-results">Inga träffar hittades.</div>`;
         return;
     }
+	
+	currentFilteredReports = filtered;
 
     filtered.forEach(report => {
         const row = document.createElement("div");
@@ -838,31 +1155,69 @@ function render() {
             row.classList.add("weekend-row");
         }
 
-        const previewText = report.text.replace(/\r?\n|\r/g, " ").substring(0, 170);
+        const previewText = report.text.substring(0, 1000);
 
-        row.innerHTML = `
-            <div class="date-block">
-                <div class="col-date">${escapeHTML(report.date)}</div>
-                <div class="col-day">${escapeHTML(dayShortName)}</div>
-            </div>
-            <div class="col-icon">
-                <i class="fa-regular fa-pen-to-square"></i>
-            </div>
-            <div class="col-preview">${escapeHTML(previewText)}...</div>
-            <div class="row-action">
-                <i class="fa-solid fa-chevron-right"></i>
-            </div>
-        `;
+row.innerHTML = `
+    <div class="date-block">
+        <div class="col-date">${escapeHTML(report.date)}</div>
+        <div class="col-day">${escapeHTML(dayShortName)}</div>
+    </div>
+    <div class="col-icon">
+        <i class="fa-regular fa-pen-to-square"></i>
+    </div>
+    <div class="col-preview">${escapeHTML(previewText)}...</div>
+    <div class="row-action">
+        ${/* Här är din nya SVG-ikon */ ''}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="action-icon">
+            <path fill="currentColor" d="M528.3 46.5H388.5c-48.1 0-89.9 33.3-100.4 80.3-10.6-47-52.3-80.3-100.4-80.3H48c-26.5 0-48 21.5-48 48v245.8c0 26.5 21.5 48 48 48h89.7c102.2 0 132.7 24.4 147.3 75 .7 2.8 5.2 2.8 6 0 14.7-50.6 45.2-75 147.3-75H528c26.5 0 48-21.5 48-48V94.6c0-26.4-21.3-47.9-47.7-48.1zM242 311.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5V289c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5-1.5 3.5-3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V251zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm259.3 121.7c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5V228c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.8c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V190z"/>
+        </svg>
+    </div>
+`;
 
         row.onclick = () => openModal(report);
         listContainer.appendChild(row);
     });
 }
 
+// --- TOGGLES ---
+
+const toggleSortOrder = document.getElementById("toggleSortOrder");
+const toggleLastSeven = document.getElementById("toggleLastSeven");
+
+toggleSortOrder.onchange = () => render();
+toggleLastSeven.onchange = () => render();
+
 // --- MODAL & EVENT LISTENERS ---
 
 function openModal(report) {
     const modal = document.getElementById("reportModal");
+    const content = modal.querySelector(".modal-content");
+    
+    // Om modalen redan är aktiv (vi bläddrar)
+    if (modal.classList.contains("active")) {
+        // 1. Starta fade-out
+        content.classList.add("fade-out");
+        
+        // 2. Vänta tills den är helt genomskinlig (300ms)
+        setTimeout(() => {
+            updateModalContent(report);
+            content.scrollTop = 0;
+            
+            // 3. Starta fade-in
+            content.classList.remove("fade-out");
+        }, 300); 
+    } else {
+        // Första öppningen: Ingen fade-out behövs
+        updateModalContent(report);
+        modal.style.display = "block";
+        requestAnimationFrame(() => { 
+            modal.classList.add("active"); 
+        });
+    }
+}
+
+// Denna funktion sköter bara data-uppdateringen
+function updateModalContent(report) {
     const reportDate = new Date(report.date);
     const dayLong = reportDate.toLocaleDateString("sv-SE", { weekday: "long" });
     const formattedDay = dayLong.charAt(0).toUpperCase() + dayLong.slice(1);
@@ -870,8 +1225,23 @@ function openModal(report) {
     document.getElementById("modalDate").textContent = `${formattedDay} ${report.date}`;
     document.getElementById("modalText").textContent = report.text;
 
-    modal.style.display = "block";
-    requestAnimationFrame(() => { modal.classList.add("active"); });
+    const currentIndex = currentFilteredReports.findIndex(r => r.date === report.date);
+    const prevBtn = document.getElementById("prevReport");
+    const nextBtn = document.getElementById("nextReport");
+
+    if (currentIndex > 0) {
+        prevBtn.disabled = false;
+        prevBtn.onclick = (e) => { e.stopPropagation(); openModal(currentFilteredReports[currentIndex - 1]); };
+    } else {
+        prevBtn.disabled = true;
+    }
+
+    if (currentIndex < currentFilteredReports.length - 1) {
+        nextBtn.disabled = false;
+        nextBtn.onclick = (e) => { e.stopPropagation(); openModal(currentFilteredReports[currentIndex + 1]); };
+    } else {
+        nextBtn.disabled = true;
+    }
 }
 
 function closeModal() {
@@ -879,6 +1249,23 @@ function closeModal() {
     modal.classList.remove("active");
     setTimeout(() => { modal.style.display = "none"; }, 250);
 }
+
+document.getElementById("shareBtn").onclick = () => {
+    // Hämtar datumet från modalens rubrik (t.ex. "Tisdag 2026-05-12")
+    const fullDateText = document.getElementById("modalDate").textContent;
+    const dateOnly = fullDateText.split(' ').pop(); 
+
+    // Skapar innehållet med "Hej," och din valda formulering
+    const subject = encodeURIComponent(`Dagsrapport ${dateOnly}`);
+    const body = encodeURIComponent(
+        `Hej,\n\n` +
+        `Jag vill uppmärksamma dig på receptionens dagsrapport ${dateOnly}:\n` +
+        `${window.location.origin}${window.location.pathname}?date=${dateOnly}`
+    );
+
+    // Öppnar e-postprogrammet
+    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+};
 
 document.getElementById("searchInput").addEventListener("input", render);
 
@@ -891,7 +1278,31 @@ document.getElementById("clearSearch").addEventListener("click", () => {
 
 document.getElementById("closeBtn").addEventListener("click", closeModal);
 
-// Stäng dropdowns om man klickar utanför
+document.getElementById("resetFilters").onclick = () => {
+    // 1. Återställ sökfältet
+    const searchInput = document.getElementById("searchInput");
+    searchInput.value = "";
+    
+    // 2. Slå av alla togglar
+    document.getElementById("toggleSortOrder").checked = false;
+    document.getElementById("toggleLastSeven").checked = false;
+    document.getElementById("toggleGridView").checked = false;
+    
+    // 3. Återställ datumväljarna (vi sätter dem till de fasta defaultvärdena)
+    startYear = 2019;
+    startMonth = 0; // Januari
+    
+    const now = new Date();
+    endYear = now.getFullYear();
+    endMonth = now.getMonth();
+    
+    // 4. Ta bort grid-mode från listan
+    document.getElementById("reportList").classList.remove("grid-mode");
+    
+    // 5. Synka datumetiketterna och rita om allt
+    syncDates(); // syncDates anropar i sin tur render()
+};
+
 window.addEventListener("click", event => {
     if (!event.target.closest('.custom-select-wrapper')) {
         document.querySelectorAll('.custom-select-wrapper').forEach(w => w.classList.remove('open'));
