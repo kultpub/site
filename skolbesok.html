@@ -603,8 +603,8 @@ svg.hover-active .visit-label[data-for-municipality="active"] {
 #statsTable th,
 #statsTable td {
   border: 1px solid #ddd;
-  padding: 8px 24px 8px 12px; /* Ger luft till höger om siffran */
-  text-align: right; /* Standard för alla dataceller */
+  padding: 8px 24px 8px 12px;
+  text-align: right;
 }
 
 #statsTable th {
@@ -683,6 +683,33 @@ svg.hover-active .visit-label[data-for-municipality="active"] {
   border-top: 2px solid #111;
   text-align: right; /* Denna var center tidigare */
   padding-right: 24px;
+}
+
+.month-cell-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  height: 20px;
+  line-height: 1.15;
+}
+
+.month-toggle {
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  accent-color: #f28c28;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.month-row-disabled td:not(:first-child) {
+  color: #aaa !important;
+  background: #f7f7f7 !important;
+}
+
+.month-row-disabled td:first-child {
+  opacity: 0.65;
 }
 
 
@@ -1666,6 +1693,7 @@ svg.hover-active .visit-label[data-for-municipality="active"] {
 let visitRows = [];
 let currentFF = "All data";
 
+
 let startYear, startMonth, endYear, endMonth;
 let availableYears = [];
 let currentTableYear = new Date().getFullYear();
@@ -1673,6 +1701,7 @@ let currentTableYear = new Date().getFullYear();
 let myChart = null;
 let lastFilteredData = {};
 
+let selectedMonths = new Set([...Array(12).keys()]);
 
 /* =========================================================
    KONSTANTER
@@ -2353,11 +2382,41 @@ function updateTable() {
         const row = tbody.insertRow();
         const nameCell = row.insertCell();
 
-        nameCell.textContent = mName;
+        if (!selectedMonths.has(mIdx)) {
+            row.classList.add("month-row-disabled");
+        }
+
         nameCell.style.fontWeight = "600";
         nameCell.style.background = "#f5f5f5";
         nameCell.style.color = "#000000";
         nameCell.style.textAlign = "center";
+
+        const monthCellInner = document.createElement("div");
+        monthCellInner.className = "month-cell-inner";
+
+        const monthLabel = document.createElement("span");
+        monthLabel.textContent = mName;
+
+        const monthCheckbox = document.createElement("input");
+        monthCheckbox.type = "checkbox";
+        monthCheckbox.className = "month-toggle";
+        monthCheckbox.checked = selectedMonths.has(mIdx);
+
+        monthCheckbox.onclick = e => {
+            e.stopPropagation();
+
+            if (monthCheckbox.checked) {
+                selectedMonths.add(mIdx);
+            } else {
+                selectedMonths.delete(mIdx);
+            }
+
+            updateTable();
+        };
+
+        monthCellInner.appendChild(monthLabel);
+        monthCellInner.appendChild(monthCheckbox);
+        nameCell.appendChild(monthCellInner);
 
         let currentMaxInScope = 0;
 
@@ -2365,17 +2424,23 @@ function updateTable() {
             let sum = 0;
 
             visitRows.filter(isRowIncludedByFF).forEach(r => {
-                if (r.år === y && monthMap[r.månad] === mIdx) sum += r.antal;
+                if (r.år === y && monthMap[r.månad] === mIdx) {
+                    sum += r.antal;
+                }
             });
 
-            if (sum > currentMaxInScope) currentMaxInScope = sum;
+            if (sum > currentMaxInScope) {
+                currentMaxInScope = sum;
+            }
         });
 
         yearsToShow.forEach(y => {
             let val = 0;
 
             visitRows.filter(isRowIncludedByFF).forEach(r => {
-                if (r.år === y && monthMap[r.månad] === mIdx) val += r.antal;
+                if (r.år === y && monthMap[r.månad] === mIdx) {
+                    val += r.antal;
+                }
             });
 
             const cell = row.insertCell();
@@ -2386,7 +2451,12 @@ function updateTable() {
                 cell.onclick = () => showMunicipalityBreakdown(y, mIdx);
             }
 
-            if (toggleLund.checked && val > 0 && val === currentMaxInScope) {
+            if (
+                selectedMonths.has(mIdx) &&
+                toggleLund.checked &&
+                val > 0 &&
+                val === currentMaxInScope
+            ) {
                 cell.classList.add("best-cell");
             }
         });
@@ -2404,7 +2474,9 @@ function updateTable() {
         let yearData = {};
 
         visitRows.filter(isRowIncludedByFF).forEach(r => {
-            if (r.år === y) {
+            const monthIndex = monthMap[r.månad];
+
+            if (r.år === y && selectedMonths.has(monthIndex)) {
                 totalForYear += r.antal;
                 yearData[r.kommun] = (yearData[r.kommun] || 0) + r.antal;
             }
@@ -2806,6 +2878,8 @@ document.getElementById("resetFilters").onclick = function() {
     toggleLund.checked = false;
     toggleLundRegion.checked = false;
 
+    selectedMonths = new Set([...Array(12).keys()]);
+
     updateHighlights();
 
     if (availableYears.length > 0) {
@@ -2813,6 +2887,10 @@ document.getElementById("resetFilters").onclick = function() {
     }
 
     initDateSelects();
+
+    if (document.getElementById("tableView").style.display !== "none") {
+        updateTable();
+    }
 };
 
 document.getElementById("saveImage").onclick = async function() {
@@ -2935,16 +3013,17 @@ const tipsContent = {
 
     table: {
         title: "Tips för tabellvyn",
-        body: `
-            <div style="text-align:left; line-height:1.55;">
-                <p>Tabellen visar skolbesök per månad och år.</p>
-                <p>Klicka på ett värde i tabellen för att se hur antalet fördelar sig mellan kommuner.</p>
-                <p><strong>Bästa månad</strong> markerar den högsta siffran för varje månad.</p>
-                <p><strong>Senaste 5 åren</strong> krymper tabellen och visar bara de fem senaste åren.</p>
-                <p>Knappen <strong>Spara tabell JPG</strong> laddar ner tabellen som bild.</p>
-            </div>
-        `
-    },
+		body: `
+			<div style="text-align:left; line-height:1.55;">
+				<p>Tabellen visar skolbesök per månad och år.</p>
+				<p>Klicka på ett värde i tabellen för att se hur antalet fördelar sig mellan kommuner.</p>
+				<p>Checkboxarna vid månadsnamnen styr vilka månader som räknas med i totalraden. Det gör det möjligt att till exempel jämföra januari–april för innevarande år med samma månader tidigare år.</p>
+				<p><strong>Bästa månad</strong> markerar den högsta siffran för varje månad.</p>
+				<p><strong>Senaste 5 åren</strong> krymper tabellen och visar bara de fem senaste åren.</p>
+				<p>Knappen <strong>Spara tabell JPG</strong> laddar ner tabellen som bild.</p>
+			</div>
+		`
+},
 
     chart: {
         title: "Tips för diagramvyn",
