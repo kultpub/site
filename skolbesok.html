@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="sv">
 <head>
@@ -27,11 +26,8 @@ body {
 }
 
 body {
-  margin: 0;
   min-height: 100vh;
-  display: grid;
-  place-items: center; /* Kartan förblir centrerad */
-  background: #fff;
+  background: #ffffff;
   overflow: hidden;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
@@ -47,40 +43,109 @@ h1 {
 
 /* =========================================================
    2. HUVUDLAYOUT
+   Fast topposition gör att karta, tabell och diagram får
+   samma rubrikposition på skärmen.
    ========================================================= */
 
-.app {
-  display: grid;
-  grid-template-columns: 240px min(76vw, 82vh);
-  gap: 28px;
-  align-items: center;
-  transition: grid-template-columns 320ms cubic-bezier(0.4, 0, 0.2, 1);
+.app,
+.app.full-width,
+.app.chart-active {
+  position: fixed;
+  top: 10vh;
+  left: 0;
+  display: flex !important;
+  justify-content: center;
+  align-items: flex-start !important;
+  width: 100vw;
+  margin: 0 !important;
+  padding-left: 70px; /* lämnar plats åt vänsterpanelen */
+  padding-right: 24px;
+  box-sizing: border-box;
 }
 
-.main-view {
-  width: min(76vw, 82vh);
-  height: min(76vw, 82vh);
+.main-view,
+.app.full-width .main-view,
+.app.chart-active .main-view {
+  width: 1000px !important;
+  max-width: 90vw !important;
+  height: auto;
 }
 
 .view-container {
   width: 100%;
-  height: 100%;
-}
-
-.map-wrap {
-  width: min(76vw, 82vh);
-  height: min(76vw, 82vh);
+  height: auto;
 }
 
 
 /* =========================================================
-   3. VYVÄXLARE
+   3. VÄNSTERPANEL / FILTER
+   ========================================================= */
+
+.ff-filter {
+  position: fixed;
+  top: 22px;
+  left: 24px;
+  z-index: 900;
+  width: 230px;
+  display: flex;
+  flex-direction: column;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.controls .custom-select-wrapper {
+  width: 180px;
+}
+
+.controls .custom-select-dropdown {
+  width: auto !important;
+  min-width: max-content;
+}
+
+.date-small {
+  width: 90px !important;
+}
+
+.date-medium {
+  width: 130px !important;
+}
+
+#dateFilters {
+  opacity: 0;
+  transform: translateY(-8px);
+  transition:
+    opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  display: none;
+}
+
+#dateFilters.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  display: block;
+}
+
+
+/* =========================================================
+   4. VYVÄXLARE
    ========================================================= */
 
 .view-selector {
   display: flex;
   gap: 4px;
-  margin: 15px 0 25px 0;
+  margin: 76px 0 25px 0;
   background: #f0f0f0;
   padding: 4px;
   border-radius: 10px;
@@ -104,76 +169,6 @@ h1 {
   background: #2f2f2f;
   color: white;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-
-/* =========================================================
-   4. VÄNSTERPANEL / FILTER
-   ========================================================= */
-
-.ff-filter {
-  position: fixed;
-  top: 22px;
-  left: 24px;
-  z-index: 900;
-  width: 230px;
-  display: flex;
-  flex-direction: column;
-}
-
-#dateFilters {
-  opacity: 0;
-  transform: translateY(-8px);
-  /* En lite längre tid här ger den där lyxiga känslan */
-  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
-              transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  pointer-events: none;
-}
-
-#dateFilters.visible {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-  /* Vi kan lägga en liten fördröjning så de tonas in EFTER att kartan/tabellen börjat synas */
-  transition-delay: 0.2s;
-}
-
-.controls {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.filter-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.controls .custom-select-wrapper {
-  width: 180px;
-}
-
-.controls .custom-select-dropdown {
-  min-width: 180px;
-}
-
-.date-small {
-  width: 90px !important;
-}
-
-.date-medium {
-  width: 130px !important;
-}
-
-.controls .custom-select-dropdown {
-  min-width: auto !important;
-  width: 100%;
-}
-
-.controls .custom-select-dropdown {
-  width: auto !important;
-  min-width: max-content;
 }
 
 
@@ -299,10 +294,10 @@ h1 {
   position: fixed;
   top: 22px;
   right: 24px;
-  z-index: 1000;
+  z-index: 900;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
   align-items: flex-start;
   background: #fff;
   padding: 16px;
@@ -312,15 +307,10 @@ h1 {
   min-width: 200px;
 }
 
-.highlight-controls {
-  position: fixed;
-  top: 22px;
-  right: 24px;
-  z-index: 900;
-  display: flex;
-  gap: 14px;
-  align-items: center;
-}
+
+/* =========================================================
+   7. TOGGLAR
+   ========================================================= */
 
 .toggle {
   display: flex;
@@ -366,7 +356,7 @@ h1 {
 
 
 /* =========================================================
-   7. KNAPPAR
+   8. KNAPPAR
    ========================================================= */
 
 .save-btn {
@@ -429,23 +419,44 @@ h1 {
 
 
 /* =========================================================
-   8. SAMMANFATTNINGSPANEL
+   9. KARTVY: RUBRIK + SUMMARY + KARTA
+   ========================================================= */
+
+#mapView {
+  width: 100% !important;
+}
+
+.map-layout {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+}
+
+.map-layout .summary-panel {
+  flex: 0 0 220px;
+  width: 220px;
+  margin-top: 0;
+}
+
+.map-layout .map-wrap {
+  flex: 0 0 auto;
+  width: min(76vw, 82vh);
+  height: min(76vw, 82vh);
+  transform: translateY(-35px);
+}
+
+
+/* =========================================================
+   10. SAMMANFATTNINGSPANEL
    ========================================================= */
 
 .summary-panel {
-  align-self: center;
   padding: 24px 22px;
   border: 1px solid #e2e2e2;
   border-radius: 16px;
   background: #fafafa;
   color: #222;
-  transition: opacity 220ms ease, transform 220ms ease;
-  transform-origin: left center;
-}
-
-.summary-panel.hiding {
-  opacity: 0;
-  transform: scale(0.97);
 }
 
 .summary-label,
@@ -492,10 +503,10 @@ h1 {
 
 
 /* =========================================================
-   9. KARTA / SVG
+   11. KARTA / SVG
    ========================================================= */
 
-svg {
+svg.map-svg {
   width: 100%;
   height: 100%;
   display: block;
@@ -566,52 +577,81 @@ svg.hover-active .visit-label[data-for-municipality="active"] {
 
 
 /* =========================================================
-   10. TABELL
+   12. VYRUBRIKER
    ========================================================= */
+
+#mapHeaderDisplay,
+#tableHeaderDisplay,
+#chartHeaderDisplay {
+  width: 100%;
+  margin: 0 0 20px 0 !important;
+  color: #2f2f2f;
+  border-left: 4px solid #f28c28;
+  padding-left: 15px;
+  font-size: 28px;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  display: block;
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   13. TABELL- OCH DIAGRAMVY
+   ========================================================= */
+
+#tableView,
+#chartView {
+  width: 100% !important;
+  max-width: 1000px !important;
+  margin: 0 auto !important;
+}
+
+#tableView {
+  transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#tableView.compact-table {
+  max-width: 750px !important;
+}
 
 .table-scroll,
 #chartContainer {
-  width: 100%;
-  height: 525px;
+  width: 100% !important;
+  height: 530px !important;
+  box-sizing: border-box;
+  margin: 0 !important;
+  border: 1px solid #e2e2e2;
+  border-radius: 16px;
 }
 
-#statsTable {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 15px;
+.table-scroll {
+  overflow-x: auto;
 }
+
+#tableView .table-scroll {
+  overflow-x: hidden;
+  overflow-y: auto;
+  transition:
+    box-shadow 520ms ease,
+    border-color 520ms ease;
+}
+
+#tableView.compact-table .table-scroll {
+  box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+}
+
+
+/* =========================================================
+   14. TABELL
+   ========================================================= */
 
 #statsTable {
   width: 100%;
   min-width: 600px;
+  table-layout: fixed;
   border-collapse: collapse;
   font-size: 15px;
-}
-
-#statsTable {
-  table-layout: fixed;
-  width: 100%;
-}
-
-#statsTable thead th {
-  background: #2f2f2f;
-  color: white;
-  text-align: right;
-  padding-right: 24px;
-}
-
-#statsTable td {
-  padding: 12px 14px;
-  border-bottom: 1px solid #eee;
-  color: #222;
-  text-align: right;
-  cursor: pointer;
-  transition: background 0.1s;
-}
-
-#statsTable tbody tr.total-row td:first-child {
-    cursor: default;
-    pointer-events: none;
 }
 
 #statsTable th,
@@ -622,48 +662,46 @@ svg.hover-active .visit-label[data-for-municipality="active"] {
 }
 
 #statsTable th {
-  white-space: nowrap;
-  min-width: 80px;
-}
-
-#statsTable th {
   background: #2f2f2f;
   color: white;
   font-size: 14px;
   padding: 12px 8px;
+  white-space: nowrap;
+  min-width: 80px;
 }
 
-#statsTable th:first-child,
-#statsTable td:first-child {
-  text-align: left !important;
-  padding-left: 14px;
-  background: #f5f5f5;
+#statsTable td {
+  border-bottom: 1px solid #eee;
+  color: #222;
+  cursor: pointer;
+  transition: background 0.1s;
 }
 
 #statsTable th:first-child,
 #statsTable td:first-child {
   width: 100px;
+  text-align: left !important;
+  padding-left: 14px;
+  background: #f5f5f5;
 }
 
-/* Rubriken "Månad" */
 #statsTable thead th:first-child {
-  background: #f5f5f5 !important; /* Ljusgrå bakgrund */
-  color: #000000 !important;      /* Svart textfärg */
-  text-align: center;
+  background: #f5f5f5 !important;
+  color: #000000 !important;
+  text-align: center !important;
   padding-left: 14px;
   font-weight: 700;
 }
 
 #statsTable td:first-child {
-  text-align: center;
+  text-align: center !important;
   background: #f5f5f5;
-  color: #000000 !important;      /* Säkerställ svart textfärg */
+  color: #000000 !important;
   font-weight: 600;
-  padding-left: 14px;
 }
 
 #statsTable td:hover:not(:first-child) {
-  background-color: #fff9db !important; /* Samma färg som "Bästa månad" vid hovring */
+  background-color: #fff9db !important;
   color: #000;
 }
 
@@ -675,14 +713,12 @@ svg.hover-active .visit-label[data-for-municipality="active"] {
   background-color: #fafafa;
 }
 
-/* Specifik styling för totalraden längst ned */
 #statsTable tbody tr.total-row {
-  background-color: #2f2f2f !important; /* Mörk bakgrund */
-  color: white !important;              /* Vit text */
+  background-color: #2f2f2f !important;
+  color: white !important;
   font-weight: 300;
 }
 
-/* Inaktivera hover-effekten för totalraden */
 #statsTable tbody tr.total-row:hover td {
   background-color: #2f2f2f !important;
 }
@@ -692,12 +728,22 @@ svg.hover-active .visit-label[data-for-municipality="active"] {
   bottom: 0;
   background-color: #2f2f2f !important;
   color: white !important;
-  font-weight: 600; /* Jag sänkte vikten åt dig här också */
+  font-weight: 600;
   z-index: 5;
   border-top: 2px solid #111;
-  text-align: right; /* Denna var center tidigare */
+  text-align: right;
   padding-right: 24px;
 }
+
+#statsTable tbody tr.total-row td:first-child {
+  cursor: default;
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   15. MÅNADSVÄLJARE I TABELL
+   ========================================================= */
 
 .month-cell-inner {
   display: flex;
@@ -755,20 +801,17 @@ svg.hover-active .visit-label[data-for-municipality="active"] {
 
 
 /* =========================================================
-   11. BÄSTA MÅNAD
+   16. BÄSTA MÅNAD
    ========================================================= */
 
-/* Styling för "Bästa månad" */
-
-/* Uppdaterad "Bästa månad" - Mer professionell */
 .best-cell {
   position: relative;
-  background-color: #fff9db !important; /* Mycket mjuk gul/beige */
+  background-color: #fff9db !important;
   color: #2f2f2f !important;
   font-weight: 700 !important;
+  border: 1px solid #ffe082 !important;
 }
 
-/* En tunn vertikal linje till vänster i cellen som indikerar rekord */
 .best-cell::before {
   content: "";
   position: absolute;
@@ -779,114 +822,10 @@ svg.hover-active .visit-label[data-for-municipality="active"] {
   background-color: #f28c28;
 }
 
-/* Valfritt: Om du vill att värdet ska poppa lite utan ikoner */
-.best-cell {
-  border: 1px solid #ffe082 !important;
-}
-
 
 /* =========================================================
-   12. TABELL- OCH DIAGRAMRUBRIKER
+   17. DIAGRAM
    ========================================================= */
-
-/* Uppdatera denna regel så den gäller båda rubrikerna */
-#tableHeaderDisplay,
-#chartHeaderDisplay {
-  width: 100%;
-  margin: 0 0 20px 0;
-  color: #2f2f2f;
-  border-left: 4px solid #f28c28;
-  padding-left: 15px;
-  font-size: 28px;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
-  display: block;
-}
-
-#tableHeaderDisplay,
-#chartHeaderDisplay {
-  width: 100%;
-  box-sizing: border-box;
-  margin: 0 0 20px 0 !important;
-  padding-left: 15px;
-  border-left: 4px solid #f28c28;
-  color: #2f2f2f;
-  font-size: 28px;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-  display: block;
-}
-
-
-/* =========================================================
-   13. TABELL- OCH DIAGRAMVY
-   ========================================================= */
-
-#tableView,
-#chartView {
-  width: min(95vw, 1100px);
-  margin: 0 auto;
-  height: auto;
-}
-
-#tableView,
-#chartView {
-  width: min(95vw, 1100px);
-  height: auto !important;
-  margin: 0 auto !important;
-}
-
-#tableView {
-  width: min(95vw, 1100px);
-  max-width: 95vw;
-  margin: 0 auto !important;
-  transition: width 520ms cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: width;
-}
-
-.table-scroll,
-#chartContainer {
-  width: 100% !important;
-  height: 530px !important;
-  box-sizing: border-box;
-  margin: 0 !important;
-  border: 1px solid #e2e2e2;
-  border-radius: 16px;
-}
-
-#tableView .table-scroll {
-  width: 100% !important;
-  height: 530px !important;
-  overflow-x: hidden;
-  overflow-y: auto;
-  transition:
-    box-shadow 520ms ease,
-    border-color 520ms ease;
-}
-
-#tableView.compact-table .table-scroll {
-  box-shadow: 0 10px 28px rgba(0,0,0,0.08);
-}
-
-
-/* =========================================================
-   14. DIAGRAM
-   ========================================================= */
-
-#chartContainer {
-  background: #fafafa;
-  border-radius: 16px;
-  border: 1px solid #e2e2e2;
-  padding: 20px;
-  width: 100%;
-  height: 525px; /* Exakt tabellhöjd */
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
-  box-sizing: border-box;
-  border: 1px solid #e2e2e2;
-  margin-top: -1px;
-}
 
 #chartContainer {
   overflow: hidden;
@@ -903,69 +842,7 @@ svg.hover-active .visit-label[data-for-municipality="active"] {
 
 
 /* =========================================================
-   15. LAYOUTLÄGEN: TABELL OCH DIAGRAM
-   ========================================================= */
-
-/* --- FIX FÖR TABELLVY --- */
-.app.chart-active .summary-panel {
-  display: none; /* Ändra från visibility: hidden till display: none */
-}
-
-/* Ge diagrammet frihet att vara brett men stanna i sin kolumn */
-.app.full-width .main-view,
-.app.chart-active .main-view {
-  width: 100% !important;
-  max-width: 95vw !important;
-  height: auto;
-  margin: 0 auto;
-  display: block;
-}
-
-/* Säkerställ att grid-systemet inte kollapsar */
-.app.chart-active {
-  width: 100%;
-  grid-template-columns: 1fr; /* Samma som .app.full-width */
-  align-items: start;        /* Samma som .app.full-width */
-  margin-top: -15vh;         /* Samma vertikala lyft som tabellen */
-}
-
-.app.chart-active #dateFilters {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-  display: block !important;
-}
-
-/* =========================================================
-   SLUTLIG LAYOUTFIX: TABELL OCH DIAGRAM I EXAKT SAMMA POSITION
-   Lägg sist i CSS:en.
-   ========================================================= */
-
-.app.full-width,
-.app.chart-active {
-  width: 100%;
-  grid-template-columns: 1fr;
-  align-items: start;
-  margin-top: -15vh;
-}
-
-.app.full-width .summary-panel,
-.app.chart-active .summary-panel {
-  display: none;
-}
-
-.app.full-width .main-view,
-.app.chart-active .main-view {
-  width: 100% !important;
-  max-width: 95vw !important;
-  height: auto !important;
-  margin: 0 auto !important;
-  display: block !important;
-}
-
-
-/* =========================================================
-   16. MODALER
+   18. MODALER
    ========================================================= */
 
 .modal-overlay {
@@ -987,7 +864,7 @@ svg.hover-active .visit-label[data-for-municipality="active"] {
   padding: 30px;
   border-radius: 16px;
   position: relative;
-  max-width: min(1100px, 92vw);
+  max-width: min(1000px, 92vw);
   width: auto;
   box-shadow: 0 20px 40px rgba(0,0,0,0.2);
   text-align: center;
@@ -1024,7 +901,7 @@ svg.hover-active .visit-label[data-for-municipality="active"] {
 
 
 /* =========================================================
-   17. TIPSMODALER
+   19. TIPSMODALER
    ========================================================= */
 
 .modal-content.tips-modal {
@@ -1040,16 +917,14 @@ svg.hover-active .visit-label[data-for-municipality="active"] {
   letter-spacing: -0.02em;
 }
 
-.modal-content.tips-modal #modalMessage {
+.modal-content.tips-modal #modalMessage,
+.modal-content.tips-modal #modalMessage p {
   font-size: 19px;
   line-height: 1.6;
   color: #333;
 }
 
 .modal-content.tips-modal #modalMessage p {
-  font-size: 19px;
-  line-height: 1.6;
-  color: #333;
   margin: 0 0 15px 0;
 }
 
@@ -1064,15 +939,16 @@ svg.hover-active .visit-label[data-for-municipality="active"] {
 
 
 /* =========================================================
-   18. VYFADE
+   20. VYFADE
    ========================================================= */
 
 #mapView,
 #tableView,
 #chartView {
   opacity: 0;
-  transition: opacity 320ms ease;
+  transition: none !important;
   will-change: opacity;
+  padding-top: 0 !important;
 }
 
 #mapView.visible,
@@ -1235,63 +1111,72 @@ svg.hover-active .visit-label[data-for-municipality="active"] {
   </div>
 
 
-  <!-- =====================================================
-       HUVUDYTA
-       Sammanfattning + aktiv vy
-       ===================================================== -->
+<!-- =====================================================
+     HUVUDYTA
+     Aktiv vy: karta, tabell eller diagram
+     ===================================================== -->
 
-  <div class="app">
+<div class="app">
 
-    <!-- Sammanfattningspanel för kartvyn -->
-    <div class="summary-panel">
+  <!-- Vycontainer: karta, tabell och diagram ligger här -->
+  <div class="main-view">
 
-      <!-- Total -->
-      <div class="summary-label">Totalt</div>
-      <div class="summary-total" id="summaryTotal">0</div>
+    <!-- =====================================================
+         KARTVY
+         Rubrik + sammanfattning + karta
+         ===================================================== -->
+    <div id="mapView" class="view-container visible">
 
+      <h2 id="mapHeaderDisplay">All data</h2>
 
-      <!-- Lund -->
-      <div class="summary-row">
-        <div class="label">Lund</div>
+      <div class="map-layout">
 
-        <div class="value">
-          <span id="summaryLund">0</span>
-          <span class="summary-percent" id="summaryLundPercent">(0 %)</span>
+        <!-- Sammanfattningspanel för kartvyn -->
+        <div class="summary-panel">
+
+          <!-- Total -->
+          <div class="summary-label">Totalt</div>
+          <div class="summary-total" id="summaryTotal">0</div>
+
+          <!-- Lund -->
+          <div class="summary-row">
+            <div class="label">Lund</div>
+
+            <div class="value">
+              <span id="summaryLund">0</span>
+              <span class="summary-percent" id="summaryLundPercent">(0 %)</span>
+            </div>
+          </div>
+
+          <!-- Lund + omnejd -->
+          <div class="summary-row">
+            <div class="label">Lund + omnejd</div>
+
+            <div class="value">
+              <span id="summaryLundRegion">0</span>
+              <span class="summary-percent" id="summaryLundRegionPercent">(0 %)</span>
+            </div>
+          </div>
+
+          <!-- Övrigt -->
+          <div class="summary-row">
+            <div class="label">Övrigt</div>
+
+            <div class="value">
+              <span id="summaryOther">0</span>
+              <span class="summary-percent" id="summaryOtherPercent">(0 %)</span>
+            </div>
+          </div>
+
         </div>
-      </div>
 
-
-      <!-- Lund + omnejd -->
-      <div class="summary-row">
-        <div class="label">Lund + omnejd</div>
-
-        <div class="value">
-          <span id="summaryLundRegion">0</span>
-          <span class="summary-percent" id="summaryLundRegionPercent">(0 %)</span>
-        </div>
-      </div>
-
-
-      <!-- Övrigt -->
-      <div class="summary-row">
-        <div class="label">Övrigt</div>
-
-        <div class="value">
-          <span id="summaryOther">0</span>
-          <span class="summary-percent" id="summaryOtherPercent">(0 %)</span>
-        </div>
-      </div>
-
-    </div>
-
-
-    <!-- Vycontainer: karta, tabell och diagram ligger här -->
-    <div class="main-view">
-
-      <!-- Kartvy -->
-      <div id="mapView" class="view-container visible">
+        <!-- Karta -->
         <div class="map-wrap">
-  
+
+          <!-- =====================================================
+               SVG-KARTA
+               Skånekarta med kommuner som klick-/hoverbara paths
+               ===================================================== -->
 
 <!-- =====================================================
      SVG-KARTA
@@ -1688,43 +1573,50 @@ svg.hover-active .visit-label[data-for-municipality="active"] {
 
   </g>
 </svg>
-        </div> <!-- .map-wrap -->
-      </div>   <!-- #mapView -->
 
-      <!-- =====================================================
-           TABELLVY
-           Visar skolbesök per månad och år.
-           Rubriken uppdateras av JavaScript utifrån valt filter.
-           ===================================================== -->
-      <div id="tableView" class="view-container" style="display:none;">
-        <h2 id="tableHeaderDisplay">All data</h2>
-
-        <div class="table-scroll">
-          <table id="statsTable">
-            <thead></thead>
-            <tbody></tbody>
-          </table>
         </div>
+
+      </div> <!-- .map-layout -->
+
+    </div> <!-- #mapView -->
+
+
+    <!-- =====================================================
+         TABELLVY
+         Visar skolbesök per månad och år.
+         Rubriken uppdateras av JavaScript utifrån valt filter.
+         ===================================================== -->
+    <div id="tableView" class="view-container" style="display:none;">
+      <h2 id="tableHeaderDisplay">All data</h2>
+
+      <div class="table-scroll">
+        <table id="statsTable">
+          <thead></thead>
+          <tbody></tbody>
+        </table>
       </div>
+    </div>
 
-      <!-- =====================================================
-           DIAGRAMVY
-           Visar skolbesök som linjediagram.
-           Canvas fylls av Chart.js.
-           ===================================================== -->
-      <div id="chartView" class="view-container" style="display:none;">
-        <h2 id="chartHeaderDisplay">All data</h2>
 
-        <div id="chartContainer">
-          <canvas id="statsChart"></canvas>
-        </div>
+    <!-- =====================================================
+         DIAGRAMVY
+         Visar skolbesök som linjediagram.
+         Canvas fylls av Chart.js.
+         ===================================================== -->
+    <div id="chartView" class="view-container" style="display:none;">
+      <h2 id="chartHeaderDisplay">All data</h2>
+
+      <div id="chartContainer">
+        <canvas id="statsChart"></canvas>
       </div>
+    </div>
 
-    </div> <!-- .main-view -->
-  </div>   <!-- .app -->
+  </div> <!-- .main-view -->
 
-  <!-- Tooltip för kommunnamn i kartvyn -->
-  <div class="map-tooltip" id="mapTooltip"></div>
+</div> <!-- .app -->
+
+<!-- Tooltip för kommunnamn i kartvyn -->
+<div class="map-tooltip" id="mapTooltip"></div>
 
 <script>
 /* =========================================================
@@ -2253,6 +2145,8 @@ function shouldUseCallout(p, c) {
 }
 
 function drawMapData(data) {
+	const mapHeader = document.getElementById("mapHeaderDisplay");
+    if (mapHeader) mapHeader.textContent = currentFF;
     svg.querySelectorAll("path[data-name]").forEach(path => {
         const name = path.dataset.name;
         const value = data[name];
@@ -2388,25 +2282,18 @@ function updateTable() {
         yearsToShow = yearsToShow.slice(-5);
     }
 
-    const tableView = document.getElementById("tableView");
-
-    if (tableView) {
-        const visibleYearCount = yearsToShow.length;
-        const maxTableWidth = Math.min(window.innerWidth * 0.95, 1100);
-
-        const compactWidth = Math.min(
-            maxTableWidth,
-            Math.max(620, 160 + visibleYearCount * 115)
-        );
-
-        if (toggleLundRegion.checked) {
-            tableView.classList.add("compact-table");
-            tableView.style.width = `${compactWidth}px`;
-        } else {
-            tableView.classList.remove("compact-table");
-            tableView.style.width = `${maxTableWidth}px`;
-        }
-    }
+	const tableView = document.getElementById("tableView");
+	
+	if (tableView) {
+		if (toggleLundRegion.checked) {
+			// Vi sätter bara klassen, JS ska inte räkna pixlar!
+			tableView.classList.add("compact-table");
+			tableView.style.width = ""; // Rensa tidigare pixelvärden
+		} else {
+			tableView.classList.remove("compact-table");
+			tableView.style.width = ""; // Rensa tidigare pixelvärden
+		}
+	}
 
     let headerHtml = `<tr><th style="text-align:center">Månad</th>`;
 
@@ -2733,6 +2620,7 @@ function updateChart(data) {
 
 function switchView(viewId, btn) {
     const appElement = document.querySelector(".app");
+    const mapHeader = document.getElementById("mapHeaderDisplay");
     const dateFilters = document.getElementById("dateFilters");
     const saveBtn = document.getElementById("saveImage");
     const labelLund = document.getElementById("labelLund");
@@ -2745,90 +2633,95 @@ function switchView(viewId, btn) {
     const allViews = [mapView, tableView, chartView];
     const targetView = document.getElementById(viewId + "View");
 
+    const shouldShowFilters = (viewId === "map" || viewId === "chart");
+    const filtersCurrentlyVisible = dateFilters.classList.contains("visible");
+
+    if (!shouldShowFilters) {
+        dateFilters.classList.remove("visible");
+
+        setTimeout(() => {
+            if (!dateFilters.classList.contains("visible")) {
+                dateFilters.style.display = "none";
+            }
+        }, 300);
+    } else {
+        dateFilters.style.display = "block";
+
+        if (!filtersCurrentlyVisible) {
+            requestAnimationFrame(() => {
+                dateFilters.classList.add("visible");
+            });
+        }
+    }
+
     toggleLund.checked = false;
     toggleLundRegion.checked = false;
 
-    allViews.forEach(v => v.classList.remove("visible"));
-	dateFilters.classList.remove("visible");
-    document.querySelectorAll(".view-btn").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".view-btn").forEach(b => {
+        b.classList.remove("active");
+    });
 
     btn.classList.add("active");
 
-    setTimeout(() => {
-        allViews.forEach(v => {
-            v.style.display = "none";
-        });
+    allViews.forEach(v => {
+        v.classList.remove("visible");
+        v.style.display = "none";
+        v.style.width = "";
+    });
 
-        appElement.classList.remove("full-width", "chart-active");
+    appElement.classList.remove("full-width", "chart-active");
 
-        if (viewId === "chart") {
-            appElement.classList.add("chart-active");
+    if (viewId === "chart") {
+        appElement.classList.add("chart-active");
 
-            dateFilters.style.display = "block";
+        labelLund.textContent = "Mjuk linje";
+        labelLundRegion.textContent = "Visa antal";
+        saveBtn.textContent = "Spara diagram PNG";
 
-            labelLund.textContent = "Mjuk linje";
-            labelLundRegion.textContent = "Visa antal";
-            saveBtn.textContent = "Spara diagram PNG";
+        targetView.style.display = "block";
+        targetView.classList.add("visible");
 
-            targetView.style.display = "block";
+        updateChart(lastFilteredData);
 
-            updateChart(lastFilteredData);
-
-            if (myChart) setTimeout(() => myChart.resize(), 50);
-        }
-
-        else if (viewId === "table") {
-            appElement.classList.add("full-width");
-
-            dateFilters.style.display = "none";
-
-            labelLund.textContent = "Bästa månad ★";
-            labelLundRegion.textContent = "Senaste 5 åren";
-            saveBtn.textContent = "Spara tabell JPG";
-
-            targetView.style.display = "block";
-
-            const maxTableWidth = Math.min(window.innerWidth * 0.95, 1100);
-
-            targetView.style.width = `${maxTableWidth}px`;
-
-            updateTable();
-        }
-
-        else {
-            dateFilters.style.display = "block";
-
-            labelLund.textContent = "Lund";
-            labelLundRegion.textContent = "Lund + omnejd";
-            saveBtn.textContent = "Spara karta JPG";
-
-            targetView.style.display = "block";
-
+        if (myChart) {
             requestAnimationFrame(() => {
-                updateHighlights();
-                clearVisitLabels();
-                drawMapData(lastFilteredData);
-
-                targetView.classList.add("visible");
-                dateFilters.classList.add("visible");
+                myChart.resize();
+                myChart.update();
             });
+        }
+    }
 
-            return;
+    else if (viewId === "table") {
+        appElement.classList.add("full-width");
+
+        labelLund.textContent = "Bästa månad ★";
+        labelLundRegion.textContent = "Senaste 5 åren";
+        saveBtn.textContent = "Spara tabell JPG";
+
+        targetView.style.display = "block";
+        targetView.classList.add("visible");
+
+        updateTable();
+    }
+
+    else {
+        labelLund.textContent = "Lund";
+        labelLundRegion.textContent = "Lund + omnejd";
+        saveBtn.textContent = "Spara karta JPG";
+
+        targetView.style.display = "block";
+        targetView.classList.add("visible");
+
+        if (mapHeader) {
+            mapHeader.style.display = "block";
+            mapHeader.textContent = currentFF;
         }
 
-        requestAnimationFrame(() => {
-            targetView.classList.add("visible");
-
-            if (viewId === "chart") {
-                dateFilters.classList.add("visible");
-            } else {
-                dateFilters.classList.remove("visible");
-            }
-        });
-
-    }, 350);
+        updateHighlights();
+        clearVisitLabels();
+        drawMapData(lastFilteredData);
+    }
 }
-
 
 /* =========================================================
    TOGGLAR
@@ -2955,7 +2848,7 @@ document.getElementById("saveImage").onclick = async function() {
     let filePrefix;
 
     if (isMap) {
-        target = document.querySelector(".app");
+        target = document.getElementById("mapView");
         filePrefix = "karta";
     }
 
@@ -2978,13 +2871,35 @@ document.getElementById("saveImage").onclick = async function() {
 
     if (!target) return;
 
+    /*
+       Dölj checkboxarna endast vid tabellexport.
+       visibility:hidden gör att tabellen behåller samma layout.
+    */
+    let hiddenCheckboxes = [];
+
+    if (isTable) {
+        hiddenCheckboxes = [...document.querySelectorAll(".month-toggle")];
+
+        hiddenCheckboxes.forEach(cb => {
+            cb.style.visibility = "hidden";
+        });
+    }
+
     const originalOverflow = target.style.overflow;
     const originalBackground = target.style.background;
     const originalPadding = target.style.padding;
 
     target.style.overflow = "visible";
     target.style.background = "#ffffff";
-    target.style.padding = "0";
+
+    /*
+       Viktigt:
+       Sätt inte padding: 0 på kartvyn.
+       Det var sannolikt det som fick kartvyn att hoppa.
+    */
+    if (!isMap) {
+        target.style.padding = "0";
+    }
 
     await new Promise(requestAnimationFrame);
 
@@ -3004,7 +2919,9 @@ document.getElementById("saveImage").onclick = async function() {
     }).then(canvas => {
         const link = document.createElement("a");
         const timestamp = new Date().toISOString().slice(0, 10);
-        const safeFF = currentFF.replace(/[^\p{L}\p{N}]+/gu, "_").replace(/^_+|_+$/g, "");
+        const safeFF = currentFF
+            .replace(/[^\p{L}\p{N}]+/gu, "_")
+            .replace(/^_+|_+$/g, "");
 
         if (isChart) {
             link.download = `${filePrefix}_${safeFF}_${timestamp}.png`;
@@ -3025,6 +2942,10 @@ document.getElementById("saveImage").onclick = async function() {
         target.style.overflow = originalOverflow;
         target.style.background = originalBackground;
         target.style.padding = originalPadding;
+
+        hiddenCheckboxes.forEach(cb => {
+            cb.style.visibility = "";
+        });
     });
 };
 
@@ -3055,11 +2976,11 @@ const tipsContent = {
         title: "Tips för kartvyn",
         body: `
             <div style="text-align:left; line-height:1.55;">
-                <p>Kartan visar från vilken kommun skolbesöken har gjorts för vald period och vald skolnivå. Skolbesök från kommuner utanför Skåne summeras i kategorin <strong>Övrigt</strong>.</p>
-                <p>Du kan använda filtren till vänster för att avgränsa perioden och välja typ av skola.</p>
-                <p>Hovra över kommunerna för att se deras namn.</p>
-                <p>Togglarna till höger markerar antingen Lund eller Lund + omnejd.</p>
-                <p>Knappen <strong>Spara karta JPG</strong> laddar ner den aktuella kartvyn som bild.</p>
+                <p>Kartan visar hur skolbesöken fördelar sig över Skånes kommuner utifrån den filtrering du har valt: skolnivå och tidsperiod. Skolbesök från skolor utanför Skåne redovisas samlat som <strong>Övrigt</strong>.</p>
+				<p>Med reglagen uppe till höger kan du vid behov framhäva Lunds kommun (med eller utan omnejd) med annan färg på kartan.</p>
+				<p>I panelen till vänster om kartan visas en sammanställning för aktuell filtrering.</p>
+                <p>För muspekaren över en kommun för att se kommunens namn.</p>
+                <p>Knappen <strong>Spara karta JPG</strong> laddar ner aktuella kartvy och panel som bild.</p>
             </div>
         `
     },
@@ -3068,9 +2989,9 @@ const tipsContent = {
         title: "Tips för tabellvyn",
 		body: `
 			<div style="text-align:left; line-height:1.55;">
-				<p>Tabellen visar skolbesök per månad och år.</p>
-				<p>Klicka på ett värde i tabellen för att se hur antalet fördelar sig mellan kommuner.</p>
-				<p>Checkboxarna vid månadsnamnen styr vilka månader som räknas med i totalraden — använd dem för att till exempel jämföra januari–mars olika år.</p>
+				<p>Tabellen visar antalet skolbesök per år och månad, utifrån vald skolnivå.</p>
+				<p>Klicka på ett värde i tabellen för att se hur antalet fördelar sig över Skånes kommuner. Skolbesök från skolor utanför Skåne redovisas samlat som <strong>Övrigt</strong>.</p>
+				<p>Checkboxarna vid månadsnamnen styr vilka månader som tas med i totalraden. På så sätt kan du jämföra utfallet för en vald period över flera år, till exempel januari–mars.</p>
 				<p><strong>Bästa månad</strong> markerar den högsta siffran för varje månad.</p>
 				<p><strong>Senaste 5 åren</strong> krymper tabellen och visar bara de fem senaste åren.</p>
 				<p>Knappen <strong>Spara tabell JPG</strong> laddar ner tabellen som bild.</p>
@@ -3082,8 +3003,7 @@ const tipsContent = {
         title: "Tips för diagramvyn",
         body: `
             <div style="text-align:left; line-height:1.55;">
-                <p>Diagrammet visar utvecklingen månad för månad för vald period och skolnivå.</p>
-                <p>Du kan ändra perioden med filtren till vänster.</p>
+                <p>Diagrammet visar utvecklingen månad för månad utifrån den filtrering du har valt: skolnivå och tidsperiod.</p>
                 <p><strong>Mjuk linje</strong> gör linjen mer avrundad.</p>
                 <p><strong>Visa antal</strong> visar värdena direkt vid punkterna i diagrammet.</p>
                 <p>Knappen <strong>Spara diagram PNG</strong> laddar ner diagrammet som bild.</p>
