@@ -1,0 +1,3352 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Entréintäkter</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+/* =========================================================
+   1. GLOBAL RESET OCH SIDGRUND
+   ========================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  width: 100%;
+  min-height: 100%;
+  background: #ffffff;
+}
+
+body {
+  min-height: 100vh;
+  background: #ffffff;
+  overflow: hidden;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(30px, 4vw, 44px);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+
+
+/* =========================================================
+   2. HUVUDLAYOUT
+   Fast topposition gör att karta, tabell och diagram får
+   samma rubrikposition på skärmen.
+   ========================================================= */
+
+.app,
+.app.full-width,
+.app.chart-active {
+  position: fixed;
+  top: 10vh;
+  left: 0;
+  display: flex !important;
+  justify-content: center;
+  align-items: flex-start !important;
+  width: 100vw;
+  margin: 0 !important;
+  padding-left: 70px; /* lämnar plats åt vänsterpanelen */
+  padding-right: 24px;
+  box-sizing: border-box;
+}
+
+.main-view,
+.app.full-width .main-view,
+.app.chart-active .main-view {
+  width: 1000px !important;
+  max-width: 90vw !important;
+  height: auto;
+}
+
+.view-container {
+  width: 100%;
+  height: auto;
+}
+
+
+/* =========================================================
+   3. VÄNSTERPANEL / FILTER
+   ========================================================= */
+
+.ff-filter {
+  position: fixed;
+  top: 22px;
+  left: 24px;
+  z-index: 900;
+  width: 230px;
+  display: flex;
+  flex-direction: column;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.controls .custom-select-wrapper {
+  width: 180px;
+}
+
+.controls .custom-select-dropdown {
+  width: auto !important;
+  min-width: max-content;
+}
+
+.date-small {
+  width: 90px !important;
+}
+
+.date-medium {
+  width: 130px !important;
+}
+
+#dateFilters {
+  margin-top: 0;
+}
+
+.side-panel-block {
+  display: none;
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+}
+
+.side-panel-block.visible {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  transition:
+    opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+/* =========================================================
+   4. VYVÄXLARE
+   ========================================================= */
+
+.view-selector {
+  display: flex;
+  gap: 4px;
+  margin: 76px 0 25px 0;
+  background: #f0f0f0;
+  padding: 4px;
+  border-radius: 10px;
+  width: 100%;
+}
+
+.view-btn {
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 600;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.view-btn.active {
+  background: #2f2f2f;
+  color: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+
+/* =========================================================
+   5. CUSTOM SELECTS OCH DROPDOWNS
+   ========================================================= */
+
+.custom-select-wrapper {
+  position: relative;
+  width: 100%;
+  user-select: none;
+}
+
+.custom-select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #f5f5f5;
+  cursor: pointer;
+  font-size: 15px;
+  color: #222;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.custom-select-trigger:hover,
+.custom-select-wrapper.open .custom-select-trigger {
+  border-color: #2f2f2f;
+  box-shadow: 0 0 0 3px rgba(47, 47, 47, 0.08);
+}
+
+.chevron {
+  width: 16px;
+  height: 16px;
+  fill: #777;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+
+.custom-select-wrapper.open .chevron {
+  transform: rotate(180deg);
+}
+
+.custom-select-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 560px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  z-index: 1000;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.14);
+}
+
+.custom-select-wrapper.open .custom-select-dropdown {
+  display: block;
+}
+
+.dropdown-cols-ff {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-flow: column;
+  grid-template-rows: repeat(7, auto);
+  padding: 8px;
+  gap: 2px;
+}
+
+.dropdown-grid-years {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(4, auto);
+  grid-auto-flow: column;
+  gap: 8px;
+  padding: 10px;
+  min-width: 280px;
+}
+
+.dropdown-grid-months {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(4, auto);
+  grid-auto-flow: column;
+  gap: 4px;
+  padding: 8px;
+  min-width: 220px;
+}
+
+.dropdown-option {
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #222;
+  white-space: nowrap;
+}
+
+.dropdown-option:hover {
+  background: #f1f1f1;
+}
+
+.dropdown-option.selected {
+  background: #2f2f2f;
+  color: #fff;
+  font-weight: 600;
+}
+
+.dropdown-grid-years .dropdown-option,
+.dropdown-grid-months .dropdown-option {
+  text-align: center;
+  padding: 6px 4px;
+}
+
+
+/* =========================================================
+   6. HÖGERPANEL / KONTROLLER
+   ========================================================= */
+
+.highlight-controls {
+  position: fixed;
+  top: 22px;
+  right: 24px;
+  z-index: 900;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: flex-start;
+  background: #fff;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  min-width: 200px;
+}
+
+
+/* =========================================================
+   7. TOGGLAR
+   ========================================================= */
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.toggle input {
+  display: none;
+}
+
+.toggle-track {
+  width: 42px;
+  height: 24px;
+  border-radius: 999px;
+  background: #d6d6d6;
+  position: relative;
+  transition: background 160ms ease;
+}
+
+.toggle-track::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  transition: transform 160ms ease;
+}
+
+.toggle input:checked + .toggle-track {
+  background: #f28c28;
+}
+
+.toggle input:checked + .toggle-track::after {
+  transform: translateX(18px);
+}
+
+
+/* =========================================================
+   8. KNAPPAR
+   ========================================================= */
+
+.save-btn {
+  width: 100%;
+  padding: 10px 15px;
+  background: #2f2f2f;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 8px;
+}
+
+.save-btn:hover {
+  background: #000;
+}
+
+.reset-btn {
+  width: 100%;
+  margin-top: 10px;
+  margin-bottom: 30px;
+  padding: 10px;
+  background: transparent;
+  color: #666;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.reset-btn:hover {
+  background: #f0f0f0;
+  color: #222;
+  border-color: #999;
+}
+
+.tips-btn {
+  width: 100%;
+  padding: 10px 15px;
+  background: #ffffff;
+  color: #2f2f2f;
+  border: 1px solid #d6d6d6;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  margin-top: 8px;
+}
+
+.tips-btn:hover {
+  background: #f5f5f5;
+  border-color: #999;
+  color: #000;
+}
+
+
+/* =========================================================
+   9. VYRUBRIKER
+   ========================================================= */
+
+#tableHeaderDisplay,
+#chartHeaderDisplay,
+#dataHeaderDisplay {
+  width: 100%;
+  margin: 0 0 20px 0 !important;
+  color: #2f2f2f;
+  border-left: 4px solid #f28c28;
+  padding-left: 15px;
+  font-size: 28px;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  display: block;
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   10. TABELL- OCH DIAGRAMVY
+   ========================================================= */
+
+#tableView,
+#chartView {
+  width: 100% !important;
+  max-width: 1000px !important;
+  margin: 0 auto !important;
+}
+
+#tableView {
+  transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#tableView.compact-table {
+  max-width: 750px !important;
+}
+
+.table-scroll,
+#chartContainer {
+  width: 100% !important;
+  height: 530px !important;
+  box-sizing: border-box;
+  margin: 0 !important;
+  border: 1px solid #e2e2e2;
+  border-radius: 16px;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+#tableView .table-scroll {
+  overflow-x: hidden;
+  overflow-y: auto;
+  transition:
+    box-shadow 520ms ease,
+    border-color 520ms ease;
+}
+
+#tableView.compact-table .table-scroll {
+  box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+}
+
+
+/* =========================================================
+   11. TABELL
+   ========================================================= */
+
+#statsTable {
+  width: 100%;
+  min-width: 600px;
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+#statsTable th,
+#statsTable td {
+  border: 1px solid #ddd;
+  padding: 8px 10px 8px 12px;
+  text-align: right;
+}
+
+#statsTable th {
+  background: #2f2f2f;
+  color: white;
+  font-size: 14px;
+  padding: 12px 8px;
+  white-space: nowrap;
+  min-width: 80px;
+}
+
+#statsTable td {
+  border-bottom: 1px solid #eee;
+  color: #222;
+  cursor: pointer;
+  transition: background 0.1s;
+  text-align: right;
+  padding-right: 10px;
+}
+
+#statsTable th:first-child,
+#statsTable td:first-child {
+  width: 100px;
+  text-align: left !important;
+  padding-left: 14px;
+  background: #f5f5f5;
+}
+
+#statsTable thead th:first-child {
+  background: #f5f5f5 !important;
+  color: #000000 !important;
+  text-align: center !important;
+  padding-left: 14px;
+  font-weight: 700;
+}
+
+#statsTable td:first-child {
+  text-align: center !important;
+  background: #f5f5f5;
+  color: #000000 !important;
+  font-weight: 600;
+}
+
+#statsTable td:hover:not(:first-child) {
+  background-color: #fff9db !important;
+  color: #000;
+}
+
+#statsTable tr:hover td {
+  background: #f9f9f9;
+}
+
+#statsTable tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+#statsTable tbody tr.total-row {
+  background-color: #2f2f2f !important;
+  color: white !important;
+  font-weight: 300;
+}
+
+#statsTable tbody tr.total-row:hover td {
+  background-color: #2f2f2f !important;
+}
+
+#statsTable tbody tr.total-row td {
+  position: sticky;
+  bottom: 0;
+  background-color: #2f2f2f !important;
+  color: white !important;
+  font-weight: 600;
+  z-index: 5;
+  border-top: 2px solid #111;
+  text-align: right;
+  padding-right: 10px;
+}
+
+#statsTable tbody tr.total-row td:first-child {
+  cursor: default;
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   12. MÅNADSVÄLJARE I TABELL
+   ========================================================= */
+
+.month-cell-inner {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  height: 20px;
+  line-height: 1.15;
+}
+
+.month-cell-inner span {
+  flex: 1;
+}
+
+.month-toggle {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid #bbb;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  flex-shrink: 0;
+  position: relative;
+  transition: background 150ms ease, border-color 150ms ease;
+}
+
+.month-toggle:checked {
+  background: #2f2f2f;
+  border-color: #2f2f2f;
+}
+
+.month-toggle:checked::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 0px;
+  width: 5px;
+  height: 9px;
+  border: 2px solid #fff;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg);
+}
+
+.month-row-disabled td:not(:first-child) {
+  color: #aaa !important;
+  background: #f7f7f7 !important;
+}
+
+.month-row-disabled td:first-child {
+  opacity: 0.65;
+}
+
+
+/* =========================================================
+   13. BÄSTA MÅNAD
+   ========================================================= */
+
+.best-cell {
+  position: relative;
+  background-color: #fff9db !important;
+  color: #2f2f2f !important;
+  font-weight: 700 !important;
+  border: 1px solid #ffe082 !important;
+}
+
+.best-cell::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background-color: #f28c28;
+}
+
+
+/* =========================================================
+   14. DIAGRAM
+   ========================================================= */
+
+#chartContainer {
+  overflow: hidden;
+  background: #fafafa;
+  padding: 20px;
+  display: block;
+}
+
+#statsChart {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+
+/* =========================================================
+   15. DATAVY
+   ========================================================= */
+
+#dataView {
+  width: 100% !important;
+  max-width: 1000px !important;
+  margin: 0 auto !important;
+}
+
+.data-table-shell {
+  width: 100%;
+  height: 530px;
+  border: 1px solid #e2e2e2;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.data-table-shell.monthly .data-table-head,
+.data-table-shell.monthly .data-table-row {
+  grid-template-columns: 0.45fr 0.55fr 1fr 1fr 1.7fr 1fr;
+}
+
+.data-table-head,
+.data-table-row {
+  display: grid;
+  align-items: center;
+  column-gap: 28px;
+}
+
+:root {
+  --data-table-pad: 28px;
+  --data-table-gap: 28px;
+  --scrollbar-width: 17px;
+}
+
+.data-table-head,
+.data-table-row {
+  display: grid;
+  align-items: center;
+  column-gap: var(--data-table-gap);
+}
+
+.data-table-head {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  min-height: 48px;
+
+  /* Viktigt: rubriken kompenseras för scrollbaren i body */
+  padding-left: var(--data-table-pad);
+  padding-right: calc(var(--data-table-pad) + var(--scrollbar-width));
+
+  background: #2f2f2f;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.data-table-body {
+  height: calc(530px - 48px);
+
+  /* Viktigt: alltid scrollbarutrymme, så bredden inte hoppar */
+  overflow-y: scroll;
+}
+
+.data-table-row {
+  min-height: 42px;
+  padding-left: var(--data-table-pad);
+  padding-right: var(--data-table-pad);
+
+  font-size: 15px;
+  color: #222;
+  border-bottom: 1px solid #eee;
+}
+
+.data-table-row:nth-child(even) {
+  background: #fafafa;
+}
+
+.data-table-row:hover {
+  background: #fff9db;
+}
+
+.data-table-row .right,
+.data-table-head .right {
+  text-align: right;
+}
+
+.data-table-row .left,
+.data-table-head .left {
+  text-align: left;
+}
+
+/* Defaultvy / bästa dagar */
+.data-table-shell.daily .data-table-head,
+.data-table-shell.daily .data-table-row {
+  grid-template-columns: 1.1fr 0.7fr 1.4fr 1fr;
+}
+
+/* Veckovy */
+.data-table-shell.weekly .data-table-head,
+.data-table-shell.weekly .data-table-row {
+  grid-template-columns: 0.45fr 0.55fr 1fr 1fr 1.7fr 1fr;
+}
+
+.data-sort-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.data-sort-header i {
+  font-size: 12px;
+  color: #f28c28;
+}
+
+.data-sort-header:hover {
+  color: #f28c28;
+}
+
+
+/* =========================================================
+   16. SNABBT OM DATA
+   ========================================================= */
+
+.quick-data-box {
+  line-height: 1.7;
+  width: 100%;
+  margin-top: 0;
+  padding: 16px 16px 14px;
+  border: 1px solid #ddd;
+  border-radius: 14px;
+  background: #fafafa;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.quick-data-box h2 {
+  margin: 0 0 16px 0;
+  font-size: 19px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: #222;
+}
+
+.quick-data-facts {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.quick-data-row {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  column-gap: 8px;
+  align-items: baseline;
+  font-size: 14px;
+  line-height: 1.45;
+  color: #333;
+}
+
+.quick-data-row i {
+  color: #f28c28;
+  font-size: 17px;
+  transform: translateY(1px);
+}
+
+.quick-data-label {
+  color: #666;
+}
+
+.quick-data-value {
+  color: #111;
+  font-weight: 750;
+}
+
+
+/* =========================================================
+   17. MODALER
+   ========================================================= */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  backdrop-filter: blur(2px);
+}
+
+.modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  position: relative;
+  max-width: min(1000px, 92vw);
+  width: auto;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #777;
+  transition: transform 0.2s ease, color 0.2s ease;
+  line-height: 1;
+}
+
+.modal-close:hover {
+  transform: rotate(90deg);
+  color: #222;
+}
+
+.modal-content h3 {
+  margin: 0 0 10px 0;
+  font-size: 22px;
+}
+
+.modal-content p {
+  color: #555;
+  margin: 0;
+  font-size: 16px;
+}
+
+
+/* =========================================================
+   18. TIPSMODALER
+   ========================================================= */
+
+.modal-content.tips-modal {
+  width: min(720px, 92vw) !important;
+  max-width: 720px !important;
+  text-align: left;
+}
+
+.modal-content.tips-modal h3 {
+  font-size: 28px;
+  line-height: 1.15;
+  margin-bottom: 20px;
+  letter-spacing: -0.02em;
+}
+
+.modal-content.tips-modal #modalMessage,
+.modal-content.tips-modal #modalMessage p {
+  font-size: 19px;
+  line-height: 1.6;
+  color: #333;
+}
+
+.modal-content.tips-modal #modalMessage p {
+  margin: 0 0 15px 0;
+}
+
+.modal-content.tips-modal #modalMessage p:last-child {
+  margin-bottom: 0;
+}
+
+.modal-content.tips-modal strong {
+  color: #111;
+  font-weight: 750;
+}
+
+
+/* =========================================================
+   19. VYFADE
+   ========================================================= */
+
+#tableView,
+#chartView,
+#dataView {
+  opacity: 0;
+  transition: none !important;
+  will-change: opacity;
+  padding-top: 0 !important;
+}
+
+#tableView.visible,
+#chartView.visible,
+#dataView.visible {
+  opacity: 1;
+}
+</style>
+</head>
+
+<body>
+
+  <!-- =====================================================
+       MODAL
+       Används för datameddelanden och tips
+       ===================================================== -->
+
+  <div id="dataModal" class="modal-overlay">
+    <div class="modal-content">
+      <button class="modal-close" id="closeModal">&times;</button>
+      <h3>Data saknas</h3>
+      <p id="modalMessage"></p>
+    </div>
+  </div>
+
+
+  <!-- =====================================================
+       VÄNSTERPANEL
+       Rubrik, vyval, informationsrutor och datumfilter
+       ===================================================== -->
+
+  <div class="ff-filter">
+
+    <!-- Sidrubrik -->
+    <h1>Entréintäkter</h1>
+
+
+    <!-- Vyväljare: tabell / diagram / data -->
+    <div class="view-selector">
+      <button class="view-btn active" id="btnTable" onclick="switchView('table', this)">Tabell</button>
+      <button class="view-btn" id="btnChart" onclick="switchView('chart', this)">Diagram</button>
+      <button class="view-btn" id="btnData" onclick="switchView('data', this)">Data</button>
+    </div>
+
+
+    <!-- Återställning av filter -->
+    <button class="reset-btn" id="resetFilters" style="display: none;">
+      Återställ filter
+    </button>
+
+
+    <!-- Snabbdata -->
+    <div id="quickDataBox" class="quick-data-box side-panel-block">
+      <h2>Snabbt om data</h2>
+      <div id="quickDataFacts" class="quick-data-facts"></div>
+    </div>
+
+
+    <!-- Tabellinformation -->
+    <div id="tableInfoBox" class="quick-data-box side-panel-block">
+      <h2>Tabellen visar</h2>
+      <div id="tableInfoFacts" class="quick-data-facts"></div>
+    </div>
+
+
+    <!-- Datumfilter -->
+    <div id="dateFilters" class="view-container side-panel-block">
+      <div class="controls">
+
+        <!-- Från och med -->
+        <div class="filter-group">
+          <label class="summary-label">Från och med</label>
+
+          <div style="display: flex; gap: 8px;">
+            <div class="custom-select-wrapper date-small" id="fromYearWrapper">
+              <div class="custom-select-trigger" id="fromYearTrigger">
+                <span id="fromYearLabel">År</span>
+              </div>
+
+              <div class="custom-select-dropdown">
+                <div id="fromYearCols"></div>
+              </div>
+            </div>
+
+            <div class="custom-select-wrapper date-medium" id="fromMonthWrapper">
+              <div class="custom-select-trigger" id="fromMonthTrigger">
+                <span id="fromMonthLabel">Månad</span>
+              </div>
+
+              <div class="custom-select-dropdown">
+                <div id="fromMonthCols"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- Till och med -->
+        <div class="filter-group">
+          <label class="summary-label">Till och med</label>
+
+          <div style="display: flex; gap: 8px;">
+            <div class="custom-select-wrapper date-small" id="toYearWrapper">
+              <div class="custom-select-trigger" id="toYearTrigger">
+                <span id="toYearLabel">År</span>
+              </div>
+
+              <div class="custom-select-dropdown">
+                <div id="toYearCols"></div>
+              </div>
+            </div>
+
+            <div class="custom-select-wrapper date-medium" id="toMonthWrapper">
+              <div class="custom-select-trigger" id="toMonthTrigger">
+                <span id="toMonthLabel">Månad</span>
+              </div>
+
+              <div class="custom-select-dropdown">
+                <div id="toMonthCols"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       HÖGERPANEL
+       Kontextberoende togglar, tips och exportknapp
+       ===================================================== -->
+
+  <div class="highlight-controls">
+
+    <!-- Toggle 1: betydelsen ändras beroende på aktiv vy -->
+    <label class="toggle">
+      <input type="checkbox" id="toggleLund">
+      <span class="toggle-track"></span>
+      <span id="labelLund">Bästa månad ★</span>
+    </label>
+
+
+    <!-- Toggle 2: betydelsen ändras beroende på aktiv vy -->
+    <label class="toggle">
+      <input type="checkbox" id="toggleLundRegion">
+      <span class="toggle-track"></span>
+      <span id="labelLundRegion">Senaste 5 åren</span>
+    </label>
+
+
+    <!-- Hjälp och export -->
+    <button class="tips-btn" id="showTips">Tips</button>
+    <button class="save-btn" id="saveImage">Spara tabell JPG</button>
+
+  </div>
+
+
+  <!-- =====================================================
+       HUVUDYTA
+       Aktiv vy: tabell, diagram eller data
+       ===================================================== -->
+
+  <div class="app">
+
+    <!-- Vycontainer: tabell, diagram och data ligger här -->
+    <div class="main-view">
+
+      <!-- =====================================================
+           TABELLVY
+           ===================================================== -->
+
+      <div id="tableView" class="view-container" style="display:none;">
+        <h2 id="tableHeaderDisplay">All data</h2>
+
+        <div class="table-scroll">
+          <table id="statsTable">
+            <thead></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+
+      <!-- =====================================================
+           DIAGRAMVY
+           ===================================================== -->
+
+      <div id="chartView" class="view-container" style="display:none;">
+        <h2 id="chartHeaderDisplay">All data</h2>
+
+        <div id="chartContainer">
+          <canvas id="statsChart"></canvas>
+        </div>
+      </div>
+
+
+      <!-- =====================================================
+           DATAVY
+           ===================================================== -->
+
+      <div id="dataView" class="view-container" style="display:none;">
+        <h2 id="dataHeaderDisplay">Alla intäktsposter</h2>
+
+        <div class="data-table-shell daily">
+          <div id="dataTableHead" class="data-table-head"></div>
+          <div id="dataTableBody" class="data-table-body"></div>
+        </div>
+      </div>
+
+    </div> <!-- .main-view -->
+
+  </div> <!-- .app -->
+
+<script>
+/* =========================================================
+   1. GLOBAL DATA OCH AKTUELLT FILTERLÄGE
+   ========================================================= */
+
+let revenueRows = [];
+let weeklyRowsCache = null;
+let monthlyRowsCache = null;
+let quickDataFactsCache = null;
+
+let startYear, startMonth, endYear, endMonth;
+let availableYears = [];
+
+let myChart = null;
+let lastFilteredData = {};
+
+let selectedMonths = new Set([...Array(12).keys()]);
+
+let dataSort = {
+    key: "date",
+    direction: "desc" // "none", "asc", "desc"
+};
+
+
+/* =========================================================
+   2. KONSTANTER
+   ========================================================= */
+
+const monthMap = {
+    "Jan": 0,
+    "Feb": 1,
+    "Mar": 2,
+    "Apr": 3,
+    "Maj": 4,
+    "Jun": 5,
+    "Jul": 6,
+    "Aug": 7,
+    "Sep": 8,
+    "Okt": 9,
+    "Nov": 10,
+    "Dec": 11
+};
+
+const monthNamesShort = [
+    "Jan", "Feb", "Mar", "Apr", "Maj", "Jun",
+    "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"
+];
+
+
+/* =========================================================
+   3. DOM-REFERENSER
+   ========================================================= */
+
+const toggleLund = document.getElementById("toggleLund");
+const toggleLundRegion = document.getElementById("toggleLundRegion");
+
+
+/* =========================================================
+   4. CSV OCH DATANORMALISERING
+   ========================================================= */
+
+function parseCSV(text) {
+    const lines = text.trim().split(/\r?\n/);
+    const headers = lines.shift().split(";").map(h => h.trim().replace(/^\uFEFF/, ""));
+
+    return lines
+        .filter(line => line.trim())
+        .map(line => {
+            const values = line.split(";").map(v => v.trim());
+            const row = {};
+
+            headers.forEach((header, index) => {
+                row[header] = values[index];
+            });
+
+            const datum = row.datum;
+            const date = new Date(datum + "T00:00:00");
+            const year = date.getFullYear();
+            const monthIndex = date.getMonth();
+            const day = date.getDate();
+
+            return {
+                datum: datum,
+                date: date,
+                år: year,
+                månad: monthNamesShort[monthIndex],
+                månadIndex: monthIndex,
+                dag: day,
+                intäkt: Number(row.intäkt) || 0,
+
+                weekday: getWeekdayShort(date),
+                weekdaySort: (date.getDay() + 6) % 7,
+                specialTag: getSpecialDayTag(date)
+            };
+        });
+}
+
+
+/* =========================================================
+   5. GRUPPERING: VECKOR OCH MÅNADER
+   ========================================================= */
+
+function buildWeeklyRows() {
+    if (weeklyRowsCache) return weeklyRowsCache;
+
+    const groupedWeeks = {};
+
+    revenueRows.forEach(row => {
+        const info = getISOWeekInfo(row.date);
+
+        if (!groupedWeeks[info.key]) {
+            groupedWeeks[info.key] = {
+                week: info.week,
+                year: info.isoYear,
+                startDate: info.monday,
+                endDate: info.sunday,
+                specialTags: getWeekSpecialTags(info.monday, info.sunday),
+                sum: 0
+            };
+        }
+
+        groupedWeeks[info.key].sum += row.intäkt;
+    });
+
+    weeklyRowsCache = Object.values(groupedWeeks);
+    return weeklyRowsCache;
+}
+
+function buildMonthlyRows() {
+    if (monthlyRowsCache) return monthlyRowsCache;
+
+    const groupedMonths = {};
+
+    revenueRows.forEach(row => {
+        const year = row.år;
+        const monthIndex = row.månadIndex;
+        const key = `${year}-${String(monthIndex + 1).padStart(2, "0")}`;
+
+        if (!groupedMonths[key]) {
+            const tertialNumber = getTertial(monthIndex);
+            const quarterNumber = getQuarter(monthIndex);
+
+            const startDate = new Date(year, monthIndex, 1);
+            const endDate = new Date(year, monthIndex + 1, 0);
+
+            const startDateString = toISODate(startDate);
+            const endDateString = toISODate(endDate);
+
+            groupedMonths[key] = {
+                month: monthNamesShort[monthIndex].toLowerCase(),
+                monthIndex: monthIndex,
+                year: year,
+                tertial: ordinalSwedish(tertialNumber),
+                tertialNumber: tertialNumber,
+                quarter: ordinalSwedish(quarterNumber),
+                quarterNumber: quarterNumber,
+                specialTags: getWeekSpecialTags(startDateString, endDateString),
+                sum: 0,
+                sortDate: new Date(year, monthIndex, 1)
+            };
+        }
+
+        groupedMonths[key].sum += row.intäkt;
+    });
+
+    monthlyRowsCache = Object.values(groupedMonths);
+    return monthlyRowsCache;
+}
+
+
+/* =========================================================
+   6. FORMATTERING OCH SMÅ HJÄLPFUNKTIONER
+   ========================================================= */
+
+function formatSEK(v) {
+    return new Intl.NumberFormat("sv-SE", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(v);
+}
+
+function formatSwedishNumber(v) {
+    return new Intl.NumberFormat("sv-SE").format(v);
+}
+
+function formatSwedishNumber(v) {
+    return new Intl.NumberFormat("sv-SE").format(v);
+}
+
+function formatPercent(p, t) {
+    return t === 0
+        ? "0 %"
+        : new Intl.NumberFormat("sv-SE", { maximumFractionDigits: 1 }).format((p / t) * 100) + " %";
+}
+
+function formatSEKRounded(v) {
+    return new Intl.NumberFormat("sv-SE", {
+        maximumFractionDigits: 0
+    }).format(Math.round(v));
+}
+
+function closeAllSelects() {
+    document.querySelectorAll(".custom-select-wrapper").forEach(w => w.classList.remove("open"));
+}
+
+function getSelectedMonthsLabel() {
+    const count = selectedMonths.size;
+
+    if (count === 12) {
+        return "Alla";
+    }
+
+    return String(count);
+}
+
+function getBestFromMap(map) {
+    let bestKey = "";
+    let bestValue = -Infinity;
+
+    Object.entries(map).forEach(([key, value]) => {
+        if (value > bestValue) {
+            bestKey = key;
+            bestValue = value;
+        }
+    });
+
+    return bestKey;
+}
+
+
+/* =========================================================
+   7. DATUM- OCH KALENDERHJÄLP
+   ========================================================= */
+
+function getWeekdayShort(date) {
+    return new Intl.DateTimeFormat("sv-SE", {
+        weekday: "short"
+    }).format(date).replace(".", "").slice(0, 3);
+}
+
+function getWeekdaySortIndex(date) {
+    const day = date.getDay();
+
+    // JavaScript: söndag = 0.
+    // Svensk sortering: måndag = 1 ... söndag = 7.
+    return day === 0 ? 7 : day;
+}
+
+function toISODate(date) {
+    return date.toISOString().slice(0, 10);
+}
+
+function addDays(date, days) {
+    const d = new Date(date);
+    d.setDate(d.getDate() + days);
+    return d;
+}
+
+function sameDate(a, b) {
+    return (
+        a.getFullYear() === b.getFullYear() &&
+        a.getMonth() === b.getMonth() &&
+        a.getDate() === b.getDate()
+    );
+}
+
+function getISOWeek(date) {
+    const d = new Date(Date.UTC(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate()
+    ));
+
+    const dayNum = d.getUTCDay() || 7;
+
+    d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+
+    const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+
+    return {
+        year: d.getUTCFullYear(),
+        week: weekNo
+    };
+}
+
+function getISOWeekNumber(date) {
+    const d = new Date(Date.UTC(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate()
+    ));
+
+    const dayNum = d.getUTCDay() || 7;
+
+    d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+
+    return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+}
+
+function getISOWeekInfo(date) {
+    const d = new Date(Date.UTC(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate()
+    ));
+
+    const dayNum = d.getUTCDay() || 7;
+
+    d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+
+    const isoYear = d.getUTCFullYear();
+
+    const yearStart = new Date(Date.UTC(isoYear, 0, 1));
+
+    const week = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+
+    const monday = new Date(Date.UTC(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate()
+    ));
+
+    monday.setUTCDate(monday.getUTCDate() - dayNum + 1);
+
+    const sunday = new Date(monday);
+    sunday.setUTCDate(monday.getUTCDate() + 6);
+
+    return {
+        isoYear,
+        week,
+        monday: toISODate(monday),
+        sunday: toISODate(sunday),
+        key: `${isoYear}-W${String(week).padStart(2, "0")}`
+    };
+}
+
+function getTertial(monthIndex) {
+    if (monthIndex <= 3) return 1;      // jan–apr
+    if (monthIndex <= 7) return 2;      // maj–aug
+    return 3;                           // sep–dec
+}
+
+function getQuarter(monthIndex) {
+    return Math.floor(monthIndex / 3) + 1;
+}
+
+function getHalfYear(monthIndex) {
+    return monthIndex <= 5 ? 1 : 2;
+}
+
+function ordinalSwedish(n) {
+    if (n === 1 || n === 2) return `${n}:a`;
+    return `${n}:e`;
+}
+
+function halfYearLabel(n) {
+    return n === 1 ? "jan–jun" : "jul–dec";
+}
+
+
+/* =========================================================
+   8. SÄRSKILDA DAGAR OCH PERIODER
+   ========================================================= */
+
+function getEasterSunday(year) {
+    // Meeus/Jones/Butcher-algoritmen för gregoriansk påsk
+    const a = year % 19;
+    const b = Math.floor(year / 100);
+    const c = year % 100;
+    const d = Math.floor(b / 4);
+    const e = b % 4;
+    const f = Math.floor((b + 8) / 25);
+    const g = Math.floor((b - f + 1) / 3);
+    const h = (19 * a + b - d - g + 15) % 30;
+    const i = Math.floor(c / 4);
+    const k = c % 4;
+    const l = (32 + 2 * e + 2 * i - h - k) % 7;
+    const m = Math.floor((a + 11 * h + 22 * l) / 451);
+    const month = Math.floor((h + l - 7 * m + 114) / 31) - 1;
+    const day = ((h + l - 7 * m + 114) % 31) + 1;
+
+    return new Date(year, month, day);
+}
+
+function getMidsummerEve(year) {
+    // Midsommarafton är fredagen mellan 19 och 25 juni.
+    for (let day = 19; day <= 25; day++) {
+        const d = new Date(year, 5, day);
+        if (d.getDay() === 5) return d; // fredag
+    }
+}
+
+function getAllSaintsDay(year) {
+    // Alla helgons dag är lördagen mellan 31 oktober och 6 november.
+    for (let d = new Date(year, 9, 31); d <= new Date(year, 10, 6); d = addDays(d, 1)) {
+        if (d.getDay() === 6) return d; // lördag
+    }
+}
+
+function getCultureNight(year) {
+    // Kulturnatten: tredje lördagen i september.
+    let count = 0;
+
+    for (let day = 1; day <= 30; day++) {
+        const d = new Date(year, 8, day);
+
+        if (d.getDay() === 6) {
+            count++;
+            if (count === 3) return d;
+        }
+    }
+}
+
+function isWeekend(date) {
+    return date.getDay() === 0 || date.getDay() === 6;
+}
+
+function isSportlovsdag(date) {
+    const week = getISOWeekNumber(date);
+    const day = date.getDay();
+
+    // Lördag + söndag vecka 7 samt hela vecka 8.
+    return (
+        (week === 7 && (day === 6 || day === 0)) ||
+        week === 8
+    );
+}
+
+function isHostlovsdag(date) {
+    const week = getISOWeekNumber(date);
+    const day = date.getDay();
+
+    // Lördag + söndag vecka 43 samt hela vecka 44.
+    return (
+        (week === 43 && (day === 6 || day === 0)) ||
+        week === 44
+    );
+}
+
+function isPasklovsdag(date) {
+    const year = date.getFullYear();
+    const easter = getEasterSunday(year);
+
+    const start = addDays(easter, -8); // lördag före påskveckan
+    const end = addDays(easter, 1);    // annandag påsk
+
+    return date >= start && date <= end;
+}
+
+function isJulstoksdag(date) {
+    const year = date.getFullYear();
+    const christmasDay = new Date(year, 11, 25);
+
+    let sunday = new Date(christmasDay);
+
+    while (sunday.getDay() !== 0) {
+        sunday = addDays(sunday, -1);
+    }
+
+    // Fjärde söndagen före juldagen.
+    const fourthSundayBeforeChristmas = addDays(sunday, -21);
+
+    const friday = addDays(fourthSundayBeforeChristmas, -2);
+    const saturday = addDays(fourthSundayBeforeChristmas, -1);
+
+    return (
+        sameDate(date, friday) ||
+        sameDate(date, saturday) ||
+        sameDate(date, fourthSundayBeforeChristmas)
+    );
+}
+
+function getSpecialDayTag(date) {
+    const year = date.getFullYear();
+    const easter = getEasterSunday(year);
+
+    const midsummerEve = getMidsummerEve(year);
+    const midsummerDay = addDays(midsummerEve, 1);
+    const allSaintsDay = getAllSaintsDay(year);
+    const cultureNight = getCultureNight(year);
+
+    const specialDays = [
+        { tag: "Nationaldag", date: new Date(year, 5, 6) },
+        { tag: "Midsommarafton", date: midsummerEve },
+        { tag: "Midsommardag", date: midsummerDay },
+        { tag: "Skärtorsdag", date: addDays(easter, -3) },
+        { tag: "Långfredag", date: addDays(easter, -2) },
+        { tag: "Påskafton", date: addDays(easter, -1) },
+        { tag: "Påskdagen", date: easter },
+        { tag: "Annandag påsk", date: addDays(easter, 1) },
+        { tag: "Första maj", date: new Date(year, 4, 1) },
+        { tag: "Alla helgons dag", date: allSaintsDay },
+        { tag: "Valborgsmässoafton", date: new Date(year, 3, 30) },
+        { tag: "Kulturnatten", date: cultureNight }
+    ];
+
+    for (const item of specialDays) {
+        if (sameDate(date, item.date)) {
+            return item.tag;
+        }
+    }
+
+    if (isSportlovsdag(date)) return "Sportlovsdag";
+
+    if (isPasklovsdag(date)) return "Påsklovsdag";
+
+    if (isHostlovsdag(date)) return "Höstlovsdag";
+
+    if (isJulstoksdag(date)) return "Julstöksdag";
+
+    return "";
+}
+
+function getWeekSpecialTags(startDateString, endDateString) {
+    const rawTags = [];
+
+    let current = new Date(startDateString + "T00:00:00");
+    const end = new Date(endDateString + "T00:00:00");
+
+    while (current <= end) {
+        const tag = getSpecialDayTag(current);
+
+        if (tag && !rawTags.includes(tag)) {
+            rawTags.push(tag);
+        }
+
+        current = addDays(current, 1);
+    }
+
+    const weekTags = [];
+
+    function addWeekTag(label) {
+        if (!weekTags.includes(label)) {
+            weekTags.push(label);
+        }
+    }
+
+    /*
+       Samlingsnamn i veckovy.
+    */
+    const hasEasterRelated = rawTags.some(tag =>
+        [
+            "Påsklovsdag",
+            "Skärtorsdag",
+            "Långfredag",
+            "Påskafton",
+            "Påskdagen",
+            "Annandag påsk"
+        ].includes(tag)
+    );
+
+    const hasMidsummerRelated = rawTags.some(tag =>
+        [
+            "Midsommarafton",
+            "Midsommardag"
+        ].includes(tag)
+    );
+
+    const hasAutumnBreakRelated = rawTags.some(tag =>
+        [
+            "Höstlovsdag",
+            "Alla helgons dag"
+        ].includes(tag)
+    );
+
+    if (rawTags.includes("Sportlovsdag")) {
+        addWeekTag("Sportlov");
+    }
+
+    if (hasEasterRelated) {
+        addWeekTag("Påsklov");
+    }
+
+    if (hasMidsummerRelated) {
+        addWeekTag("Midsommar");
+    }
+
+    if (hasAutumnBreakRelated) {
+        addWeekTag("Höstlov");
+    }
+
+    if (rawTags.includes("Julstöksdag")) {
+        addWeekTag("Julstök");
+    }
+
+    /*
+       Övriga enskilda dagar behålls som de är.
+       Dessa ska inte döljas bakom samlingsnamn.
+    */
+    rawTags.forEach(tag => {
+        const absorbedTags = [
+            "Sportlovsdag",
+            "Påsklovsdag",
+            "Skärtorsdag",
+            "Långfredag",
+            "Påskafton",
+            "Påskdagen",
+            "Annandag påsk",
+            "Midsommarafton",
+            "Midsommardag",
+            "Höstlovsdag",
+            "Alla helgons dag",
+            "Julstöksdag"
+        ];
+
+        if (!absorbedTags.includes(tag)) {
+            addWeekTag(tag);
+        }
+    });
+
+    return weekTags.join(", ");
+}
+
+
+/* =========================================================
+   9. DATUMFILTER
+   ========================================================= */
+
+function initDateSelects() {
+    availableYears = [...new Set(revenueRows.map(r => r.år))].sort((a, b) => b - a);
+
+    const latestRow = [...revenueRows].sort((a, b) => b.date - a.date)[0];
+
+    const defaultYear = latestRow ? latestRow.år : new Date().getFullYear();
+
+    startYear = defaultYear;
+    startMonth = 0;
+    endYear = defaultYear;
+    endMonth = latestRow ? latestRow.månadIndex : 11;
+
+    renderDatePart("fromYear", availableYears, "dropdown-grid-years", val => {
+        startYear = val;
+        syncDates();
+    });
+
+    renderDatePart("toYear", availableYears, "dropdown-grid-years", val => {
+        endYear = val;
+        syncDates();
+    });
+
+    renderDatePart("fromMonth", monthNamesShort, "dropdown-grid-months", (val, idx) => {
+        startMonth = idx;
+        syncDates();
+    });
+
+    renderDatePart("toMonth", monthNamesShort, "dropdown-grid-months", (val, idx) => {
+        endMonth = idx;
+        syncDates();
+    });
+
+    syncDates();
+}
+
+function renderDatePart(idPrefix, list, gridClass, callback) {
+    const wrapper = document.getElementById(`${idPrefix}Wrapper`);
+    const trigger = document.getElementById(`${idPrefix}Trigger`);
+    const cols = document.getElementById(`${idPrefix}Cols`);
+
+    cols.className = gridClass;
+
+    trigger.onclick = e => {
+        e.stopPropagation();
+
+        const isOpen = wrapper.classList.contains("open");
+
+        closeAllSelects();
+
+        if (!isOpen) wrapper.classList.add("open");
+    };
+
+    cols.innerHTML = "";
+
+    list.forEach((item, idx) => {
+        const opt = document.createElement("div");
+
+        opt.className = "dropdown-option";
+        opt.textContent = item;
+
+        opt.onclick = () => {
+            callback(item, idx);
+            wrapper.classList.remove("open");
+        };
+
+        cols.appendChild(opt);
+    });
+}
+
+function syncDates() {
+    const startVal = startYear * 12 + startMonth;
+    const endVal = endYear * 12 + endMonth;
+
+    if (startVal > endVal) {
+        endYear = startYear;
+        endMonth = startMonth;
+    }
+
+    updateDateLabels();
+    renderCustomRange();
+}
+
+function updateDateLabels() {
+    document.getElementById("fromYearLabel").textContent = startYear;
+    document.getElementById("fromMonthLabel").textContent = monthNamesShort[startMonth];
+    document.getElementById("toYearLabel").textContent = endYear;
+    document.getElementById("toMonthLabel").textContent = monthNamesShort[endMonth];
+}
+
+function renderCustomRange() {
+    const startTotal = startYear * 12 + startMonth;
+    const endTotal = endYear * 12 + endMonth;
+
+    const filteredRows = revenueRows.filter(row => {
+        const rowTotal = row.år * 12 + row.månadIndex;
+        return rowTotal >= startTotal && rowTotal <= endTotal;
+    });
+
+    lastFilteredData = filteredRows;
+
+    if (document.getElementById("tableView").style.display !== "none") {
+        updateTable();
+    } else if (document.getElementById("chartView").style.display !== "none") {
+        updateChart(filteredRows);
+    } else if (document.getElementById("dataView").style.display !== "none") {
+        updateDataView();
+    }
+}
+
+
+/* =========================================================
+   10. TABELLVY
+   ========================================================= */
+
+function updateTable() {
+    const table = document.getElementById("statsTable");
+    const thead = table.querySelector("thead");
+    const tbody = table.querySelector("tbody");
+    const headerDisplay = document.getElementById("tableHeaderDisplay");
+
+    if (!table || !thead || !tbody || !headerDisplay) return;
+
+    headerDisplay.textContent = "Entréintäkter";
+
+    /*
+       Vilka år som ska visas.
+       toggleLundRegion betyder i tabellvyn: Senaste 5 åren.
+    */
+    let yearsToShow = [...availableYears].sort((a, b) => a - b);
+
+    if (toggleLundRegion.checked) {
+        yearsToShow = yearsToShow.slice(-5);
+    }
+
+    /*
+       Tabellens breddläge.
+    */
+    const tableView = document.getElementById("tableView");
+
+    if (tableView) {
+        if (toggleLundRegion.checked) {
+            tableView.classList.add("compact-table");
+            tableView.style.width = "";
+        } else {
+            tableView.classList.remove("compact-table");
+            tableView.style.width = "";
+        }
+    }
+
+    /*
+       Förberäkna intäkter per år och månad.
+       Detta gör tabellen snabbare än att loopa igenom revenueRows
+       om och om igen inne i varje cell.
+    */
+    const sumsByYearMonth = {};
+
+    yearsToShow.forEach(year => {
+        sumsByYearMonth[year] = Array(12).fill(0);
+    });
+
+    revenueRows.forEach(row => {
+        if (
+            sumsByYearMonth[row.år] &&
+            row.månadIndex >= 0 &&
+            row.månadIndex <= 11
+        ) {
+            sumsByYearMonth[row.år][row.månadIndex] += row.intäkt;
+        }
+    });
+
+    /*
+       Tabellhuvud.
+    */
+    let headerHtml = `<tr><th style="text-align:center">Månad</th>`;
+
+    yearsToShow.forEach(year => {
+        headerHtml += `<th>${year}</th>`;
+    });
+
+    headerHtml += `</tr>`;
+
+    thead.innerHTML = headerHtml;
+    tbody.innerHTML = "";
+
+    /*
+       Månadsrader.
+    */
+    monthNamesShort.forEach((monthName, monthIndex) => {
+        const row = tbody.insertRow();
+
+        if (!selectedMonths.has(monthIndex)) {
+            row.classList.add("month-row-disabled");
+        }
+
+        const nameCell = row.insertCell();
+
+        nameCell.style.fontWeight = "600";
+        nameCell.style.background = "#f5f5f5";
+        nameCell.style.color = "#000000";
+        nameCell.style.textAlign = "center";
+        nameCell.style.cursor = "pointer";
+
+        const monthCellInner = document.createElement("div");
+        monthCellInner.className = "month-cell-inner";
+
+        const monthLabel = document.createElement("span");
+        monthLabel.textContent = monthName;
+
+        const monthCheckbox = document.createElement("input");
+        monthCheckbox.type = "checkbox";
+        monthCheckbox.className = "month-toggle";
+        monthCheckbox.checked = selectedMonths.has(monthIndex);
+
+        function toggleMonthSelection() {
+            if (monthCheckbox.checked) {
+                selectedMonths.add(monthIndex);
+            } else {
+                selectedMonths.delete(monthIndex);
+            }
+
+            updateTable();
+        }
+
+        monthCheckbox.onclick = event => {
+            event.stopPropagation();
+            toggleMonthSelection();
+        };
+
+        nameCell.onclick = event => {
+            if (event.target === monthCheckbox) return;
+
+            monthCheckbox.checked = !monthCheckbox.checked;
+            toggleMonthSelection();
+        };
+
+        monthCellInner.appendChild(monthLabel);
+        monthCellInner.appendChild(monthCheckbox);
+        nameCell.appendChild(monthCellInner);
+
+        /*
+           Hitta bästa värde för aktuell månad inom visade år.
+           toggleLund betyder i tabellvyn: Bästa månad.
+        */
+        const currentMaxInScope = Math.max(
+            ...yearsToShow.map(year => sumsByYearMonth[year][monthIndex] || 0)
+        );
+
+        yearsToShow.forEach(year => {
+            const value = sumsByYearMonth[year][monthIndex] || 0;
+
+            const cell = row.insertCell();
+            cell.style.textAlign = "right";
+            cell.textContent = value > 0 ? formatSEK(value) : "-";
+
+            if (
+                selectedMonths.has(monthIndex) &&
+                toggleLund.checked &&
+                value > 0 &&
+                value === currentMaxInScope
+            ) {
+                cell.classList.add("best-cell");
+            }
+        });
+    });
+
+    /*
+       Totalrad.
+       Endast valda månader räknas med.
+    */
+    const footerRow = tbody.insertRow();
+    footerRow.classList.add("total-row");
+
+    const totalLabelCell = footerRow.insertCell();
+    totalLabelCell.textContent = "TOTALT";
+    totalLabelCell.style.textAlign = "left";
+
+    yearsToShow.forEach(year => {
+        let totalForYear = 0;
+
+        selectedMonths.forEach(monthIndex => {
+            totalForYear += sumsByYearMonth[year][monthIndex] || 0;
+        });
+
+        const cell = footerRow.insertCell();
+        cell.style.textAlign = "right";
+        cell.textContent = totalForYear > 0 ? formatSEK(totalForYear) : "-";
+    });
+
+    /*
+       Uppdatera vänsterpanelens tabellinfo, om den finns.
+    */
+    if (
+        typeof renderTableInfoFacts === "function" &&
+        document.getElementById("tableView").style.display !== "none"
+    ) {
+        renderTableInfoFacts();
+    }
+}
+
+
+/* =========================================================
+   11. DIAGRAMVY
+   ========================================================= */
+
+const valueLabelsPlugin = {
+    id: "valueLabelsPlugin",
+
+    afterDatasetsDraw(chart) {
+        if (!toggleLundRegion.checked) return;
+
+        const { ctx } = chart;
+
+        ctx.save();
+        ctx.font = "bold 16px system-ui";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "bottom";
+        ctx.fillStyle = "#222";
+
+        chart.data.datasets.forEach((dataset, i) => {
+            const meta = chart.getDatasetMeta(i);
+
+            meta.data.forEach((element, index) => {
+                const value = dataset.data[index];
+
+                if (value > 0) {
+                    ctx.fillText(
+                        formatSEK(value),
+                        element.x,
+                        element.y - 12
+                    );
+                }
+            });
+        });
+
+        ctx.restore();
+    }
+};
+
+Chart.register(valueLabelsPlugin);
+
+function updateChart(data) {
+    const canvas = document.getElementById("statsChart");
+
+    if (!canvas) return;
+
+    const cHeader = document.getElementById("chartHeaderDisplay");
+
+    if (cHeader) cHeader.textContent = "Entréintäkter";
+
+    const ctx = canvas.getContext("2d");
+    const isSmooth = toggleLund.checked;
+
+    const labels = [];
+    const chartData = [];
+
+    let currentY = startYear;
+    let currentM = startMonth;
+
+    const endTotal = endYear * 12 + endMonth;
+
+    while ((currentY * 12 + currentM) <= endTotal) {
+        labels.push([monthNamesShort[currentM], currentY.toString()]);
+
+        let monthlySum = 0;
+
+        revenueRows.forEach(r => {
+            if (r.år === currentY && r.månadIndex === currentM) {
+                monthlySum += r.intäkt;
+            }
+        });
+
+        chartData.push(monthlySum);
+
+        currentM++;
+
+        if (currentM > 11) {
+            currentM = 0;
+            currentY++;
+        }
+    }
+
+    if (myChart) myChart.destroy();
+
+    myChart = new Chart(ctx, {
+        type: "line",
+
+        data: {
+            labels: labels,
+
+            datasets: [{
+                data: chartData,
+                borderColor: "#f28c28",
+                backgroundColor: "rgba(242, 140, 40, 0.1)",
+                borderWidth: 3,
+                fill: true,
+                tension: isSmooth ? 0.4 : 0,
+                pointRadius: 5,
+                pointHoverRadius: 0,
+                pointBackgroundColor: "#f28c28"
+            }]
+        },
+
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            events: [],
+
+            animation: {
+                duration: 900,
+                easing: "easeOutQuart",
+                x: {
+                    from: -80
+                }
+            },
+
+            layout: {
+                padding: {
+                    left: 20,
+                    right: 40,
+                    top: toggleLundRegion.checked ? 55 : 35,
+                    bottom: 10
+                }
+            },
+
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    enabled: false
+                }
+            },
+
+            scales: {
+                x: {
+                    offset: true,
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        padding: 10,
+                        align: "center",
+                        textAlign: "center",
+                        font: {
+                            size: 15,
+                            weight: "700"
+                        }
+                    }
+                },
+
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        padding: 15,
+                        font: {
+                            size: 15,
+                            weight: "700"
+                        },
+                        callback: value => formatSwedishNumber(value)
+                    }
+                }
+            }
+        }
+    });
+}
+
+
+/* =========================================================
+   12. SNABBDATA OCH TABELLINFORMATION
+   ========================================================= */
+
+function buildQuickDataFacts() {
+    if (!revenueRows.length) return [];
+
+    const weekdayTotals = {};
+    const weekTotals = {};
+    const specificWeekTotals = {};
+    const monthTotals = {};
+    const specificMonthTotals = {};
+    const tertialTotals = {};
+    const specificTertialTotals = {};
+    const quarterTotals = {};
+    const specificQuarterTotals = {};
+    const halfYearTotals = {};
+    const specificHalfYearTotals = {};
+    const yearTotals = {};
+
+    revenueRows.forEach(row => {
+        const amount = row.intäkt;
+        const year = row.år;
+        const monthIndex = row.månadIndex;
+
+        const weekdayLong = new Intl.DateTimeFormat("sv-SE", {
+            weekday: "long"
+        }).format(row.date);
+
+        const weekInfo = getISOWeekInfo(row.date);
+        const week = weekInfo.week;
+
+        const monthLong = new Intl.DateTimeFormat("sv-SE", {
+            month: "long"
+        }).format(row.date);
+
+        const monthShort = monthNamesShort[monthIndex].toLowerCase();
+
+        const tertial = getTertial(monthIndex);
+        const quarter = getQuarter(monthIndex);
+        const halfYear = getHalfYear(monthIndex);
+
+        weekdayTotals[weekdayLong] = (weekdayTotals[weekdayLong] || 0) + amount;
+
+        weekTotals[week] = (weekTotals[week] || 0) + amount;
+        specificWeekTotals[`${week} ${year}`] = (specificWeekTotals[`${week} ${year}`] || 0) + amount;
+
+        monthTotals[monthLong] = (monthTotals[monthLong] || 0) + amount;
+        specificMonthTotals[`${monthShort} ${year}`] = (specificMonthTotals[`${monthShort} ${year}`] || 0) + amount;
+
+        tertialTotals[tertial] = (tertialTotals[tertial] || 0) + amount;
+        specificTertialTotals[`${tertial} ${year}`] = (specificTertialTotals[`${tertial} ${year}`] || 0) + amount;
+
+        quarterTotals[quarter] = (quarterTotals[quarter] || 0) + amount;
+        specificQuarterTotals[`${quarter} ${year}`] = (specificQuarterTotals[`${quarter} ${year}`] || 0) + amount;
+
+        halfYearTotals[halfYear] = (halfYearTotals[halfYear] || 0) + amount;
+        specificHalfYearTotals[`${halfYear} ${year}`] = (specificHalfYearTotals[`${halfYear} ${year}`] || 0) + amount;
+
+        yearTotals[year] = (yearTotals[year] || 0) + amount;
+    });
+
+    const bestTertialSpecific = getBestFromMap(specificTertialTotals).split(" ");
+    const bestQuarterSpecific = getBestFromMap(specificQuarterTotals).split(" ");
+    const bestHalfYearSpecific = getBestFromMap(specificHalfYearTotals).split(" ");
+
+    return [
+        {
+            type: "general",
+            label: "Bästa veckodag",
+            value: getBestFromMap(weekdayTotals)
+        },
+        {
+            type: "general",
+            label: "Bästa vecka",
+            value: getBestFromMap(weekTotals)
+        },
+        {
+            type: "general",
+            label: "Bästa månad",
+            value: getBestFromMap(monthTotals)
+        },
+        {
+            type: "general",
+            label: "Bästa tertial",
+            value: ordinalSwedish(Number(getBestFromMap(tertialTotals)))
+        },
+        {
+            type: "general",
+            label: "Bästa kvartal",
+            value: ordinalSwedish(Number(getBestFromMap(quarterTotals)))
+        },
+    ];
+}
+
+function renderQuickDataFacts() {
+    const box = document.getElementById("quickDataBox");
+    const factsEl = document.getElementById("quickDataFacts");
+
+    if (!box || !factsEl) return;
+
+    if (!quickDataFactsCache) {
+        quickDataFactsCache = buildQuickDataFacts();
+    }
+
+    factsEl.innerHTML = quickDataFactsCache.map(fact => {
+        const icon = fact.type === "general"
+            ? "fa-chart-simple"
+            : "fa-calendar-check";
+
+        return `
+            <div class="quick-data-row">
+                <i class="fa-solid ${icon}" title="${fact.type === "general" ? "Generellt" : "Specifikt"}"></i>
+                <div>
+                    <span class="quick-data-label">${fact.label}:</span>
+                    <span class="quick-data-value">${fact.value}</span>
+                </div>
+            </div>
+        `;
+    }).join("");
+}
+
+function renderTableInfoFacts() {
+    const box = document.getElementById("tableInfoBox");
+    const factsEl = document.getElementById("tableInfoFacts");
+
+    if (!box || !factsEl || !revenueRows.length) return;
+
+    let yearsToShow = [...availableYears].sort((a, b) => a - b);
+
+    if (toggleLundRegion.checked) {
+        yearsToShow = yearsToShow.slice(-5);
+    }
+
+    const firstYear = yearsToShow[0];
+    const lastYear = yearsToShow[yearsToShow.length - 1];
+
+    const yearTotals = {};
+    let total = 0;
+
+    revenueRows.forEach(row => {
+        if (
+            yearsToShow.includes(row.år) &&
+            selectedMonths.has(row.månadIndex)
+        ) {
+            yearTotals[row.år] = (yearTotals[row.år] || 0) + row.intäkt;
+            total += row.intäkt;
+        }
+    });
+
+    let bestYear = "";
+    let bestYearValue = -Infinity;
+
+    Object.entries(yearTotals).forEach(([year, value]) => {
+        if (value > bestYearValue) {
+            bestYear = year;
+            bestYearValue = value;
+        }
+    });
+
+    const facts = [
+        {
+            icon: "fa-calendar-days",
+            label: "Period",
+            value: firstYear === lastYear ? `${firstYear}` : `${firstYear}–${lastYear}`
+        },
+        {
+            icon: "fa-table-columns",
+            label: "Visade år",
+            value: toggleLundRegion.checked ? "Senaste 5" : "Alla"
+        },
+        {
+            icon: "fa-calendar-check",
+            label: "Aktiva månader",
+            value: getSelectedMonthsLabel()
+        },
+        {
+            icon: "fa-coins",
+            label: "Total intäkt",
+            value: formatSEKRounded(total)
+        },
+        {
+            icon: "fa-arrow-trend-up",
+            label: "Bästa år",
+            value: bestYear ? `${bestYear}` : "–"
+        }
+    ];
+
+    factsEl.innerHTML = facts.map(fact => `
+        <div class="quick-data-row">
+            <i class="fa-solid ${fact.icon}"></i>
+            <div>
+                <span class="quick-data-label">${fact.label}:</span>
+                <span class="quick-data-value">${fact.value}</span>
+            </div>
+        </div>
+    `).join("");
+}
+
+
+/* =========================================================
+   13. DATAVY: SORTERING OCH RENDERING
+   ========================================================= */
+
+function getSortIcon(key) {
+    if (dataSort.key !== key || dataSort.direction === "none") {
+        return "fa-sort";
+    }
+
+    if (dataSort.direction === "asc") {
+        return "fa-arrow-up-wide-short";
+    }
+
+    return "fa-arrow-down-wide-short";
+}
+
+function makeSortableHeader(label, key, align = "left") {
+    return `
+        <div class="${align}">
+            <span class="data-sort-header" onclick="setDataSort('${key}')">
+                ${label}
+                <i class="fa-solid ${getSortIcon(key)}"></i>
+            </span>
+        </div>
+    `;
+}
+
+function setDataSort(key) {
+    if (dataSort.key !== key) {
+        dataSort.key = key;
+        dataSort.direction = "asc";
+    } else {
+        if (dataSort.direction === "none") {
+            dataSort.direction = "asc";
+        } else if (dataSort.direction === "asc") {
+            dataSort.direction = "desc";
+        } else {
+            dataSort.direction = "none";
+        }
+    }
+
+    updateDataView();
+}
+
+function resetDataSort() {
+    dataSort = {
+        key: "date",
+        direction: "none"
+    };
+}
+
+function updateDataView() {
+    const shell = document.querySelector(".data-table-shell");
+    const head = document.getElementById("dataTableHead");
+    const body = document.getElementById("dataTableBody");
+    const headerDisplay = document.getElementById("dataHeaderDisplay");
+
+    if (!shell || !head || !body || !headerDisplay) return;
+
+    const weekMode = toggleLund.checked;
+    const monthMode = toggleLundRegion.checked;
+
+    const validDailyKeys = ["date", "weekday", "specialTag", "amount"];
+    const validWeeklyKeys = ["week", "year", "startDate", "endDate", "specialTags", "sum"];
+    const validMonthlyKeys = ["month", "year", "tertial", "quarter", "specialTags", "sum"];
+
+    if (weekMode && !validWeeklyKeys.includes(dataSort.key)) {
+        dataSort = { key: "startDate", direction: "none" };
+    }
+
+    else if (monthMode && !validMonthlyKeys.includes(dataSort.key)) {
+        dataSort = { key: "year", direction: "none" };
+    }
+
+    else if (!weekMode && !monthMode && !validDailyKeys.includes(dataSort.key)) {
+        dataSort = { key: "date", direction: "none" };
+    }
+
+    function compareSortValues(a, b, key, direction) {
+        const dir = direction === "asc" ? 1 : -1;
+
+        let av = a[key];
+        let bv = b[key];
+
+        if (key === "weekday") {
+            av = a.weekdaySort;
+            bv = b.weekdaySort;
+        }
+
+        if (key === "month") {
+            av = a.monthIndex;
+            bv = b.monthIndex;
+        }
+
+        if (key === "tertial") {
+            av = a.tertialNumber;
+            bv = b.tertialNumber;
+        }
+
+        if (key === "quarter") {
+            av = a.quarterNumber;
+            bv = b.quarterNumber;
+        }
+
+        if (key === "specialTag" || key === "specialTags") {
+            const aEmpty = !av;
+            const bEmpty = !bv;
+
+            if (aEmpty && !bEmpty) return 1;
+            if (!aEmpty && bEmpty) return -1;
+            if (aEmpty && bEmpty) return 0;
+
+            return String(av).localeCompare(String(bv), "sv-SE") * dir;
+        }
+
+        if (typeof av === "string" && typeof bv === "string") {
+            return av.localeCompare(bv, "sv-SE") * dir;
+        }
+
+        if (av < bv) return -1 * dir;
+        if (av > bv) return 1 * dir;
+
+        return 0;
+    }
+
+    body.innerHTML = "";
+
+    /*
+       VECKOVY
+    */
+    if (weekMode) {
+        headerDisplay.textContent = "Veckovy";
+
+        shell.classList.remove("daily", "monthly");
+        shell.classList.add("weekly");
+
+        head.innerHTML = `
+            ${makeSortableHeader("Vecka", "week", "left")}
+            ${makeSortableHeader("År", "year", "left")}
+            ${makeSortableHeader("Startdag", "startDate", "left")}
+            ${makeSortableHeader("Slutdag", "endDate", "left")}
+            ${makeSortableHeader("Innehåller period/dag", "specialTags", "left")}
+            ${makeSortableHeader("Summa", "sum", "right")}
+        `;
+
+        let rows = [...buildWeeklyRows()];
+
+        if (dataSort.direction === "none") {
+            rows.sort((a, b) => b.startDate.localeCompare(a.startDate));
+        } else {
+            rows.sort((a, b) => compareSortValues(a, b, dataSort.key, dataSort.direction));
+        }
+
+        rows.forEach(row => {
+            const div = document.createElement("div");
+            div.className = "data-table-row";
+
+            div.innerHTML = `
+                <div class="left">${row.week}</div>
+                <div class="left">${row.year}</div>
+                <div class="left">${row.startDate}</div>
+                <div class="left">${row.endDate}</div>
+                <div class="left">${row.specialTags}</div>
+                <div class="right">${formatSEK(row.sum)}</div>
+            `;
+
+            body.appendChild(div);
+        });
+
+        return;
+    }
+
+    /*
+       MÅNADSVY
+    */
+    if (monthMode) {
+        headerDisplay.textContent = "Månadsvy";
+
+        shell.classList.remove("daily", "weekly");
+        shell.classList.add("monthly");
+
+        head.innerHTML = `
+            ${makeSortableHeader("Månad", "month", "left")}
+            ${makeSortableHeader("År", "year", "left")}
+            ${makeSortableHeader("Tertial", "tertial", "left")}
+            ${makeSortableHeader("Kvartal", "quarter", "left")}
+            ${makeSortableHeader("Innehåller period/dag", "specialTags", "left")}
+            ${makeSortableHeader("Summa", "sum", "right")}
+        `;
+
+        let rows = [...buildMonthlyRows()];
+
+        /*
+           Default: senaste månad först.
+        */
+        if (dataSort.direction === "none") {
+            rows.sort((a, b) => b.sortDate - a.sortDate);
+        } else {
+            rows.sort((a, b) => {
+                const primary = compareSortValues(a, b, dataSort.key, dataSort.direction);
+
+                if (primary !== 0) return primary;
+
+                /*
+                   Stabil sekundärsortering.
+                */
+                if (dataSort.key === "month") {
+                    return b.year - a.year;
+                }
+
+                if (dataSort.key === "year") {
+                    return a.monthIndex - b.monthIndex;
+                }
+
+                return b.sortDate - a.sortDate;
+            });
+        }
+
+        rows.forEach(row => {
+            const div = document.createElement("div");
+            div.className = "data-table-row";
+
+            div.innerHTML = `
+                <div class="left">${row.month}</div>
+                <div class="left">${row.year}</div>
+                <div class="left">${row.tertial}</div>
+                <div class="left">${row.quarter}</div>
+                <div class="left">${row.specialTags}</div>
+                <div class="right">${formatSEK(row.sum)}</div>
+            `;
+
+            body.appendChild(div);
+        });
+
+        return;
+    }
+
+    /*
+       DAGSVY
+    */
+    headerDisplay.textContent = "Alla intäktsposter";
+
+    shell.classList.remove("weekly", "monthly");
+    shell.classList.add("daily");
+
+    head.innerHTML = `
+        ${makeSortableHeader("Datum", "date", "left")}
+        ${makeSortableHeader("Veckodag", "weekday", "left")}
+        ${makeSortableHeader("Period/dag", "specialTag", "left")}
+        ${makeSortableHeader("Intäkt", "amount", "right")}
+    `;
+
+    let rows = revenueRows.map(row => ({
+        date: row.date,
+        datum: row.datum,
+        weekday: row.weekday,
+        weekdaySort: row.weekdaySort,
+        specialTag: row.specialTag,
+        amount: row.intäkt
+    }));
+
+    if (dataSort.direction === "none") {
+        rows.sort((a, b) => b.date - a.date);
+    } else {
+        rows.sort((a, b) => compareSortValues(a, b, dataSort.key, dataSort.direction));
+    }
+
+    rows.forEach(row => {
+        const div = document.createElement("div");
+        div.className = "data-table-row";
+
+        div.innerHTML = `
+            <div class="left">${row.datum}</div>
+            <div class="left">${row.weekday}</div>
+            <div class="left">${row.specialTag}</div>
+            <div class="right">${formatSEK(row.amount)}</div>
+        `;
+
+        body.appendChild(div);
+    });
+}
+
+
+/* =========================================================
+   14. SIDOPANEL: VISA OCH DÖLJ BLOCK
+   ========================================================= */
+
+function showSideBlock(el) {
+    if (!el) return;
+
+    el.style.display = "block";
+
+    requestAnimationFrame(() => {
+        el.classList.add("visible");
+    });
+}
+
+function hideSideBlock(el) {
+    if (!el) return;
+
+    el.classList.remove("visible");
+    el.style.display = "none";
+}
+
+
+/* =========================================================
+   15. VÄXLING MELLAN VYER
+   ========================================================= */
+
+function switchView(viewId, btn) {
+    const tableInfoBox = document.getElementById("tableInfoBox");
+    const quickDataBox = document.getElementById("quickDataBox");
+    const resetBtn = document.getElementById("resetFilters");
+    const appElement = document.querySelector(".app");
+    const dateFilters = document.getElementById("dateFilters");
+    const saveBtn = document.getElementById("saveImage");
+    const labelLund = document.getElementById("labelLund");
+    const labelLundRegion = document.getElementById("labelLundRegion");
+
+    const tableView = document.getElementById("tableView");
+    const chartView = document.getElementById("chartView");
+    const dataView = document.getElementById("dataView");
+
+    const allViews = [tableView, chartView, dataView];
+    const targetView = document.getElementById(viewId + "View");
+
+    if (!targetView) return;
+
+    /*
+       Vänsterpanelens dynamiska block.
+       Alla använder samma animation.
+    */
+    resetBtn.style.display = "block";
+
+    const activeSideBlock =
+        viewId === "chart" ? dateFilters :
+        viewId === "data" ? quickDataBox :
+        viewId === "table" ? tableInfoBox :
+        null;
+
+    [dateFilters, quickDataBox, tableInfoBox].forEach(block => {
+        if (block !== activeSideBlock) {
+            hideSideBlock(block);
+        }
+    });
+
+    if (viewId === "data" && !quickDataFactsCache) {
+        renderQuickDataFacts();
+    }
+
+    if (viewId === "table") {
+        renderTableInfoFacts();
+    }
+
+    showSideBlock(activeSideBlock);
+
+    /*
+       Nollställ togglar vid vybyte.
+    */
+    toggleLund.checked = false;
+    toggleLundRegion.checked = false;
+
+    /*
+       Aktiv knapp.
+    */
+    document.querySelectorAll(".view-btn").forEach(b => {
+        b.classList.remove("active");
+    });
+
+    if (btn) {
+        btn.classList.add("active");
+    }
+
+    /*
+       Dölj alla vyer.
+    */
+    allViews.forEach(v => {
+        if (!v) return;
+
+        v.classList.remove("visible");
+        v.style.display = "none";
+        v.style.width = "";
+    });
+
+    appElement.classList.remove("full-width", "chart-active");
+
+    /*
+       DIAGRAMVY
+    */
+    if (viewId === "chart") {
+        appElement.classList.add("chart-active");
+
+        labelLund.textContent = "Mjuk linje";
+        labelLundRegion.textContent = "Visa belopp";
+        saveBtn.style.display = "block";
+        saveBtn.textContent = "Spara diagram PNG";
+
+        targetView.style.display = "block";
+        targetView.classList.add("visible");
+
+        updateChart(lastFilteredData);
+
+        if (myChart) {
+            requestAnimationFrame(() => {
+                myChart.resize();
+            });
+        }
+
+        return;
+    }
+
+    /*
+       DATAVY
+    */
+    if (viewId === "data") {
+        appElement.classList.add("full-width");
+
+        labelLund.textContent = "Veckovy";
+        labelLundRegion.textContent = "Månadsvy";
+        saveBtn.style.display = "none";
+
+        targetView.style.display = "block";
+        targetView.classList.add("visible");
+
+        updateDataView();
+
+        return;
+    }
+
+    /*
+       TABELLVY
+    */
+    appElement.classList.add("full-width");
+
+    labelLund.textContent = "Bästa månad ★";
+    labelLundRegion.textContent = "Senaste 5 åren";
+    saveBtn.style.display = "block";
+    saveBtn.textContent = "Spara tabell JPG";
+
+    targetView.style.display = "block";
+    targetView.classList.add("visible");
+
+    updateTable();
+}
+
+
+/* =========================================================
+   16. TOGGLAR
+   ========================================================= */
+
+toggleLund.onchange = () => {
+    const isChart = document.getElementById("chartView").style.display !== "none";
+    const isTable = document.getElementById("tableView").style.display !== "none";
+    const isData = document.getElementById("dataView").style.display !== "none";
+
+    if (isChart) {
+        updateChart(lastFilteredData);
+    }
+
+    else if (isTable) {
+        updateTable();
+    }
+
+    else if (isData) {
+        /*
+           I datavyn betyder toggleLund = Veckovy.
+           Om Veckovy slås på ska Månadsvy slås av.
+           Om Veckovy slås av händer inget mer — då visas dagsvy.
+        */
+        if (toggleLund.checked) {
+            toggleLundRegion.checked = false;
+        }
+
+        resetDataSort();
+        updateDataView();
+    }
+};
+
+toggleLundRegion.onchange = () => {
+    const isChart = document.getElementById("chartView").style.display !== "none";
+    const isTable = document.getElementById("tableView").style.display !== "none";
+    const isData = document.getElementById("dataView").style.display !== "none";
+
+    if (isChart) {
+        if (myChart) {
+            myChart.draw();
+        }
+    }
+
+    else if (isTable) {
+        updateTable();
+    }
+
+    else if (isData) {
+        /*
+           I datavyn betyder toggleLundRegion = Månadsvy.
+           Om Månadsvy slås på ska Veckovy slås av.
+           Om Månadsvy slås av händer inget mer — då visas dagsvy.
+        */
+        if (toggleLundRegion.checked) {
+            toggleLund.checked = false;
+        }
+
+        resetDataSort();
+        updateDataView();
+    }
+};
+
+
+/* =========================================================
+   17. KNAPPAR: ÅTERSTÄLLNING OCH EXPORT
+   ========================================================= */
+
+document.getElementById("resetFilters").onclick = function() {
+    const isTable = document.getElementById("tableView").style.display !== "none";
+    const isChart = document.getElementById("chartView").style.display !== "none";
+    const isData = document.getElementById("dataView").style.display !== "none";
+
+    // Gemensamt: stäng av båda togglarna
+    toggleLund.checked = false;
+    toggleLundRegion.checked = false;
+
+    /*
+       TABELLVY
+       Återställ:
+       - alla månader aktiva
+       - Bästa månad av
+       - Senaste 5 åren av
+    */
+    if (isTable) {
+        selectedMonths = new Set([...Array(12).keys()]);
+        updateTable();
+        renderTableInfoFacts();
+        return;
+    }
+
+    /*
+       DATAVY
+       Återställ:
+       - ingen sortering
+       - dagsvy
+       - veckovy av
+       - månadsvy av
+    */
+    if (isData) {
+        dataSort = {
+            key: "date",
+            direction: "none"
+        };
+
+        updateDataView();
+        return;
+    }
+
+    /*
+       DIAGRAMVY
+       Återställ:
+       - datumfilter till standard
+       - togglar av
+    */
+    if (isChart) {
+        initDateSelects();
+        updateChart(lastFilteredData);
+        return;
+    }
+};
+
+document.getElementById("saveImage").onclick = async function() {
+    const isTable = document.getElementById("tableView").style.display !== "none";
+    const isChart = document.getElementById("chartView").style.display !== "none";
+    const isData = document.getElementById("dataView").style.display !== "none";
+
+    let target;
+    let filePrefix;
+
+    if (isTable) {
+        target = document.getElementById("tableView");
+        filePrefix = "tabell";
+    }
+
+    else if (isChart) {
+        target = document.getElementById("chartView");
+        filePrefix = "diagram";
+
+        if (myChart) {
+            myChart.options.devicePixelRatio = 3;
+            myChart.resize();
+            myChart.update("none");
+            myChart.draw();
+        }
+    }
+
+    else if (isData) {
+        target = document.getElementById("dataView");
+        filePrefix = "data";
+    }
+
+    if (!target) return;
+
+    /*
+       Dölj checkboxarna endast vid tabellexport.
+       visibility:hidden gör att tabellen behåller samma layout.
+    */
+    let hiddenCheckboxes = [];
+
+    if (isTable) {
+        hiddenCheckboxes = [...document.querySelectorAll(".month-toggle")];
+
+        hiddenCheckboxes.forEach(cb => {
+            cb.style.visibility = "hidden";
+        });
+    }
+
+    const originalOverflow = target.style.overflow;
+    const originalBackground = target.style.background;
+    const originalPadding = target.style.padding;
+
+    target.style.overflow = "visible";
+    target.style.background = "#ffffff";
+
+    /*
+       Viktigt:
+       Sätt inte padding: 0 på kartvyn.
+       Det var sannolikt det som fick kartvyn att hoppa.
+    */
+    target.style.padding = "0";
+
+    await new Promise(requestAnimationFrame);
+
+    const rect = target.getBoundingClientRect();
+
+    html2canvas(target, {
+        backgroundColor: "#ffffff",
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        scrollX: 0,
+        scrollY: 0,
+        width: Math.ceil(rect.width),
+        height: Math.ceil(rect.height),
+        windowWidth: document.documentElement.scrollWidth,
+        windowHeight: document.documentElement.scrollHeight
+    }).then(canvas => {
+        const link = document.createElement("a");
+        const timestamp = new Date().toISOString().slice(0, 10);
+        const safeFF = "entreintakter";
+
+        if (isChart) {
+            link.download = `${filePrefix}_${safeFF}_${timestamp}.png`;
+            link.href = canvas.toDataURL("image/png");
+        } else {
+            link.download = `${filePrefix}_${safeFF}_${timestamp}.jpg`;
+            link.href = canvas.toDataURL("image/jpeg", 0.95);
+        }
+
+        link.click();
+
+        if (isChart && myChart) {
+            myChart.options.devicePixelRatio = window.devicePixelRatio || 1;
+            myChart.resize();
+            myChart.update("none");
+        }
+
+        target.style.overflow = originalOverflow;
+        target.style.background = originalBackground;
+        target.style.padding = originalPadding;
+
+        hiddenCheckboxes.forEach(cb => {
+            cb.style.visibility = "";
+        });
+    });
+};
+
+
+/* =========================================================
+   18. MODAL: STÄNGNING
+   ========================================================= */
+
+document.getElementById("closeModal").onclick = function() {
+    document.getElementById("dataModal").style.display = "none";
+};
+
+window.onclick = function(event) {
+    const modal = document.getElementById("dataModal");
+
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+};
+
+
+/* =========================================================
+   19. TIPSTEXTER
+   ========================================================= */
+
+const tipsContent = {
+    table: {
+        title: "Tips för tabellvyn",
+        body: `
+            <div style="text-align:left; line-height:1.55;">
+                <p>Tabellen visar entréintäkter per månad och år.</p>
+                <p>Checkboxarna vid månadsnamnen styr vilka månader som tas med i totalraden. På så sätt kan du jämföra intäkter för en vald period över flera år, till exempel januari–mars.</p>
+                <p><strong>Bästa månad</strong> markerar det högsta värdet för varje månad inom de år som visas.</p>
+                <p><strong>Senaste 5 åren</strong> visar bara de fem senaste åren och gör tabellen smalare.</p>
+                <p>Knappen <strong>Spara tabell JPG</strong> laddar ner tabellen som bild.</p>
+            </div>
+        `
+    },
+
+    chart: {
+        title: "Tips för diagramvyn",
+        body: `
+            <div style="text-align:left; line-height:1.55;">
+                <p>Diagrammet visar entréintäkterna månad för månad för vald tidsperiod.</p>
+                <p><strong>Mjuk linje</strong> gör linjen mer avrundad.</p>
+                <p><strong>Visa belopp</strong> visar värdena direkt vid punkterna i diagrammet.</p>
+                <p>Knappen <strong>Spara diagram PNG</strong> laddar ner diagrammet som bild.</p>
+            </div>
+        `
+    },
+
+    data: {
+        title: "Tips för datavyn",
+        body: `
+            <div style="text-align:left; line-height:1.55;">
+                <p>Datavyn visar de bakomliggande intäktsposterna.</p>
+                <p>Klicka på kolumnrubrikerna för att sortera innehållet.</p>
+                <p><strong>Veckovy</strong> summerar intäkterna per vecka.</p>
+                <p><strong>Månadsvy</strong> summerar intäkterna per månad.</p>
+                <p><strong>Återställ filter</strong> tar bort sortering och återgår till dagsvy.</p>
+            </div>
+        `
+    }
+};
+
+function getActiveViewId() {
+    if (document.getElementById("chartView").style.display !== "none") return "chart";
+    if (document.getElementById("tableView").style.display !== "none") return "table";
+    if (document.getElementById("dataView").style.display !== "none") return "data";
+
+    return "table";
+}
+
+document.getElementById("showTips").onclick = function() {
+    const activeView = getActiveViewId();
+    const content = tipsContent[activeView];
+
+    const modal = document.getElementById("dataModal");
+    const modalContent = modal.querySelector(".modal-content");
+
+    modalContent.classList.add("tips-modal");
+
+    modal.querySelector("h3").textContent = content.title;
+    document.getElementById("modalMessage").innerHTML = content.body;
+
+    modal.style.display = "flex";
+};
+
+
+/* =========================================================
+   20. GLOBALA EVENTLYSSNARE
+   ========================================================= */
+
+document.addEventListener("click", closeAllSelects);
+
+
+/* =========================================================
+   21. INITIERING
+   ========================================================= */
+
+async function loadCSVData() {
+    try {
+        const response = await fetch("https://kultpub.github.io/site/entreintakter.csv");
+        const text = await response.text();
+
+        revenueRows = parseCSV(text);
+
+        /*
+           Nollställ cache.
+        */
+        quickDataFactsCache = null;
+        weeklyRowsCache = null;
+        monthlyRowsCache = null;
+
+        /*
+           År och standardläge.
+        */
+        availableYears = [...new Set(revenueRows.map(r => r.år))].sort((a, b) => b - a);
+
+        /*
+           Initiera datumväljare.
+           Detta sätter också startYear/startMonth/endYear/endMonth.
+        */
+        initDateSelects();
+
+        /*
+           Startvyn ska vara tabellvyn.
+        */
+        document.getElementById("tableView").style.display = "block";
+        document.getElementById("chartView").style.display = "none";
+        document.getElementById("dataView").style.display = "none";
+
+        document.getElementById("tableView").classList.add("visible");
+        document.getElementById("chartView").classList.remove("visible");
+        document.getElementById("dataView").classList.remove("visible");
+
+        /*
+           Datumfilter ska inte visas i tabellvyn.
+        */
+        document.getElementById("dateFilters").classList.remove("visible");
+        document.getElementById("dateFilters").style.display = "none";
+
+        /*
+           Återställ-knappen ska visas även i tabellvyn.
+        */
+        document.getElementById("resetFilters").style.display = "block";
+
+        /*
+           Vänsterpanelens informationsboxar.
+           Tabellinfo visas från start, snabbdata döljs.
+        */
+        const tableInfoBox = document.getElementById("tableInfoBox");
+        const quickDataBox = document.getElementById("quickDataBox");
+
+        if (quickDataBox) {
+            hideSideBlock(quickDataBox);
+        }
+
+        if (tableInfoBox) {
+            renderTableInfoFacts();
+            showSideBlock(tableInfoBox);
+        }
+
+        /*
+           Säkerställ att tabellvyns knappar/toggles har rätt etiketter.
+        */
+        document.getElementById("labelLund").textContent = "Bästa månad ★";
+        document.getElementById("labelLundRegion").textContent = "Senaste 5 åren";
+
+        const saveBtn = document.getElementById("saveImage");
+        saveBtn.style.display = "block";
+        saveBtn.textContent = "Spara tabell JPG";
+
+        /*
+           Säkerställ startläge för togglar.
+        */
+        toggleLund.checked = false;
+        toggleLundRegion.checked = false;
+
+        /*
+           Rita tabell och uppdatera tabellfakta.
+        */
+        updateTable();
+
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+loadCSVData();
+</script>
+
+</body>
+</html>
