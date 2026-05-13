@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="sv">
 <head>
@@ -53,6 +54,7 @@ h1 {
   grid-template-columns: 240px min(76vw, 82vh);
   gap: 28px;
   align-items: center;
+  transition: grid-template-columns 320ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .main-view {
@@ -437,6 +439,13 @@ h1 {
   border-radius: 16px;
   background: #fafafa;
   color: #222;
+  transition: opacity 220ms ease, transform 220ms ease;
+  transform-origin: left center;
+}
+
+.summary-panel.hiding {
+  opacity: 0;
+  transform: scale(0.97);
 }
 
 .summary-label,
@@ -600,6 +609,11 @@ svg.hover-active .visit-label[data-for-municipality="active"] {
   transition: background 0.1s;
 }
 
+#statsTable tbody tr.total-row td:first-child {
+    cursor: default;
+    pointer-events: none;
+}
+
 #statsTable th,
 #statsTable td {
   border: 1px solid #ddd;
@@ -628,7 +642,7 @@ svg.hover-active .visit-label[data-for-municipality="active"] {
 
 #statsTable th:first-child,
 #statsTable td:first-child {
-  width: 110px;
+  width: 100px;
 }
 
 /* Rubriken "Månad" */
@@ -688,19 +702,46 @@ svg.hover-active .visit-label[data-for-municipality="active"] {
 .month-cell-inner {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 8px;
+  justify-content: flex-start;
+  gap: 6px;
   height: 20px;
   line-height: 1.15;
 }
 
+.month-cell-inner span {
+  flex: 1;
+}
+
 .month-toggle {
-  width: 15px;
-  height: 15px;
-  margin: 0;
-  accent-color: #f28c28;
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid #bbb;
+  border-radius: 4px;
+  background: #fff;
   cursor: pointer;
   flex-shrink: 0;
+  position: relative;
+  transition: background 150ms ease, border-color 150ms ease;
+}
+
+.month-toggle:checked {
+  background: #2f2f2f;
+  border-color: #2f2f2f;
+}
+
+.month-toggle:checked::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 0px;
+  width: 5px;
+  height: 9px;
+  border: 2px solid #fff;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg);
 }
 
 .month-row-disabled td:not(:first-child) {
@@ -2402,17 +2443,28 @@ function updateTable() {
         monthCheckbox.className = "month-toggle";
         monthCheckbox.checked = selectedMonths.has(mIdx);
 
-        monthCheckbox.onclick = e => {
-            e.stopPropagation();
-
-            if (monthCheckbox.checked) {
-                selectedMonths.add(mIdx);
-            } else {
-                selectedMonths.delete(mIdx);
-            }
-
-            updateTable();
-        };
+		monthCheckbox.onclick = e => {
+			e.stopPropagation();
+			if (monthCheckbox.checked) {
+				selectedMonths.add(mIdx);
+			} else {
+				selectedMonths.delete(mIdx);
+			}
+			updateTable();
+		};
+		
+		nameCell.style.cursor = "pointer";
+		
+		nameCell.onclick = e => {
+			if (e.target === monthCheckbox) return;
+			monthCheckbox.checked = !monthCheckbox.checked;
+			if (monthCheckbox.checked) {
+				selectedMonths.add(mIdx);
+			} else {
+				selectedMonths.delete(mIdx);
+			}
+			updateTable();
+		};
 
         monthCellInner.appendChild(monthLabel);
         monthCellInner.appendChild(monthCheckbox);
@@ -2653,7 +2705,7 @@ function updateChart(data) {
                         textAlign: "center",
                         font: {
                             size: 15,
-                            weight: "500"
+                            weight: "700"
                         }
                     }
                 },
@@ -2664,7 +2716,7 @@ function updateChart(data) {
                         padding: 15,
                         font: {
                             size: 15,
-                            weight: "500"
+                            weight: "700"
                         },
                         callback: value => formatSwedishNumber(value)
                     }
@@ -2697,6 +2749,7 @@ function switchView(viewId, btn) {
     toggleLundRegion.checked = false;
 
     allViews.forEach(v => v.classList.remove("visible"));
+	dateFilters.classList.remove("visible");
     document.querySelectorAll(".view-btn").forEach(b => b.classList.remove("active"));
 
     btn.classList.add("active");
@@ -2773,7 +2826,7 @@ function switchView(viewId, btn) {
             }
         });
 
-    }, 320);
+    }, 350);
 }
 
 
@@ -3017,7 +3070,7 @@ const tipsContent = {
 			<div style="text-align:left; line-height:1.55;">
 				<p>Tabellen visar skolbesök per månad och år.</p>
 				<p>Klicka på ett värde i tabellen för att se hur antalet fördelar sig mellan kommuner.</p>
-				<p>Checkboxarna vid månadsnamnen styr vilka månader som räknas med i totalraden. Det gör det möjligt att till exempel jämföra januari–april för innevarande år med samma månader tidigare år.</p>
+				<p>Checkboxarna vid månadsnamnen styr vilka månader som räknas med i totalraden — använd dem för att till exempel jämföra januari–mars olika år.</p>
 				<p><strong>Bästa månad</strong> markerar den högsta siffran för varje månad.</p>
 				<p><strong>Senaste 5 åren</strong> krymper tabellen och visar bara de fem senaste åren.</p>
 				<p>Knappen <strong>Spara tabell JPG</strong> laddar ner tabellen som bild.</p>
