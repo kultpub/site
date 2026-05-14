@@ -77,6 +77,7 @@ h1 {
 }
 
 #reportHeaderDisplay {
+  visibility: hidden;
   width: 100%;
   margin: 0 0 20px 0 !important;
   color: #2f2f2f;
@@ -87,6 +88,10 @@ h1 {
   line-height: 1.2;
   display: block;
   box-sizing: border-box;
+}
+
+#reportHeaderDisplay.is-ready {
+  visibility: visible;
 }
 
 
@@ -1159,12 +1164,15 @@ function updateHeaderCount(count, rawSearch = "") {
 
   if (!rawSearch) {
     header.textContent = baseText;
+    header.classList.add("is-ready");
     return;
   }
 
   header.textContent = exactSearch
     ? `${baseText} för exakt fras “${rawSearch}”`
     : `${baseText} för “${rawSearch}”`;
+
+  header.classList.add("is-ready");
 }
 
 
