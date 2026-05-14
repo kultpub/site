@@ -5,1329 +5,1623 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dagsrapporter</title>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 <style>
-:root {
-    --bg: #f3f4f6;
-    --surface: #ffffff;
-    --surface-soft: #f8fafc;
-    --text: #111827;
-    --muted: #6b7280;
-    --muted-light: #9ca3af;
-    --border: #e5e7eb;
-    --border-strong: #d1d5db;
-    --accent: #2563eb;
-    --accent-soft: #eff6ff;
-    --weekend-bg: #fff7ed;
-    --weekend-border: #ed7117;
-    --weekend-text: #c2410c;
-    --shadow: 0 20px 45px rgba(15, 23, 42, 0.08);
-    --radius: 18px;
-}
+/* =========================================================
+   1. GLOBAL RESET OCH SIDGRUND
+   ========================================================= */
 
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 html,
 body {
-    margin: 0;
-    min-height: 100%;
-}
-
-html {
-    scrollbar-gutter: stable;
+  margin: 0;
+  width: 100%;
+  min-height: 100%;
+  background: #ffffff;
 }
 
 body {
-    font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background:
-        radial-gradient(circle at top left, rgba(37, 99, 235, 0.08), transparent 32rem),
-        var(--bg);
-    color: var(--text);
-    padding: 36px 20px;
-}
-
-/* Layout */
-
-.highlight-controls {
-    position: fixed;
-    top: 22px;
-    right: 24px;
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    align-items: flex-start;
-    background: #fff;
-    padding: 16px;
-    border-radius: 12px;
-    border: 1px solid #ddd;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    min-width: 200px;
-}
-
-.toggle {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-    width: 100%;
-    font-family: system-ui, -apple-system, sans-serif;
-    font-size: 14px;
-}
-
-.toggle input {
-    display: none;
-}
-
-.toggle-track {
-    width: 42px;
-    height: 24px;
-    border-radius: 999px;
-    background: #d6d6d6;
-    position: relative;
-    transition: background 160ms ease;
-}
-
-.toggle-track::after {
-    content: "";
-    position: absolute;
-    top: 3px;
-    left: 3px;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: #fff;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.25);
-    transition: transform 160ms ease;
-}
-
-.toggle input:checked + .toggle-track {
-    background: #f28c28;
-}
-
-.toggle input:checked + .toggle-track::after {
-    transform: translateX(18px);
-}
-
-.app-container {
-    width: 100%;
-    max-width: 980px;
-    margin: 0 auto;
-}
-
-.page-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    overflow: hidden;
-}
-
-/* Header */
-
-header {
-    padding: 36px 40px 30px;
-    border-bottom: 1px solid var(--border);
-    background: linear-gradient(180deg, #ffffff 0%, #f9fafb 100%);
-}
-
-.eyebrow {
-    margin: 0 0 10px;
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--accent);
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
+  min-height: 100vh;
+  background: #ffffff;
+  overflow: hidden;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #222;
 }
 
 h1 {
-    margin: 0;
-    font-size: clamp(30px, 4vw, 44px);
-    font-weight: 700;
-    letter-spacing: -0.04em;
-    line-height: 1.05;
+  margin: 0;
+  font-size: clamp(30px, 4vw, 44px);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
 }
 
-.header-text {
-    max-width: 650px;
-    margin: 16px 0 0;
-    color: var(--muted);
-    font-size: 15px;
-    line-height: 1.6;
+
+/* =========================================================
+   2. HUVUDLAYOUT
+   Samma fasta grundposition som i Butiksförsäljning.
+   ========================================================= */
+
+.app {
+  position: fixed;
+  top: 10vh;
+  left: 0;
+  display: flex !important;
+  justify-content: center;
+  align-items: flex-start !important;
+  width: 100vw;
+  margin: 0 !important;
+  padding-left: 70px;
+  padding-right: 24px;
+  box-sizing: border-box;
 }
 
-/* Toolbar */
-
-.toolbar {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 16px;
-    align-items: flex-end; /* Ändra från center till flex-end */
-    padding: 24px 40px;
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
+.main-view {
+  width: 1000px !important;
+  max-width: 90vw !important;
+  height: auto;
 }
 
-.search-box {
-    position: relative;
+.view-container {
+  width: 100%;
+  height: auto;
 }
 
-.search-box i.fa-magnifying-glass {
-    position: absolute;
-    left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--muted-light);
-    font-size: 14px;
+#reportView {
+  opacity: 1;
+  padding-top: 0 !important;
 }
 
-input,
-select {
-    width: 100%;
-    height: 46px;
-    border: 1px solid var(--border-strong);
-    border-radius: 12px;
-    background: #fff;
-    color: var(--text);
-    font-family: inherit;
-    font-size: 14px;
-    outline: none;
-    transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
+#reportHeaderDisplay {
+  width: 100%;
+  margin: 0 0 20px 0 !important;
+  color: #2f2f2f;
+  border-left: 4px solid #f28c28;
+  padding-left: 15px;
+  font-size: 28px;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  display: block;
+  box-sizing: border-box;
 }
 
-input {
-    padding: 0 44px 0 42px;
+
+/* =========================================================
+   3. VÄNSTERPANEL / FILTER
+   ========================================================= */
+
+.ff-filter {
+  position: fixed;
+  top: 22px;
+  left: 24px;
+  z-index: 900;
+  width: 230px;
+  display: flex;
+  flex-direction: column;
 }
 
-select {
-    padding: 0 38px 0 14px;
+.ff-filter h1 {
+  margin-bottom: 53px;
 }
 
-input:focus,
-select:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+.panel-subtitle {
+  margin: 14px 0 28px 0;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.45;
 }
 
-#clearSearch {
-    position: absolute;
-    right: 13px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: var(--muted-light);
-    transition: background 0.18s, color 0.18s;
-}
-
-#clearSearch:hover {
-    background: var(--surface-soft);
-    color: var(--text);
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .filter-group {
-    display: flex;
-    gap: 12px;
-    align-items: flex-end; /* Justerar väljarna så de står på samma bottenlinje */
-    width: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
-/* List */
+.summary-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.search-box {
+  position: relative;
+  width: 100%;
+}
+
+.search-box i.fa-magnifying-glass {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #777;
+  font-size: 14px;
+}
+
+#searchInput {
+  width: 100%;
+  height: 42px;
+  padding: 0 40px 0 38px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #f5f5f5;
+  color: #222;
+  outline: none;
+  font-size: 15px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#searchInput:focus {
+  border-color: #2f2f2f;
+  box-shadow: 0 0 0 3px rgba(47, 47, 47, 0.08);
+}
+
+#clearSearch {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #777;
+}
+
+#clearSearch:hover {
+  background: #e8e8e8;
+  color: #222;
+}
+
+.date-small {
+  width: 90px !important;
+}
+
+.date-medium {
+  width: 130px !important;
+}
+
+
+/* =========================================================
+   4. CUSTOM SELECTS OCH DROPDOWNS
+   ========================================================= */
+
+.custom-select-wrapper {
+  position: relative;
+  width: 100%;
+  user-select: none;
+}
+
+.custom-select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #f5f5f5;
+  cursor: pointer;
+  font-size: 15px;
+  color: #222;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.custom-select-trigger:hover,
+.custom-select-wrapper.open .custom-select-trigger {
+  border-color: #2f2f2f;
+  box-shadow: 0 0 0 3px rgba(47, 47, 47, 0.08);
+}
+
+.chevron {
+  width: 16px;
+  height: 16px;
+  fill: #777;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+
+.custom-select-wrapper.open .chevron {
+  transform: rotate(180deg);
+}
+
+.custom-select-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  z-index: 1000;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.14);
+}
+
+.custom-select-wrapper.open .custom-select-dropdown {
+  display: block;
+}
+
+.dropdown-grid-years {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(4, auto);
+  grid-auto-flow: column;
+  gap: 8px;
+  padding: 10px;
+  min-width: 280px;
+}
+
+.dropdown-grid-months {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(4, auto);
+  grid-auto-flow: column;
+  gap: 4px;
+  padding: 8px;
+  min-width: 220px;
+}
+
+.dropdown-option {
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #222;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.dropdown-option:hover {
+  background: #f1f1f1;
+}
+
+.dropdown-option.selected {
+  background: #2f2f2f;
+  color: #fff;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   5. HÖGERPANEL / KONTROLLER
+   ========================================================= */
+
+.highlight-controls {
+  position: fixed;
+  top: 22px;
+  right: 24px;
+  z-index: 900;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: flex-start;
+  background: #fff;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  min-width: 200px;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.toggle input {
+  display: none;
+}
+
+.toggle-track {
+  width: 42px;
+  height: 24px;
+  border-radius: 999px;
+  background: #d6d6d6;
+  position: relative;
+  transition: background 160ms ease;
+}
+
+.toggle-track::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  transition: transform 160ms ease;
+}
+
+.toggle input:checked + .toggle-track {
+  background: #f28c28;
+}
+
+.toggle input:checked + .toggle-track::after {
+  transform: translateX(18px);
+}
+
+.tips-btn {
+  width: 100%;
+  padding: 10px 15px;
+  background: #ffffff;
+  color: #2f2f2f;
+  border: 1px solid #d6d6d6;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  margin-top: 8px;
+}
+
+.tips-btn:hover {
+  background: #f5f5f5;
+  border-color: #999;
+  color: #000;
+}
+
+.reset-btn {
+  width: 100%;
+  margin: 0 0 24px 0;
+  padding: 10px;
+  background: transparent;
+  color: #666;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.reset-btn:hover,
+.tips-btn:hover {
+  background: #f5f5f5;
+  border-color: #999;
+  color: #000;
+}
+
+
+/* =========================================================
+   6. RAPPORTLISTA
+   ========================================================= */
+
+.report-shell {
+  width: 100%;
+  height: 530px;
+  border: 1px solid #e2e2e2;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fff;
+  box-sizing: border-box;
+}
 
 .report-list {
-    min-height: 280px;
+  height: 100%;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+
+  /* Firefox */
+  scrollbar-width: auto;
+  scrollbar-color: #f28c28 #f3f3f3;
 }
 
-/* Container-växling */
-.report-list.grid-mode {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-auto-rows: min-content;
-    gap: 20px;
-    padding: 30px 40px;
-    align-items: start;
+/* Chrome, Edge, Safari */
+.report-list::-webkit-scrollbar {
+  width: 16px;
 }
 
-/* Kort-styling: Exakt kvadratisk */
-.report-list.grid-mode .report-row {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 32px;
-    background: var(--surface);
-    border: 1px solid var(--border-strong);
-    border-radius: 20px;
-    aspect-ratio: 1 / 1; 
-    overflow: hidden;
-    
-    gap: 16px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+.report-list::-webkit-scrollbar-track {
+  background: #f3f3f3;
+  border-left: 1px solid #e2e2e2;
 }
 
-.report-list.grid-mode .report-row:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-    border-color: var(--accent);
+.report-list::-webkit-scrollbar-thumb {
+  background: #f28c28;
+  border-radius: 999px;
+  border: 4px solid #f3f3f3;
 }
 
-/* Texten i kvadraten */
-.report-list.grid-mode .col-preview {
-    white-space: pre-wrap;
-    display: block;
-    font-size: 14px;
-    line-height: 1.6;
-    color: #374151;
-    
-    /* Maskering för att texten inte ska sluta tvärt vid kanten */
-    mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+.report-list::-webkit-scrollbar-thumb:hover {
+  background: #d97706;
 }
 
-.report-list.grid-mode .date-block {
-    flex-direction: row;
-    align-items: center;
-    gap: 12px;
-    width: 100%;
-    border-bottom: 2px solid var(--accent-soft);
-    padding-bottom: 15px;
-    flex-shrink: 0; /* Hindrar rubriken från att tryckas ihop */
-}
 
 .report-row {
-    display: grid;
-    grid-template-columns: 90px 46px 1fr auto;
-    gap: 16px;
-    align-items: center;
-    padding: 22px 40px;
-    border-bottom: 1px solid var(--border);
-    cursor: pointer;
-    transition: background 0.18s;
-    position: relative;
-}
-
-.report-row:last-child {
-    border-bottom: none;
+  display: grid;
+  grid-template-columns: 90px 30px 1fr 10px;
+  align-items: center;
+  column-gap: 28px;
+  min-height: 68px;
+  padding: 0 28px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: background 0.1s;
+  color: #222;
+  background: #fff;
 }
 
 .report-row:hover {
-    background: var(--accent-soft);
+  background: #fff9db;
 }
 
 .date-block {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .col-date {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 13px;
-    font-weight: 500;
-    color: #374151;
-    letter-spacing: -0.03em;
+  font-size: 15px;
+  font-weight: 700;
+  color: #111;
+  font-variant-numeric: tabular-nums;
 }
 
 .col-day {
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--muted-light);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+  font-size: 12px;
+  font-weight: 700;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 .col-icon {
-    width: 42px;
-    height: 42px;
-    border-radius: 12px;
-    background: var(--surface-soft);
-    border: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--muted);
-    font-size: 17px;
-    
-    /* Lägg till denna rad: */
-    flex-shrink: 0; 
-    
-    transition: color 0.18s, border-color 0.18s, background 0.18s, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  color: #f28c28;
+  font-size: 18px;
 }
 
-/* Förstora ikonen när raden hovras */
-.report-row:hover .col-icon i {
-    transform: scale(1.25);
-}
-
-/* Säkerställ att ikonen inuti har en mjuk transition */
 .col-icon i {
-    transition: transform 0.2s ease;
-    display: inline-block; /* Krävs för att transform ska fungera korrekt */
+  display: inline-block;
+  transition:
+    transform 0.18s ease,
+    color 0.18s ease;
+  transform-origin: center center;
+}
+
+.report-row:hover .col-icon i {
+  transform: scale(1.25);
+  color: #2f2f2f;
 }
 
 .col-preview {
-    color: #374151;
-    font-size: 15px;
-    line-height: 1.55;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  color: #222;
+  font-size: 15px;
+  line-height: 1.45;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .row-action {
-    color: var(--muted-light);
-    font-size: 13px;
+  text-align: right;
+  color: #777;
+  font-size: 14px;
 }
-
-.report-row:hover .row-action {
-    color: var(--accent);
-}
-
-/* Weekend */
 
 .weekend-row {
-    background: var(--weekend-bg);
+  background: #ffedd5 !important;
 }
 
 .weekend-row:hover {
-    background: #ffedd5;
+  background: #fed7aa !important;
 }
 
 .weekend-row .col-day,
 .weekend-row .row-action {
-    color: var(--weekend-text);
+  color: #c2410c;
 }
-
-.weekend-row .col-icon {
-    color: var(--weekend-text);
-    background: #fff;
-}
-
-/* Empty/error */
 
 .no-results {
-    padding: 70px 30px;
-    text-align: center;
-    color: var(--muted);
-    font-size: 15px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  color: #333;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: center;
+
+  background: #fafafa;
 }
 
-/* Modal */
-
-.modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(15, 23, 42, 0.58);
-    z-index: 1000;
-    opacity: 0;
-    transition: opacity 0.25s ease;
-    padding: 24px;
+.no-results i {
+  font-size: 34px;
+  color: #f28c28;
+  margin-bottom: 4px;
 }
 
-.modal.active {
-    display: block;
-    opacity: 1;
+.no-results small {
+  font-size: 15px;
+  font-weight: 500;
+  color: #777;
+}
+
+
+/* =========================================================
+   7. KORTVY
+   ========================================================= */
+
+.report-list.grid-mode {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  padding: 22px;
+  align-items: start;
+}
+
+.report-list.grid-mode .report-row {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: 0;
+  height: 300px;
+  padding: 24px;
+  border: 1px solid #e2e2e2;
+  border-radius: 16px;
+  background: #fff !important;
+  overflow: hidden;
+}
+
+.report-list.grid-mode .report-row:hover {
+  background: #fff9db !important;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+}
+
+.report-list.grid-mode .date-block {
+  width: 100%;
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.report-list.grid-mode .col-icon {
+  display: none;
+}
+
+.report-list.grid-mode .col-preview {
+  white-space: pre-wrap;
+  display: block;
+  font-size: 15px;
+  line-height: 1.55;
+  color: #333;
+  mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+}
+
+.report-list.grid-mode .row-action {
+  position: absolute;
+  right: 22px;
+  bottom: 18px;
+}
+
+
+/* =========================================================
+   8. MODALER
+   ========================================================= */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  backdrop-filter: blur(2px);
+}
+
+.modal-overlay.active {
+  display: flex;
 }
 
 .modal-content {
-    background: white;
-    width: min(760px, 100%);
-    max-height: calc(100vh - 80px);
-    overflow-y: auto;
-    margin: 40px auto;
-    padding: 42px 48px 48px;
-    position: relative;
-    border-radius: 20px;
-    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.28);
-    
-    /* Animation: Väldigt mjuk fade */
-    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-    opacity: 1;
-    transform: scale(1);
+  background: white;
+  padding: 34px 38px 30px;
+  border-radius: 16px;
+  position: relative;
+  max-width: min(820px, 92vw);
+  width: 820px;
+  max-height: min(760px, 88vh);
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  text-align: left;
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
-/* När vi tonar ut */
 .modal-content.fade-out {
-    opacity: 0;
-    transform: scale(0.98); /* Krymper en aning för mjukare känsla */
+  opacity: 0;
+  transform: scale(0.985);
 }
 
-.modal-date {
-    color: var(--accent);
-    font-weight: 700;
-    margin-bottom: 12px;
-    display: block;
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #777;
+  transition: transform 0.2s ease, color 0.2s ease;
+  line-height: 1;
 }
 
-.modal-title {
-    margin: 0 0 24px;
-    padding-bottom: 18px;
-    border-bottom: 1px solid var(--border);
-    font-size: 28px;
-    letter-spacing: -0.03em;
-}
-
-.modal-text {
-    font-size: 17px;
-    line-height: 1.8;
-    color: #1f2937;
-    white-space: pre-wrap;
-}
-
-.close-modal {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    width: 40px;
-    height: 40px;
-    border-radius: 12px; /* Mjukare kvadratisk form istället för cirkel */
-    border: 1px solid var(--border);
-    background: #fff;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--muted);
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-}
-
-.close-modal i {
-    font-size: 18px;
-    transition: transform 0.2s ease;
-}
-
-.close-modal:hover {
-    background: #fef2f2; /* Subtil röd ton för "stäng" */
-    color: #ef4444;     /* Modern röd färg */
-    border-color: #fee2e2;
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.12);
-}
-
-.close-modal:hover i {
-    transform: rotate(90deg); /* Snygg rotation vid hovring */
-}
-
-.close-modal:active {
-    transform: scale(0.95); /* Taktil feedback vid klick */
-}
-
-/* Röda dagar */
-.holiday-row {
-    background: #fef2f2;
-    border-left: 5px solid #ef4444;
-}
-
-.holiday-row:hover {
-    background: #fee2e2;
-}
-
-.holiday-row .col-day,
-.holiday-row .row-action {
-    color: #b91c1c;
-}
-
-.holiday-row .col-icon {
-    color: #b91c1c;
-    background: #fff;
-    transform: translate(-4px, 0px);
-}
-
-/* Custom Select Styling */
-.custom-select-wrapper {
-    position: relative;
-    width: 100%;
-    user-select: none;
-}
-
-.custom-select-trigger {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 14px;
-    height: 46px;
-    border: 1px solid var(--border-strong);
-    border-radius: 12px;
-    background: #fff;
-    cursor: pointer;
-    font-size: 14px;
-    color: var(--text);
-    transition: all 0.2s;
-}
-
-.custom-select-trigger:hover, 
-.custom-select-wrapper.open .custom-select-trigger {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
-}
-
-.chevron {
-    width: 16px;
-    height: 16px;
-    fill: none;
-    stroke: var(--muted-light);
-    stroke-width: 2;
-    transition: transform 0.2s;
-}
-
-.custom-select-wrapper.open .chevron {
-    transform: rotate(180deg);
-}
-
-.custom-select-dropdown {
-    display: none;
-    position: absolute;
-    top: calc(100% + 8px);
-    right: 0;
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    z-index: 1000;
-    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
-    padding: 8px;
-}
-
-.custom-select-wrapper.open .custom-select-dropdown {
-    display: block;
-}
-
-/* Grid-layouter för valen */
-.dropdown-grid-years, .dropdown-grid-months {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(4, auto);
-    grid-auto-flow: column;
-    gap: 4px;
-    padding: 8px;
-}
-
-.dropdown-grid-years {
-    min-width: 200px;
-}
-
-.dropdown-grid-months {
-    min-width: 240px;
-}
-
-.dropdown-option {
-    padding: 8px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 13px;
-    text-align: center;
-    color: var(--text);
-    transition: background 0.1s;
-}
-
-.dropdown-option:hover {
-    background: var(--surface-soft);
-}
-
-.dropdown-option.selected {
-    background: var(--accent);
-    color: #fff;
-    font-weight: 600;
-}
-
-/* Layout-justering för toolbar */
-.filter-group {
-    display: flex;
-    gap: 12px;
-    width: auto;
-}
-
-.date-label {
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--muted-light);
-    text-transform: uppercase;
-    margin-bottom: 4px;
-    display: block;
-}
-
-.date-box-group {
-    display: flex;
-    flex-direction: column;
+.modal-close:hover {
+  transform: rotate(90deg);
+  color: #222;
 }
 
 .share-modal-btn {
-    position: absolute;
-    top: 20px;
-    right: 75px; /* Placerad till vänster om stäng-knappen som har right: 20px */
-    width: 40px;
-    height: 40px;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    background: #fff;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--muted);
-    transition: all 0.2s ease;
+  position: absolute;
+  top: 14px;
+  right: 54px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #d6d6d6;
+  border-radius: 8px;
+  background: #fff;
+  color: #666;
+  cursor: pointer;
 }
 
 .share-modal-btn:hover {
-    background: var(--accent-soft);
-    color: var(--accent);
-    border-color: var(--accent);
+  background: #f5f5f5;
+  color: #111;
+  border-color: #999;
 }
 
-.reset-btn {
-    width: 100%;
-    margin-top: 8px;
-    padding: 10px;
-    background: #f3f4f6;
-    color: #4b5563;
-    border: 1px solid #d1d5db;
-    border-radius: 10px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.18s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+.modal-date {
+  display: block;
+  margin: 4px 0 10px 0;
+  color: #f28c28;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
-.reset-btn:hover {
-    background: #e5e7eb;
-    color: #111827;
-    border-color: #9ca3af;
+.modal-title {
+  margin: 0 0 18px 0;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e5e5;
+  color: #111;
+  font-size: 30px;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
 }
 
-.reset-btn:active {
-    transform: scale(0.97);
-}
-
-/* Styling för den nya SVG-ikonen */
-.action-icon {
-    width: 20px;
-    height: 20px;
-    display: block;
-    transition: transform 0.2s ease;
-}
-
-/* Gör ikonen lite större i kortvyn och placera den snyggt */
-.report-list.grid-mode .row-action {
-    display: block; /* Vi visar den nu, tidigare var den döljd */
-    position: absolute;
-    bottom: 24px;
-    right: 24px;
-    color: var(--accent);
-    opacity: 0.6;
-}
-
-.report-row:hover .action-icon {
-    transform: scale(1.15);
-    color: var(--accent);
-}
-
-.report-list.grid-mode .report-row:hover .row-action {
-    opacity: 1;
+.modal-text {
+  color: #222;
+  font-size: 18px;
+  line-height: 1.7;
+  white-space: pre-wrap;
 }
 
 .modal-navigation {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 40px;
-    padding-top: 20px;
-    border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e5e5;
 }
 
 .nav-btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 20px;
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    background: #fff;
-    color: var(--text);
-    font-weight: 600;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 1px solid #d6d6d6;
+  background: #fff;
+  color: #2f2f2f;
+  font-weight: 650;
+  font-size: 14px;
+  cursor: pointer;
 }
 
 .nav-btn:hover:not(:disabled) {
-    background: var(--accent-soft);
-    border-color: var(--accent);
-    color: var(--accent);
+  background: #f5f5f5;
+  border-color: #999;
 }
 
 .nav-btn:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
+  opacity: 0.3;
+  cursor: not-allowed;
 }
 
-/* Responsive */
+.modal-content.tips-modal {
+  width: min(720px, 92vw) !important;
+  max-width: 720px !important;
+}
 
-@media (max-width: 760px) {
-    body {
-        padding: 18px 12px;
-    }
+.modal-content.tips-modal h3 {
+  margin: 0 0 18px 0;
+  font-size: 28px;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
 
-    header {
-        padding: 28px 22px 24px;
-    }
+#tipsMessage {
+  font-size: 18px;
+  line-height: 1.6;
+  color: #333;
+}
 
-    .toolbar {
-        grid-template-columns: 1fr;
-        padding: 20px 22px;
-    }
+#tipsMessage p {
+  margin: 0 0 14px 0;
+}
 
-    .filter-group {
-        width: 100%;
-    }
+.search-hit {
+  font-weight: 800;
+  color: #111;
+}
 
-    .report-row {
-        grid-template-columns: 1fr 38px;
-        gap: 12px;
-        padding: 20px 22px;
-    }
+.search-all-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  font-size: 13px;
+  color: #666;
+  cursor: pointer;
+}
 
-    .date-block {
-        grid-column: 1 / -1;
-        flex-direction: row;
-        align-items: baseline;
-        gap: 12px;
-    }
+.search-all-toggle input {
+  width: 15px;
+  height: 15px;
+  accent-color: #f28c28;
+}
 
-    .col-icon {
-        display: none;
-    }
+.month-toggle {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid #bbb;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  flex-shrink: 0;
+  position: relative;
+  transition: background 150ms ease, border-color 150ms ease;
+}
 
-    .col-preview {
-        white-space: normal;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-    }
+.month-toggle:checked {
+  background: #2f2f2f;
+  border-color: #2f2f2f;
+}
 
-    .modal-content {
-        margin: 18px auto;
-        padding: 34px 26px 34px;
-        max-height: calc(100vh - 36px);
-    }
+.month-toggle:checked::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 0px;
+  width: 5px;
+  height: 9px;
+  border: 2px solid #fff;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg);
+}
 
-    .modal-title {
-        font-size: 24px;
-    }
+
+/* =========================================================
+   9. RESPONSIVT
+   ========================================================= */
+
+@media (max-width: 980px) {
+  body {
+    overflow: auto;
+  }
+
+  .ff-filter,
+  .highlight-controls,
+  .app {
+    position: static;
+  }
+
+  .ff-filter,
+  .highlight-controls {
+    width: calc(100% - 32px);
+    margin: 16px;
+  }
+
+  .app {
+    width: 100%;
+    padding: 16px;
+  }
+
+  .main-view {
+    max-width: 100% !important;
+  }
+
+  .report-shell {
+    height: 70vh;
+  }
+
+  .report-row {
+    grid-template-columns: 1fr 34px;
+    gap: 10px;
+    padding: 16px 18px;
+  }
+
+  .date-block,
+  .col-preview {
+    grid-column: 1 / -1;
+  }
+
+  .col-icon {
+    display: none;
+  }
+
+  .report-list.grid-mode {
+    grid-template-columns: 1fr;
+  }
 }
 </style>
 </head>
 
 <body>
 
+<!-- =====================================================
+     VÄNSTERPANEL
+     ===================================================== -->
+
+<div class="ff-filter">
+  <h1>Dagsrapporter</h1>
+
+
+
+  <div class="controls">
+    <div class="filter-group">
+      <label class="summary-label">Sök i rapporterna</label>
+		<div class="search-box">
+		<i class="fa-solid fa-magnifying-glass"></i>
+		<input type="text" id="searchInput" placeholder="Sökord eller datum" autocomplete="off">
+		<div id="clearSearch" title="Rensa sökning">
+			<i class="fa-solid fa-xmark"></i>
+		</div>
+		</div>
+		<label class="search-all-toggle">
+		<input type="checkbox" id="toggleSearchAll" class="month-toggle">
+		<span>Sök i alla poster</span>
+		</label>
+		
+		<label class="search-all-toggle">
+		<input type="checkbox" id="toggleExactSearch" class="month-toggle">
+		<span>Exakt fras</span>
+		</label>
+    </div>
+	
+  <button id="resetFilters" class="reset-btn">Återställ filter</button>	
+
+    <div class="filter-group">
+      <label class="summary-label">Från och med</label>
+      <div style="display: flex; gap: 8px;">
+        <div class="custom-select-wrapper date-small" id="fromYearWrapper">
+          <div class="custom-select-trigger" id="fromYearTrigger">
+            <span id="fromYearLabel">År</span>
+            <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="currentColor" fill="none" stroke-width="2"/></svg>
+          </div>
+          <div class="custom-select-dropdown"><div id="fromYearCols"></div></div>
+        </div>
+
+        <div class="custom-select-wrapper date-medium" id="fromMonthWrapper">
+          <div class="custom-select-trigger" id="fromMonthTrigger">
+            <span id="fromMonthLabel">Månad</span>
+            <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="currentColor" fill="none" stroke-width="2"/></svg>
+          </div>
+          <div class="custom-select-dropdown"><div id="fromMonthCols"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <label class="summary-label">Till och med</label>
+      <div style="display: flex; gap: 8px;">
+        <div class="custom-select-wrapper date-small" id="toYearWrapper">
+          <div class="custom-select-trigger" id="toYearTrigger">
+            <span id="toYearLabel">År</span>
+            <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="currentColor" fill="none" stroke-width="2"/></svg>
+          </div>
+          <div class="custom-select-dropdown"><div id="toYearCols"></div></div>
+        </div>
+
+        <div class="custom-select-wrapper date-medium" id="toMonthWrapper">
+          <div class="custom-select-trigger" id="toMonthTrigger">
+            <span id="toMonthLabel">Månad</span>
+            <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="currentColor" fill="none" stroke-width="2"/></svg>
+          </div>
+          <div class="custom-select-dropdown"><div id="toMonthCols"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- =====================================================
+     HÖGERPANEL
+     ===================================================== -->
+
 <div class="highlight-controls">
   <label class="toggle">
     <input type="checkbox" id="toggleSortOrder">
     <span class="toggle-track"></span>
-    Äldst först
+    <span>Äldst först</span>
   </label>
 
   <label class="toggle">
-    <input type="checkbox" id="toggleLastSeven">
+    <input type="checkbox" id="toggleGridView">
     <span class="toggle-track"></span>
-    Senaste 7
+    <span>Kortvy</span>
   </label>
-  
-<label class="toggle">
-  <input type="checkbox" id="toggleGridView">
-  <span class="toggle-track"></span>
-  Kortvy
-</label>
 
-<button id="resetFilters" class="reset-btn">
-    Återställ
-  </button>
+  <button id="showTips" class="tips-btn">Tips</button>
 </div>
 
-<div class="app-container">
-    <div class="page-card">
-        <header>
-            <p class="eyebrow">Receptionens</p>
-            <h1>Dagsrapporter</h1>
-            <p class="header-text">
-                Sök, filtrera och läs arkiverade dagsrapporter från receptionen.
-            </p>
-        </header>
 
-        <div class="toolbar">
-            <div class="search-box">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="searchInput" placeholder="Sök i rapporterna" autocomplete="off">
-                <div id="clearSearch" title="Rensa sökning">
-                    <i class="fa-solid fa-xmark"></i>
-                </div>
-            </div>
+<!-- =====================================================
+     HUVUDYTA
+     ===================================================== -->
 
-<div class="filter-group">
-    <!-- FRÅN -->
-    <div class="date-box-group">
-        <span class="date-label">Från</span>
-        <div style="display: flex; gap: 6px;">
-            <div class="custom-select-wrapper" id="fromYearWrapper" style="width: 80px;">
-                <div class="custom-select-trigger" id="fromYearTrigger">
-                    <span id="fromYearLabel">År</span>
-                    <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="currentColor"/></svg>
-                </div>
-                <div class="custom-select-dropdown"><div id="fromYearCols" class="dropdown-grid-years"></div></div>
-            </div>
-            <div class="custom-select-wrapper" id="fromMonthWrapper" style="width: 110px;">
-                <div class="custom-select-trigger" id="fromMonthTrigger">
-                    <span id="fromMonthLabel">Månad</span>
-                    <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="currentColor"/></svg>
-                </div>
-                <div class="custom-select-dropdown"><div id="fromMonthCols" class="dropdown-grid-months"></div></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- TILL -->
-    <div class="date-box-group">
-        <span class="date-label">Till</span>
-        <div style="display: flex; gap: 6px;">
-            <div class="custom-select-wrapper" id="toYearWrapper" style="width: 80px;">
-                <div class="custom-select-trigger" id="toYearTrigger">
-                    <span id="toYearLabel">År</span>
-                    <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="currentColor"/></svg>
-                </div>
-                <div class="custom-select-dropdown"><div id="toYearCols" class="dropdown-grid-years"></div></div>
-            </div>
-            <div class="custom-select-wrapper" id="toMonthWrapper" style="width: 110px;">
-                <div class="custom-select-trigger" id="toMonthTrigger">
-                    <span id="toMonthLabel">Månad</span>
-                    <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="currentColor"/></svg>
-                </div>
-                <div class="custom-select-dropdown"><div id="toMonthCols" class="dropdown-grid-months"></div></div>
-            </div>
-        </div>
-    </div>
-</div>
-        </div>
-
+<div class="app">
+  <div class="main-view">
+    <div id="reportView" class="view-container">
+      <h2 id="reportHeaderDisplay">Alla dagsrapporter</h2>
+      <div class="report-shell">
         <div id="reportList" class="report-list">
-            <div class="no-results">Hämtar arkiv...</div>
+          <div class="no-results">Hämtar arkiv...</div>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 
-<div id="reportModal" class="modal">
-    <div class="modal-content">
-        <!-- DELA-KNAPPEN (Ny) -->
-        <button id="shareBtn" class="share-modal-btn" title="Dela via e-post">
-            <i class="fa-solid fa-share-nodes"></i>
-        </button>
 
-        <button id="closeBtn" class="close-modal" aria-label="Stäng">
-            <i class="fa-solid fa-xmark"></i>
-        </button>
+<!-- =====================================================
+     RAPPORTMODAL
+     ===================================================== -->
 
-        <span class="modal-date" id="modalDate"></span>
-        <h2 class="modal-title">Dagsrapport</h2>
-        <div class="modal-text" id="modalText"></div>
-		<div class="modal-navigation">
-    <button id="prevReport" class="nav-btn" title="Föregående rapport">
+<div id="reportModal" class="modal-overlay">
+  <div class="modal-content">
+    <button id="shareBtn" class="share-modal-btn" title="Dela via e-post">
+      <i class="fa-solid fa-envelope"></i>
+    </button>
+
+    <button id="closeBtn" class="modal-close" aria-label="Stäng">&times;</button>
+
+    <span class="modal-date" id="modalDate"></span>
+    <h2 class="modal-title">Dagsrapport</h2>
+    <div class="modal-text" id="modalText"></div>
+
+    <div class="modal-navigation">
+      <button id="prevReport" class="nav-btn" title="Föregående rapport">
         <i class="fa-solid fa-chevron-left"></i> Föregående
-    </button>
-    <button id="nextReport" class="nav-btn" title="Nästa rapport">
+      </button>
+      <button id="nextReport" class="nav-btn" title="Nästa rapport">
         Nästa <i class="fa-solid fa-chevron-right"></i>
-    </button>
-</div>
+      </button>
     </div>
+  </div>
+</div>
+
+
+<!-- =====================================================
+     TIPSMODAL
+     ===================================================== -->
+
+<div id="tipsModal" class="modal-overlay">
+  <div class="modal-content tips-modal">
+    <button id="closeTipsModal" class="modal-close" aria-label="Stäng">&times;</button>
+    <h3>Tips för dagsrapporter</h3>
+	<div id="tipsMessage">
+       <p>Listan visar dagsrapporter för vald period. Klicka på en rad eller ett kort för att öppna hela rapporten.</p>
+       <p><strong>Sökningen</strong> kan användas med ett eller flera ord. Alla ord måste finnas i rapporten för att den ska visas.</p>
+       <p>Markera <strong>Sök i alla poster</strong> om sökningen ska göras i hela arkivet, oavsett valt datumintervall.</p>
+       <p>Markera <strong>Exakt fras</strong> för att söka efter exakt matchning, t.ex. <em>Lunds universitet</em>.</p>
+       <p><strong>Äldst först</strong> vänder sorteringen så att de äldsta rapporterna visas överst.</p>
+       <p><strong>Kortvy</strong> visar rapporterna som större läskort i stället för tabellrader.</p>
+       <p><strong>Återställ filter</strong> rensar sökfältet och återställer alla filter och visningsval till ursprunglig inställning.</p>
+	</div>
+  </div>
 </div>
 
 <script>
+/* =========================================================
+   1. GLOBAL DATA OCH KONSTANTER
+   ========================================================= */
+
 let allReports = [];
-let currentFilteredReports = []; // Håller reda på listan som visas just nu
+let currentFilteredReports = [];
+let startYear, startMonth, endYear, endMonth;
+let availableYears = [];
+let currentOpenReportDate = null;
+let currentSearchTerms = [];
+
 const csvUrl = "https://kultpub.github.io/site/dagsrapporter.csv";
 const dayNames = ["sön", "mån", "tis", "ons", "tor", "fre", "lör"];
+const monthNamesShort = [
+  "Jan", "Feb", "Mar", "Apr", "Maj", "Jun",
+  "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"
+];
 
-// Globala datumtillstånd för de anpassade dropdown-menyerna
-let startYear, startMonth, endYear, endMonth;
-const monthNamesShort = ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"];
+
+/* =========================================================
+   2. CSV OCH HJÄLPFUNKTIONER
+   ========================================================= */
 
 function parseCSV(text) {
-    const rows = [];
-    const lines = text.trim().split(/\r?\n/);
-    for (let i = 1; i < lines.length; i++) {
-        const line = lines[i];
-        if (!line) continue;
-        const index = line.indexOf(";");
-        if (index !== -1) {
-            const date = line.substring(0, index).trim();
-            const reportText = line.substring(index + 1).trim();
-            rows.push({ date, text: reportText });
-        }
+  const rows = [];
+  const lines = text.trim().split(/\r?\n/);
+
+  for (let i = 1; i < lines.length; i++) {
+    const line = lines[i];
+    if (!line) continue;
+
+    const index = line.indexOf(";");
+
+    if (index !== -1) {
+      const date = line.substring(0, index).trim();
+      const reportText = line.substring(index + 1).trim();
+
+      if (date && reportText) {
+        rows.push({ date, text: reportText });
+      }
     }
-    return rows;
+  }
+
+  return rows;
 }
 
 function escapeHTML(str) {
-    return str.replace(/[&<>"']/g, char => ({
-        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
-    }[char]));
+  return String(str).replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  }[char]));
 }
+
+function closeAllSelects() {
+  document.querySelectorAll(".custom-select-wrapper").forEach(w => w.classList.remove("open"));
+}
+
+function parseLocalDate(dateString) {
+  return new Date(dateString + "T00:00:00");
+}
+
+function getReportMonthValue(dateString) {
+  const parts = dateString.split("-");
+  return parseInt(parts[0], 10) * 12 + (parseInt(parts[1], 10) - 1);
+}
+
+function escapeRegExp(str) {
+  return String(str).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function highlightSearchTerms(text, searchTerms) {
+  if (!searchTerms.length) return escapeHTML(text);
+
+  const terms = [...new Set(
+    searchTerms
+      .map(term => term.text.trim())
+      .filter(Boolean)
+  )].sort((a, b) => b.length - a.length);
+
+  if (!terms.length) return escapeHTML(text);
+
+  const regex = new RegExp(`(${terms.map(escapeRegExp).join("|")})`, "gi");
+
+  return escapeHTML(text).replace(regex, `<strong class="search-hit">$1</strong>`);
+}
+
+function updateHeaderCount(count, rawSearch = "") {
+  const header = document.getElementById("reportHeaderDisplay");
+  const formattedCount = new Intl.NumberFormat("sv-SE").format(count);
+  const exactSearch = document.getElementById("toggleExactSearch")?.checked;
+
+  const baseText = count === 1
+    ? "Visar 1 rapport"
+    : `Visar ${formattedCount} rapporter`;
+
+  if (!rawSearch) {
+    header.textContent = baseText;
+    return;
+  }
+
+  header.textContent = exactSearch
+    ? `${baseText} för exakt fras “${rawSearch}”`
+    : `${baseText} för “${rawSearch}”`;
+}
+
+
+/* =========================================================
+   3. INITIERING AV DATA OCH DATUMFILTER
+   ========================================================= */
 
 async function loadData() {
-    try {
-        const response = await fetch(csvUrl);
-        if (!response.ok) throw new Error("Kunde inte läsa filen.");
-        const csvText = await response.text();
-        allReports = parseCSV(csvText);
-        allReports.sort((a, b) => b.date.localeCompare(a.date));
+  try {
+    const response = await fetch(`${csvUrl}?v=${Date.now()}`);
+    if (!response.ok) throw new Error("Kunde inte läsa filen.");
 
-        initCustomFilters(); 
-        render();
+    const csvText = await response.text();
+    allReports = parseCSV(csvText);
+    allReports.sort((a, b) => b.date.localeCompare(a.date));
 
-        // --- SMART LÄNK LOGIK (Nytt) ---
-        const urlParams = new URLSearchParams(window.location.search);
-        const sharedDate = urlParams.get('date');
-        if (sharedDate) {
-            const reportToOpen = allReports.find(r => r.date === sharedDate);
-            if (reportToOpen) openModal(reportToOpen);
-        }
-    } catch (error) {
-        document.getElementById("reportList").innerHTML =
-            `<div class="no-results">Fel vid hämtning av arkivet.</div>`;
+    initCustomFilters();
+    render();
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const sharedDate = urlParams.get("date");
+
+    if (sharedDate) {
+      const reportToOpen = allReports.find(r => r.date === sharedDate);
+      if (reportToOpen) openModal(reportToOpen);
     }
+  } catch (error) {
+    console.error(error);
+    document.getElementById("reportList").innerHTML =
+      `<div class="no-results">Fel vid hämtning av arkivet.</div>`;
+  }
 }
 
-// Hämta element
-const toggleGridView = document.getElementById("toggleGridView");
-const reportList = document.getElementById("reportList");
+function setDefaultDateRange() {
+  const now = new Date();
 
-toggleGridView.onchange = () => {
-    if (toggleGridView.checked) {
-        reportList.classList.add("grid-mode");
-    } else {
-        reportList.classList.remove("grid-mode");
-    }
-    // Vi anropar render för att säkerställa att allt ser rätt ut, 
-    // men CSS sköter det mesta av magin nu.
-    render(); 
-};
+  startYear = now.getFullYear();
+  startMonth = 0;
 
-// --- LOGIK FÖR ANPASSADE DROPDOWNS ---
+  endYear = now.getFullYear();
+  endMonth = now.getMonth();
+}
+
+function setFullHistoryDateRange() {
+  const earliestReport = allReports[allReports.length - 1];
+  const now = new Date();
+
+  startYear = earliestReport
+    ? parseInt(earliestReport.date.split("-")[0], 10)
+    : now.getFullYear();
+
+  startMonth = 0;
+
+  endYear = now.getFullYear();
+  endMonth = now.getMonth();
+}
 
 function initCustomFilters() {
-    const years = [...new Set(allReports.map(r => parseInt(r.date.split("-")[0])))].sort((a, b) => b - a);
-    const now = new Date();
-    const currentYear = now.getFullYear();
-    const currentMonthIdx = now.getMonth();
+  const currentYear = new Date().getFullYear();
+  
+  availableYears = [...new Set([
+  ...allReports.map(r => parseInt(r.date.split("-")[0], 10)),
+  currentYear
+  ])].sort((a, b) => b - a);
 
-    startYear = 2019; 
-    startMonth = 0; 
-    
-    endYear = years.includes(currentYear) ? currentYear : years[0];
-    endMonth = currentMonthIdx;
+  setDefaultDateRange();
 
-    renderDropdown("fromYear", years, (val) => { startYear = val; syncDates(); });
-    renderDropdown("toYear", years, (val) => { endYear = val; syncDates(); });
-    renderDropdown("fromMonth", monthNamesShort, (val, idx) => { startMonth = idx; syncDates(); });
-    renderDropdown("toMonth", monthNamesShort, (val, idx) => { endMonth = idx; syncDates(); });
-
+  renderDatePart("fromYear", availableYears, "dropdown-grid-years", val => {
+    startYear = val;
     syncDates();
+  });
+
+  renderDatePart("toYear", availableYears, "dropdown-grid-years", val => {
+    endYear = val;
+    syncDates();
+  });
+
+  renderDatePart("fromMonth", monthNamesShort, "dropdown-grid-months", (val, idx) => {
+    startMonth = idx;
+    syncDates();
+  });
+
+  renderDatePart("toMonth", monthNamesShort, "dropdown-grid-months", (val, idx) => {
+    endMonth = idx;
+    syncDates();
+  });
+
+  syncDates();
 }
 
-function renderDropdown(idPrefix, list, callback) {
-    const wrapper = document.getElementById(`${idPrefix}Wrapper`);
-    const trigger = document.getElementById(`${idPrefix}Trigger`);
-    const cols = document.getElementById(`${idPrefix}Cols`);
+function renderDatePart(idPrefix, list, gridClass, callback) {
+  const wrapper = document.getElementById(`${idPrefix}Wrapper`);
+  const trigger = document.getElementById(`${idPrefix}Trigger`);
+  const cols = document.getElementById(`${idPrefix}Cols`);
 
-    trigger.onclick = (e) => {
-        e.stopPropagation();
-        const isOpen = wrapper.classList.contains('open');
-        document.querySelectorAll('.custom-select-wrapper').forEach(w => w.classList.remove('open'));
-        if (!isOpen) wrapper.classList.add('open');
+  cols.className = gridClass;
+
+  trigger.onclick = e => {
+    e.stopPropagation();
+
+    const isOpen = wrapper.classList.contains("open");
+    closeAllSelects();
+
+    if (!isOpen) wrapper.classList.add("open");
+  };
+
+  cols.innerHTML = "";
+
+  list.forEach((item, idx) => {
+    const opt = document.createElement("div");
+    opt.className = "dropdown-option";
+    opt.textContent = item;
+
+    opt.onclick = () => {
+      callback(item, idx);
+      wrapper.classList.remove("open");
     };
 
-    cols.innerHTML = "";
-    list.forEach((item, idx) => {
-        const opt = document.createElement("div");
-        opt.className = "dropdown-option";
-        opt.textContent = item;
-        opt.onclick = () => {
-            callback(item, idx);
-            wrapper.classList.remove('open');
-        };
-        cols.appendChild(opt);
-    });
+    cols.appendChild(opt);
+  });
 }
 
 function syncDates() {
-    const startVal = startYear * 12 + startMonth;
-    const endVal = endYear * 12 + endMonth;
+  const startVal = startYear * 12 + startMonth;
+  const endVal = endYear * 12 + endMonth;
 
-    if (startVal > endVal) {
-        endYear = startYear;
-        endMonth = startMonth;
-    }
+  if (startVal > endVal) {
+    endYear = startYear;
+    endMonth = startMonth;
+  }
 
-    document.getElementById("fromYearLabel").textContent = startYear;
-    document.getElementById("fromMonthLabel").textContent = monthNamesShort[startMonth];
-    document.getElementById("toYearLabel").textContent = endYear;
-    document.getElementById("toMonthLabel").textContent = monthNamesShort[endMonth];
-    
-    render();
+  document.getElementById("fromYearLabel").textContent = startYear;
+  document.getElementById("fromMonthLabel").textContent = monthNamesShort[startMonth];
+  document.getElementById("toYearLabel").textContent = endYear;
+  document.getElementById("toMonthLabel").textContent = monthNamesShort[endMonth];
+
+  markSelectedDateOptions();
+  render();
 }
 
-// --- RENDERING ---
+function markSelectedDateOptions() {
+  const state = {
+    fromYear: startYear,
+    toYear: endYear,
+    fromMonth: monthNamesShort[startMonth],
+    toMonth: monthNamesShort[endMonth]
+  };
+
+  Object.entries(state).forEach(([prefix, value]) => {
+    const cols = document.getElementById(`${prefix}Cols`);
+    if (!cols) return;
+
+    [...cols.children].forEach(opt => {
+      opt.classList.toggle("selected", opt.textContent === String(value));
+    });
+  });
+}
+
+
+/* =========================================================
+   4. SÖKNING OCH RENDERING
+   ========================================================= */
+
+function getSearchTerms(rawSearch) {
+  const exactSearch = document.getElementById("toggleExactSearch").checked;
+
+  if (!rawSearch) return [];
+
+  if (exactSearch) {
+    return [{
+      text: rawSearch,
+      isExact: true
+    }];
+  }
+
+  return rawSearch
+    .split(/\s+/)
+    .filter(Boolean)
+    .map(term => ({
+      text: term,
+      isExact: false
+    }));
+}
+
+function reportMatchesSearch(report, searchTerms) {
+  if (searchTerms.length === 0) return true;
+
+  const reportTextLower = report.text.toLowerCase();
+  const reportDate = report.date;
+
+  return searchTerms.every(term => {
+    const t = term.text;
+
+    if (reportTextLower.includes(t) || reportDate.includes(t)) return true;
+
+    return false;
+  });
+}
 
 function render() {
-    const searchInput = document.getElementById("searchInput");
-    const clearSearch = document.getElementById("clearSearch");
-    const rawSearch = searchInput.value.toLowerCase().trim();
-    
-    const listContainer = document.getElementById("reportList");
-    const sortOldestFirst = document.getElementById("toggleSortOrder").checked;
-    const showOnlyLastSeven = document.getElementById("toggleLastSeven").checked;
+  const searchInput = document.getElementById("searchInput");
+  const clearSearch = document.getElementById("clearSearch");
+  const listContainer = document.getElementById("reportList");
 
-    clearSearch.style.display = searchInput.value ? "flex" : "none";
-    const quoteCount = (rawSearch.split('"').length - 1) % 2 !== 0;
-    const normalizedSearch = quoteCount ? rawSearch + '"' : rawSearch;
-    const searchTerms = [];
-    const regex = /"([^"]*)"|\S+/g;
-    let match;
+  if (!searchInput || !clearSearch || !listContainer || !allReports.length) return;
 
-while ((match = regex.exec(normalizedSearch)) !== null) {
-    if (match[1] !== undefined) {
-        const wasAutoCompleted = quoteCount && normalizedSearch.endsWith('"') 
-            && match.index + match[0].length === normalizedSearch.length;
-        searchTerms.push({
-            text: match[1],
-            isExact: !wasAutoCompleted && match[1].length > 0
-        });
-    } else {
-        searchTerms.push({ text: match[0], isExact: false });
-    }
+  const rawSearch = searchInput.value.toLowerCase().trim();
+  const searchTerms = getSearchTerms(rawSearch);
+  currentSearchTerms = searchTerms;
+
+  const sortOldestFirst = document.getElementById("toggleSortOrder").checked;
+
+  clearSearch.style.display = searchInput.value ? "flex" : "none";
+
+  const startVal = startYear * 12 + startMonth;
+  const endVal = endYear * 12 + endMonth;
+
+  let filtered = allReports.filter(report => {
+    const reportDateObj = parseLocalDate(report.date);
+    const reportVal = getReportMonthValue(report.date);
+
+    const matchesSearch = reportMatchesSearch(report, searchTerms);
+
+    const searchAll = document.getElementById("toggleSearchAll").checked;
+
+	const matchesDate = reportVal >= startVal && reportVal <= endVal;
+	
+	return matchesSearch && (searchAll && searchTerms.length > 0 ? true : matchesDate);
+  });
+
+  filtered.sort((a, b) => sortOldestFirst
+    ? a.date.localeCompare(b.date)
+    : b.date.localeCompare(a.date)
+  );
+
+  currentFilteredReports = filtered;
+  updateHeaderCount(filtered.length, rawSearch);
+
+  listContainer.innerHTML = "";
+
+  if (document.getElementById("toggleGridView").checked) {
+    listContainer.classList.add("grid-mode");
+  } else {
+    listContainer.classList.remove("grid-mode");
+  }
+
+  if (filtered.length === 0) {
+	listContainer.innerHTML = `
+	<div class="no-results">
+		<i class="fa-solid fa-magnifying-glass"></i>
+		<div>Inga träffar hittades</div>
+		<small>Prova att ändra sökord eller datumintervall.</small>
+	</div>
+	`;
+    return;
+  }
+
+  filtered.forEach(report => {
+    const row = document.createElement("div");
+    row.className = "report-row";
+
+    const reportDate = parseLocalDate(report.date);
+    const dayShortName = dayNames[reportDate.getDay()];
+
+	if (reportDate.getDay() === 0 || reportDate.getDay() === 6) {
+	row.classList.add("weekend-row");
+	}
+
+    row.innerHTML = `
+      <div class="date-block">
+        <div class="col-date">${escapeHTML(report.date)}</div>
+        <div class="col-day">${escapeHTML(dayShortName)}</div>
+      </div>
+      <div class="col-icon"><i class="fa-regular fa-pen-to-square"></i></div>
+      <div class="col-preview">${highlightSearchTerms(report.text, searchTerms)}</div>
+      <div class="row-action"><i class="fa-solid fa-chevron-right"></i></div>
+    `;
+
+    row.onclick = () => openModal(report);
+    listContainer.appendChild(row);
+  });
 }
 
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-    sevenDaysAgo.setHours(0, 0, 0, 0);
 
-    const startVal = startYear * 12 + startMonth;
-    const endVal = endYear * 12 + endMonth;
-
-    let filtered = allReports.filter(report => {
-        const reportTextLower = report.text.toLowerCase();
-        const reportDate = report.date;
-        const reportDateObj = new Date(report.date);
-        const parts = report.date.split("-");
-        const reportVal = parseInt(parts[0]) * 12 + (parseInt(parts[1]) - 1);
-
-        const matchesSearch = searchTerms.length === 0 || searchTerms.every(term => {
-            const t = term.text;
-            
-            if (reportTextLower.includes(t) || reportDate.includes(t)) return true;
-
-            if (!term.isExact) {
-                if ((t === "pers" || t.startsWith("person")) && (/\bpers\b/.test(reportTextLower) || reportTextLower.includes("person"))) return true;
-                if ((/^åk\d/.test(t) || t === "åk" || t === "årskurs") && (reportTextLower.includes("årskurs") || reportTextLower.includes("åk"))) return true;
-                if ((t === "lu" || t === "universitet" || t === "lunds universitet") && (reportTextLower.includes("lunds universitet") || /\blu\b/.test(reportTextLower))) return true;
-                if ((t.includes("cafe") || t.includes("café") || t.includes("kafe") || t.includes("kafé")) && (reportTextLower.includes("kafé") || reportTextLower.includes("kafe"))) return true;
-            }
-            return false;
-        });
-
-        const matchesDate = showOnlyLastSeven
-            ? reportDateObj >= sevenDaysAgo
-            : reportVal >= startVal && reportVal <= endVal;
-
-        return matchesSearch && matchesDate;
-    });
-
-    filtered.sort((a, b) => sortOldestFirst ? a.date.localeCompare(b.date) : b.date.localeCompare(a.date));
-
-    listContainer.innerHTML = "";
-    if (filtered.length === 0) {
-        listContainer.innerHTML = `<div class="no-results">Inga träffar hittades.</div>`;
-        return;
-    }
-    
-    currentFilteredReports = filtered;
-
-    filtered.forEach(report => {
-        const row = document.createElement("div");
-        row.className = "report-row";
-        const reportDate = new Date(report.date);
-        const dayShortName = dayNames[reportDate.getDay()];
-        const monthDay = report.date.substring(5);
-        const holidays = ["01-01", "12-24", "12-25", "12-31"];
-        
-        if (holidays.includes(monthDay)) row.classList.add("holiday-row");
-        else if (reportDate.getDay() === 0 || reportDate.getDay() === 6) row.classList.add("weekend-row");
-
-        row.innerHTML = `
-            <div class="date-block">
-                <div class="col-date">${escapeHTML(report.date)}</div>
-                <div class="col-day">${escapeHTML(dayShortName)}</div>
-            </div>
-            <div class="col-icon"><i class="fa-regular fa-pen-to-square"></i></div>
-            <div class="col-preview">${escapeHTML(report.text.substring(0, 1000))}...</div>
-            <div class="row-action">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="action-icon">
-                    <path fill="currentColor" d="M528.3 46.5H388.5c-48.1 0-89.9 33.3-100.4 80.3-10.6-47-52.3-80.3-100.4-80.3H48c-26.5 0-48 21.5-48 48v245.8c0 26.5 21.5 48 48 48h89.7c102.2 0 132.7 24.4 147.3 75 .7 2.8 5.2 2.8 6 0 14.7-50.6 45.2-75 147.3-75H528c26.5 0 48-21.5 48-48V94.6c0-26.4-21.3-47.9-47.7-48.1zM242 311.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5V289c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5-1.5 3.5-3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V251zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm259.3 121.7c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5V228c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.8c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V190z"/>
-                </svg>
-            </div>
-        `;
-        row.onclick = () => openModal(report);
-        listContainer.appendChild(row);
-    });
-}
-
-// --- TOGGLES ---
-
-const toggleSortOrder = document.getElementById("toggleSortOrder");
-const toggleLastSeven = document.getElementById("toggleLastSeven");
-
-toggleSortOrder.onchange = () => render();
-toggleLastSeven.onchange = () => render();
-
-// --- MODAL & EVENT LISTENERS ---
+/* =========================================================
+   5. MODAL
+   ========================================================= */
 
 function openModal(report) {
-    const modal = document.getElementById("reportModal");
-    const content = modal.querySelector(".modal-content");
-    
-    // Om modalen redan är aktiv (vi bläddrar)
-    if (modal.classList.contains("active")) {
-        // 1. Starta fade-out
-        content.classList.add("fade-out");
-        
-        // 2. Vänta tills den är helt genomskinlig (300ms)
-        setTimeout(() => {
-            updateModalContent(report);
-            content.scrollTop = 0;
-            
-            // 3. Starta fade-in
-            content.classList.remove("fade-out");
-        }, 300); 
-    } else {
-        // Första öppningen: Ingen fade-out behövs
-        updateModalContent(report);
-        modal.style.display = "block";
-        requestAnimationFrame(() => { 
-            modal.classList.add("active"); 
-        });
-    }
+  const modal = document.getElementById("reportModal");
+  const content = modal.querySelector(".modal-content");
+
+  currentOpenReportDate = report.date;
+
+  if (modal.classList.contains("active")) {
+    content.classList.add("fade-out");
+
+    setTimeout(() => {
+      updateModalContent(report);
+      content.scrollTop = 0;
+      content.classList.remove("fade-out");
+    }, 300);
+  } else {
+    updateModalContent(report);
+    modal.classList.add("active");
+  }
 }
 
-// Denna funktion sköter bara data-uppdateringen
 function updateModalContent(report) {
-    const reportDate = new Date(report.date);
-    const dayLong = reportDate.toLocaleDateString("sv-SE", { weekday: "long" });
-    const formattedDay = dayLong.charAt(0).toUpperCase() + dayLong.slice(1);
+  const reportDate = parseLocalDate(report.date);
+  const dayLong = reportDate.toLocaleDateString("sv-SE", { weekday: "long" });
+  const formattedDay = dayLong.charAt(0).toUpperCase() + dayLong.slice(1);
 
-    document.getElementById("modalDate").textContent = `${formattedDay} ${report.date}`;
-    document.getElementById("modalText").textContent = report.text;
+  document.getElementById("modalDate").textContent = `${formattedDay} ${report.date}`;
+  document.getElementById("modalText").innerHTML =
+  highlightSearchTerms(report.text, currentSearchTerms);
 
-    const currentIndex = currentFilteredReports.findIndex(r => r.date === report.date);
-    const prevBtn = document.getElementById("prevReport");
-    const nextBtn = document.getElementById("nextReport");
+  const currentIndex = currentFilteredReports.findIndex(r => r.date === report.date);
+  const prevBtn = document.getElementById("prevReport");
+  const nextBtn = document.getElementById("nextReport");
 
-    if (currentIndex > 0) {
-        prevBtn.disabled = false;
-        prevBtn.onclick = (e) => { e.stopPropagation(); openModal(currentFilteredReports[currentIndex - 1]); };
-    } else {
-        prevBtn.disabled = true;
-    }
+  if (currentIndex > 0) {
+    prevBtn.disabled = false;
+    prevBtn.onclick = event => {
+      event.stopPropagation();
+      openModal(currentFilteredReports[currentIndex - 1]);
+    };
+  } else {
+    prevBtn.disabled = true;
+    prevBtn.onclick = null;
+  }
 
-    if (currentIndex < currentFilteredReports.length - 1) {
-        nextBtn.disabled = false;
-        nextBtn.onclick = (e) => { e.stopPropagation(); openModal(currentFilteredReports[currentIndex + 1]); };
-    } else {
-        nextBtn.disabled = true;
-    }
+  if (currentIndex < currentFilteredReports.length - 1) {
+    nextBtn.disabled = false;
+    nextBtn.onclick = event => {
+      event.stopPropagation();
+      openModal(currentFilteredReports[currentIndex + 1]);
+    };
+  } else {
+    nextBtn.disabled = true;
+    nextBtn.onclick = null;
+  }
 }
 
-function closeModal() {
-    const modal = document.getElementById("reportModal");
-    modal.classList.remove("active");
-    setTimeout(() => { modal.style.display = "none"; }, 250);
+function closeReportModal() {
+  document.getElementById("reportModal").classList.remove("active");
 }
 
-document.getElementById("shareBtn").onclick = () => {
-    // Hämtar datumet från modalens rubrik (t.ex. "Tisdag 2026-05-12")
-    const fullDateText = document.getElementById("modalDate").textContent;
-    const dateOnly = fullDateText.split(' ').pop(); 
+function closeTipsModal() {
+  document.getElementById("tipsModal").classList.remove("active");
+}
 
-    // Skapar innehållet med "Hej," och din valda formulering
-    const subject = encodeURIComponent(`Dagsrapport ${dateOnly}`);
-    const body = encodeURIComponent(
-        `Hej,\n\n` +
-        `Jag vill uppmärksamma dig på receptionens dagsrapport ${dateOnly}:\n` +
-        `${window.location.origin}${window.location.pathname}?date=${dateOnly}`
-    );
 
-    // Öppnar e-postprogrammet
-    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+/* =========================================================
+   6. EVENTLYSSNARE
+   ========================================================= */
+
+document.getElementById("toggleSortOrder").onchange = render;
+document.getElementById("toggleGridView").onchange = render;
+document.getElementById("toggleSearchAll").onchange = () => {
+  if (document.getElementById("toggleSearchAll").checked) {
+    setFullHistoryDateRange();
+  } else {
+    setDefaultDateRange();
+  }
+
+  syncDates();
 };
+document.getElementById("toggleExactSearch").onchange = render;
 
 document.getElementById("searchInput").addEventListener("input", render);
 
 document.getElementById("clearSearch").addEventListener("click", () => {
-    const input = document.getElementById("searchInput");
-    input.value = "";
-    input.focus();
-    render();
+  const input = document.getElementById("searchInput");
+  input.value = "";
+  input.focus();
+  render();
 });
 
-document.getElementById("closeBtn").addEventListener("click", closeModal);
-
 document.getElementById("resetFilters").onclick = () => {
-    // 1. Återställ sökfältet
-    const searchInput = document.getElementById("searchInput");
-    searchInput.value = "";
-    
-    // 2. Slå av alla togglar
-    document.getElementById("toggleSortOrder").checked = false;
-    document.getElementById("toggleLastSeven").checked = false;
-    document.getElementById("toggleGridView").checked = false;
-    
-    // 3. Återställ datumväljarna (vi sätter dem till de fasta defaultvärdena)
-    startYear = 2019;
-    startMonth = 0; // Januari
-    
-    const now = new Date();
-    endYear = now.getFullYear();
-    endMonth = now.getMonth();
-    
-    // 4. Ta bort grid-mode från listan
-    document.getElementById("reportList").classList.remove("grid-mode");
-    
-    // 5. Synka datumetiketterna och rita om allt
-    syncDates(); // syncDates anropar i sin tur render()
+  const searchInput = document.getElementById("searchInput");
+  const clearSearch = document.getElementById("clearSearch");
+
+  searchInput.value = "";
+  clearSearch.style.display = "none";
+  currentSearchTerms = [];
+
+  document.getElementById("toggleSortOrder").checked = false;
+  document.getElementById("toggleGridView").checked = false;
+  document.getElementById("toggleSearchAll").checked = false;
+  document.getElementById("toggleExactSearch").checked = false;
+
+  setDefaultDateRange();
+
+  syncDates();
+};
+
+document.getElementById("closeBtn").onclick = closeReportModal;
+document.getElementById("closeTipsModal").onclick = closeTipsModal;
+
+document.getElementById("showTips").onclick = () => {
+  document.getElementById("tipsModal").classList.add("active");
+};
+
+document.getElementById("shareBtn").onclick = () => {
+  const fullDateText = document.getElementById("modalDate").textContent;
+  const dateOnly = fullDateText.split(" ").pop();
+
+  const subject = encodeURIComponent(`Dagsrapport ${dateOnly}`);
+  const body = encodeURIComponent(
+    `Hej,\n\n` +
+    `Jag vill uppmärksamma dig på receptionens dagsrapport ${dateOnly}:\n` +
+    `${window.location.origin}${window.location.pathname}?date=${dateOnly}`
+  );
+
+  window.location.href = `mailto:?subject=${subject}&body=${body}`;
 };
 
 window.addEventListener("click", event => {
-    if (!event.target.closest('.custom-select-wrapper')) {
-        document.querySelectorAll('.custom-select-wrapper').forEach(w => w.classList.remove('open'));
-    }
-    if (event.target === document.getElementById("reportModal")) {
-        closeModal();
-    }
+  if (!event.target.closest(".custom-select-wrapper")) {
+    closeAllSelects();
+  }
+
+  if (event.target === document.getElementById("reportModal")) {
+    closeReportModal();
+  }
+
+  if (event.target === document.getElementById("tipsModal")) {
+    closeTipsModal();
+  }
 });
 
 window.addEventListener("keydown", event => {
-    if (event.key === "Escape") closeModal();
+  const reportModalOpen = document.getElementById("reportModal").classList.contains("active");
+
+  if (event.key === "Escape") {
+    closeReportModal();
+    closeTipsModal();
+  }
+
+  if (!reportModalOpen || !currentFilteredReports.length || !currentOpenReportDate) return;
+
+  const currentIndex = currentFilteredReports.findIndex(r => r.date === currentOpenReportDate);
+
+  if (event.key === "ArrowLeft" && currentIndex > 0) {
+    openModal(currentFilteredReports[currentIndex - 1]);
+  }
+
+  if (event.key === "ArrowRight" && currentIndex < currentFilteredReports.length - 1) {
+    openModal(currentFilteredReports[currentIndex + 1]);
+  }
 });
+
+
+/* =========================================================
+   7. INITIERING
+   ========================================================= */
 
 loadData();
 </script>
