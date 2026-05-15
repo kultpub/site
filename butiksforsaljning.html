@@ -521,9 +521,16 @@ h1 {
 #statsTable td {
   border-bottom: 1px solid #eee;
   color: #222;
-  cursor: pointer;
-  transition: background 0.1s;
+  cursor: default;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease;
   text-align: right;
+}
+
+#statsTable tbody tr:not(.total-row) td:first-child {
+  cursor: pointer;
 }
 
 #statsTable th:first-child,
@@ -549,17 +556,31 @@ h1 {
   font-weight: 600;
 }
 
-#statsTable td:hover:not(:first-child) {
-  background-color: #fff9db !important;
+#statsTable tbody tr:not(.total-row) td:hover:not(:first-child) {
+  background-color: #ffd86b !important;
   color: #000;
 }
 
-#statsTable tr:hover td {
-  background: #f9f9f9;
+#statsTable tbody tr:not(.total-row):hover td {
+  background-color: #fff1bd !important;
 }
 
-#statsTable tbody tr:nth-child(even) {
-  background-color: #fafafa;
+#statsTable tbody tr:not(.total-row):hover td:first-child {
+  background-color: #ffe39a !important;
+  color: #000 !important;
+}
+
+#statsTable tbody tr:not(.total-row):hover td:not(:first-child) {
+  box-shadow: inset 0 1px 0 rgba(242, 140, 40, 0.35),
+              inset 0 -1px 0 rgba(242, 140, 40, 0.35);
+}
+
+#statsTable tbody tr:nth-child(even) td:not(:first-child) {
+  background-color: #f3f3f3;
+}
+
+#statsTable tbody tr:nth-child(odd) td:not(:first-child) {
+  background-color: #ffffff;
 }
 
 #statsTable tbody tr.total-row {
@@ -582,14 +603,9 @@ h1 {
   border-top: 2px solid #111;
   text-align: right;
   padding-right: 10px;
+  cursor: default !important;
 }
-
-#statsTable tbody tr.total-row td:first-child {
-  cursor: default;
-  pointer-events: none;
-}
-
-
+   
 /* =========================================================
    12. MÅNADSVÄLJARE I TABELL
    ========================================================= */
