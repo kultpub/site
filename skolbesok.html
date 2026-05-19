@@ -2594,7 +2594,13 @@ function updateChart(data) {
         }
     }
 
-    if (myChart) myChart.destroy();
+if (myChart) {
+    myChart.data.labels = labels;
+    myChart.data.datasets[0].data = chartData;
+    myChart.data.datasets[0].tension = isSmooth ? 0.4 : 0;
+    myChart.update('none');
+    return;
+}
 
     myChart = new Chart(ctx, {
         type: "line",
