@@ -1150,6 +1150,7 @@ let myChart = null;
 let lastFilteredData = {};
 
 let selectedMonths = new Set([...Array(12).keys()]);
+let typeToggleCount = 0;
 
 /* =========================================================
    KONSTANTER OCH MAPPNINGAR FÖR NY CSV-STRUKTUR
@@ -1416,6 +1417,46 @@ function showKategoriBreakdown(year, monthIndex) {
     modal.querySelector("h3").textContent = `${monthName} ${year}: Kategorier`;
     document.getElementById("modalMessage").innerHTML = html;
     modal.style.display = "flex";
+}
+
+function checkTypeToggleBehavior() {
+    // Lista på de besöksmål där Verksamhet och Anläggning ger exakt samma siffror
+    const staticPlaces = [
+        "Kulturens Östarp", 
+        "Livets museum", 
+        "Hökeriet", 
+        "Tegnérmuseet"
+    ];
+
+    // Om vi har valt ett av dessa fasta besöksmål, räkna upp klicket
+    if (staticPlaces.includes(currentFF)) {
+        typeToggleCount++;
+
+        // Vid tredje klicket (och framåt), trigga den pedagogiska förklaringen
+        if (typeToggleCount > 2) {
+            const modal = document.getElementById("dataModal");
+            const modalContent = modal.querySelector(".modal-content");
+            
+            // Återställ eventuell klass eller specifik bredd från andra funktioner
+            modalContent.className = "modal-content"; 
+            modalContent.style.width = "420px";
+            
+            modal.querySelector("h3").textContent = "Information om besöksdatan";
+            document.getElementById("modalMessage").innerHTML = `
+                <div style="text-align: left; line-height: 1.5; font-size: 16px; margin-top: 10px;">
+                    På <strong>${currentFF}</strong> beräknas verksamhets- och anläggningsbesök på samma grunder, 
+                    vilket innebär att siffrorna inte förändras när du byter perspektiv.
+                </div>
+            `;
+            modal.style.display = "flex";
+            
+            // Nollställ räknaren så att modalen inte spammas vid exakt varje klick framöver
+            typeToggleCount = 0;
+        }
+    } else {
+        // Om användaren byter till exempelvis Kulturen i Lund, nollställer vi räknaren
+        typeToggleCount = 0;
+    }
 }
 
 /* =========================================================
@@ -2004,6 +2045,7 @@ function switchView(viewId, btn) {
    ========================================================= */
 
 toggleVerksamhet.onchange = () => {
+    checkTypeToggleBehavior(); // ← Lägg till denna rad först
     toggleAnlaggning.checked = !toggleVerksamhet.checked;
     updateKategoriVisibility();
     renderCustomRange();
@@ -2011,6 +2053,7 @@ toggleVerksamhet.onchange = () => {
 };
 
 toggleAnlaggning.onchange = () => {
+    checkTypeToggleBehavior(); // ← Lägg till denna rad först
     toggleVerksamhet.checked = !toggleAnlaggning.checked;
     updateKategoriVisibility();
     renderCustomRange();
@@ -2127,6 +2170,7 @@ function initFFSelect() {
         opt.onclick = () => {
             currentFF = option;
             labelEl.textContent = option;
+			typeToggleCount = 0;
 
             document.getElementById("mainSiteHeader").textContent = option;
             updateKategoriVisibility();
@@ -2158,6 +2202,7 @@ function initFFSelect() {
 document.getElementById("resetFilters").onclick = function() {
     currentFF = "Alla besöksmål";
     currentKategori = "Alla kategorier";
+	typeToggleCount = 0;
     
     document.getElementById("ffSelectLabel").textContent = "Alla besöksmål";
     document.getElementById("mainSiteHeader").textContent = "Alla besöksmål";
