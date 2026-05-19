@@ -1,0 +1,2279 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Besöksstatistik</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+/* =========================================================
+   1. GLOBAL RESET OCH SIDGRUND
+   ========================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  width: 100%;
+  min-height: 100%;
+  background: #ffffff;
+}
+
+body {
+  min-height: 100vh;
+  background: #ffffff;
+  overflow: hidden;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(30px, 4vw, 44px);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  
+  /* Låser rubrikområdets höjd så att rvp har en fix startposition */
+  height: 95px; 
+  display: flex;
+  align-items: flex-start;
+}
+
+
+/* =========================================================
+   2. HUVUDLAYOUT
+   ========================================================= */
+
+.app,
+.app.full-width,
+.app.chart-active {
+  position: fixed;
+  top: 10vh;
+  left: 0;
+  display: flex !important;
+  justify-content: center;
+  align-items: flex-start !important;
+  width: 100vw;
+  margin: 0 !important;
+  padding-left: 70px; /* lämnar plats åt vänsterpanelen */
+  padding-right: 24px;
+  box-sizing: border-box;
+}
+
+.main-view,
+.app.full-width .main-view,
+.app.chart-active .main-view {
+  width: 1000px !important;
+  max-width: 90vw !important;
+  height: auto;
+}
+
+.view-container {
+  width: 100%;
+  height: auto;
+}
+
+
+/* =========================================================
+   3. VÄNSTERPANEL / FILTER
+   ========================================================= */
+
+.ff-filter {
+  position: fixed;
+  top: 22px;
+  left: 24px;
+  z-index: 900;
+  width: 230px;
+  display: flex;
+  flex-direction: column;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.controls .custom-select-wrapper {
+  width: 180px;
+}
+
+.controls .custom-select-dropdown,
+.custom-select-dropdown {
+  min-width: 340px !important;
+  width: 340px !important;
+}
+
+.date-small {
+  width: 90px !important;
+}
+
+.date-medium {
+  width: 130px !important;
+}
+
+#dateFilters {
+  opacity: 0;
+  transform: translateY(-8px);
+  transition:
+    opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  display: none;
+  position: relative;   /* ← ny */
+  z-index: 1;           /* ← ny */
+}
+
+#dateFilters.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  display: block;
+}
+
+#kategoriContainer {
+  display: none;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition:
+    opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    margin-bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-bottom: 0;
+  pointer-events: none;
+  position: relative;   /* ← ny */
+  z-index: 10;          /* ← ny */  
+}
+
+#kategoriContainer.visible {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+  margin-bottom: 10px;
+  pointer-events: auto;
+}
+
+#kategoriSlider {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#kategoriContainer.visible #kategoriSlider {
+  max-height: 40px;
+}
+
+#kategoriSelectWrapper .custom-select-dropdown {
+  min-width: 250px !important;
+  width: 250px !important;
+}
+
+
+/* =========================================================
+   4. VYVÄXLARE
+   ========================================================= */
+
+.view-selector {
+  display: flex;
+  gap: 4px;
+  margin: 20px 0 25px 0; /* Anpassad efter h1:s fixa höjd */
+  background: #f0f0f0;
+  padding: 4px;
+  border-radius: 10px;
+  width: 100%;
+}
+
+.view-btn {
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 600;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.view-btn.active {
+  background: #2f2f2f;
+  color: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+
+/* =========================================================
+   5. CUSTOM SELECTS OCH DROPDOWNS
+   ========================================================= */
+
+.custom-select-wrapper {
+  position: relative;
+  width: 100%;
+  user-select: none;
+}
+
+.custom-select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #f5f5f5;
+  cursor: pointer;
+  font-size: 15px;
+  color: #222;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.custom-select-trigger:hover,
+.custom-select-wrapper.open .custom-select-trigger {
+  border-color: #2f2f2f;
+  box-shadow: 0 0 0 3px rgba(47, 47, 47, 0.08);
+}
+
+.chevron {
+  width: 16px;
+  height: 16px;
+  fill: #777;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+
+.custom-select-wrapper.open .chevron {
+  transform: rotate(180deg);
+}
+
+.custom-select-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  z-index: 1000;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.14);
+}
+
+.custom-select-wrapper.open .custom-select-dropdown {
+  display: block;
+}
+
+/* Enkolumns-dropdown för besöksmål som matchar väljarknappen */
+#ffSelectWrapper .custom-select-dropdown {
+  min-width: 200px !important;
+  width: 100% !important;
+}
+
+.dropdown-cols-ff {
+  display: grid;
+  grid-template-columns: 1fr;
+  padding: 8px;
+  gap: 4px;
+  min-width: 0;
+}
+
+.dropdown-grid-years {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(4, auto);
+  grid-auto-flow: column;
+  gap: 8px;
+  padding: 10px;
+  min-width: 280px;
+}
+
+.dropdown-grid-months {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(4, auto);
+  grid-auto-flow: column;
+  gap: 4px;
+  padding: 8px;
+  min-width: 220px;
+}
+
+.dropdown-option {
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #222;
+  white-space: nowrap;
+}
+
+.dropdown-option:hover {
+  background: #f1f1f1;
+}
+
+.dropdown-option.selected {
+  background: #2f2f2f;
+  color: #fff;
+  font-weight: 600;
+}
+
+.dropdown-grid-years .dropdown-option,
+.dropdown-grid-months .dropdown-option {
+  text-align: center;
+  padding: 6px 4px;
+}
+
+/* Dynamiska tillägg för rubriker och kategoritvåkolumn */
+.select-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 4px;
+  margin-top: 10px;
+}
+
+.dropdown-cols-kategori {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-flow: column;
+  grid-template-rows: repeat(6, auto);
+  padding: 8px;
+  gap: 4px;
+}
+
+
+/* =========================================================
+   6. HÖGERPANEL / KONTROLLER
+   ========================================================= */
+
+.highlight-controls {
+  position: fixed;
+  top: 22px;
+  right: 24px;
+  z-index: 900;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: flex-start;
+  background: #fff;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  min-width: 200px;
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background: #e2e2e2;
+  margin: 4px 0;
+}
+
+
+/* =========================================================
+   7. TOGGLAR
+   ========================================================= */
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.toggle input {
+  display: none;
+}
+
+.toggle-track {
+  width: 42px;
+  height: 24px;
+  border-radius: 999px;
+  background: #d6d6d6;
+  position: relative;
+  transition: background 160ms ease;
+}
+
+.toggle-track::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  transition: transform 160ms ease;
+}
+
+.toggle input:checked + .toggle-track {
+  background: #f28c28;
+}
+
+.toggle input:checked + .toggle-track::after {
+  transform: translateX(18px);
+}
+
+
+/* =========================================================
+   8. KNAPPAR
+   ========================================================= */
+
+.save-btn {
+  width: 100%;
+  padding: 10px 15px;
+  background: #2f2f2f;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 8px;
+}
+
+.save-btn:hover {
+  background: #000;
+}
+
+.reset-btn {
+  width: 100%;
+  margin-top: 20px;
+  padding: 10px;
+  background: transparent;
+  color: #666;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.reset-btn:hover {
+  background: #f0f0f0;
+  color: #222;
+  border-color: #999;
+}
+
+.tips-btn {
+  width: 100%;
+  padding: 10px 15px;
+  background: #ffffff;
+  color: #2f2f2f;
+  border: 1px solid #d6d6d6;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  margin-top: 8px;
+}
+
+.tips-btn:hover {
+  background: #f5f5f5;
+  border-color: #999;
+  color: #000;
+}
+
+
+/* =========================================================
+   9. VYRUBRIKER
+   ========================================================= */
+
+#tableHeaderDisplay,
+#chartHeaderDisplay {
+  width: 100%;
+  margin: 0 0 20px 0 !important;
+  color: #2f2f2f;
+  border-left: 4px solid #f28c28;
+  padding-left: 15px;
+  font-size: 28px;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  display: block;
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   10. TABELL- OCH DIAGRAMVY
+   ========================================================= */
+
+#tableView,
+#chartView {
+  width: 100% !important;
+  max-width: 1000px !important;
+  margin: 0 auto !important;
+}
+
+#tableView {
+  transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#tableView.compact-table {
+  max-width: 750px !important;
+}
+
+.table-scroll,
+#chartContainer {
+  width: 100% !important;
+  height: 530px !important;
+  box-sizing: border-box;
+  margin: 0 !important;
+  border: 1px solid #e2e2e2;
+  border-radius: 16px;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+#tableView .table-scroll {
+  overflow-x: hidden;
+  overflow-y: auto;
+  transition:
+    box-shadow 520ms ease,
+    border-color 520ms ease;
+}
+
+#tableView.compact-table .table-scroll {
+  box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+}
+
+
+/* =========================================================
+   11. TABELL
+   ========================================================= */
+
+#statsTable {
+  width: 100%;
+  min-width: 600px;
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+#statsTable th,
+#statsTable td {
+  border: 1px solid #ddd;
+  padding: 8px 10px 8px 12px;
+  text-align: right;
+}
+
+#statsTable th {
+  background: #2f2f2f;
+  color: white;
+  font-size: 14px;
+  padding: 12px 8px;
+  white-space: nowrap;
+  min-width: 80px;
+  cursor: default;
+}
+
+#statsTable td {
+  border-bottom: 1px solid #eee;
+  color: #222;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease;
+  text-align: right;
+}
+
+
+/* =========================================================
+   FÖRSTA KOLUMNEN / MÅNADSCELLER
+   ========================================================= */
+
+#statsTable th:first-child,
+#statsTable td:first-child {
+  width: 100px;
+  background: #f5f5f5;
+  color: #000000 !important;
+  font-weight: 600;
+}
+
+#statsTable thead th:first-child {
+  background: #f5f5f5 !important;
+  color: #000000 !important;
+  text-align: center !important;
+  padding: 12px 8px;
+  font-weight: 700;
+  cursor: default;
+}
+
+#statsTable tbody tr:not(.total-row) td:first-child {
+  padding: 8px 6px 8px 10px !important;
+  text-align: left !important;
+  cursor: pointer;
+}
+
+#statsTable tbody tr.total-row td:first-child {
+  text-align: left !important;
+  cursor: default !important;
+  pointer-events: none;
+}
+
+#statsTable tbody tr:not(.total-row) td:first-child .month-cell-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  width: 100%;
+  height: 20px;
+  line-height: 1.15;
+}
+
+#statsTable tbody tr:not(.total-row) td:first-child .month-cell-inner span {
+  flex: 0 0 auto;
+  text-align: left;
+}
+
+#statsTable tbody tr:not(.total-row) td:first-child .month-toggle {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+
+/* =========================================================
+   ZEBRA OCH HOVER
+   ========================================================= */
+
+#statsTable tbody tr:nth-child(even) td:not(:first-child) {
+  background-color: #f3f3f3;
+}
+
+#statsTable tbody tr:nth-child(odd) td:not(:first-child) {
+  background-color: #ffffff;
+}
+
+#statsTable tbody tr:not(.total-row):hover td {
+  background-color: #fff1bd !important;
+}
+
+#statsTable tbody tr:not(.total-row):hover td:first-child {
+  background-color: #ffe39a !important;
+  color: #000 !important;
+}
+
+#statsTable tbody tr:not(.total-row):hover td:not(:first-child) {
+  box-shadow:
+    inset 0 1px 0 rgba(242, 140, 40, 0.35),
+    inset 0 -1px 0 rgba(242, 140, 40, 0.35);
+}
+
+#statsTable tbody tr:not(.total-row) td:hover:not(:first-child) {
+  background-color: #ffd86b !important;
+  color: #000;
+}
+
+
+/* =========================================================
+   TOTALRAD
+   ========================================================= */
+
+#statsTable tbody tr.total-row {
+  background-color: #2f2f2f !important;
+  color: white !important;
+  font-weight: 300;
+}
+
+#statsTable tbody tr.total-row:hover td {
+  background-color: #2f2f2f !important;
+}
+
+#statsTable tbody tr.total-row td {
+  position: sticky;
+  bottom: 0;
+  background-color: #2f2f2f !important;
+  color: white !important;
+  font-weight: 600;
+  z-index: 5;
+  border-top: 2px solid #111;
+  text-align: right;
+  cursor: pointer;
+}
+
+#statsTable tbody tr.total-row td:first-child {
+  cursor: default !important;
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   12. MÅNADSVÄLJARE I TABELL
+   ========================================================= */
+
+.month-cell-inner {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  height: 20px;
+  line-height: 1.15;
+}
+
+.month-cell-inner span {
+  flex: 1;
+}
+
+.month-toggle {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid #bbb;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  flex-shrink: 0;
+  position: relative;
+  transition: background 150ms ease, border-color 150ms ease;
+}
+
+.month-toggle:checked {
+  background: #2f2f2f;
+  border-color: #2f2f2f;
+}
+
+.month-toggle:checked::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 0px;
+  width: 5px;
+  height: 9px;
+  border: 2px solid #fff;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg);
+}
+
+.month-row-disabled td:not(:first-child) {
+  color: #aaa !important;
+  background: #f7f7f7 !important;
+}
+
+.month-row-disabled td:first-child {
+  opacity: 0.65;
+}
+
+
+/* =========================================================
+   13. BÄSTA MÅNAD
+   ========================================================= */
+
+.best-cell {
+  position: relative;
+  background-color: #fff9db !important;
+  color: #2f2f2f !important;
+  font-weight: 700 !important;
+  border: 1px solid #ffe082 !important;
+}
+
+.best-cell::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background-color: #f28c28;
+}
+
+
+/* =========================================================
+   14. DIAGRAM
+   ========================================================= */
+
+#chartContainer {
+  overflow: hidden;
+  background: #fafafa;
+  padding: 20px;
+  display: block;
+}
+
+#statsChart {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+
+/* =========================================================
+   15. MODALER
+   ========================================================= */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  backdrop-filter: blur(2px);
+}
+
+.modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  position: relative;
+  max-width: min(1000px, 92vw);
+  width: auto;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #777;
+  transition: transform 0.2s ease, color 0.2s ease;
+  line-height: 1;
+}
+
+.modal-close:hover {
+  transform: rotate(90deg);
+  color: #222;
+}
+
+.modal-content h3 {
+  margin: 0 0 10px 0;
+  font-size: 22px;
+}
+
+.modal-content p {
+  color: #555;
+  margin: 0;
+  font-size: 16px;
+}
+
+
+/* =========================================================
+   16. TIPSMODALER
+   ========================================================= */
+
+.modal-content.tips-modal {
+  width: min(720px, 92vw) !important;
+  max-width: 720px !important;
+  text-align: left;
+}
+
+.modal-content.tips-modal h3 {
+  font-size: 28px;
+  line-height: 1.15;
+  margin-bottom: 20px;
+  letter-spacing: -0.02em;
+}
+
+.modal-content.tips-modal #modalMessage,
+.modal-content.tips-modal #modalMessage p {
+  font-size: 19px;
+  line-height: 1.6;
+  color: #333;
+}
+
+.modal-content.tips-modal #modalMessage p {
+  margin: 0 0 15px 0;
+}
+
+.modal-content.tips-modal #modalMessage p:last-child {
+  margin-bottom: 0;
+}
+
+.modal-content.tips-modal strong {
+  color: #111;
+  font-weight: 750;
+}
+
+
+/* =========================================================
+   17. VYFADE
+   ========================================================= */
+
+#tableView,
+#chartView {
+  opacity: 0;
+  transition: none !important;
+  will-change: opacity;
+  padding-top: 0 !important;
+}
+
+#tableView.visible,
+#chartView.visible {
+  opacity: 1;
+}
+</style>
+</head>
+
+<body>
+
+  <!-- MODAL -->
+  <div id="dataModal" class="modal-overlay">
+    <div class="modal-content">
+      <button class="modal-close" id="closeModal">&times;</button>
+      <h3>Data saknas</h3>
+      <p id="modalMessage"></p>
+    </div>
+  </div>
+
+
+  <!-- VÄNSTERPANEL -->
+  <div class="ff-filter">
+
+    <!-- Sidrubrik -->
+    <h1 id="mainSiteHeader">Alla besöksmål</h1>
+
+
+    <!-- Vyväljare: tabell / diagram -->
+    <div class="view-selector">
+      <button class="view-btn active" id="btnTable" onclick="switchView('table', this)">Tabell</button>
+      <button class="view-btn" id="btnChart" onclick="switchView('chart', this)">Diagram</button>
+    </div>
+
+    <!-- Rubrik till första dropdownen -->
+    <div class="select-title">Besöksmål</div>
+
+    <!-- Specialdropdown: Besöksmål -->
+    <div class="custom-select-wrapper" id="ffSelectWrapper" style="margin-bottom: 10px;">
+      <div class="custom-select-trigger" id="ffSelectTrigger">
+        <span id="ffSelectLabel">Alla besöksmål</span>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 9l6 6 6-6" />
+        </svg>
+      </div>
+      <div class="custom-select-dropdown">
+        <div class="dropdown-cols-ff" id="ffDropdownCols"></div>
+      </div>
+    </div>
+
+<!-- Behållare för Kategori (Dold som standard) -->
+<div id="kategoriContainer">
+  <div id="kategoriSlider">
+    <div class="select-title">Kategori</div>
+  </div>
+  <div class="custom-select-wrapper" id="kategoriSelectWrapper">
+    <div class="custom-select-trigger" id="kategoriSelectTrigger">
+      <span id="kategoriSelectLabel">Alla kategorier</span>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M6 9l6 6 6-6" />
+      </svg>
+    </div>
+    <div class="custom-select-dropdown">
+      <div class="dropdown-cols-kategori" id="kategoriDropdownCols"></div>
+    </div>
+  </div>
+</div>
+
+    <input type="hidden" id="ffFilter" value="Alla besöksmål">
+
+
+    <!-- Återställning av filter -->
+    <button class="reset-btn" id="resetFilters" style="margin-bottom: 20px;">Återställ filter</button>
+	
+<div id="kategoriHint" style="display:none; font-size:14px; color:#666; line-height:1.5; margin-top:8px; margin-bottom:12px;">
+  <i class="fa-solid fa-circle-info" style="margin-right:6px; color:#f28c28;"></i>Klicka på ett värde i tabellen för att se månadens fördelning av olika besökskategorier.
+</div>
+
+
+    <!-- Datumfilter -->
+    <div id="dateFilters" class="view-container">
+      <div class="controls">
+
+        <!-- Från och med -->
+        <div class="filter-group">
+          <label class="summary-label">Från och med</label>
+
+          <div style="display: flex; gap: 8px;">
+            <div class="custom-select-wrapper date-small" id="fromYearWrapper">
+              <div class="custom-select-trigger" id="fromYearTrigger">
+                <span id="fromYearLabel">År</span>
+              </div>
+
+              <div class="custom-select-dropdown">
+                <div id="fromYearCols"></div>
+              </div>
+            </div>
+
+            <div class="custom-select-wrapper date-medium" id="fromMonthWrapper">
+              <div class="custom-select-trigger" id="fromMonthTrigger">
+                <span id="fromMonthLabel">Månad</span>
+              </div>
+
+              <div class="custom-select-dropdown">
+                <div id="fromMonthCols"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- Till och med -->
+        <div class="filter-group">
+          <label class="summary-label">Till och med</label>
+
+          <div style="display: flex; gap: 8px;">
+            <div class="custom-select-wrapper date-small" id="toYearWrapper">
+              <div class="custom-select-trigger" id="toYearTrigger">
+                <span id="toYearLabel">År</span>
+              </div>
+
+              <div class="custom-select-dropdown">
+                <div id="toYearCols"></div>
+              </div>
+            </div>
+
+            <div class="custom-select-wrapper date-medium" id="toMonthWrapper">
+              <div class="custom-select-trigger" id="toMonthTrigger">
+                <span id="toMonthLabel">Månad</span>
+              </div>
+
+              <div class="custom-select-dropdown">
+                <div id="toMonthCols"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- HÖGERPANEL -->
+  <div class="highlight-controls">
+
+    <!-- Typ av besök-togglar -->
+    <label class="toggle">
+      <input type="checkbox" id="toggleVerksamhet" checked>
+      <span class="toggle-track"></span>
+      <span>Verksamhet</span>
+    </label>
+
+    <label class="toggle">
+      <input type="checkbox" id="toggleAnlaggning">
+      <span class="toggle-track"></span>
+      <span>Anläggning</span>
+    </label>
+
+    <div class="divider"></div>
+
+    <!-- Gamla togglar -->
+    <label class="toggle">
+      <input type="checkbox" id="toggleLund">
+      <span class="toggle-track"></span>
+      <span id="labelLund">Bästa månad ★</span>
+    </label>
+
+    <label class="toggle">
+      <input type="checkbox" id="toggleLundRegion">
+      <span class="toggle-track"></span>
+      <span id="labelLundRegion">Senaste 5 åren</span>
+    </label>
+
+    <!-- Hjälp och export -->
+    <button class="tips-btn" id="showTips">Tips</button>
+    <button class="save-btn" id="saveImage">Spara tabell JPG</button>
+
+  </div>
+
+
+<!-- HUVUDYTA -->
+<div class="app">
+  <div class="main-view">
+
+    <!-- TABELLVY -->
+    <div id="tableView" class="view-container visible">
+      <h2 id="tableHeaderDisplay">Besöksdata</h2>
+
+      <div class="table-scroll">
+        <table id="statsTable">
+          <thead></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+
+    <!-- DIAGRAMVY -->
+    <div id="chartView" class="view-container" style="display:none;">
+      <h2 id="chartHeaderDisplay">Besöksdata</h2>
+
+      <div id="chartContainer">
+        <canvas id="statsChart"></canvas>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   GLOBAL DATA OCH AKTUELLT FILTERLÄGE
+   ========================================================= */
+
+let visitRows = [];
+let currentFF = "Alla besöksmål";
+let currentKategori = "Alla kategorier";
+
+let startYear, startMonth, endYear, endMonth;
+let availableYears = [];
+let currentTableYear = new Date().getFullYear();
+
+let myChart = null;
+let lastFilteredData = {};
+
+let selectedMonths = new Set([...Array(12).keys()]);
+
+/* =========================================================
+   KONSTANTER OCH MAPPNINGAR FÖR NY CSV-STRUKTUR
+   ========================================================= */
+
+const monthMap = {
+    "jan": 0, "feb": 1, "mar": 2, "apr": 3, "maj": 4, "jun": 5,
+    "jul": 6, "aug": 7, "sep": 8, "okt": 9, "nov": 10, "dec": 11
+};
+
+const monthNamesShort = [
+    "Jan", "Feb", "Mar", "Apr", "Maj", "Jun",
+    "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"
+];
+
+// Kartlägger dropdownens snygga namn mot CSV-filens rådata-id:n
+const FF_MAP = {
+    "Alla besöksmål": "all",
+    "Kulturen i Lund": "kulturenilund",
+    "Kulturens Östarp": "kulturensostarp",
+    "Livets museum": "livetsmuseum",
+    "Hökeriet": "hokeriet",
+    "Tegnérmuseet": "tegnermuseet",
+};
+
+const FF_OPTIONS = Object.keys(FF_MAP);
+
+// Kartlägger dropdownens visningsnamn mot CSV-filens exakta strängar
+const KATEGORI_MAP = {
+    "Alla kategorier": "all",
+    "Vuxen": "vuxen",
+    "Barn": "barn",
+    "Medlem": "medlem",
+    "Pensionär": "pensionär",
+    "Student": "student",
+    "Rabatt": "rabatt",
+    "Fri vuxen": "fri-vuxen",
+    "Konferens": "konferens",
+    "Skola barn": "skola-barn",
+    "Skola vuxen": "skola-vuxen",
+	"Skola (allt)": "skola-allt"
+};
+
+const KATEGORI_OPTIONS = Object.keys(KATEGORI_MAP);
+
+
+/* =========================================================
+   DYNAMISK RUBRIKHÄMTNING
+   ========================================================= */
+
+function getBesokTypPrefix() {
+    return document.getElementById("toggleAnlaggning").checked ? "Anläggningsbesök" : "Verksamhetsbesök";
+}
+
+
+/* =========================================================
+   CSV OCH DATANORMALISERING (UPDATERAD FÖR NY CSV)
+   ========================================================= */
+
+function parseCSV(text) {
+    const lines = text.trim().split(/\r?\n/);
+    if(lines.length === 0 || !lines[0]) return [];
+    const headers = lines.shift().split(";").map(h => h.trim().replace(/^\uFEFF/, ""));
+
+    return lines
+        .filter(line => line.trim())
+        .map(line => {
+            const values = line.split(";").map(v => v.trim());
+            const row = {};
+
+            headers.forEach((header, index) => {
+                row[header] = values[index];
+            });
+
+            return {
+                år: parseInt(row.år),
+                månad: row.månad ? row.månad.toLowerCase() : "",
+                besöksmål: row.besöksmål ? row.besöksmål.toLowerCase() : "", 
+                typ: row.typ ? row.typ.toLowerCase() : "",
+                kategori: row.kategori ? row.kategori.toLowerCase() : "",
+                antal: Number(row.antal) || 0
+            };
+        });
+}
+
+function parseSkolCSV(text) {
+    const lines = text.trim().split(/\r?\n/);
+    if(lines.length === 0 || !lines[0]) return [];
+    const headers = lines.shift().split(";").map(h => h.trim().replace(/^\uFEFF/, ""));
+
+    return lines
+        .filter(line => line.trim())
+        .map(line => {
+            const values = line.split(";").map(v => v.trim());
+            const row = {};
+
+            headers.forEach((header, index) => {
+                row[header] = values[index];
+            });
+
+            // Gör strängen till små bokstäver och trimma bort eventuella extra mellanslag
+            const niva = row.skolnivå ? row.skolnivå.toLowerCase().trim() : "";
+            
+            // Standardvalet för SAMTLIGA övriga skolnivåkategorier
+            let katId = "skola-barn"; 
+            
+            // Exakt matchning mot dina två vuxenkategorier (i små bokstäver)
+            if (niva === "högskola, universitet" || niva === "vuxenutbildning") {
+                katId = "skola-vuxen";
+            }
+
+            return {
+                år: parseInt(row.år),
+                månad: row.månad ? row.månad.toLowerCase() : "",
+                besöksmål: "kulturenilund", // All skoldata mappas till Kulturen i Lund
+                typ: "verksamhet",          // Skola räknas alltid som verksamhet
+                kategori: katId,
+                antal: Number(row.antal) || 0
+            };
+        });
+}
+
+
+/* =========================================================
+   FORMATTERING OCH SMÅ HJÄLPFUNKTIONER
+   ========================================================= */
+
+function formatSwedishNumber(v) {
+    return new Intl.NumberFormat("sv-SE").format(v);
+}
+
+function closeAllSelects() {
+    document.querySelectorAll(".custom-select-wrapper").forEach(w => w.classList.remove("open"));
+}
+
+function updateKategoriHint() {
+    const hint = document.getElementById("kategoriHint");
+    const isTable = document.getElementById("tableView").style.display !== "none";
+    const show = isTable && currentFF === "Kulturen i Lund" && currentKategori === "Alla kategorier";
+    hint.style.display = show ? "block" : "none";
+}
+
+function updateTableCursor() {
+    const showPointer = currentFF === "Kulturen i Lund" 
+        && currentKategori === "Alla kategorier"
+        && document.getElementById("toggleVerksamhet").checked;
+    document.querySelectorAll("#statsTable td:not(:first-child)").forEach(td => {
+        td.style.cursor = showPointer ? "pointer" : "default";
+    });
+}
+
+function showKategoriBreakdown(year, monthIndex) {
+    const monthName = monthNamesShort[monthIndex];
+
+    const breakdown = KATEGORI_OPTIONS
+        .filter(kat => kat !== "Alla kategorier")
+        .map(kat => {
+            const katId = KATEGORI_MAP[kat];
+            const antal = visitRows.filter(r => {
+                if (r.år !== year) return false;
+                if (monthMap[r.månad] !== monthIndex) return false;
+                if (r.besöksmål !== "kulturenilund") return false;
+
+                if (r.typ !== "kombinerat") {
+                    const checkedTyp = document.getElementById("toggleAnlaggning").checked ? "anläggning" : "verksamhet";
+                    if (r.typ !== checkedTyp) return false;
+                }
+
+                return r.kategori === katId;
+            }).reduce((sum, r) => sum + r.antal, 0);
+            return { kat, antal };
+        })
+        .filter(r => r.antal > 0)
+        .sort((a, b) => b.antal - a.antal);
+
+    if (breakdown.length === 0) return;
+
+    const total = breakdown.reduce((sum, r) => sum + r.antal, 0);
+
+    let rows = breakdown.map(r => {
+        const pct = ((r.antal / total) * 100).toFixed(1).replace(".", ",");
+        return `
+            <tr>
+                <td style="padding:7px 0; font-weight:500; border-bottom:1px solid #eee; text-align:left;">${r.kat}</td>
+                <td style="padding:7px 0; text-align:right; border-bottom:1px solid #eee;
+                           font-variant-numeric:tabular-nums; color:#f28c28; font-weight:700;">
+                    ${formatSwedishNumber(r.antal)}
+                </td>
+                <td style="padding:7px 0 7px 16px; text-align:right; border-bottom:1px solid #eee;
+                           font-variant-numeric:tabular-nums; color:#999; font-size:13px;">
+                    ${pct} %
+                </td>
+            </tr>`;
+    }).join("");
+
+    const html = `
+        <table style="width:100%; border-collapse:collapse; margin-top:14px;">
+            <tbody>
+                ${rows}
+                <tr>
+                    <td style="padding:9px 0 4px; font-weight:700; text-align:left;">Totalt</td>
+                    <td style="padding:9px 0 4px; text-align:right;
+                               font-variant-numeric:tabular-nums; color:#f28c28; font-weight:700;">
+                        ${formatSwedishNumber(total)}
+                    </td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>`;
+
+    const modal = document.getElementById("dataModal");
+    const modalContent = modal.querySelector(".modal-content");
+    modalContent.classList.remove("tips-modal");
+    modalContent.style.width = "360px";
+    modal.querySelector("h3").textContent = `${monthName} ${year}: Kategorier`;
+    document.getElementById("modalMessage").innerHTML = html;
+    modal.style.display = "flex";
+}
+
+/* =========================================================
+   NY EXAKT FILTER-FILTRERINGSMOTOR
+   ========================================================= */
+
+function isRowMatchingFilters(row) {
+    // 1. Filtrera på besöksmål
+    const targetFFId = FF_MAP[currentFF];
+    if (targetFFId !== "all" && row.besöksmål !== targetFFId) {
+        return false;
+    }
+
+    // 2. Hantera Typ (Verksamhet vs Anläggning) 
+    if (row.typ !== "kombinerat") {
+        const checkedTyp = document.getElementById("toggleAnlaggning").checked ? "anläggning" : "verksamhet";
+        if (row.typ !== checkedTyp) {
+            return false;
+        }
+    }
+
+// 3. Hantera Kategori (Korrigerad för att matcha små bokstäver i rådatan)
+    if (targetFFId === "kulturenilund") {
+        if (currentKategori !== "Alla kategorier") {
+            const targetKatId = KATEGORI_MAP[currentKategori];
+            
+            // Speciell logik för den nya samlingskategorin
+            if (targetKatId === "skola-allt") {
+                if (row.kategori !== "skola-barn" && row.kategori !== "skola-vuxen") {
+                    return false;
+                }
+            } else {
+                // Standardjämförelse för övriga enskilda kategorier
+                if (row.kategori !== targetKatId && row.kategori !== currentKategori.toLowerCase()) {
+                    return false;
+                }
+            }
+        }
+    }
+
+    return true;
+}
+
+
+/* =========================================================
+   DATUMFILTER
+   ========================================================= */
+
+function initDateSelects() {
+    availableYears = [...new Set(visitRows.map(r => r.år))].sort((a, b) => b - a);
+    if(availableYears.length === 0) return;
+
+    const latestRow = [...visitRows].sort((a, b) =>
+        (b.år * 12 + monthMap[b.månad]) - (a.år * 12 + monthMap[a.månad])
+    )[0];
+
+    const defaultYear = latestRow ? latestRow.år : new Date().getFullYear();
+
+    startYear = defaultYear;
+    startMonth = 0;
+    endYear = defaultYear;
+    endMonth = latestRow ? monthMap[latestRow.månad] : 11;
+
+    renderDatePart("fromYear", availableYears, "dropdown-grid-years", val => {
+        startYear = val;
+        syncDates();
+    });
+
+    renderDatePart("toYear", availableYears, "dropdown-grid-years", val => {
+        endYear = val;
+        syncDates();
+    });
+
+    renderDatePart("fromMonth", monthNamesShort, "dropdown-grid-months", (val, idx) => {
+        startMonth = idx;
+        syncDates();
+    });
+
+    renderDatePart("toMonth", monthNamesShort, "dropdown-grid-months", (val, idx) => {
+        endMonth = idx;
+        syncDates();
+    });
+
+    syncDates();
+}
+
+function renderDatePart(idPrefix, list, gridClass, callback) {
+    const wrapper = document.getElementById(`${idPrefix}Wrapper`);
+    const trigger = document.getElementById(`${idPrefix}Trigger`);
+    const cols = document.getElementById(`${idPrefix}Cols`);
+
+    cols.className = gridClass;
+
+    trigger.onclick = e => {
+        e.stopPropagation();
+        const isOpen = wrapper.classList.contains("open");
+        closeAllSelects();
+        if (!isOpen) wrapper.classList.add("open");
+    };
+
+    cols.innerHTML = "";
+
+    list.forEach((item, idx) => {
+        const opt = document.createElement("div");
+        opt.className = "dropdown-option";
+        opt.textContent = item;
+
+        opt.onclick = () => {
+            callback(item, idx);
+            wrapper.classList.remove("open");
+        };
+
+        cols.appendChild(opt);
+    });
+}
+
+function syncDates() {
+    const startVal = startYear * 12 + startMonth;
+    const endVal = endYear * 12 + endMonth;
+
+    if (startVal > endVal) {
+        endYear = startYear;
+        endMonth = startMonth;
+    }
+
+    updateDateLabels();
+    renderCustomRange();
+}
+
+function updateDateLabels() {
+    document.getElementById("fromYearLabel").textContent = startYear;
+    document.getElementById("fromMonthLabel").textContent = monthNamesShort[startMonth];
+    document.getElementById("toYearLabel").textContent = endYear;
+    document.getElementById("toMonthLabel").textContent = monthNamesShort[endMonth];
+}
+
+function renderCustomRange(forceAnimationReset = false) {
+    const startTotal = startYear * 12 + startMonth;
+    const endTotal = endYear * 12 + endMonth;
+
+    const filteredData = {};
+
+    visitRows.filter(isRowMatchingFilters).forEach(row => {
+        const rowTotal = row.år * 12 + monthMap[row.månad];
+        if (rowTotal >= startTotal && rowTotal <= endTotal) {
+            filteredData[row.besöksmål] = (filteredData[row.besöksmål] || 0) + row.antal;
+        }
+    });
+
+    lastFilteredData = filteredData;
+
+    if (document.getElementById("chartView").style.display !== "none") {
+        updateChart(filteredData, forceAnimationReset);
+    } else {
+        updateTable();
+    }
+}
+
+
+/* =========================================================
+   TABELLVY
+   ========================================================= */
+
+function updateTable() {
+    const table = document.getElementById("statsTable");
+    const thead = table.querySelector("thead");
+    const tbody = table.querySelector("tbody");
+    const headerDisplay = document.getElementById("tableHeaderDisplay");
+
+    if (!tbody || !headerDisplay) return;
+
+    const currentYear = new Date().getFullYear();
+    
+    let yearsInScope = availableYears
+        .filter(y => y <= currentYear)
+        .sort((a, b) => a - b);
+
+    if (yearsInScope.length > 10) {
+        yearsInScope = yearsInScope.slice(-10);
+    }
+
+    if (toggleLundRegion.checked) {
+        yearsInScope = yearsInScope.slice(-5);
+    }
+
+    const prefix = getBesokTypPrefix();
+    let katDisplay = currentKategori === "Skola (allt)" ? "skola" : currentKategori.toLowerCase();
+    const katSuffix = (currentFF === "Kulturen i Lund" && currentKategori !== "Alla kategorier") ? ` (${katDisplay})` : "";
+    
+    if (yearsInScope.length > 0) {
+        const displayStartYear = yearsInScope[0];
+        const displayEndYear = yearsInScope[yearsInScope.length - 1];
+        
+        if (currentFF === "Alla besöksmål") {
+            headerDisplay.textContent = `${prefix} alla besöksmål ${displayStartYear}–${displayEndYear}`;
+        } else {
+            headerDisplay.textContent = `${prefix} på ${currentFF}${katSuffix} ${displayStartYear}–${displayEndYear}`;
+        }
+    } else {
+        if (currentFF === "Alla besöksmål") {
+            headerDisplay.textContent = `${prefix} alla besöksmål`;
+        } else {
+            headerDisplay.textContent = `${prefix} på ${currentFF}${katSuffix}`;
+        }
+    }
+
+    const tableView = document.getElementById("tableView");
+    if (tableView) {
+        if (toggleLundRegion.checked) {
+            tableView.classList.add("compact-table");
+        } else {
+            tableView.classList.remove("compact-table");
+        }
+    }
+
+    let headerHtml = `<tr><th style="text-align:center">Månad</th>`;
+    yearsInScope.forEach(y => {
+        headerHtml += `<th>${y}</th>`;
+    });
+    headerHtml += `</tr>`;
+
+    thead.innerHTML = headerHtml;
+    tbody.innerHTML = "";
+
+    monthNamesShort.forEach((mName, mIdx) => {
+        const row = tbody.insertRow();
+        const nameCell = row.insertCell();
+
+        if (!selectedMonths.has(mIdx)) {
+            row.classList.add("month-row-disabled");
+        }
+
+        nameCell.style.fontWeight = "600";
+        nameCell.style.background = "#f5f5f5";
+        nameCell.style.color = "#000000";
+        nameCell.style.textAlign = "center";
+
+        const monthCellInner = document.createElement("div");
+        monthCellInner.className = "month-cell-inner";
+
+        const monthLabel = document.createElement("span");
+        monthLabel.textContent = mName;
+
+        const monthCheckbox = document.createElement("input");
+        monthCheckbox.type = "checkbox";
+        monthCheckbox.className = "month-toggle";
+        monthCheckbox.checked = selectedMonths.has(mIdx);
+
+        monthCheckbox.onclick = e => {
+            e.stopPropagation();
+            if (monthCheckbox.checked) {
+                selectedMonths.add(mIdx);
+            } else {
+                selectedMonths.delete(mIdx);
+            }
+            updateTable();
+        };
+        
+        nameCell.style.cursor = "pointer";
+        nameCell.onclick = e => {
+            if (e.target === monthCheckbox) return;
+            monthCheckbox.checked = !monthCheckbox.checked;
+            if (monthCheckbox.checked) {
+                selectedMonths.add(mIdx);
+            } else {
+                selectedMonths.delete(mIdx);
+            }
+            updateTable();
+        };
+
+        monthCellInner.appendChild(monthLabel);
+        monthCellInner.appendChild(monthCheckbox);
+        nameCell.appendChild(monthCellInner);
+
+        let currentMaxInScope = 0;
+        yearsInScope.forEach(y => {
+            let sum = 0;
+            visitRows.filter(isRowMatchingFilters).forEach(r => {
+                if (r.år === y && monthMap[r.månad] === mIdx) {
+                    sum += r.antal;
+                }
+            });
+            if (sum > currentMaxInScope) currentMaxInScope = sum;
+        });
+
+        yearsInScope.forEach(y => {
+            let val = 0;
+            visitRows.filter(isRowMatchingFilters).forEach(r => {
+                if (r.år === y && monthMap[r.månad] === mIdx) {
+                    val += r.antal;
+                }
+            });
+
+            const cell = row.insertCell();
+            cell.textContent = val > 0 ? formatSwedishNumber(val) : "-";
+
+			if (val > 0 
+				&& currentFF === "Kulturen i Lund" 
+				&& currentKategori === "Alla kategorier"
+				&& document.getElementById("toggleVerksamhet").checked) {
+				cell.onclick = () => showKategoriBreakdown(y, mIdx);
+				cell.style.cursor = "pointer";
+			} else {
+				cell.style.cursor = "default";
+			}
+
+            if (
+                selectedMonths.has(mIdx) &&
+                toggleLund.checked &&
+                val > 0 &&
+                val === currentMaxInScope
+            ) {
+                cell.classList.add("best-cell");
+            }
+        });
+    });
+
+    const footerRow = tbody.insertRow();
+    footerRow.classList.add("total-row");
+
+    const totalLabelCell = footerRow.insertCell();
+    totalLabelCell.textContent = "TOTALT";
+    totalLabelCell.style.textAlign = "left";
+
+    yearsInScope.forEach(y => {
+        let totalForYear = 0;
+
+        visitRows.filter(isRowMatchingFilters).forEach(r => {
+            const monthIndex = monthMap[r.månad];
+            if (r.år === y && selectedMonths.has(monthIndex)) {
+                totalForYear += r.antal;
+            }
+        });
+
+        const cell = footerRow.insertCell();
+        cell.textContent = formatSwedishNumber(totalForYear);
+    });
+}
+
+
+/* =========================================================
+   DIAGRAMVY
+   ========================================================= */
+
+const valueLabelsPlugin = {
+    id: "valueLabelsPlugin",
+    afterDatasetsDraw(chart) {
+        if (!toggleLundRegion.checked) return;
+        const { ctx } = chart;
+
+        ctx.save();
+        ctx.font = "bold 16px system-ui";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "bottom";
+        ctx.fillStyle = "#222";
+
+        chart.data.datasets.forEach((dataset, i) => {
+            const meta = chart.getDatasetMeta(i);
+            meta.data.forEach((element, index) => {
+                const value = dataset.data[index];
+                if (value > 0) {
+                    ctx.fillText(
+                        formatSwedishNumber(value),
+                        element.x,
+                        element.y - 12
+                    );
+                }
+            });
+        });
+        ctx.restore();
+    }
+};
+
+Chart.register(valueLabelsPlugin);
+
+function updateChart(data, forceResetAnimation = false) {
+    const canvas = document.getElementById("statsChart");
+    if (!canvas) return;
+
+    const cHeader = document.getElementById("chartHeaderDisplay");
+    if (cHeader) {
+        const prefix = getBesokTypPrefix();
+        const startMName = monthNamesShort[startMonth].toLowerCase();
+        const endMName = monthNamesShort[endMonth].toLowerCase();
+        const tidsSpann = `${startMName} ${startYear} – ${endMName} ${endYear}`;
+        const katSuffix = (currentFF === "Kulturen i Lund" && currentKategori !== "Alla kategorier") ? ` (${currentKategori.toLowerCase()})` : "";
+        
+        if (currentFF === "Alla besöksmål") {
+            cHeader.textContent = `${prefix} alla besöksmål ${tidsSpann}`;
+        } else {
+            cHeader.textContent = `${prefix} på ${currentFF}${katSuffix} ${tidsSpann}`;
+        }
+    }
+
+    const ctx = canvas.getContext("2d");
+    const isSmooth = toggleLund.checked;
+
+    const labels = [];
+    const chartData = [];
+
+    let currentY = startYear;
+    let currentM = startMonth;
+    const endTotal = endYear * 12 + endMonth;
+
+    const reverseMonthMap = monthNamesShort.map(m => m.toLowerCase());
+
+    while ((currentY * 12 + currentM) <= endTotal) {
+        labels.push([monthNamesShort[currentM], currentY.toString()]);
+
+        let monthlySum = 0;
+        const currentMStr = reverseMonthMap[currentM];
+
+        visitRows.filter(isRowMatchingFilters).forEach(r => {
+            if (r.år === currentY && r.månad === currentMStr) {
+                monthlySum += r.antal;
+            }
+        });
+
+        chartData.push(monthlySum);
+
+        currentM++;
+        if (currentM > 11) {
+            currentM = 0;
+            currentY++;
+        }
+    }
+
+    if (forceResetAnimation && myChart) {
+        myChart.destroy();
+        myChart = null;
+    }
+
+    if (myChart) {
+        myChart.data.labels = labels;
+        myChart.data.datasets[0].data = chartData;
+        myChart.data.datasets[0].tension = isSmooth ? 0.4 : 0;
+        myChart.update('none'); 
+    } else {
+        myChart = new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: chartData,
+                    borderColor: "#f28c28",
+                    backgroundColor: "rgba(242, 140, 40, 0.1)",
+                    borderWidth: 3,
+                    fill: true,
+                    tension: isSmooth ? 0.4 : 0,
+                    pointRadius: 5,
+                    pointHoverRadius: 0,
+                    pointBackgroundColor: "#f28c28"
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                events: [],
+                animation: {
+                    duration: 900,
+                    easing: "easeOutQuart",
+                    x: { from: -80 }
+                },
+                layout: {
+                    padding: { left: 20, right: 40, top: 35, bottom: 10 }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: false }
+                },
+                scales: {
+                    x: {
+                        offset: true,
+                        grid: { display: false },
+                        ticks: {
+                            padding: 10,
+                            align: "center",
+                            textAlign: "center",
+                            font: { size: 15, weight: "700" }
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            padding: 15,
+                            font: { size: 15, weight: "700" },
+                            callback: value => formatSwedishNumber(value)
+                        }
+                    }
+                }
+            }
+        });
+    }
+}
+
+
+/* =========================================================
+   VÄXLING MELLAN VYER
+   ========================================================= */
+
+function switchView(viewId, btn) {
+    const appElement = document.querySelector(".app");
+    const dateFilters = document.getElementById("dateFilters");
+    const saveBtn = document.getElementById("saveImage");
+    const labelLund = document.getElementById("labelLund");
+    const labelLundRegion = document.getElementById("labelLundRegion");
+
+    const tableView = document.getElementById("tableView");
+    const chartView = document.getElementById("chartView");
+    const allViews = [tableView, chartView];
+    const targetView = document.getElementById(viewId + "View");
+
+    if (!targetView) return;
+
+    const shouldShowFilters = (viewId === "chart");
+    const filtersCurrentlyVisible = dateFilters.classList.contains("visible");
+
+    if (!shouldShowFilters) {
+        dateFilters.classList.remove("visible");
+        setTimeout(() => {
+            if (!dateFilters.classList.contains("visible")) {
+                dateFilters.style.display = "none";
+            }
+        }, 300);
+    } else {
+        dateFilters.style.display = "block";
+        if (!filtersCurrentlyVisible) {
+            requestAnimationFrame(() => {
+                dateFilters.classList.add("visible");
+            });
+        }
+    }
+
+    toggleLund.checked = false;
+    toggleLundRegion.checked = false;
+
+    document.querySelectorAll(".view-btn").forEach(b => {
+        b.classList.remove("active");
+    });
+
+    btn.classList.add("active");
+
+    allViews.forEach(v => {
+        v.classList.remove("visible");
+        v.style.display = "none";
+    });
+
+    appElement.classList.remove("full-width", "chart-active");
+
+    if (viewId === "chart") {
+        appElement.classList.add("chart-active");
+        labelLund.textContent = "Mjuk linje";
+        labelLundRegion.textContent = "Visa antal";
+        saveBtn.textContent = "Spara diagram PNG";
+
+        targetView.style.display = "block";
+        targetView.classList.add("visible");
+
+        // Säkerställ att DOM har uppdaterat bredd/höjd innan diagrammet ritas ut
+        requestAnimationFrame(() => {
+			updateChart(lastFilteredData, true);
+		});
+		updateKategoriHint();
+		updateTableCursor();
+    } else {
+        appElement.classList.add("full-width");
+        labelLund.textContent = "Bästa månad ★";
+        labelLundRegion.textContent = "Senaste 5 åren";
+        saveBtn.textContent = "Spara tabell JPG";
+
+        targetView.style.display = "block";
+        targetView.classList.add("visible");
+
+        updateTable();
+		updateKategoriHint();
+		updateTableCursor();
+    }
+}
+
+
+/* =========================================================
+   TOGGLAR OCH DERAS INBÖRDES BEROENDE
+   ========================================================= */
+
+toggleVerksamhet.onchange = () => {
+    toggleAnlaggning.checked = !toggleVerksamhet.checked;
+    updateKategoriVisibility();
+    renderCustomRange();
+    updateTableCursor();
+};
+
+toggleAnlaggning.onchange = () => {
+    toggleVerksamhet.checked = !toggleAnlaggning.checked;
+    updateKategoriVisibility();
+    renderCustomRange();
+    updateTableCursor();
+};
+
+toggleLund.onchange = () => {
+    const isChart = document.getElementById("chartView").style.display !== "none";
+    if (isChart) updateChart(lastFilteredData);
+    else updateTable();
+};
+
+toggleLundRegion.onchange = () => {
+    const isChart = document.getElementById("chartView").style.display !== "none";
+    if (isChart) updateChart(lastFilteredData);
+    else updateTable();
+};
+
+
+/* =========================================================
+   KATEGORISELECTDROPDOWN (DYNAMISK TVÅKOLUMN)
+   ========================================================= */
+
+function initKategoriSelect() {
+    const wrapper = document.getElementById("kategoriSelectWrapper");
+    const labelEl = document.getElementById("kategoriSelectLabel");
+    const cols = document.getElementById("kategoriDropdownCols");
+
+    cols.innerHTML = "";
+
+    KATEGORI_OPTIONS.forEach(option => {
+        const opt = document.createElement("div");
+        opt.className = "dropdown-option" + (option === currentKategori ? " selected" : "");
+        opt.textContent = option;
+
+        opt.onclick = () => {
+            currentKategori = option;
+            labelEl.textContent = option;
+
+            wrapper.querySelectorAll(".dropdown-option").forEach(o => o.classList.remove("selected"));
+            opt.classList.add("selected");
+            wrapper.classList.remove("open");
+
+            renderCustomRange(true);
+			updateKategoriHint();
+			updateTableCursor();
+        };
+
+        cols.appendChild(opt);
+    });
+
+    document.getElementById("kategoriSelectTrigger").onclick = e => {
+        e.stopPropagation();
+        closeAllSelects();
+        wrapper.classList.toggle("open");
+    };
+}
+
+
+/* =========================================================
+   HJÄLPARE FÖR KATEGORIVISNING (KRAV 1 & KRAV 2 WITH ANIMATION)
+   ========================================================= */
+function updateKategoriVisibility() {
+    const katContainer = document.getElementById("kategoriContainer");
+    const isKulturenILund = (currentFF === "Kulturen i Lund");
+    const isVerksamhetActive = document.getElementById("toggleVerksamhet").checked;
+    const shouldShow = isKulturenILund && isVerksamhetActive;
+
+    if (shouldShow) {
+        initKategoriSelect();
+        katContainer.style.display = "block";
+        // Dubbel rAF säkerställer att display:block hunnit layoutas
+        // innan transition-klassen sätts
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                katContainer.classList.add("visible");
+            });
+        });
+    } else {
+        document.getElementById("kategoriSelectWrapper").classList.remove("open");
+        katContainer.classList.remove("visible");
+
+        // Spara referens till aktuellt anrop så att ett senare anrop
+        // kan avbryta timeoutet om tillståndet ändras under animationen
+        clearTimeout(katContainer._hideTimer);
+        katContainer._hideTimer = setTimeout(() => {
+            if (!katContainer.classList.contains("visible")) {
+                katContainer.style.display = "none";
+            }
+        }, 350);
+
+        currentKategori = "Alla kategorier";
+        document.getElementById("kategoriSelectLabel").textContent = "Alla kategorier";
+		updateKategoriHint();
+		updateTableCursor();
+    }
+}
+
+/* =========================================================
+   FILTER FÖR BESÖKSMÅL (SPECIALDROPDOWN)
+   ========================================================= */
+function initFFSelect() {
+    const wrapper = document.getElementById("ffSelectWrapper");
+    const labelEl = document.getElementById("ffSelectLabel");
+    const cols = document.getElementById("ffDropdownCols");
+
+    cols.innerHTML = "";
+
+    FF_OPTIONS.forEach(option => {
+        const opt = document.createElement("div");
+        opt.className = "dropdown-option" + (option === currentFF ? " selected" : "");
+        opt.textContent = option;
+
+        opt.onclick = () => {
+            currentFF = option;
+            labelEl.textContent = option;
+
+            document.getElementById("mainSiteHeader").textContent = option;
+            updateKategoriVisibility();
+
+            wrapper.querySelectorAll(".dropdown-option").forEach(o => o.classList.remove("selected"));
+            opt.classList.add("selected");
+            wrapper.classList.remove("open");
+
+            renderCustomRange(true);
+			updateKategoriHint();
+			updateTableCursor();
+        };
+
+        cols.appendChild(opt);
+    });
+
+    document.getElementById("ffSelectTrigger").onclick = e => {
+        e.stopPropagation();
+        closeAllSelects();
+        wrapper.classList.toggle("open");
+    };
+}
+
+
+/* =========================================================
+   KNAPPAR: ÅTERSTÄLLNING OCH EXPORT
+   ========================================================= */
+
+document.getElementById("resetFilters").onclick = function() {
+    currentFF = "Alla besöksmål";
+    currentKategori = "Alla kategorier";
+    
+    document.getElementById("ffSelectLabel").textContent = "Alla besöksmål";
+    document.getElementById("mainSiteHeader").textContent = "Alla besöksmål";
+    
+    toggleVerksamhet.checked = true;
+    toggleAnlaggning.checked = false;
+    toggleLund.checked = false;
+    toggleLundRegion.checked = false;
+
+    updateKategoriVisibility(); 
+    selectedMonths = new Set([...Array(12).keys()]);
+    initDateSelects();
+
+    if (document.getElementById("tableView").style.display !== "none") {
+        updateTable();
+    }
+	
+	updateKategoriHint();
+	updateTableCursor();
+};
+
+document.getElementById("saveImage").onclick = async function() {
+    const isTable = document.getElementById("tableView").style.display !== "none";
+    const isChart = document.getElementById("chartView").style.display !== "none";
+
+    let target = isTable ? document.getElementById("tableView") : document.getElementById("chartView");
+    let filePrefix = isTable ? "tabell" : "diagram";
+
+    if (!target) return;
+
+    let hiddenCheckboxes = [];
+    if (isTable) {
+        hiddenCheckboxes = [...document.querySelectorAll(".month-toggle")];
+        hiddenCheckboxes.forEach(cb => { cb.style.visibility = "hidden"; });
+    }
+
+    const originalOverflow = target.style.overflow;
+    const originalBackground = target.style.background;
+    const originalPadding = target.style.padding;
+
+    target.style.overflow = "visible";
+    target.style.background = "#ffffff";
+    target.style.padding = "0";
+
+    await new Promise(requestAnimationFrame);
+    const rect = target.getBoundingClientRect();
+
+    html2canvas(target, {
+        backgroundColor: "#ffffff",
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        width: Math.ceil(rect.width),
+        height: Math.ceil(rect.height),
+    }).then(canvas => {
+        const link = document.createElement("a");
+        const timestamp = new Date().toISOString().slice(0, 10);
+        const safeFF = currentFF.replace(/[^\p{L}\p{N}]+/gu, "_").replace(/^_+|_+$/g, "");
+        const safePrefix = getBesokTypPrefix();
+
+        if (isChart) {
+            link.download = `${filePrefix}_${safePrefix}_${safeFF}_${timestamp}.png`;
+            link.href = canvas.toDataURL("image/png");
+        } else {
+            link.download = `${filePrefix}_${safePrefix}_${safeFF}_${timestamp}.jpg`;
+            link.href = canvas.toDataURL("image/jpeg", 0.95);
+        }
+
+        link.click();
+
+        target.style.overflow = originalOverflow;
+        target.style.background = originalBackground;
+        target.style.padding = originalPadding;
+
+        hiddenCheckboxes.forEach(cb => { cb.style.visibility = ""; });
+    });
+};
+
+
+/* =========================================================
+   MODAL OCH TIPSTEXTER
+   ========================================================= */
+
+document.getElementById("closeModal").onclick = function() {
+    document.getElementById("dataModal").style.display = "none";
+    document.querySelector(".modal-content").style.width = "";
+};
+
+window.onclick = function(event) {
+    const modal = document.getElementById("dataModal");
+    if (event.target == modal) {
+        modal.style.display = "none";
+        modal.querySelector(".modal-content").style.width = "";
+    }
+};
+
+const tipsContent = {
+    table: {
+        title: "Tips för tabellvyn",
+        body: `<div style="text-align:left; line-height:1.55;">
+                <p>Tabellen visar antalet besök per år och månad utifrån valda filterinställningar.</p>
+                <p>Checkboxarna vid månadsnamnen styr vilka månader som tas med i totalraden.</p>
+                <p>Använd reglagen <strong>Verksamhet</strong> och <strong>Anläggning</strong> för att växla <em>verksamhets-</em> och <em>anläggningsbesök</em>. Verksamhetsbesök avser besök där personen tar del av museets verksamhet, t.ex. utställningar, visningar, program eller evenemang. Anläggningsbesök avser besök på själva museianläggningen/platsen, oavsett vad personen gör där.</p>
+                <p>Om du väljer besöksmålet <strong>Kulturen i Lund</strong> och kategori <strong>Alla kategorier</strong> kan du även klicka på tabellens celler för att bryta ner data per demografisk kategori (vuxen, barn, student etc.).</p>
+               </div>`
+    },
+    chart: {
+        title: "Tips för diagramvyn",
+        body: `<div style="text-align:left; line-height:1.55;">
+                <p>Diagrammet visar utvecklingen månad för månad utifrån de val du har gjort.</p>
+                <p><strong>Mjuk linje</strong> gör linjen mer avrundad.</p>
+                <p><strong>Visa antal</strong> visar värdena direkt vid punkterna i diagrammet.</p>
+               </div>`
+    }
+};
+
+document.getElementById("showTips").onclick = function() {
+    const isChart = document.getElementById("chartView").style.display !== "none";
+    const content = tipsContent[isChart ? "chart" : "table"];
+
+    const modal = document.getElementById("dataModal");
+    const modalContent = modal.querySelector(".modal-content");
+
+    modalContent.style.width = "";  // ← återställ eventuell kategori-bredd
+    modalContent.classList.add("tips-modal");
+    modal.querySelector("h3").textContent = content.title;
+    document.getElementById("modalMessage").innerHTML = content.body;
+    modal.style.display = "flex";
+};
+
+document.addEventListener("click", closeAllSelects);
+
+
+/* =========================================================
+   INITIERING OCH CSV-LADDNING
+   ========================================================= */
+
+async function loadCSVData() {
+    try {
+        const response = await fetch("https://kultpub.github.io/site/besoksdata.csv");
+        const text = await response.text();
+
+        visitRows = parseCSV(text);
+        if(visitRows.length === 0) return;
+
+        availableYears = [...new Set(visitRows.map(r => r.år))].sort((a, b) => b - a);
+        currentTableYear = availableYears[0] || new Date().getFullYear();
+
+        initFFSelect();
+        initDateSelects();
+
+        document.getElementById("tableView").style.display = "block";
+        document.getElementById("chartView").style.display = "none";
+        document.getElementById("tableView").classList.add("visible");
+        document.querySelector(".app").classList.add("full-width");
+        
+        document.getElementById("dateFilters").style.display = "none";
+
+        renderCustomRange();
+        updateTable();
+
+    } catch (e) {
+        console.error("Fel vid laddning av CSV-data:", e);
+    }
+}
+
+loadCSVData();
+</script>
+
+</body>
+</html>
