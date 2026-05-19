@@ -6,8 +6,6 @@
 2015;jan;kulturenilund;verksamhet;medlem;153
 2015;jan;kulturenilund;verksamhet;pensionär;184
 2015;jan;kulturenilund;verksamhet;rabatt;53
-2015;jan;kulturenilund;verksamhet;skola-barn;608
-2015;jan;kulturenilund;verksamhet;skola-vuxen;67
 2015;jan;kulturenilund;verksamhet;student;119
 2015;jan;kulturenilund;anläggning;total;4932
 2015;jan;kulturensostarp;kombinerat;total;330
@@ -22,8 +20,6 @@
 2015;feb;kulturenilund;verksamhet;medlem;547
 2015;feb;kulturenilund;verksamhet;pensionär;567
 2015;feb;kulturenilund;verksamhet;rabatt;57
-2015;feb;kulturenilund;verksamhet;skola-barn;663
-2015;feb;kulturenilund;verksamhet;skola-vuxen;138
 2015;feb;kulturenilund;verksamhet;student;232
 2015;feb;kulturenilund;anläggning;total;5893
 2015;feb;kulturensostarp;kombinerat;total;183
@@ -38,8 +34,6 @@
 2015;mar;kulturenilund;verksamhet;medlem;430
 2015;mar;kulturenilund;verksamhet;pensionär;417
 2015;mar;kulturenilund;verksamhet;rabatt;90
-2015;mar;kulturenilund;verksamhet;skola-barn;1294
-2015;mar;kulturenilund;verksamhet;skola-vuxen;167
 2015;mar;kulturenilund;verksamhet;student;221
 2015;mar;kulturenilund;anläggning;total;10754
 2015;mar;kulturensostarp;kombinerat;total;910
@@ -54,8 +48,6 @@
 2015;apr;kulturenilund;verksamhet;medlem;408
 2015;apr;kulturenilund;verksamhet;pensionär;408
 2015;apr;kulturenilund;verksamhet;rabatt;157
-2015;apr;kulturenilund;verksamhet;skola-barn;1503
-2015;apr;kulturenilund;verksamhet;skola-vuxen;218
 2015;apr;kulturenilund;verksamhet;student;224
 2015;apr;kulturenilund;anläggning;total;18261
 2015;apr;kulturensostarp;kombinerat;total;1992
@@ -70,8 +62,6 @@
 2015;maj;kulturenilund;verksamhet;medlem;501
 2015;maj;kulturenilund;verksamhet;pensionär;761
 2015;maj;kulturenilund;verksamhet;rabatt;361
-2015;maj;kulturenilund;verksamhet;skola-barn;2276
-2015;maj;kulturenilund;verksamhet;skola-vuxen;267
 2015;maj;kulturenilund;verksamhet;student;358
 2015;maj;kulturenilund;anläggning;total;19768
 2015;maj;kulturensostarp;kombinerat;total;4233
@@ -87,8 +77,6 @@
 2015;jun;kulturenilund;verksamhet;medlem;579
 2015;jun;kulturenilund;verksamhet;pensionär;837
 2015;jun;kulturenilund;verksamhet;rabatt;475
-2015;jun;kulturenilund;verksamhet;skola-barn;2246
-2015;jun;kulturenilund;verksamhet;skola-vuxen;50
 2015;jun;kulturenilund;verksamhet;student;546
 2015;jun;kulturenilund;anläggning;total;21172
 2015;jun;kulturensostarp;kombinerat;total;3736
@@ -104,8 +92,6 @@
 2015;jul;kulturenilund;verksamhet;medlem;521
 2015;jul;kulturenilund;verksamhet;pensionär;1210
 2015;jul;kulturenilund;verksamhet;rabatt;180
-2015;jul;kulturenilund;verksamhet;skola-barn;315
-2015;jul;kulturenilund;verksamhet;skola-vuxen;64
 2015;jul;kulturenilund;verksamhet;student;399
 2015;jul;kulturenilund;anläggning;total;24255
 2015;jul;kulturensostarp;kombinerat;total;4369
@@ -121,8 +107,6 @@
 2015;aug;kulturenilund;verksamhet;medlem;459
 2015;aug;kulturenilund;verksamhet;pensionär;886
 2015;aug;kulturenilund;verksamhet;rabatt;136
-2015;aug;kulturenilund;verksamhet;skola-barn;833
-2015;aug;kulturenilund;verksamhet;skola-vuxen;142
 2015;aug;kulturenilund;verksamhet;student;371
 2015;aug;kulturenilund;anläggning;total;18779
 2015;aug;kulturensostarp;kombinerat;total;3791
@@ -138,8 +122,6 @@
 2015;sep;kulturenilund;verksamhet;medlem;293
 2015;sep;kulturenilund;verksamhet;pensionär;412
 2015;sep;kulturenilund;verksamhet;rabatt;79
-2015;sep;kulturenilund;verksamhet;skola-barn;1324
-2015;sep;kulturenilund;verksamhet;skola-vuxen;192
 2015;sep;kulturenilund;verksamhet;student;205
 2015;sep;kulturenilund;anläggning;total;14357
 2015;sep;kulturensostarp;kombinerat;total;3739
@@ -155,8 +137,6 @@
 2015;okt;kulturenilund;verksamhet;medlem;324
 2015;okt;kulturenilund;verksamhet;pensionär;425
 2015;okt;kulturenilund;verksamhet;rabatt;61
-2015;okt;kulturenilund;verksamhet;skola-barn;805
-2015;okt;kulturenilund;verksamhet;skola-vuxen;285
 2015;okt;kulturenilund;verksamhet;student;260
 2015;okt;kulturenilund;anläggning;total;11789
 2015;okt;kulturensostarp;kombinerat;total;1652
@@ -173,8 +153,6 @@
 2015;nov;kulturenilund;verksamhet;medlem;1943
 2015;nov;kulturenilund;verksamhet;pensionär;719
 2015;nov;kulturenilund;verksamhet;rabatt;13
-2015;nov;kulturenilund;verksamhet;skola-barn;1067
-2015;nov;kulturenilund;verksamhet;skola-vuxen;222
 2015;nov;kulturenilund;verksamhet;student;975
 2015;nov;kulturenilund;anläggning;total;11617
 2015;nov;kulturensostarp;kombinerat;total;1873
@@ -191,8 +169,6 @@
 2015;dec;kulturenilund;verksamhet;medlem;357
 2015;dec;kulturenilund;verksamhet;pensionär;274
 2015;dec;kulturenilund;verksamhet;rabatt;155
-2015;dec;kulturenilund;verksamhet;skola-barn;1533
-2015;dec;kulturenilund;verksamhet;skola-vuxen;90
 2015;dec;kulturenilund;verksamhet;student;303
 2015;dec;kulturenilund;anläggning;total;8712
 2015;dec;kulturensostarp;kombinerat;total;2474
@@ -209,8 +185,6 @@
 2016;jan;kulturenilund;verksamhet;medlem;278
 2016;jan;kulturenilund;verksamhet;pensionär;169
 2016;jan;kulturenilund;verksamhet;rabatt;77
-2016;jan;kulturenilund;verksamhet;skola-barn;594
-2016;jan;kulturenilund;verksamhet;skola-vuxen;78
 2016;jan;kulturenilund;verksamhet;student;190
 2016;jan;kulturenilund;anläggning;total;5990
 2016;jan;kulturensostarp;kombinerat;total;152
@@ -227,8 +201,6 @@
 2016;feb;kulturenilund;verksamhet;medlem;217
 2016;feb;kulturenilund;verksamhet;pensionär;192
 2016;feb;kulturenilund;verksamhet;rabatt;23
-2016;feb;kulturenilund;verksamhet;skola-barn;598
-2016;feb;kulturenilund;verksamhet;skola-vuxen;213
 2016;feb;kulturenilund;verksamhet;student;183
 2016;feb;kulturenilund;anläggning;total;5785
 2016;feb;kulturensostarp;kombinerat;total;322
@@ -245,8 +217,6 @@
 2016;mar;kulturenilund;verksamhet;medlem;592
 2016;mar;kulturenilund;verksamhet;pensionär;611
 2016;mar;kulturenilund;verksamhet;rabatt;161
-2016;mar;kulturenilund;verksamhet;skola-barn;886
-2016;mar;kulturenilund;verksamhet;skola-vuxen;217
 2016;mar;kulturenilund;verksamhet;student;282
 2016;mar;kulturenilund;anläggning;total;9648
 2016;mar;kulturensostarp;kombinerat;total;1700
@@ -263,8 +233,6 @@
 2016;apr;kulturenilund;verksamhet;medlem;657
 2016;apr;kulturenilund;verksamhet;pensionär;775
 2016;apr;kulturenilund;verksamhet;rabatt;118
-2016;apr;kulturenilund;verksamhet;skola-barn;1205
-2016;apr;kulturenilund;verksamhet;skola-vuxen;346
 2016;apr;kulturenilund;verksamhet;student;304
 2016;apr;kulturenilund;anläggning;total;14330
 2016;apr;kulturensostarp;kombinerat;total;1828
@@ -281,8 +249,6 @@
 2016;maj;kulturenilund;verksamhet;medlem;824
 2016;maj;kulturenilund;verksamhet;pensionär;1018
 2016;maj;kulturenilund;verksamhet;rabatt;439
-2016;maj;kulturenilund;verksamhet;skola-barn;3288
-2016;maj;kulturenilund;verksamhet;skola-vuxen;156
 2016;maj;kulturenilund;verksamhet;student;314
 2016;maj;kulturenilund;anläggning;total;23115
 2016;maj;kulturensostarp;kombinerat;total;4611
@@ -299,8 +265,6 @@
 2016;jun;kulturenilund;verksamhet;medlem;847
 2016;jun;kulturenilund;verksamhet;pensionär;1039
 2016;jun;kulturenilund;verksamhet;rabatt;467
-2016;jun;kulturenilund;verksamhet;skola-barn;2249
-2016;jun;kulturenilund;verksamhet;skola-vuxen;43
 2016;jun;kulturenilund;verksamhet;student;456
 2016;jun;kulturenilund;anläggning;total;21834
 2016;jun;kulturensostarp;kombinerat;total;4009
@@ -317,8 +281,6 @@
 2016;jul;kulturenilund;verksamhet;medlem;965
 2016;jul;kulturenilund;verksamhet;pensionär;1599
 2016;jul;kulturenilund;verksamhet;rabatt;327
-2016;jul;kulturenilund;verksamhet;skola-barn;386
-2016;jul;kulturenilund;verksamhet;skola-vuxen;78
 2016;jul;kulturenilund;verksamhet;student;485
 2016;jul;kulturenilund;anläggning;total;23349
 2016;jul;kulturensostarp;kombinerat;total;4626
@@ -335,8 +297,6 @@
 2016;aug;kulturenilund;verksamhet;medlem;687
 2016;aug;kulturenilund;verksamhet;pensionär;1167
 2016;aug;kulturenilund;verksamhet;rabatt;246
-2016;aug;kulturenilund;verksamhet;skola-barn;758
-2016;aug;kulturenilund;verksamhet;skola-vuxen;254
 2016;aug;kulturenilund;verksamhet;student;450
 2016;aug;kulturenilund;anläggning;total;19883
 2016;aug;kulturensostarp;kombinerat;total;3835
@@ -353,8 +313,6 @@
 2016;sep;kulturenilund;verksamhet;medlem;329
 2016;sep;kulturenilund;verksamhet;pensionär;371
 2016;sep;kulturenilund;verksamhet;rabatt;148
-2016;sep;kulturenilund;verksamhet;skola-barn;1000
-2016;sep;kulturenilund;verksamhet;skola-vuxen;280
 2016;sep;kulturenilund;verksamhet;student;250
 2016;sep;kulturenilund;anläggning;total;14887
 2016;sep;kulturensostarp;kombinerat;total;2350
@@ -371,8 +329,6 @@
 2016;okt;kulturenilund;verksamhet;medlem;514
 2016;okt;kulturenilund;verksamhet;pensionär;648
 2016;okt;kulturenilund;verksamhet;rabatt;190
-2016;okt;kulturenilund;verksamhet;skola-barn;1018
-2016;okt;kulturenilund;verksamhet;skola-vuxen;460
 2016;okt;kulturenilund;verksamhet;student;400
 2016;okt;kulturenilund;anläggning;total;12405
 2016;okt;kulturensostarp;kombinerat;total;1641
@@ -389,8 +345,6 @@
 2016;nov;kulturenilund;verksamhet;medlem;1563
 2016;nov;kulturenilund;verksamhet;pensionär;1369
 2016;nov;kulturenilund;verksamhet;rabatt;127
-2016;nov;kulturenilund;verksamhet;skola-barn;1100
-2016;nov;kulturenilund;verksamhet;skola-vuxen;303
 2016;nov;kulturenilund;verksamhet;student;1380
 2016;nov;kulturenilund;anläggning;total;12550
 2016;nov;kulturensostarp;kombinerat;total;2117
@@ -407,8 +361,6 @@
 2016;dec;kulturenilund;verksamhet;medlem;425
 2016;dec;kulturenilund;verksamhet;pensionär;342
 2016;dec;kulturenilund;verksamhet;rabatt;79
-2016;dec;kulturenilund;verksamhet;skola-barn;1376
-2016;dec;kulturenilund;verksamhet;skola-vuxen;62
 2016;dec;kulturenilund;verksamhet;student;261
 2016;dec;kulturenilund;anläggning;total;9059
 2016;dec;kulturensostarp;kombinerat;total;2295
@@ -425,8 +377,6 @@
 2017;jan;kulturenilund;verksamhet;medlem;437
 2017;jan;kulturenilund;verksamhet;pensionär;470
 2017;jan;kulturenilund;verksamhet;rabatt;39
-2017;jan;kulturenilund;verksamhet;skola-barn;393
-2017;jan;kulturenilund;verksamhet;skola-vuxen;93
 2017;jan;kulturenilund;verksamhet;student;240
 2017;jan;kulturenilund;anläggning;total;7227
 2017;jan;kulturensostarp;kombinerat;total;201
@@ -443,8 +393,6 @@
 2017;feb;kulturenilund;verksamhet;medlem;372
 2017;feb;kulturenilund;verksamhet;pensionär;304
 2017;feb;kulturenilund;verksamhet;rabatt;27
-2017;feb;kulturenilund;verksamhet;skola-barn;358
-2017;feb;kulturenilund;verksamhet;skola-vuxen;189
 2017;feb;kulturenilund;verksamhet;student;200
 2017;feb;kulturenilund;anläggning;total;6873
 2017;feb;kulturensostarp;kombinerat;total;187
@@ -461,8 +409,6 @@
 2017;mar;kulturenilund;verksamhet;medlem;348
 2017;mar;kulturenilund;verksamhet;pensionär;262
 2017;mar;kulturenilund;verksamhet;rabatt;65
-2017;mar;kulturenilund;verksamhet;skola-barn;1493
-2017;mar;kulturenilund;verksamhet;skola-vuxen;387
 2017;mar;kulturenilund;verksamhet;student;267
 2017;mar;kulturenilund;anläggning;total;9905
 2017;mar;kulturensostarp;kombinerat;total;987
@@ -479,8 +425,6 @@
 2017;apr;kulturenilund;verksamhet;medlem;437
 2017;apr;kulturenilund;verksamhet;pensionär;295
 2017;apr;kulturenilund;verksamhet;rabatt;80
-2017;apr;kulturenilund;verksamhet;skola-barn;910
-2017;apr;kulturenilund;verksamhet;skola-vuxen;214
 2017;apr;kulturenilund;verksamhet;student;286
 2017;apr;kulturenilund;anläggning;total;15856
 2017;apr;kulturensostarp;kombinerat;total;2124
@@ -497,8 +441,6 @@
 2017;maj;kulturenilund;verksamhet;medlem;576
 2017;maj;kulturenilund;verksamhet;pensionär;514
 2017;maj;kulturenilund;verksamhet;rabatt;253
-2017;maj;kulturenilund;verksamhet;skola-barn;2642
-2017;maj;kulturenilund;verksamhet;skola-vuxen;220
 2017;maj;kulturenilund;verksamhet;student;294
 2017;maj;kulturenilund;anläggning;total;19355
 2017;maj;kulturensostarp;kombinerat;total;3466
@@ -515,8 +457,6 @@
 2017;jun;kulturenilund;verksamhet;medlem;1091
 2017;jun;kulturenilund;verksamhet;pensionär;1398
 2017;jun;kulturenilund;verksamhet;rabatt;480
-2017;jun;kulturenilund;verksamhet;skola-barn;1869
-2017;jun;kulturenilund;verksamhet;skola-vuxen;283
 2017;jun;kulturenilund;verksamhet;student;979
 2017;jun;kulturenilund;anläggning;total;22950
 2017;jun;kulturensostarp;kombinerat;total;3727
@@ -533,8 +473,6 @@
 2017;jul;kulturenilund;verksamhet;medlem;1359
 2017;jul;kulturenilund;verksamhet;pensionär;3114
 2017;jul;kulturenilund;verksamhet;rabatt;392
-2017;jul;kulturenilund;verksamhet;skola-barn;321
-2017;jul;kulturenilund;verksamhet;skola-vuxen;311
 2017;jul;kulturenilund;verksamhet;student;707
 2017;jul;kulturenilund;anläggning;total;28055
 2017;jul;kulturensostarp;kombinerat;total;4166
@@ -551,8 +489,6 @@
 2017;aug;kulturenilund;verksamhet;medlem;764
 2017;aug;kulturenilund;verksamhet;pensionär;1519
 2017;aug;kulturenilund;verksamhet;rabatt;225
-2017;aug;kulturenilund;verksamhet;skola-barn;946
-2017;aug;kulturenilund;verksamhet;skola-vuxen;222
 2017;aug;kulturenilund;verksamhet;student;496
 2017;aug;kulturenilund;anläggning;total;19033
 2017;aug;kulturensostarp;kombinerat;total;4244
@@ -569,8 +505,6 @@
 2017;sep;kulturenilund;verksamhet;medlem;562
 2017;sep;kulturenilund;verksamhet;pensionär;789
 2017;sep;kulturenilund;verksamhet;rabatt;337
-2017;sep;kulturenilund;verksamhet;skola-barn;848
-2017;sep;kulturenilund;verksamhet;skola-vuxen;336
 2017;sep;kulturenilund;verksamhet;student;330
 2017;sep;kulturenilund;anläggning;total;17667
 2017;sep;kulturensostarp;kombinerat;total;2088
@@ -587,8 +521,6 @@
 2017;okt;kulturenilund;verksamhet;medlem;493
 2017;okt;kulturenilund;verksamhet;pensionär;612
 2017;okt;kulturenilund;verksamhet;rabatt;161
-2017;okt;kulturenilund;verksamhet;skola-barn;905
-2017;okt;kulturenilund;verksamhet;skola-vuxen;484
 2017;okt;kulturenilund;verksamhet;student;337
 2017;okt;kulturenilund;anläggning;total;11311
 2017;okt;kulturensostarp;kombinerat;total;1651
@@ -605,8 +537,6 @@
 2017;nov;kulturenilund;verksamhet;medlem;657
 2017;nov;kulturenilund;verksamhet;pensionär;546
 2017;nov;kulturenilund;verksamhet;rabatt;157
-2017;nov;kulturenilund;verksamhet;skola-barn;531
-2017;nov;kulturenilund;verksamhet;skola-vuxen;692
 2017;nov;kulturenilund;verksamhet;student;339
 2017;nov;kulturenilund;anläggning;total;10727
 2017;nov;kulturensostarp;kombinerat;total;1931
@@ -623,8 +553,6 @@
 2017;dec;kulturenilund;verksamhet;medlem;1500
 2017;dec;kulturenilund;verksamhet;pensionär;902
 2017;dec;kulturenilund;verksamhet;rabatt;107
-2017;dec;kulturenilund;verksamhet;skola-barn;1523
-2017;dec;kulturenilund;verksamhet;skola-vuxen;294
 2017;dec;kulturenilund;verksamhet;student;1752
 2017;dec;kulturenilund;anläggning;total;11281
 2017;dec;kulturensostarp;kombinerat;total;2347
@@ -641,8 +569,6 @@
 2018;jan;kulturenilund;verksamhet;medlem;516
 2018;jan;kulturenilund;verksamhet;pensionär;509
 2018;jan;kulturenilund;verksamhet;rabatt;60
-2018;jan;kulturenilund;verksamhet;skola-barn;358
-2018;jan;kulturenilund;verksamhet;skola-vuxen;116
 2018;jan;kulturenilund;verksamhet;student;275
 2018;jan;kulturenilund;anläggning;total;7352
 2018;jan;kulturensostarp;kombinerat;total;233
@@ -659,8 +585,6 @@
 2018;feb;kulturenilund;verksamhet;medlem;573
 2018;feb;kulturenilund;verksamhet;pensionär;330
 2018;feb;kulturenilund;verksamhet;rabatt;78
-2018;feb;kulturenilund;verksamhet;skola-barn;373
-2018;feb;kulturenilund;verksamhet;skola-vuxen;253
 2018;feb;kulturenilund;verksamhet;student;271
 2018;feb;kulturenilund;anläggning;total;8351
 2018;feb;kulturensostarp;kombinerat;total;236
@@ -677,8 +601,6 @@
 2018;mar;kulturenilund;verksamhet;medlem;741
 2018;mar;kulturenilund;verksamhet;pensionär;364
 2018;mar;kulturenilund;verksamhet;rabatt;154
-2018;mar;kulturenilund;verksamhet;skola-barn;936
-2018;mar;kulturenilund;verksamhet;skola-vuxen;369
 2018;mar;kulturenilund;verksamhet;student;354
 2018;mar;kulturenilund;anläggning;total;9755
 2018;mar;kulturensostarp;kombinerat;total;1047
@@ -695,8 +617,6 @@
 2018;apr;kulturenilund;verksamhet;medlem;916
 2018;apr;kulturenilund;verksamhet;pensionär;554
 2018;apr;kulturenilund;verksamhet;rabatt;324
-2018;apr;kulturenilund;verksamhet;skola-barn;878
-2018;apr;kulturenilund;verksamhet;skola-vuxen;296
 2018;apr;kulturenilund;verksamhet;student;415
 2018;apr;kulturenilund;anläggning;total;18095
 2018;apr;kulturensostarp;kombinerat;total;1735
@@ -713,8 +633,6 @@
 2018;maj;kulturenilund;verksamhet;medlem;669
 2018;maj;kulturenilund;verksamhet;pensionär;701
 2018;maj;kulturenilund;verksamhet;rabatt;348
-2018;maj;kulturenilund;verksamhet;skola-barn;2035
-2018;maj;kulturenilund;verksamhet;skola-vuxen;291
 2018;maj;kulturenilund;verksamhet;student;340
 2018;maj;kulturenilund;anläggning;total;21369
 2018;maj;kulturensostarp;kombinerat;total;4629
@@ -731,8 +649,6 @@
 2018;jun;kulturenilund;verksamhet;medlem;955
 2018;jun;kulturenilund;verksamhet;pensionär;1090
 2018;jun;kulturenilund;verksamhet;rabatt;332
-2018;jun;kulturenilund;verksamhet;skola-barn;1544
-2018;jun;kulturenilund;verksamhet;skola-vuxen;127
 2018;jun;kulturenilund;verksamhet;student;605
 2018;jun;kulturenilund;anläggning;total;15961
 2018;jun;kulturensostarp;kombinerat;total;3861
@@ -749,8 +665,6 @@
 2018;jul;kulturenilund;verksamhet;medlem;914
 2018;jul;kulturenilund;verksamhet;pensionär;1310
 2018;jul;kulturenilund;verksamhet;rabatt;290
-2018;jul;kulturenilund;verksamhet;skola-barn;336
-2018;jul;kulturenilund;verksamhet;skola-vuxen;221
 2018;jul;kulturenilund;verksamhet;student;463
 2018;jul;kulturenilund;anläggning;total;13513
 2018;jul;kulturensostarp;kombinerat;total;3063
@@ -767,8 +681,6 @@
 2018;aug;kulturenilund;verksamhet;medlem;711
 2018;aug;kulturenilund;verksamhet;pensionär;1080
 2018;aug;kulturenilund;verksamhet;rabatt;391
-2018;aug;kulturenilund;verksamhet;skola-barn;375
-2018;aug;kulturenilund;verksamhet;skola-vuxen;342
 2018;aug;kulturenilund;verksamhet;student;568
 2018;aug;kulturenilund;anläggning;total;13177
 2018;aug;kulturensostarp;kombinerat;total;3316
@@ -785,8 +697,6 @@
 2018;sep;kulturenilund;verksamhet;medlem;642
 2018;sep;kulturenilund;verksamhet;pensionär;477
 2018;sep;kulturenilund;verksamhet;rabatt;212
-2018;sep;kulturenilund;verksamhet;skola-barn;1020
-2018;sep;kulturenilund;verksamhet;skola-vuxen;267
 2018;sep;kulturenilund;verksamhet;student;311
 2018;sep;kulturenilund;anläggning;total;12442
 2018;sep;kulturensostarp;kombinerat;total;1972
@@ -803,8 +713,6 @@
 2018;okt;kulturenilund;verksamhet;medlem;605
 2018;okt;kulturenilund;verksamhet;pensionär;558
 2018;okt;kulturenilund;verksamhet;rabatt;100
-2018;okt;kulturenilund;verksamhet;skola-barn;868
-2018;okt;kulturenilund;verksamhet;skola-vuxen;500
 2018;okt;kulturenilund;verksamhet;student;416
 2018;okt;kulturenilund;anläggning;total;9235
 2018;okt;kulturensostarp;kombinerat;total;1627
@@ -821,8 +729,6 @@
 2018;nov;kulturenilund;verksamhet;medlem;681
 2018;nov;kulturenilund;verksamhet;pensionär;665
 2018;nov;kulturenilund;verksamhet;rabatt;70
-2018;nov;kulturenilund;verksamhet;skola-barn;910
-2018;nov;kulturenilund;verksamhet;skola-vuxen;439
 2018;nov;kulturenilund;verksamhet;student;1118
 2018;nov;kulturenilund;anläggning;total;8044
 2018;nov;kulturensostarp;kombinerat;total;1907
@@ -839,8 +745,6 @@
 2018;dec;kulturenilund;verksamhet;medlem;794
 2018;dec;kulturenilund;verksamhet;pensionär;1231
 2018;dec;kulturenilund;verksamhet;rabatt;246
-2018;dec;kulturenilund;verksamhet;skola-barn;1395
-2018;dec;kulturenilund;verksamhet;skola-vuxen;445
 2018;dec;kulturenilund;verksamhet;student;1930
 2018;dec;kulturenilund;anläggning;total;9020
 2018;dec;kulturensostarp;kombinerat;total;2389
@@ -857,8 +761,6 @@
 2019;jan;kulturenilund;verksamhet;medlem;382
 2019;jan;kulturenilund;verksamhet;pensionär;444
 2019;jan;kulturenilund;verksamhet;rabatt;48
-2019;jan;kulturenilund;verksamhet;skola-barn;528
-2019;jan;kulturenilund;verksamhet;skola-vuxen;97
 2019;jan;kulturenilund;verksamhet;student;240
 2019;jan;kulturenilund;anläggning;total;6320
 2019;jan;kulturensostarp;kombinerat;total;194
@@ -875,8 +777,6 @@
 2019;feb;kulturenilund;verksamhet;medlem;712
 2019;feb;kulturenilund;verksamhet;pensionär;431
 2019;feb;kulturenilund;verksamhet;rabatt;98
-2019;feb;kulturenilund;verksamhet;skola-barn;871
-2019;feb;kulturenilund;verksamhet;skola-vuxen;376
 2019;feb;kulturenilund;verksamhet;student;313
 2019;feb;kulturenilund;anläggning;total;12772
 2019;feb;kulturensostarp;kombinerat;total;238
@@ -893,8 +793,6 @@
 2019;mar;kulturenilund;verksamhet;medlem;640
 2019;mar;kulturenilund;verksamhet;pensionär;429
 2019;mar;kulturenilund;verksamhet;rabatt;157
-2019;mar;kulturenilund;verksamhet;skola-barn;1067
-2019;mar;kulturenilund;verksamhet;skola-vuxen;488
 2019;mar;kulturenilund;verksamhet;student;368
 2019;mar;kulturenilund;anläggning;total;12382
 2019;mar;kulturensostarp;kombinerat;total;1161
@@ -911,8 +809,6 @@
 2019;apr;kulturenilund;verksamhet;medlem;601
 2019;apr;kulturenilund;verksamhet;pensionär;441
 2019;apr;kulturenilund;verksamhet;rabatt;211
-2019;apr;kulturenilund;verksamhet;skola-barn;1311
-2019;apr;kulturenilund;verksamhet;skola-vuxen;375
 2019;apr;kulturenilund;verksamhet;student;356
 2019;apr;kulturenilund;anläggning;total;15872
 2019;apr;kulturensostarp;kombinerat;total;1920
@@ -929,8 +825,6 @@
 2019;maj;kulturenilund;verksamhet;medlem;665
 2019;maj;kulturenilund;verksamhet;pensionär;711
 2019;maj;kulturenilund;verksamhet;rabatt;414
-2019;maj;kulturenilund;verksamhet;skola-barn;2389
-2019;maj;kulturenilund;verksamhet;skola-vuxen;259
 2019;maj;kulturenilund;verksamhet;student;347
 2019;maj;kulturenilund;anläggning;total;17343
 2019;maj;kulturensostarp;kombinerat;total;4235
@@ -947,8 +841,6 @@
 2019;jun;kulturenilund;verksamhet;medlem;1068
 2019;jun;kulturenilund;verksamhet;pensionär;1621
 2019;jun;kulturenilund;verksamhet;rabatt;412
-2019;jun;kulturenilund;verksamhet;skola-barn;1056
-2019;jun;kulturenilund;verksamhet;skola-vuxen;186
 2019;jun;kulturenilund;verksamhet;student;696
 2019;jun;kulturenilund;anläggning;total;24616
 2019;jun;kulturensostarp;kombinerat;total;3678
@@ -965,8 +857,6 @@
 2019;jul;kulturenilund;verksamhet;medlem;985
 2019;jul;kulturenilund;verksamhet;pensionär;3281
 2019;jul;kulturenilund;verksamhet;rabatt;417
-2019;jul;kulturenilund;verksamhet;skola-barn;439
-2019;jul;kulturenilund;verksamhet;skola-vuxen;186
 2019;jul;kulturenilund;verksamhet;student;542
 2019;jul;kulturenilund;anläggning;total;23501
 2019;jul;kulturensostarp;kombinerat;total;3364
@@ -983,8 +873,6 @@
 2019;aug;kulturenilund;verksamhet;medlem;758
 2019;aug;kulturenilund;verksamhet;pensionär;2405
 2019;aug;kulturenilund;verksamhet;rabatt;496
-2019;aug;kulturenilund;verksamhet;skola-barn;665
-2019;aug;kulturenilund;verksamhet;skola-vuxen;168
 2019;aug;kulturenilund;verksamhet;student;474
 2019;aug;kulturenilund;anläggning;total;19721
 2019;aug;kulturensostarp;kombinerat;total;3025
@@ -1001,8 +889,6 @@
 2019;sep;kulturenilund;verksamhet;medlem;557
 2019;sep;kulturenilund;verksamhet;pensionär;1319
 2019;sep;kulturenilund;verksamhet;rabatt;345
-2019;sep;kulturenilund;verksamhet;skola-barn;1304
-2019;sep;kulturenilund;verksamhet;skola-vuxen;356
 2019;sep;kulturenilund;verksamhet;student;319
 2019;sep;kulturenilund;anläggning;total;18165
 2019;sep;kulturensostarp;kombinerat;total;1984
@@ -1019,8 +905,6 @@
 2019;okt;kulturenilund;verksamhet;medlem;618
 2019;okt;kulturenilund;verksamhet;pensionär;1220
 2019;okt;kulturenilund;verksamhet;rabatt;241
-2019;okt;kulturenilund;verksamhet;skola-barn;1348
-2019;okt;kulturenilund;verksamhet;skola-vuxen;443
 2019;okt;kulturenilund;verksamhet;student;338
 2019;okt;kulturenilund;anläggning;total;14324
 2019;okt;kulturensostarp;kombinerat;total;1303
@@ -1037,8 +921,6 @@
 2019;nov;kulturenilund;verksamhet;medlem;1186
 2019;nov;kulturenilund;verksamhet;pensionär;1147
 2019;nov;kulturenilund;verksamhet;rabatt;186
-2019;nov;kulturenilund;verksamhet;skola-barn;662
-2019;nov;kulturenilund;verksamhet;skola-vuxen;276
 2019;nov;kulturenilund;verksamhet;student;1194
 2019;nov;kulturenilund;anläggning;total;13417
 2019;nov;kulturensostarp;kombinerat;total;2057
@@ -1055,8 +937,6 @@
 2019;dec;kulturenilund;verksamhet;medlem;1983
 2019;dec;kulturenilund;verksamhet;pensionär;1086
 2019;dec;kulturenilund;verksamhet;rabatt;240
-2019;dec;kulturenilund;verksamhet;skola-barn;982
-2019;dec;kulturenilund;verksamhet;skola-vuxen;223
 2019;dec;kulturenilund;verksamhet;student;1463
 2019;dec;kulturenilund;anläggning;total;14753
 2019;dec;kulturensostarp;kombinerat;total;2261
@@ -1073,8 +953,6 @@
 2020;jan;kulturenilund;verksamhet;medlem;411
 2020;jan;kulturenilund;verksamhet;pensionär;679
 2020;jan;kulturenilund;verksamhet;rabatt;111
-2020;jan;kulturenilund;verksamhet;skola-barn;220
-2020;jan;kulturenilund;verksamhet;skola-vuxen;97
 2020;jan;kulturenilund;verksamhet;student;234
 2020;jan;kulturenilund;anläggning;total;6483
 2020;jan;kulturensostarp;kombinerat;total;128
@@ -1091,8 +969,6 @@
 2020;feb;kulturenilund;verksamhet;medlem;818
 2020;feb;kulturenilund;verksamhet;pensionär;1217
 2020;feb;kulturenilund;verksamhet;rabatt;117
-2020;feb;kulturenilund;verksamhet;skola-barn;639
-2020;feb;kulturenilund;verksamhet;skola-vuxen;363
 2020;feb;kulturenilund;verksamhet;student;262
 2020;feb;kulturenilund;anläggning;total;10875
 2020;feb;kulturensostarp;kombinerat;total;435
@@ -1109,8 +985,6 @@
 2020;mar;kulturenilund;verksamhet;medlem;283
 2020;mar;kulturenilund;verksamhet;pensionär;182
 2020;mar;kulturenilund;verksamhet;rabatt;28
-2020;mar;kulturenilund;verksamhet;skola-barn;361
-2020;mar;kulturenilund;verksamhet;skola-vuxen;381
 2020;mar;kulturenilund;verksamhet;student;136
 2020;mar;kulturenilund;anläggning;total;4578
 2020;mar;kulturensostarp;kombinerat;total;765
@@ -1127,8 +1001,6 @@
 2020;apr;kulturenilund;verksamhet;medlem;307
 2020;apr;kulturenilund;verksamhet;pensionär;37
 2020;apr;kulturenilund;verksamhet;rabatt;20
-2020;apr;kulturenilund;verksamhet;skola-barn;151
-2020;apr;kulturenilund;verksamhet;skola-vuxen;24
 2020;apr;kulturenilund;verksamhet;student;60
 2020;apr;kulturenilund;anläggning;total;2282
 2020;apr;kulturensostarp;kombinerat;total;1404
@@ -1145,8 +1017,6 @@
 2020;maj;kulturenilund;verksamhet;medlem;465
 2020;maj;kulturenilund;verksamhet;pensionär;100
 2020;maj;kulturenilund;verksamhet;rabatt;50
-2020;maj;kulturenilund;verksamhet;skola-barn;570
-2020;maj;kulturenilund;verksamhet;skola-vuxen;29
 2020;maj;kulturenilund;verksamhet;student;116
 2020;maj;kulturenilund;anläggning;total;3610
 2020;maj;kulturensostarp;kombinerat;total;2668
@@ -1163,8 +1033,6 @@
 2020;jun;kulturenilund;verksamhet;medlem;731
 2020;jun;kulturenilund;verksamhet;pensionär;152
 2020;jun;kulturenilund;verksamhet;rabatt;56
-2020;jun;kulturenilund;verksamhet;skola-barn;340
-2020;jun;kulturenilund;verksamhet;skola-vuxen;33
 2020;jun;kulturenilund;verksamhet;student;135
 2020;jun;kulturenilund;anläggning;total;4667
 2020;jun;kulturensostarp;kombinerat;total;1879
@@ -1181,8 +1049,6 @@
 2020;jul;kulturenilund;verksamhet;medlem;1118
 2020;jul;kulturenilund;verksamhet;pensionär;581
 2020;jul;kulturenilund;verksamhet;rabatt;82
-2020;jul;kulturenilund;verksamhet;skola-barn;135
-2020;jul;kulturenilund;verksamhet;skola-vuxen;5
 2020;jul;kulturenilund;verksamhet;student;368
 2020;jul;kulturenilund;anläggning;total;12983
 2020;jul;kulturensostarp;kombinerat;total;4373
@@ -1199,8 +1065,6 @@
 2020;aug;kulturenilund;verksamhet;medlem;793
 2020;aug;kulturenilund;verksamhet;pensionär;391
 2020;aug;kulturenilund;verksamhet;rabatt;204
-2020;aug;kulturenilund;verksamhet;skola-barn;380
-2020;aug;kulturenilund;verksamhet;skola-vuxen;401
 2020;aug;kulturenilund;verksamhet;student;315
 2020;aug;kulturenilund;anläggning;total;6522
 2020;aug;kulturensostarp;kombinerat;total;2736
@@ -1217,8 +1081,6 @@
 2020;sep;kulturenilund;verksamhet;medlem;643
 2020;sep;kulturenilund;verksamhet;pensionär;362
 2020;sep;kulturenilund;verksamhet;rabatt;68
-2020;sep;kulturenilund;verksamhet;skola-barn;1214
-2020;sep;kulturenilund;verksamhet;skola-vuxen;364
 2020;sep;kulturenilund;verksamhet;student;189
 2020;sep;kulturenilund;anläggning;total;7732
 2020;sep;kulturensostarp;kombinerat;total;1876
@@ -1235,8 +1097,6 @@
 2020;okt;kulturenilund;verksamhet;medlem;802
 2020;okt;kulturenilund;verksamhet;pensionär;754
 2020;okt;kulturenilund;verksamhet;rabatt;148
-2020;okt;kulturenilund;verksamhet;skola-barn;659
-2020;okt;kulturenilund;verksamhet;skola-vuxen;396
 2020;okt;kulturenilund;verksamhet;student;362
 2020;okt;kulturenilund;anläggning;total;8889
 2020;okt;kulturensostarp;kombinerat;total;1766
@@ -1251,8 +1111,6 @@
 2020;nov;kulturenilund;verksamhet;medlem;397
 2020;nov;kulturenilund;verksamhet;pensionär;131
 2020;nov;kulturenilund;verksamhet;rabatt;41
-2020;nov;kulturenilund;verksamhet;skola-barn;225
-2020;nov;kulturenilund;verksamhet;skola-vuxen;54
 2020;nov;kulturenilund;verksamhet;student;124
 2020;nov;kulturenilund;anläggning;total;3744
 2020;nov;kulturensostarp;kombinerat;total;1316
@@ -1267,8 +1125,6 @@
 2020;dec;kulturenilund;verksamhet;medlem;361
 2020;dec;kulturenilund;verksamhet;pensionär;47
 2020;dec;kulturenilund;verksamhet;rabatt;5
-2020;dec;kulturenilund;verksamhet;skola-barn;116
-2020;dec;kulturenilund;verksamhet;skola-vuxen;35
 2020;dec;kulturenilund;verksamhet;student;66
 2020;dec;kulturenilund;anläggning;total;3855
 2020;dec;kulturensostarp;kombinerat;total;772
@@ -1283,8 +1139,6 @@
 2021;jan;kulturenilund;verksamhet;medlem;92
 2021;jan;kulturenilund;verksamhet;pensionär;22
 2021;jan;kulturenilund;verksamhet;rabatt;2
-2021;jan;kulturenilund;verksamhet;skola-barn;36
-2021;jan;kulturenilund;verksamhet;skola-vuxen;3
 2021;jan;kulturenilund;verksamhet;student;19
 2021;jan;kulturenilund;anläggning;total;2944
 2021;jan;kulturensostarp;kombinerat;total;306
@@ -1299,8 +1153,6 @@
 2021;feb;kulturenilund;verksamhet;medlem;402
 2021;feb;kulturenilund;verksamhet;pensionär;205
 2021;feb;kulturenilund;verksamhet;rabatt;22
-2021;feb;kulturenilund;verksamhet;skola-barn;124
-2021;feb;kulturenilund;verksamhet;skola-vuxen;3
 2021;feb;kulturenilund;verksamhet;student;125
 2021;feb;kulturenilund;anläggning;total;2801
 2021;feb;kulturensostarp;kombinerat;total;322
@@ -1315,8 +1167,6 @@
 2021;mar;kulturenilund;verksamhet;medlem;340
 2021;mar;kulturenilund;verksamhet;pensionär;49
 2021;mar;kulturenilund;verksamhet;rabatt;4
-2021;mar;kulturenilund;verksamhet;skola-barn;144
-2021;mar;kulturenilund;verksamhet;skola-vuxen;64
 2021;mar;kulturenilund;verksamhet;student;94
 2021;mar;kulturenilund;anläggning;total;2702
 2021;mar;kulturensostarp;kombinerat;total;563
@@ -1331,8 +1181,6 @@
 2021;apr;kulturenilund;verksamhet;medlem;489
 2021;apr;kulturenilund;verksamhet;pensionär;125
 2021;apr;kulturenilund;verksamhet;rabatt;13
-2021;apr;kulturenilund;verksamhet;skola-barn;299
-2021;apr;kulturenilund;verksamhet;skola-vuxen;44
 2021;apr;kulturenilund;verksamhet;student;178
 2021;apr;kulturenilund;anläggning;total;3688
 2021;apr;kulturensostarp;kombinerat;total;1374
@@ -1347,8 +1195,6 @@
 2021;maj;kulturenilund;verksamhet;medlem;658
 2021;maj;kulturenilund;verksamhet;pensionär;222
 2021;maj;kulturenilund;verksamhet;rabatt;21
-2021;maj;kulturenilund;verksamhet;skola-barn;578
-2021;maj;kulturenilund;verksamhet;skola-vuxen;103
 2021;maj;kulturenilund;verksamhet;student;205
 2021;maj;kulturenilund;anläggning;total;5372
 2021;maj;kulturensostarp;kombinerat;total;2656
@@ -1363,8 +1209,6 @@
 2021;jun;kulturenilund;verksamhet;medlem;708
 2021;jun;kulturenilund;verksamhet;pensionär;399
 2021;jun;kulturenilund;verksamhet;rabatt;84
-2021;jun;kulturenilund;verksamhet;skola-barn;552
-2021;jun;kulturenilund;verksamhet;skola-vuxen;29
 2021;jun;kulturenilund;verksamhet;student;269
 2021;jun;kulturenilund;anläggning;total;9376
 2021;jun;kulturensostarp;kombinerat;total;2298
@@ -1379,8 +1223,6 @@
 2021;jul;kulturenilund;verksamhet;medlem;983
 2021;jul;kulturenilund;verksamhet;pensionär;971
 2021;jul;kulturenilund;verksamhet;rabatt;153
-2021;jul;kulturenilund;verksamhet;skola-barn;133
-2021;jul;kulturenilund;verksamhet;skola-vuxen;20
 2021;jul;kulturenilund;verksamhet;student;516
 2021;jul;kulturenilund;anläggning;total;18804
 2021;jul;kulturensostarp;kombinerat;total;3906
@@ -1395,8 +1237,6 @@
 2021;aug;kulturenilund;verksamhet;medlem;739
 2021;aug;kulturenilund;verksamhet;pensionär;909
 2021;aug;kulturenilund;verksamhet;rabatt;92
-2021;aug;kulturenilund;verksamhet;skola-barn;343
-2021;aug;kulturenilund;verksamhet;skola-vuxen;111
 2021;aug;kulturenilund;verksamhet;student;530
 2021;aug;kulturenilund;anläggning;total;16842
 2021;aug;kulturensostarp;kombinerat;total;3310
@@ -1411,8 +1251,6 @@
 2021;sep;kulturenilund;verksamhet;medlem;557
 2021;sep;kulturenilund;verksamhet;pensionär;604
 2021;sep;kulturenilund;verksamhet;rabatt;232
-2021;sep;kulturenilund;verksamhet;skola-barn;821
-2021;sep;kulturenilund;verksamhet;skola-vuxen;299
 2021;sep;kulturenilund;verksamhet;student;336
 2021;sep;kulturenilund;anläggning;total;10754
 2021;sep;kulturensostarp;kombinerat;total;1879
@@ -1427,8 +1265,6 @@
 2021;okt;kulturenilund;verksamhet;medlem;778
 2021;okt;kulturenilund;verksamhet;pensionär;787
 2021;okt;kulturenilund;verksamhet;rabatt;78
-2021;okt;kulturenilund;verksamhet;skola-barn;1062
-2021;okt;kulturenilund;verksamhet;skola-vuxen;303
 2021;okt;kulturenilund;verksamhet;student;375
 2021;okt;kulturenilund;anläggning;total;14255
 2021;okt;kulturensostarp;kombinerat;total;1598
@@ -1443,8 +1279,6 @@
 2021;nov;kulturenilund;verksamhet;medlem;1917
 2021;nov;kulturenilund;verksamhet;pensionär;1186
 2021;nov;kulturenilund;verksamhet;rabatt;167
-2021;nov;kulturenilund;verksamhet;skola-barn;678
-2021;nov;kulturenilund;verksamhet;skola-vuxen;306
 2021;nov;kulturenilund;verksamhet;student;1921
 2021;nov;kulturenilund;anläggning;total;18170
 2021;nov;kulturensostarp;kombinerat;total;1655
@@ -1459,8 +1293,6 @@
 2021;dec;kulturenilund;verksamhet;medlem;511
 2021;dec;kulturenilund;verksamhet;pensionär;357
 2021;dec;kulturenilund;verksamhet;rabatt;231
-2021;dec;kulturenilund;verksamhet;skola-barn;1334
-2021;dec;kulturenilund;verksamhet;skola-vuxen;301
 2021;dec;kulturenilund;verksamhet;student;347
 2021;dec;kulturenilund;anläggning;total;8335
 2021;dec;kulturensostarp;kombinerat;total;1494
@@ -1475,8 +1307,6 @@
 2022;jan;kulturenilund;verksamhet;medlem;394
 2022;jan;kulturenilund;verksamhet;pensionär;202
 2022;jan;kulturenilund;verksamhet;rabatt;14
-2022;jan;kulturenilund;verksamhet;skola-barn;66
-2022;jan;kulturenilund;verksamhet;skola-vuxen;70
 2022;jan;kulturenilund;verksamhet;student;225
 2022;jan;kulturenilund;anläggning;total;4022
 2022;jan;kulturensostarp;kombinerat;total;329
@@ -1491,8 +1321,6 @@
 2022;feb;kulturenilund;verksamhet;medlem;628
 2022;feb;kulturenilund;verksamhet;pensionär;536
 2022;feb;kulturenilund;verksamhet;rabatt;86
-2022;feb;kulturenilund;verksamhet;skola-barn;299
-2022;feb;kulturenilund;verksamhet;skola-vuxen;240
 2022;feb;kulturenilund;verksamhet;student;298
 2022;feb;kulturenilund;anläggning;total;7853
 2022;feb;kulturensostarp;kombinerat;total;626
@@ -1507,8 +1335,6 @@
 2022;mar;kulturenilund;verksamhet;medlem;713
 2022;mar;kulturenilund;verksamhet;pensionär;516
 2022;mar;kulturenilund;verksamhet;rabatt;94
-2022;mar;kulturenilund;verksamhet;skola-barn;1160
-2022;mar;kulturenilund;verksamhet;skola-vuxen;115
 2022;mar;kulturenilund;verksamhet;student;263
 2022;mar;kulturenilund;anläggning;total;11345
 2022;mar;kulturensostarp;kombinerat;total;795
@@ -1523,8 +1349,6 @@
 2022;apr;kulturenilund;verksamhet;medlem;962
 2022;apr;kulturenilund;verksamhet;pensionär;667
 2022;apr;kulturenilund;verksamhet;rabatt;226
-2022;apr;kulturenilund;verksamhet;skola-barn;1071
-2022;apr;kulturenilund;verksamhet;skola-vuxen;361
 2022;apr;kulturenilund;verksamhet;student;425
 2022;apr;kulturenilund;anläggning;total;13977
 2022;apr;kulturensostarp;kombinerat;total;1953
@@ -1539,8 +1363,6 @@
 2022;maj;kulturenilund;verksamhet;medlem;541
 2022;maj;kulturenilund;verksamhet;pensionär;795
 2022;maj;kulturenilund;verksamhet;rabatt;293
-2022;maj;kulturenilund;verksamhet;skola-barn;1325
-2022;maj;kulturenilund;verksamhet;skola-vuxen;256
 2022;maj;kulturenilund;verksamhet;student;373
 2022;maj;kulturenilund;anläggning;total;17558
 2022;maj;kulturensostarp;kombinerat;total;7418
@@ -1555,8 +1377,6 @@
 2022;jun;kulturenilund;verksamhet;medlem;886
 2022;jun;kulturenilund;verksamhet;pensionär;1184
 2022;jun;kulturenilund;verksamhet;rabatt;264
-2022;jun;kulturenilund;verksamhet;skola-barn;1278
-2022;jun;kulturenilund;verksamhet;skola-vuxen;176
 2022;jun;kulturenilund;verksamhet;student;834
 2022;jun;kulturenilund;anläggning;total;21231
 2022;jun;kulturensostarp;kombinerat;total;4067
@@ -1571,8 +1391,6 @@
 2022;jul;kulturenilund;verksamhet;medlem;979
 2022;jul;kulturenilund;verksamhet;pensionär;1551
 2022;jul;kulturenilund;verksamhet;rabatt;135
-2022;jul;kulturenilund;verksamhet;skola-barn;109
-2022;jul;kulturenilund;verksamhet;skola-vuxen;48
 2022;jul;kulturenilund;verksamhet;student;681
 2022;jul;kulturenilund;anläggning;total;21417
 2022;jul;kulturensostarp;kombinerat;total;3906
@@ -1587,8 +1405,6 @@
 2022;aug;kulturenilund;verksamhet;medlem;635
 2022;aug;kulturenilund;verksamhet;pensionär;1053
 2022;aug;kulturenilund;verksamhet;rabatt;237
-2022;aug;kulturenilund;verksamhet;skola-barn;303
-2022;aug;kulturenilund;verksamhet;skola-vuxen;67
 2022;aug;kulturenilund;verksamhet;student;615
 2022;aug;kulturenilund;anläggning;total;16838
 2022;aug;kulturensostarp;kombinerat;total;3310
@@ -1603,8 +1419,6 @@
 2022;sep;kulturenilund;verksamhet;medlem;565
 2022;sep;kulturenilund;verksamhet;pensionär;584
 2022;sep;kulturenilund;verksamhet;rabatt;369
-2022;sep;kulturenilund;verksamhet;skola-barn;744
-2022;sep;kulturenilund;verksamhet;skola-vuxen;321
 2022;sep;kulturenilund;verksamhet;student;376
 2022;sep;kulturenilund;anläggning;total;13762
 2022;sep;kulturensostarp;kombinerat;total;2685
@@ -1619,8 +1433,6 @@
 2022;okt;kulturenilund;verksamhet;medlem;759
 2022;okt;kulturenilund;verksamhet;pensionär;739
 2022;okt;kulturenilund;verksamhet;rabatt;313
-2022;okt;kulturenilund;verksamhet;skola-barn;698
-2022;okt;kulturenilund;verksamhet;skola-vuxen;363
 2022;okt;kulturenilund;verksamhet;student;408
 2022;okt;kulturenilund;anläggning;total;10696
 2022;okt;kulturensostarp;kombinerat;total;2340
@@ -1635,8 +1447,6 @@
 2022;nov;kulturenilund;verksamhet;medlem;2204
 2022;nov;kulturenilund;verksamhet;pensionär;1429
 2022;nov;kulturenilund;verksamhet;rabatt;288
-2022;nov;kulturenilund;verksamhet;skola-barn;681
-2022;nov;kulturenilund;verksamhet;skola-vuxen;268
 2022;nov;kulturenilund;verksamhet;student;1836
 2022;nov;kulturenilund;anläggning;total;18992
 2022;nov;kulturensostarp;kombinerat;total;1769
@@ -1651,8 +1461,6 @@
 2022;dec;kulturenilund;verksamhet;medlem;637
 2022;dec;kulturenilund;verksamhet;pensionär;575
 2022;dec;kulturenilund;verksamhet;rabatt;386
-2022;dec;kulturenilund;verksamhet;skola-barn;499
-2022;dec;kulturenilund;verksamhet;skola-vuxen;166
 2022;dec;kulturenilund;verksamhet;student;433
 2022;dec;kulturenilund;anläggning;total;9409
 2022;dec;kulturensostarp;kombinerat;total;1677
@@ -1667,8 +1475,6 @@
 2023;jan;kulturenilund;verksamhet;medlem;587
 2023;jan;kulturenilund;verksamhet;pensionär;460
 2023;jan;kulturenilund;verksamhet;rabatt;79
-2023;jan;kulturenilund;verksamhet;skola-barn;197
-2023;jan;kulturenilund;verksamhet;skola-vuxen;179
 2023;jan;kulturenilund;verksamhet;student;339
 2023;jan;kulturenilund;anläggning;total;5456
 2023;jan;kulturensostarp;kombinerat;total;401
@@ -1683,8 +1489,6 @@
 2023;feb;kulturenilund;verksamhet;medlem;735
 2023;feb;kulturenilund;verksamhet;pensionär;396
 2023;feb;kulturenilund;verksamhet;rabatt;87
-2023;feb;kulturenilund;verksamhet;skola-barn;766
-2023;feb;kulturenilund;verksamhet;skola-vuxen;137
 2023;feb;kulturenilund;verksamhet;student;301
 2023;feb;kulturenilund;anläggning;total;8628
 2023;feb;kulturensostarp;kombinerat;total;498
@@ -1699,8 +1503,6 @@
 2023;mar;kulturenilund;verksamhet;medlem;450
 2023;mar;kulturenilund;verksamhet;pensionär;319
 2023;mar;kulturenilund;verksamhet;rabatt;227
-2023;mar;kulturenilund;verksamhet;skola-barn;857
-2023;mar;kulturenilund;verksamhet;skola-vuxen;222
 2023;mar;kulturenilund;verksamhet;student;309
 2023;mar;kulturenilund;anläggning;total;6932
 2023;mar;kulturensostarp;kombinerat;total;1094
@@ -1715,8 +1517,6 @@
 2023;apr;kulturenilund;verksamhet;medlem;1130
 2023;apr;kulturenilund;verksamhet;pensionär;754
 2023;apr;kulturenilund;verksamhet;rabatt;441
-2023;apr;kulturenilund;verksamhet;skola-barn;298
-2023;apr;kulturenilund;verksamhet;skola-vuxen;271
 2023;apr;kulturenilund;verksamhet;student;499
 2023;apr;kulturenilund;anläggning;total;12127
 2023;apr;kulturensostarp;kombinerat;total;1689
@@ -1731,8 +1531,6 @@
 2023;maj;kulturenilund;verksamhet;medlem;503
 2023;maj;kulturenilund;verksamhet;pensionär;962
 2023;maj;kulturenilund;verksamhet;rabatt;305
-2023;maj;kulturenilund;verksamhet;skola-barn;1276
-2023;maj;kulturenilund;verksamhet;skola-vuxen;259
 2023;maj;kulturenilund;verksamhet;student;499
 2023;maj;kulturenilund;anläggning;total;14023
 2023;maj;kulturensostarp;kombinerat;total;3015
@@ -1747,8 +1545,6 @@
 2023;jun;kulturenilund;verksamhet;medlem;964
 2023;jun;kulturenilund;verksamhet;pensionär;1314
 2023;jun;kulturenilund;verksamhet;rabatt;294
-2023;jun;kulturenilund;verksamhet;skola-barn;855
-2023;jun;kulturenilund;verksamhet;skola-vuxen;87
 2023;jun;kulturenilund;verksamhet;student;989
 2023;jun;kulturenilund;anläggning;total;18739
 2023;jun;kulturensostarp;kombinerat;total;2012
@@ -1763,8 +1559,6 @@
 2023;jul;kulturenilund;verksamhet;medlem;1416
 2023;jul;kulturenilund;verksamhet;pensionär;1926
 2023;jul;kulturenilund;verksamhet;rabatt;296
-2023;jul;kulturenilund;verksamhet;skola-barn;133
-2023;jul;kulturenilund;verksamhet;skola-vuxen;88
 2023;jul;kulturenilund;verksamhet;student;647
 2023;jul;kulturenilund;anläggning;total;23140
 2023;jul;kulturensostarp;kombinerat;total;2250
@@ -1779,8 +1573,6 @@
 2023;aug;kulturenilund;verksamhet;medlem;879
 2023;aug;kulturenilund;verksamhet;pensionär;1511
 2023;aug;kulturenilund;verksamhet;rabatt;297
-2023;aug;kulturenilund;verksamhet;skola-barn;347
-2023;aug;kulturenilund;verksamhet;skola-vuxen;79
 2023;aug;kulturenilund;verksamhet;student;627
 2023;aug;kulturenilund;anläggning;total;18730
 2023;aug;kulturensostarp;kombinerat;total;1554
@@ -1795,8 +1587,6 @@
 2023;sep;kulturenilund;verksamhet;medlem;866
 2023;sep;kulturenilund;verksamhet;pensionär;873
 2023;sep;kulturenilund;verksamhet;rabatt;483
-2023;sep;kulturenilund;verksamhet;skola-barn;804
-2023;sep;kulturenilund;verksamhet;skola-vuxen;338
 2023;sep;kulturenilund;verksamhet;student;399
 2023;sep;kulturenilund;anläggning;total;15068
 2023;sep;kulturensostarp;kombinerat;total;949
@@ -1811,8 +1601,6 @@
 2023;okt;kulturenilund;verksamhet;medlem;772
 2023;okt;kulturenilund;verksamhet;pensionär;878
 2023;okt;kulturenilund;verksamhet;rabatt;256
-2023;okt;kulturenilund;verksamhet;skola-barn;851
-2023;okt;kulturenilund;verksamhet;skola-vuxen;234
 2023;okt;kulturenilund;verksamhet;student;325
 2023;okt;kulturenilund;anläggning;total;7649
 2023;okt;kulturensostarp;kombinerat;total;799
@@ -1827,8 +1615,6 @@
 2023;nov;kulturenilund;verksamhet;medlem;599
 2023;nov;kulturenilund;verksamhet;pensionär;769
 2023;nov;kulturenilund;verksamhet;rabatt;196
-2023;nov;kulturenilund;verksamhet;skola-barn;407
-2023;nov;kulturenilund;verksamhet;skola-vuxen;206
 2023;nov;kulturenilund;verksamhet;student;327
 2023;nov;kulturenilund;anläggning;total;10092
 2023;nov;kulturensostarp;kombinerat;total;441
@@ -1843,8 +1629,6 @@
 2023;dec;kulturenilund;verksamhet;medlem;2336
 2023;dec;kulturenilund;verksamhet;pensionär;1199
 2023;dec;kulturenilund;verksamhet;rabatt;229
-2023;dec;kulturenilund;verksamhet;skola-barn;739
-2023;dec;kulturenilund;verksamhet;skola-vuxen;161
 2023;dec;kulturenilund;verksamhet;student;1544
 2023;dec;kulturenilund;anläggning;total;15339
 2023;dec;kulturensostarp;kombinerat;total;302
@@ -1859,8 +1643,6 @@
 2024;jan;kulturenilund;verksamhet;medlem;515
 2024;jan;kulturenilund;verksamhet;pensionär;592
 2024;jan;kulturenilund;verksamhet;rabatt;175
-2024;jan;kulturenilund;verksamhet;skola-barn;320
-2024;jan;kulturenilund;verksamhet;skola-vuxen;174
 2024;jan;kulturenilund;verksamhet;student;238
 2024;jan;kulturenilund;anläggning;total;4926
 2024;jan;kulturensostarp;kombinerat;total;295
@@ -1875,8 +1657,6 @@
 2024;feb;kulturenilund;verksamhet;medlem;1011
 2024;feb;kulturenilund;verksamhet;pensionär;621
 2024;feb;kulturenilund;verksamhet;rabatt;165
-2024;feb;kulturenilund;verksamhet;skola-barn;955
-2024;feb;kulturenilund;verksamhet;skola-vuxen;243
 2024;feb;kulturenilund;verksamhet;student;283
 2024;feb;kulturenilund;anläggning;total;8506
 2024;feb;kulturensostarp;kombinerat;total;531
@@ -1891,8 +1671,6 @@
 2024;mar;kulturenilund;verksamhet;medlem;1400
 2024;mar;kulturenilund;verksamhet;pensionär;776
 2024;mar;kulturenilund;verksamhet;rabatt;175
-2024;mar;kulturenilund;verksamhet;skola-barn;936
-2024;mar;kulturenilund;verksamhet;skola-vuxen;202
 2024;mar;kulturenilund;verksamhet;student;421
 2024;mar;kulturenilund;anläggning;total;13306
 2024;mar;kulturensostarp;kombinerat;total;1135
@@ -1907,8 +1685,6 @@
 2024;apr;kulturenilund;verksamhet;medlem;811
 2024;apr;kulturenilund;verksamhet;pensionär;715
 2024;apr;kulturenilund;verksamhet;rabatt;350
-2024;apr;kulturenilund;verksamhet;skola-barn;1050
-2024;apr;kulturenilund;verksamhet;skola-vuxen;300
 2024;apr;kulturenilund;verksamhet;student;352
 2024;apr;kulturenilund;anläggning;total;10368
 2024;apr;kulturensostarp;kombinerat;total;1820
@@ -1923,8 +1699,6 @@
 2024;maj;kulturenilund;verksamhet;medlem;1003
 2024;maj;kulturenilund;verksamhet;pensionär;1089
 2024;maj;kulturenilund;verksamhet;rabatt;474
-2024;maj;kulturenilund;verksamhet;skola-barn;1468
-2024;maj;kulturenilund;verksamhet;skola-vuxen;343
 2024;maj;kulturenilund;verksamhet;student;347
 2024;maj;kulturenilund;anläggning;total;15117
 2024;maj;kulturensostarp;kombinerat;total;3316
@@ -1939,8 +1713,6 @@
 2024;jun;kulturenilund;verksamhet;medlem;1346
 2024;jun;kulturenilund;verksamhet;pensionär;1506
 2024;jun;kulturenilund;verksamhet;rabatt;237
-2024;jun;kulturenilund;verksamhet;skola-barn;871
-2024;jun;kulturenilund;verksamhet;skola-vuxen;142
 2024;jun;kulturenilund;verksamhet;student;840
 2024;jun;kulturenilund;anläggning;total;20254
 2024;jun;kulturensostarp;kombinerat;total;2213
@@ -1955,8 +1727,6 @@
 2024;jul;kulturenilund;verksamhet;medlem;1216
 2024;jul;kulturenilund;verksamhet;pensionär;1869
 2024;jul;kulturenilund;verksamhet;rabatt;260
-2024;jul;kulturenilund;verksamhet;skola-barn;158
-2024;jul;kulturenilund;verksamhet;skola-vuxen;56
 2024;jul;kulturenilund;verksamhet;student;577
 2024;jul;kulturenilund;anläggning;total;22410
 2024;jul;kulturensostarp;kombinerat;total;3780
@@ -1971,8 +1741,6 @@
 2024;aug;kulturenilund;verksamhet;medlem;968
 2024;aug;kulturenilund;verksamhet;pensionär;1373
 2024;aug;kulturenilund;verksamhet;rabatt;259
-2024;aug;kulturenilund;verksamhet;skola-barn;326
-2024;aug;kulturenilund;verksamhet;skola-vuxen;90
 2024;aug;kulturenilund;verksamhet;student;571
 2024;aug;kulturenilund;anläggning;total;18902
 2024;aug;kulturensostarp;kombinerat;total;3763
@@ -1987,8 +1755,6 @@
 2024;sep;kulturenilund;verksamhet;medlem;651
 2024;sep;kulturenilund;verksamhet;pensionär;778
 2024;sep;kulturenilund;verksamhet;rabatt;227
-2024;sep;kulturenilund;verksamhet;skola-barn;1303
-2024;sep;kulturenilund;verksamhet;skola-vuxen;354
 2024;sep;kulturenilund;verksamhet;student;318
 2024;sep;kulturenilund;anläggning;total;14952
 2024;sep;kulturensostarp;kombinerat;total;3370
@@ -2003,8 +1769,6 @@
 2024;okt;kulturenilund;verksamhet;medlem;737
 2024;okt;kulturenilund;verksamhet;pensionär;672
 2024;okt;kulturenilund;verksamhet;rabatt;224
-2024;okt;kulturenilund;verksamhet;skola-barn;1254
-2024;okt;kulturenilund;verksamhet;skola-vuxen;392
 2024;okt;kulturenilund;verksamhet;student;339
 2024;okt;kulturenilund;anläggning;total;11340
 2024;okt;kulturensostarp;kombinerat;total;1269
@@ -2019,8 +1783,6 @@
 2024;nov;kulturenilund;verksamhet;medlem;1952
 2024;nov;kulturenilund;verksamhet;pensionär;894
 2024;nov;kulturenilund;verksamhet;rabatt;122
-2024;nov;kulturenilund;verksamhet;skola-barn;705
-2024;nov;kulturenilund;verksamhet;skola-vuxen;349
 2024;nov;kulturenilund;verksamhet;student;976
 2024;nov;kulturenilund;anläggning;total;17021
 2024;nov;kulturensostarp;kombinerat;total;1016
@@ -2035,8 +1797,6 @@
 2024;dec;kulturenilund;verksamhet;medlem;1976
 2024;dec;kulturenilund;verksamhet;pensionär;712
 2024;dec;kulturenilund;verksamhet;rabatt;197
-2024;dec;kulturenilund;verksamhet;skola-barn;1036
-2024;dec;kulturenilund;verksamhet;skola-vuxen;145
 2024;dec;kulturenilund;verksamhet;student;686
 2024;dec;kulturenilund;anläggning;total;14843
 2024;dec;kulturensostarp;kombinerat;total;712
@@ -2051,8 +1811,6 @@
 2025;jan;kulturenilund;verksamhet;medlem;823
 2025;jan;kulturenilund;verksamhet;pensionär;280
 2025;jan;kulturenilund;verksamhet;rabatt;89
-2025;jan;kulturenilund;verksamhet;skola-barn;430
-2025;jan;kulturenilund;verksamhet;skola-vuxen;186
 2025;jan;kulturenilund;verksamhet;student;186
 2025;jan;kulturenilund;anläggning;total;5496
 2025;jan;kulturensostarp;kombinerat;total;47
@@ -2067,8 +1825,6 @@
 2025;feb;kulturenilund;verksamhet;medlem;788
 2025;feb;kulturenilund;verksamhet;pensionär;334
 2025;feb;kulturenilund;verksamhet;rabatt;62
-2025;feb;kulturenilund;verksamhet;skola-barn;666
-2025;feb;kulturenilund;verksamhet;skola-vuxen;178
 2025;feb;kulturenilund;verksamhet;student;218
 2025;feb;kulturenilund;anläggning;total;7561
 2025;feb;kulturensostarp;kombinerat;total;394
@@ -2083,8 +1839,6 @@
 2025;mar;kulturenilund;verksamhet;medlem;887
 2025;mar;kulturenilund;verksamhet;pensionär;463
 2025;mar;kulturenilund;verksamhet;rabatt;95
-2025;mar;kulturenilund;verksamhet;skola-barn;987
-2025;mar;kulturenilund;verksamhet;skola-vuxen;213
 2025;mar;kulturenilund;verksamhet;student;263
 2025;mar;kulturenilund;anläggning;total;8675
 2025;mar;kulturensostarp;kombinerat;total;1017
@@ -2099,8 +1853,6 @@
 2025;apr;kulturenilund;verksamhet;medlem;1080
 2025;apr;kulturenilund;verksamhet;pensionär;652
 2025;apr;kulturenilund;verksamhet;rabatt;97
-2025;apr;kulturenilund;verksamhet;skola-barn;866
-2025;apr;kulturenilund;verksamhet;skola-vuxen;562
 2025;apr;kulturenilund;verksamhet;student;372
 2025;apr;kulturenilund;anläggning;total;13960
 2025;apr;kulturensostarp;kombinerat;total;2355
@@ -2115,8 +1867,6 @@
 2025;maj;kulturenilund;verksamhet;medlem;1024
 2025;maj;kulturenilund;verksamhet;pensionär;878
 2025;maj;kulturenilund;verksamhet;rabatt;382
-2025;maj;kulturenilund;verksamhet;skola-barn;2190
-2025;maj;kulturenilund;verksamhet;skola-vuxen;212
 2025;maj;kulturenilund;verksamhet;student;361
 2025;maj;kulturenilund;anläggning;total;20195
 2025;maj;kulturensostarp;kombinerat;total;1810
@@ -2131,8 +1881,6 @@
 2025;jun;kulturenilund;verksamhet;medlem;1257
 2025;jun;kulturenilund;verksamhet;pensionär;1482
 2025;jun;kulturenilund;verksamhet;rabatt;212
-2025;jun;kulturenilund;verksamhet;skola-barn;842
-2025;jun;kulturenilund;verksamhet;skola-vuxen;114
 2025;jun;kulturenilund;verksamhet;student;1004
 2025;jun;kulturenilund;anläggning;total;22702
 2025;jun;kulturensostarp;kombinerat;total;3108
@@ -2147,8 +1895,6 @@
 2025;jul;kulturenilund;verksamhet;medlem;1530
 2025;jul;kulturenilund;verksamhet;pensionär;1740
 2025;jul;kulturenilund;verksamhet;rabatt;656
-2025;jul;kulturenilund;verksamhet;skola-barn;170
-2025;jul;kulturenilund;verksamhet;skola-vuxen;140
 2025;jul;kulturenilund;verksamhet;student;592
 2025;jul;kulturenilund;anläggning;total;28236
 2025;jul;kulturensostarp;kombinerat;total;3622
@@ -2163,8 +1909,6 @@
 2025;aug;kulturenilund;verksamhet;medlem;1078
 2025;aug;kulturenilund;verksamhet;pensionär;1353
 2025;aug;kulturenilund;verksamhet;rabatt;189
-2025;aug;kulturenilund;verksamhet;skola-barn;427
-2025;aug;kulturenilund;verksamhet;skola-vuxen;49
 2025;aug;kulturenilund;verksamhet;student;592
 2025;aug;kulturenilund;anläggning;total;21709
 2025;aug;kulturensostarp;kombinerat;total;2407
@@ -2179,8 +1923,6 @@
 2025;sep;kulturenilund;verksamhet;medlem;742
 2025;sep;kulturenilund;verksamhet;pensionär;696
 2025;sep;kulturenilund;verksamhet;rabatt;409
-2025;sep;kulturenilund;verksamhet;skola-barn;978
-2025;sep;kulturenilund;verksamhet;skola-vuxen;379
 2025;sep;kulturenilund;verksamhet;student;233
 2025;sep;kulturenilund;anläggning;total;17548
 2025;sep;kulturensostarp;kombinerat;total;1307
@@ -2195,8 +1937,6 @@
 2025;okt;kulturenilund;verksamhet;medlem;1086
 2025;okt;kulturenilund;verksamhet;pensionär;611
 2025;okt;kulturenilund;verksamhet;rabatt;252
-2025;okt;kulturenilund;verksamhet;skola-barn;1246
-2025;okt;kulturenilund;verksamhet;skola-vuxen;285
 2025;okt;kulturenilund;verksamhet;student;316
 2025;okt;kulturenilund;anläggning;total;11041
 2025;okt;kulturensostarp;kombinerat;total;438
@@ -2211,8 +1951,6 @@
 2025;nov;kulturenilund;verksamhet;medlem;3092
 2025;nov;kulturenilund;verksamhet;pensionär;1191
 2025;nov;kulturenilund;verksamhet;rabatt;179
-2025;nov;kulturenilund;verksamhet;skola-barn;801
-2025;nov;kulturenilund;verksamhet;skola-vuxen;357
 2025;nov;kulturenilund;verksamhet;student;1602
 2025;nov;kulturenilund;anläggning;total;21944
 2025;nov;kulturensostarp;kombinerat;total;1152
@@ -2227,8 +1965,6 @@
 2025;dec;kulturenilund;verksamhet;medlem;1026
 2025;dec;kulturenilund;verksamhet;pensionär;551
 2025;dec;kulturenilund;verksamhet;rabatt;158
-2025;dec;kulturenilund;verksamhet;skola-barn;917
-2025;dec;kulturenilund;verksamhet;skola-vuxen;217
 2025;dec;kulturenilund;verksamhet;student;291
 2025;dec;kulturenilund;anläggning;total;9260
 2025;dec;kulturensostarp;kombinerat;total;1672
@@ -2243,8 +1979,6 @@
 2026;jan;kulturenilund;verksamhet;medlem;726
 2026;jan;kulturenilund;verksamhet;pensionär;288
 2026;jan;kulturenilund;verksamhet;rabatt;50
-2026;jan;kulturenilund;verksamhet;skola-barn;250
-2026;jan;kulturenilund;verksamhet;skola-vuxen;95
 2026;jan;kulturenilund;verksamhet;student;154
 2026;jan;kulturenilund;anläggning;total;4612
 2026;jan;kulturensostarp;kombinerat;total;140
@@ -2259,8 +1993,6 @@
 2026;feb;kulturenilund;verksamhet;medlem;1088
 2026;feb;kulturenilund;verksamhet;pensionär;400
 2026;feb;kulturenilund;verksamhet;rabatt;61
-2026;feb;kulturenilund;verksamhet;skola-barn;1079
-2026;feb;kulturenilund;verksamhet;skola-vuxen;233
 2026;feb;kulturenilund;verksamhet;student;202
 2026;feb;kulturenilund;anläggning;total;7029
 2026;feb;kulturensostarp;kombinerat;total;395
@@ -2275,8 +2007,6 @@
 2026;mar;kulturenilund;verksamhet;medlem;1394
 2026;mar;kulturenilund;verksamhet;pensionär;584
 2026;mar;kulturenilund;verksamhet;rabatt;70
-2026;mar;kulturenilund;verksamhet;skola-barn;1385
-2026;mar;kulturenilund;verksamhet;skola-vuxen;294
 2026;mar;kulturenilund;verksamhet;student;280
 2026;mar;kulturenilund;anläggning;total;10702
 2026;mar;kulturensostarp;kombinerat;total;378
@@ -2291,8 +2021,6 @@
 2026;apr;kulturenilund;verksamhet;medlem;1389
 2026;apr;kulturenilund;verksamhet;pensionär;545
 2026;apr;kulturenilund;verksamhet;rabatt;163
-2026;apr;kulturenilund;verksamhet;skola-barn;978
-2026;apr;kulturenilund;verksamhet;skola-vuxen;270
 2026;apr;kulturenilund;verksamhet;student;281
 2026;apr;kulturenilund;anläggning;total;13254
 2026;apr;kulturensostarp;kombinerat;total;649
