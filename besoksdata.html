@@ -1388,12 +1388,12 @@ function isRowMatchingFilters(row) {
         }
     }
 
-// 3. Hantera Kategori (Korrigerad för att matcha små bokstäver i rådatan)
+    // 3. Hantera Kategori (Släpp igenom både barn och vuxen om "Skola (allt)" är valt)
     if (targetFFId === "kulturenilund") {
         if (currentKategori !== "Alla kategorier") {
             const targetKatId = KATEGORI_MAP[currentKategori];
             
-            // Speciell logik för den nya samlingskategorin
+            // Om användaren valt Skola (allt), tillåt både skola-barn och skola-vuxen
             if (targetKatId === "skola-allt") {
                 if (row.kategori !== "skola-barn" && row.kategori !== "skola-vuxen") {
                     return false;
@@ -1752,7 +1752,10 @@ function updateChart(data, forceResetAnimation = false) {
         const startMName = monthNamesShort[startMonth].toLowerCase();
         const endMName = monthNamesShort[endMonth].toLowerCase();
         const tidsSpann = `${startMName} ${startYear} – ${endMName} ${endYear}`;
-        const katSuffix = (currentFF === "Kulturen i Lund" && currentKategori !== "Alla kategorier") ? ` (${currentKategori.toLowerCase()})` : "";
+        
+        // Här rensar vi bort (allt) om valet är Skola (allt)
+        let katDisplay = currentKategori === "Skola (allt)" ? "skola" : currentKategori.toLowerCase();
+        const katSuffix = (currentFF === "Kulturen i Lund" && currentKategori !== "Alla kategorier") ? ` (${katDisplay})` : "";
         
         if (currentFF === "Alla besöksmål") {
             cHeader.textContent = `${prefix} alla besöksmål ${tidsSpann}`;
@@ -2245,12 +2248,25 @@ document.addEventListener("click", closeAllSelects);
 
 async function loadCSVData() {
     try {
-        const response = await fetch("https://kultpub.github.io/site/besoksdata.csv");
-        const text = await response.text();
+        // Hämtar båda filerna live från dina rätta GitHub-adresser
+        const [resBesok, resSkola] = await Promise.all([
+            fetch("https://kultpub.github.io/site/besoksdata.csv"),
+            fetch("https://kultpub.github.io/site/skoldata.csv")
+        ]);
 
-        visitRows = parseCSV(text);
+        const textBesok = await resBesok.text();
+        const textSkola = await resSkola.text();
+
+        // Parsar filerna med sina respektive logiker
+        const vanligaRader = parseCSV(textBesok);
+        const skolRader = parseSkolCSV(textSkola);
+
+        // Slår ihop all data i minnet till visitRows
+        visitRows = [...vanligaRader, ...skolRader];
+        
         if(visitRows.length === 0) return;
 
+        // Resten av din initieringskod som bygger filter och tabeller
         availableYears = [...new Set(visitRows.map(r => r.år))].sort((a, b) => b - a);
         currentTableYear = availableYears[0] || new Date().getFullYear();
 
