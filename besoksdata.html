@@ -1110,7 +1110,7 @@ h1 {
 
     <!-- TABELLVY -->
     <div id="tableView" class="view-container visible">
-      <h2 id="tableHeaderDisplay">Besöksdata</h2>
+      <h2 id="tableHeaderDisplay"></h2>
 
       <div class="table-scroll">
         <table id="statsTable">
@@ -1123,7 +1123,7 @@ h1 {
 
     <!-- DIAGRAMVY -->
     <div id="chartView" class="view-container" style="display:none;">
-      <h2 id="chartHeaderDisplay">Besöksdata</h2>
+      <h2 id="chartHeaderDisplay"></h2>
 
       <div id="chartContainer">
         <canvas id="statsChart"></canvas>
@@ -1192,6 +1192,55 @@ const KATEGORI_MAP = {
     "Skola vuxen": "skola-vuxen",
 	"Skola (allt)": "skola-allt"
 };
+
+// Fast skoldata för 2017 och delar av 2018 som saknas i den externa filen
+const hardcodedSkolData = [
+    { år: 2017, månad: "jan", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 393 },
+    { år: 2017, månad: "jan", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 93 },
+    { år: 2017, månad: "feb", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 358 },
+    { år: 2017, månad: "feb", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 189 },
+    { år: 2017, månad: "mar", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1493 },
+    { år: 2017, månad: "mar", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 387 },
+    { år: 2017, månad: "apr", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 910 },
+    { år: 2017, månad: "apr", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 214 },
+    { år: 2017, månad: "maj", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 2642 },
+    { år: 2017, månad: "maj", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 220 },
+    { år: 2017, månad: "jun", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1869 },
+    { år: 2017, månad: "jun", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 283 },
+    { år: 2017, månad: "jul", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 321 },
+    { år: 2017, månad: "jul", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 311 },
+    { år: 2017, månad: "aug", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 946 },
+    { år: 2017, månad: "aug", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 222 },
+    { år: 2017, månad: "sep", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 848 },
+    { år: 2017, månad: "sep", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 336 },
+    { år: 2017, månad: "okt", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 905 },
+    { år: 2017, månad: "okt", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 484 },
+    { år: 2017, månad: "nov", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 531 },
+    { år: 2017, månad: "nov", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 692 },
+    { år: 2017, månad: "dec", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1523 },
+    { år: 2017, månad: "dec", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 294 },
+    { år: 2018, månad: "jan", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 358 },
+    { år: 2018, månad: "jan", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 116 },
+    { år: 2018, månad: "feb", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 373 },
+    { år: 2018, månad: "feb", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 253 },
+    { år: 2018, månad: "mar", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 936 },
+    { år: 2018, månad: "mar", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 369 },
+    { år: 2018, månad: "apr", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 878 },
+    { år: 2018, månad: "apr", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 296 },
+    { år: 2018, månad: "maj", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 2035 },
+    { år: 2018, månad: "maj", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 291 },
+    { år: 2018, månad: "jun", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1544 },
+    { år: 2018, månad: "jun", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 127 },
+    { år: 2018, månad: "jul", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 336 },
+    { år: 2018, månad: "jul", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 221 },
+    { år: 2018, månad: "aug", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 375 },
+    { år: 2018, månad: "aug", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 342 },
+    { år: 2018, månad: "sep", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1020 },
+    { år: 2018, månad: "sep", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 267 },
+    { år: 2018, månad: "okt", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 868 },
+    { år: 2018, månad: "okt", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 500 }
+
+];
 
 const KATEGORI_OPTIONS = Object.keys(KATEGORI_MAP);
 
@@ -2261,8 +2310,8 @@ async function loadCSVData() {
         const vanligaRader = parseCSV(textBesok);
         const skolRader = parseSkolCSV(textSkola);
 
-        // Slår ihop all data i minnet till visitRows
-        visitRows = [...vanligaRader, ...skolRader];
+        // Slår ihop besöksdata, skoldata från fil samt den hårdkodade skoldatan i minnet
+        visitRows = [...vanligaRader, ...skolRader, ...hardcodedSkolData];
         
         if(visitRows.length === 0) return;
 
