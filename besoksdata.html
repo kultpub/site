@@ -1253,7 +1253,7 @@ h1 {
 
 let visitRows = [];
 let currentFF = "Alla besöksmål";
-let currentKategori = "Alla kategorier";
+let selectedKategorier = new Set();
 
 let startYear, startMonth, endYear, endMonth;
 let availableYears = [];
@@ -1303,8 +1303,7 @@ const KATEGORI_MAP = {
     "Fri vuxen": "fri-vuxen",
     "Konferens": "konferens",
     "Skola barn": "skola-barn",
-    "Skola vuxen": "skola-vuxen",
-	"Skola (allt)": "skola-allt"
+    "Skola vuxen": "skola-vuxen"
 };
 
 // Fast skoldata för 2017 och delar av 2018 som saknas i den externa filen
@@ -1406,7 +1405,6 @@ const hardcodedSkolData = [
 
 const KATEGORI_OPTIONS = Object.keys(KATEGORI_MAP);
 
-
 /* =========================================================
    DYNAMISK RUBRIKHÄMTNING
    ========================================================= */
@@ -1499,16 +1497,17 @@ function closeAllSelects() {
 function updateKategoriHint() {
     const hint = document.getElementById("kategoriHint");
     const isTable = document.getElementById("tableView").style.display !== "none";
-    const show = isTable && currentFF === "Kulturen i Lund" && currentKategori === "Alla kategorier";
+    const show = isTable
+        && currentFF === "Kulturen i Lund"
+        && (selectedKategorier.size === 0 || selectedKategorier.size >= 2);
     hint.style.display = show ? "block" : "none";
 }
 
 function updateTableCursor() {
-    const showPointer = currentFF === "Kulturen i Lund" 
-        && currentKategori === "Alla kategorier"
+    const showPointer = currentFF === "Kulturen i Lund"
+        && (selectedKategorier.size === 0 || selectedKategorier.size >= 2)
         && document.getElementById("toggleVerksamhet").checked;
-        
-    // Uppdaterar både vanliga dataceller och datacellerna i totalraden
+
     document.querySelectorAll("#statsTable td:not(:first-child)").forEach(td => {
         td.style.cursor = showPointer ? "pointer" : "default";
     });
@@ -1516,46 +1515,38 @@ function updateTableCursor() {
 
 function showKategoriBreakdown(year, monthIndex) {
     const monthName = monthNamesShort[monthIndex];
+    const isAllaKategorier = selectedKategorier.size === 0;
 
-    // 1. Hämta rådatan för alla kategorier
-    let rawBreakdown = KATEGORI_OPTIONS
-        .filter(kat => kat !== "Alla kategorier")
-        .map(kat => {
-            const katId = KATEGORI_MAP[kat];
-            const antal = visitRows.filter(r => {
-                if (r.år !== year) return false;
-                if (monthMap[r.månad] !== monthIndex) return false;
-                if (r.besöksmål !== "kulturenilund") return false;
+    const kategoriUrval = isAllaKategorier
+        ? KATEGORI_OPTIONS.filter(o => o !== "Alla kategorier")
+        : [...selectedKategorier];
 
-                if (r.typ !== "kombinerat") {
-                    const checkedTyp = document.getElementById("toggleAnlaggning").checked ? "anläggning" : "verksamhet";
-                    if (r.typ !== checkedTyp) return false;
-                }
-
-                return r.kategori === katId;
-            }).reduce((sum, r) => sum + r.antal, 0);
-            return { kat, antal };
-        });
-
-    // 2. Normalisera och slå ihop skolkategorierna till en enhetlig "Skola"
-    let consolidatedData = {};
-
-    rawBreakdown.forEach(item => {
-        let currentKat = item.kat;
-        
-        // Om kategorin innehåller ordet "Skola", mappa om namnet till "Skola"
-        if (currentKat === "Skola barn" || currentKat === "Skola vuxen" || currentKat === "Skola (allt)") {
-            currentKat = "Skola";
-        }
-
-        // Summera antalet för den transformerade kategorin
-        if (!consolidatedData[currentKat]) {
-            consolidatedData[currentKat] = 0;
-        }
-        consolidatedData[currentKat] += item.antal;
+    let rawBreakdown = kategoriUrval.map(kat => {
+        const katId = KATEGORI_MAP[kat];
+        const antal = visitRows.filter(r => {
+            if (r.år !== year) return false;
+            if (monthMap[r.månad] !== monthIndex) return false;
+            if (r.besöksmål !== "kulturenilund") return false;
+            if (r.typ !== "kombinerat") {
+                const checkedTyp = document.getElementById("toggleAnlaggning").checked ? "anläggning" : "verksamhet";
+                if (r.typ !== checkedTyp) return false;
+            }
+            return r.kategori === katId;
+        }).reduce((sum, r) => sum + r.antal, 0);
+        return { kat, antal };
     });
 
-    // 3. Konvertera tillbaka till en sorterad array och rensa bort nollvärden
+    let consolidatedData = {};
+    rawBreakdown.forEach(item => {
+        let key = item.kat;
+        // Slå bara ihop till "Skola" om vi visar alla kategorier
+        if (isAllaKategorier && (key === "Skola barn" || key === "Skola vuxen")) {
+            key = "Skola";
+        }
+        if (!consolidatedData[key]) consolidatedData[key] = 0;
+        consolidatedData[key] += item.antal;
+    });
+
     const breakdown = Object.keys(consolidatedData)
         .map(kat => ({ kat, antal: consolidatedData[kat] }))
         .filter(r => r.antal > 0)
@@ -1565,7 +1556,7 @@ function showKategoriBreakdown(year, monthIndex) {
 
     const total = breakdown.reduce((sum, r) => sum + r.antal, 0);
 
-    let rows = breakdown.map(r => {
+    const rows = breakdown.map(r => {
         const pct = ((r.antal / total) * 100).toFixed(1).replace(".", ",");
         return `
             <tr>
@@ -1600,48 +1591,45 @@ function showKategoriBreakdown(year, monthIndex) {
     const modalContent = modal.querySelector(".modal-content");
     modalContent.classList.remove("tips-modal");
     modalContent.style.width = "360px";
-    modal.querySelector("h3").textContent = `${monthName} ${year}: Kategorier`;
+    modal.querySelector("h3").textContent = isAllaKategorier
+    ? `${monthName} ${year}: Kategorier`
+    : `${monthName} ${year}: Urval`;
     document.getElementById("modalMessage").innerHTML = html;
     modal.style.display = "flex";
 }
 
 function showÅrsKategoriBreakdown(year) {
-    // 1. Hämta rådatan för hela det valda året
-    let rawBreakdown = KATEGORI_OPTIONS
-        .filter(kat => kat !== "Alla kategorier")
-        .map(kat => {
-            const katId = KATEGORI_MAP[kat];
-            const antal = visitRows.filter(r => {
-                if (r.år !== year) return false;
-                if (r.besöksmål !== "kulturenilund") return false;
+    const isAllaKategorier = selectedKategorier.size === 0;
 
-                if (r.typ !== "kombinerat") {
-                    const checkedTyp = document.getElementById("toggleAnlaggning").checked ? "anläggning" : "verksamhet";
-                    if (r.typ !== checkedTyp) return false;
-                }
+    const kategoriUrval = isAllaKategorier
+        ? KATEGORI_OPTIONS.filter(o => o !== "Alla kategorier")
+        : [...selectedKategorier];
 
-                return r.kategori === katId;
-            }).reduce((sum, r) => sum + r.antal, 0);
-            return { kat, antal };
-        });
-
-    // 2. Normalisera och slå ihop skolkategorierna till en enhetlig "Skola"
-    let consolidatedData = {};
-
-    rawBreakdown.forEach(item => {
-        let currentKat = item.kat;
-        
-        if (currentKat === "Skola barn" || currentKat === "Skola vuxen" || currentKat === "Skola (allt)") {
-            currentKat = "Skola";
-        }
-
-        if (!consolidatedData[currentKat]) {
-            consolidatedData[currentKat] = 0;
-        }
-        consolidatedData[currentKat] += item.antal;
+    let rawBreakdown = kategoriUrval.map(kat => {
+        const katId = KATEGORI_MAP[kat];
+        const antal = visitRows.filter(r => {
+            if (r.år !== year) return false;
+            if (r.besöksmål !== "kulturenilund") return false;
+            if (r.typ !== "kombinerat") {
+                const checkedTyp = document.getElementById("toggleAnlaggning").checked ? "anläggning" : "verksamhet";
+                if (r.typ !== checkedTyp) return false;
+            }
+            return r.kategori === katId;
+        }).reduce((sum, r) => sum + r.antal, 0);
+        return { kat, antal };
     });
 
-    // 3. Konvertera till sorterad array och rensa nollvärden
+    let consolidatedData = {};
+    rawBreakdown.forEach(item => {
+        let key = item.kat;
+        // Slå bara ihop till "Skola" om vi visar alla kategorier
+        if (isAllaKategorier && (key === "Skola barn" || key === "Skola vuxen")) {
+            key = "Skola";
+        }
+        if (!consolidatedData[key]) consolidatedData[key] = 0;
+        consolidatedData[key] += item.antal;
+    });
+
     const breakdown = Object.keys(consolidatedData)
         .map(kat => ({ kat, antal: consolidatedData[kat] }))
         .filter(r => r.antal > 0)
@@ -1651,7 +1639,7 @@ function showÅrsKategoriBreakdown(year) {
 
     const total = breakdown.reduce((sum, r) => sum + r.antal, 0);
 
-    let rows = breakdown.map(r => {
+    const rows = breakdown.map(r => {
         const pct = ((r.antal / total) * 100).toFixed(1).replace(".", ",");
         return `
             <tr>
@@ -1686,7 +1674,9 @@ function showÅrsKategoriBreakdown(year) {
     const modalContent = modal.querySelector(".modal-content");
     modalContent.classList.remove("tips-modal");
     modalContent.style.width = "360px";
-    modal.querySelector("h3").textContent = `Helåret ${year}: Kategorier`;
+    modal.querySelector("h3").textContent = isAllaKategorier
+    ? `Helåret ${year}: Kategorier`
+    : `Helåret ${year}: Urval`;
     document.getElementById("modalMessage").innerHTML = html;
     modal.style.display = "flex";
 }
@@ -1738,40 +1728,30 @@ function checkTypeToggleBehavior() {
 function isRowMatchingFilters(row) {
     // 1. Filtrera på besöksmål
     const targetFFId = FF_MAP[currentFF];
-    if (targetFFId !== "all" && row.besöksmål !== targetFFId) {
-        return false;
-    }
+    if (targetFFId !== "all" && row.besöksmål !== targetFFId) return false;
 
-    // 2. Hantera Typ (Verksamhet vs Anläggning) 
+    // 2. Typ (Verksamhet vs Anläggning)
     if (row.typ !== "kombinerat") {
         const checkedTyp = document.getElementById("toggleAnlaggning").checked ? "anläggning" : "verksamhet";
-        if (row.typ !== checkedTyp) {
-            return false;
-        }
+        if (row.typ !== checkedTyp) return false;
     }
 
-    // 3. Hantera Kategori (Släpp igenom både barn och vuxen om "Skola (allt)" är valt)
-    if (targetFFId === "kulturenilund") {
-        if (currentKategori !== "Alla kategorier") {
-            const targetKatId = KATEGORI_MAP[currentKategori];
-            
-            // Om användaren valt Skola (allt), tillåt både skola-barn och skola-vuxen
+    // 3. Kategori — tomt Set = Alla kategorier = inget filter
+    if (targetFFId === "kulturenilund" && selectedKategorier.size > 0) {
+        let match = false;
+        selectedKategorier.forEach(selectedKat => {
+            const targetKatId = KATEGORI_MAP[selectedKat];
             if (targetKatId === "skola-allt") {
-                if (row.kategori !== "skola-barn" && row.kategori !== "skola-vuxen") {
-                    return false;
-                }
-            } else {
-                // Standardjämförelse för övriga enskilda kategorier
-                if (row.kategori !== targetKatId && row.kategori !== currentKategori.toLowerCase()) {
-                    return false;
-                }
+                if (row.kategori === "skola-barn" || row.kategori === "skola-vuxen") match = true;
+            } else if (row.kategori === targetKatId) {
+                match = true;
             }
-        }
+        });
+        if (!match) return false;
     }
 
     return true;
 }
-
 
 /* =========================================================
    DATUMFILTER
@@ -1950,9 +1930,19 @@ function updateTable() {
         toggleOlder.parentElement.style.cursor = "pointer";
     }
 
-    const prefix = getBesokTypPrefix();
-    let katDisplay = currentKategori === "Skola (allt)" ? "skola" : currentKategori.toLowerCase();
-    const katSuffix = (currentFF === "Kulturen i Lund" && currentKategori !== "Alla kategorier") ? ` (${katDisplay})` : "";
+const prefix = getBesokTypPrefix();
+    const totalKategorierCount = KATEGORI_OPTIONS.length - 1;
+	let katSuffix = "";
+	if (currentFF === "Kulturen i Lund") {
+		if (selectedKategorier.size === 0) {
+			katSuffix = "";
+		} else if (selectedKategorier.size === 1) {
+			const singelKat = [...selectedKategorier][0];
+			katSuffix = ` (${singelKat === "Skola (allt)" ? "skola" : singelKat.toLowerCase()})`;
+		} else {
+			katSuffix = " (urval)";
+		}
+	}
     
     if (yearsInScope.length > 0) {
         const displayStartYear = yearsInScope[0];
@@ -2093,15 +2083,16 @@ function updateTable() {
             const cell = row.insertCell();
             cell.textContent = val > 0 ? formatSwedishNumber(val) : "-";
 
-            if (val > 0 
-                && currentFF === "Kulturen i Lund" 
-                && currentKategori === "Alla kategorier"
-                && document.getElementById("toggleVerksamhet").checked) {
-                cell.onclick = () => showKategoriBreakdown(y, mIdx);
-                cell.style.cursor = "pointer";
-            } else {
-                cell.style.cursor = "default";
-            }
+			const totalKategorierCount = KATEGORI_OPTIONS.length - 1;
+			if (val > 0
+				&& currentFF === "Kulturen i Lund"
+				&& (selectedKategorier.size === 0 || selectedKategorier.size >= 2)
+				&& document.getElementById("toggleVerksamhet").checked) {
+				cell.onclick = () => showKategoriBreakdown(y, mIdx);
+				cell.style.cursor = "pointer";
+			} else {
+				cell.style.cursor = "default";
+			}
 
             if (
                 selectedMonths.has(mIdx) &&
@@ -2134,17 +2125,17 @@ function updateTable() {
         const cell = footerRow.insertCell();
         cell.textContent = formatSwedishNumber(totalForYear);
         
-        if (totalForYear > 0 
-            && currentFF === "Kulturen i Lund" 
-            && currentKategori === "Alla kategorier"
-            && document.getElementById("toggleVerksamhet").checked) {
-            
-            cell.onclick = () => showÅrsKategoriBreakdown(y);
-            cell.style.cursor = "pointer";
-            cell.title = `Klicka för att se hela årets fördelning för ${y}`;
-        } else {
-            cell.style.cursor = "default";
-        }
+		const totalKategorierCount = KATEGORI_OPTIONS.length - 1;
+		if (totalForYear > 0
+			&& currentFF === "Kulturen i Lund"
+			&& (selectedKategorier.size === 0 || selectedKategorier.size >= 2)
+			&& document.getElementById("toggleVerksamhet").checked) {
+			cell.onclick = () => showÅrsKategoriBreakdown(y);
+			cell.style.cursor = "pointer";
+			cell.title = `Klicka för att se hela årets fördelning för ${y}`;
+		} else {
+			cell.style.cursor = "default";
+		}
     });
 }
 
@@ -2195,8 +2186,18 @@ function updateChart(data, forceResetAnimation = false) {
         const tidsSpann = `${startMName} ${startYear} – ${endMName} ${endYear}`;
         
         // Här rensar vi bort (allt) om valet är Skola (allt)
-        let katDisplay = currentKategori === "Skola (allt)" ? "skola" : currentKategori.toLowerCase();
-        const katSuffix = (currentFF === "Kulturen i Lund" && currentKategori !== "Alla kategorier") ? ` (${katDisplay})` : "";
+		const totalKategorierCount = KATEGORI_OPTIONS.length - 1;
+		let katSuffix = "";
+		if (currentFF === "Kulturen i Lund") {
+			if (selectedKategorier.size === 0) {
+				katSuffix = "";
+			} else if (selectedKategorier.size === 1) {
+				const singelKat = [...selectedKategorier][0];
+				katSuffix = ` (${singelKat === "Skola (allt)" ? "skola" : singelKat.toLowerCase()})`;
+			} else {
+				katSuffix = " (urval)";
+			}
+		}
         
         if (currentFF === "Alla besöksmål") {
             cHeader.textContent = `${prefix} alla besöksmål ${tidsSpann}`;
@@ -2451,34 +2452,61 @@ function initKategoriSelect() {
 
     cols.innerHTML = "";
 
-    KATEGORI_OPTIONS.forEach(option => {
+    // ── Alla kategorier (master) ──────────────────────────────
+    const masterOpt = document.createElement("div");
+    masterOpt.className = "dropdown-option" + (selectedKategorier.size === 0 ? " selected" : "");
+    masterOpt.textContent = "Alla kategorier";
+    masterOpt.style.cssText = "font-weight:700; border-bottom:1px solid #eee; margin-bottom:4px;";
+
+    masterOpt.onclick = (e) => {
+        e.stopPropagation();
+        selectedKategorier.clear();
+        updateAfterKategoriChange();
+    };
+    cols.appendChild(masterOpt);
+
+    // ── Individuella kategorier ───────────────────────────────
+    KATEGORI_OPTIONS.filter(o => o !== "Alla kategorier").forEach(option => {
         const opt = document.createElement("div");
-        opt.className = "dropdown-option" + (option === currentKategori ? " selected" : "");
+        opt.className = "dropdown-option" + (selectedKategorier.has(option) ? " selected" : "");
         opt.textContent = option;
 
-        opt.onclick = () => {
-            currentKategori = option;
-            labelEl.textContent = option;
-
-            wrapper.querySelectorAll(".dropdown-option").forEach(o => o.classList.remove("selected"));
-            opt.classList.add("selected");
-            wrapper.classList.remove("open");
-
-            renderCustomRange(true);
-			updateKategoriHint();
-			updateTableCursor();
+        opt.onclick = (e) => {
+            e.stopPropagation();
+            if (selectedKategorier.has(option)) {
+                selectedKategorier.delete(option);
+            } else {
+                selectedKategorier.add(option);
+            }
+            updateAfterKategoriChange();
         };
-
         cols.appendChild(opt);
     });
 
+    // ── Triggerknapp ──────────────────────────────────────────
     document.getElementById("kategoriSelectTrigger").onclick = e => {
         e.stopPropagation();
         closeAllSelects();
         wrapper.classList.toggle("open");
     };
-}
 
+    function updateAfterKategoriChange() {
+        // Uppdatera label
+        if (selectedKategorier.size === 0) {
+            labelEl.textContent = "Alla kategorier";
+        } else if (selectedKategorier.size === 1) {
+            const singelKat = [...selectedKategorier][0];
+            labelEl.textContent = singelKat === "Skola (allt)" ? "Skola" : singelKat;
+        } else {
+            labelEl.textContent = `${selectedKategorier.size} kategorier valda`;
+        }
+
+        initKategoriSelect();
+        renderCustomRange(true);
+        updateKategoriHint();
+        updateTableCursor();
+    }
+}
 
 /* =========================================================
    HJÄLPARE FÖR KATEGORIVISNING (KRAV 1 & KRAV 2 WITH ANIMATION)
@@ -2492,8 +2520,6 @@ function updateKategoriVisibility() {
     if (shouldShow) {
         initKategoriSelect();
         katContainer.style.display = "block";
-        // Dubbel rAF säkerställer att display:block hunnit layoutas
-        // innan transition-klassen sätts
         requestAnimationFrame(() => {
             requestAnimationFrame(() => {
                 katContainer.classList.add("visible");
@@ -2503,8 +2529,6 @@ function updateKategoriVisibility() {
         document.getElementById("kategoriSelectWrapper").classList.remove("open");
         katContainer.classList.remove("visible");
 
-        // Spara referens till aktuellt anrop så att ett senare anrop
-        // kan avbryta timeoutet om tillståndet ändras under animationen
         clearTimeout(katContainer._hideTimer);
         katContainer._hideTimer = setTimeout(() => {
             if (!katContainer.classList.contains("visible")) {
@@ -2512,10 +2536,11 @@ function updateKategoriVisibility() {
             }
         }, 350);
 
-        currentKategori = "Alla kategorier";
+        // ← Tomt Set = "Alla kategorier" som default
+        selectedKategorier = new Set();
         document.getElementById("kategoriSelectLabel").textContent = "Alla kategorier";
-		updateKategoriHint();
-		updateTableCursor();
+        updateKategoriHint();
+        updateTableCursor();
     }
 }
 
