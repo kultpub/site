@@ -2034,19 +2034,28 @@ function updateTable() {
         toggleOlder.parentElement.style.cursor = "pointer";
     }
 
-const prefix = getBesokTypPrefix();
+	const prefix = getBesokTypPrefix();
     const totalKategorierCount = KATEGORI_OPTIONS.length - 1;
 	let katSuffix = "";
-	if (currentFF === "Kulturen i Lund") {
-		if (selectedKategorier.size === 0) {
-			katSuffix = "";
-		} else if (selectedKategorier.size === 1) {
-			const singelKat = [...selectedKategorier][0];
-			katSuffix = ` (${singelKat === "Skola (allt)" ? "skola" : singelKat.toLowerCase()})`;
-		} else {
-			katSuffix = " (urval)";
-		}
-	}
+    if (currentFF === "Kulturen i Lund") {
+        if (selectedKategorier.size === 0) {
+            katSuffix = "";
+        } else if (selectedKategorier.size === 1) {
+            const singelKat = [...selectedKategorier][0];
+            katSuffix = ` (${singelKat === "Skola (allt)" ? "skola" : singelKat.toLowerCase()})`;
+        } else if (selectedKategorier.size === 2) {
+            // Specialfall för två valda kategorier
+            if (selectedKategorier.has("Skola barn") && selectedKategorier.has("Skola vuxen")) {
+                katSuffix = " (skola)";
+            } else if (selectedKategorier.has("Skola barn") && selectedKategorier.has("Barn")) {
+                katSuffix = " (barn och skolbarn)";
+            } else {
+                katSuffix = " (urval)";
+            }
+        } else {
+            katSuffix = " (urval)";
+        }
+    }
     
     if (yearsInScope.length > 0) {
         const displayStartYear = yearsInScope[0];
