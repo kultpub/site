@@ -778,6 +778,54 @@ h1 {
   opacity: 0.65;
 }
 
+/* Styling för den övergripande master-checkboxen i th */
+#masterMonthToggle {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid #bbb;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  position: relative;
+  transition: background 150ms ease, border-color 150ms ease;
+}
+
+#masterMonthToggle:checked {
+  background: #2f2f2f;
+  border-color: #2f2f2f;
+}
+
+#masterMonthToggle:checked::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 0px;
+  width: 5px;
+  height: 9px;
+  border: 2px solid #fff;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg);
+}
+
+/* Visar ett streck om vissa, men inte alla, månader är valda */
+#masterMonthToggle:indeterminate {
+  background: #2f2f2f;
+  border-color: #2f2f2f;
+}
+
+#masterMonthToggle:indeterminate::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 6px;
+  width: 6px;
+  height: 2px;
+  background: #fff;
+}
+
 
 /* =========================================================
    13. BÄSTA MÅNAD
@@ -1844,6 +1892,10 @@ function renderCustomRange(forceAnimationReset = false) {
    TABELLVY
    ========================================================= */
 
+/* =========================================================
+   TABELLVY (UPPDATERAD MED MASTER-CHECKBOX I TH)
+   ========================================================= */
+
 function updateTable() {
     const table = document.getElementById("statsTable");
     const thead = table.querySelector("thead");
@@ -1852,7 +1904,7 @@ function updateTable() {
 
     if (!tbody || !headerDisplay) return;
 
-	const currentYear = new Date().getFullYear();        
+    const currentYear = new Date().getFullYear();        
     let allAvailable = availableYears
         .filter(y => y <= currentYear)
         .sort((a, b) => a - b);
@@ -1861,13 +1913,10 @@ function updateTable() {
     const toggle5Years = document.getElementById("toggleLundRegion"); 
     let yearsInScope = [];
 
-    // 1. Dela upp åren i nuvarande fönster (de 10 senaste) och historiska poolen (de 10 åren innan dess)
     let standardYears = allAvailable.slice(-10);
     let olderYearsPool = allAvailable.slice(0, -10);
-    let historicYears = olderYearsPool.slice(-10); // Plockar max 10 år till bakåt (totalt 20 år)
+    let historicYears = olderYearsPool.slice(-10);
 
-	// 2. Hantera inbördes beroende mellan togglarna
-    // ÄNDRAT: Kontrollera att tableView faktiskt är synlig innan vi rör toggle5Years
     const isTableActive = document.getElementById("tableView").style.display !== "none";
 
     if (showOlder && historicYears.length > 0 && isTableActive) {
@@ -1878,7 +1927,6 @@ function updateTable() {
 
         yearsInScope = historicYears;       
     } else {
-        // Körs om vi är i nutidsläge ELLER om vi har växlat över till diagramvyn
         toggle5Years.disabled = false;      
         toggle5Years.parentElement.style.opacity = "1";
         toggle5Years.parentElement.style.cursor = "pointer";
@@ -1886,24 +1934,21 @@ function updateTable() {
         yearsInScope = standardYears;
     }
 
-    // 3. Krymp fönstret om "Senaste 5 åren" är ikryssat (körs bara i nutidsläget)
     if (toggle5Years.checked) {
         yearsInScope = yearsInScope.slice(-5);
     }
 
-	// 4. Hantera om äldre data saknas helt i filen
-		const toggleOlder = document.getElementById("toggleOlderData");
-		if (historicYears.length === 0) {
-			toggleOlder.checked = false;
-			toggleOlder.disabled = true;
-			toggleOlder.parentElement.style.opacity = "0.4";
-			toggleOlder.parentElement.style.cursor = "not-allowed";
-		} else if (!showOlder) {
-			// Om det finns data och den inte är aktiv, se till att den har full opacitet
-			toggleOlder.disabled = false;
-			toggleOlder.parentElement.style.opacity = "1";
-			toggleOlder.parentElement.style.cursor = "pointer";
-		}
+    const toggleOlder = document.getElementById("toggleOlderData");
+    if (historicYears.length === 0) {
+        toggleOlder.checked = false;
+        toggleOlder.disabled = true;
+        toggleOlder.parentElement.style.opacity = "0.4";
+        toggleOlder.parentElement.style.cursor = "not-allowed";
+    } else if (!showOlder) {
+        toggleOlder.disabled = false;
+        toggleOlder.parentElement.style.opacity = "1";
+        toggleOlder.parentElement.style.cursor = "pointer";
+    }
 
     const prefix = getBesokTypPrefix();
     let katDisplay = currentKategori === "Skola (allt)" ? "skola" : currentKategori.toLowerCase();
@@ -1935,7 +1980,15 @@ function updateTable() {
         }
     }
 
-    let headerHtml = `<tr><th style="text-align:center">Månad</th>`;
+    // NYTT: Bygg första TH-cellen med en master-checkbox i en flexbox-layout
+    let headerHtml = `<tr>
+        <th style="background:#f5f5f5 !important; color:#000000 !important; font-weight:700; text-align:center; padding:8px 6px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; width:100%;">
+                <span>Månad</span>
+                <input type="checkbox" id="masterMonthToggle">
+            </div>
+        </th>`;
+        
     yearsInScope.forEach(y => {
         headerHtml += `<th>${y}</th>`;
     });
@@ -1943,6 +1996,30 @@ function updateTable() {
 
     thead.innerHTML = headerHtml;
     tbody.innerHTML = "";
+
+    // NYTT: Hämta master-checkboxen från DOM och ställ in dess läge (Checked / Indeterminate / Unchecked)
+    const masterToggle = document.getElementById("masterMonthToggle");
+    if (selectedMonths.size === 12) {
+        masterToggle.checked = true;
+        masterToggle.indeterminate = false;
+    } else if (selectedMonths.size === 0) {
+        masterToggle.checked = false;
+        masterToggle.indeterminate = false;
+    } else {
+        masterToggle.checked = false;
+        masterToggle.indeterminate = true;
+    }
+
+    // NYTT: Klickfunktion för master-checkboxen (Töm eller fyll alla)
+    masterToggle.onclick = e => {
+        e.stopPropagation();
+        if (masterToggle.checked) {
+            selectedMonths = new Set([...Array(12).keys()]); // Alla 12 månader
+        } else {
+            selectedMonths.clear(); // Tomt
+        }
+        updateTable();
+    };
 
     monthNamesShort.forEach((mName, mIdx) => {
         const row = tbody.insertRow();
@@ -2016,15 +2093,15 @@ function updateTable() {
             const cell = row.insertCell();
             cell.textContent = val > 0 ? formatSwedishNumber(val) : "-";
 
-			if (val > 0 
-				&& currentFF === "Kulturen i Lund" 
-				&& currentKategori === "Alla kategorier"
-				&& document.getElementById("toggleVerksamhet").checked) {
-				cell.onclick = () => showKategoriBreakdown(y, mIdx);
-				cell.style.cursor = "pointer";
-			} else {
-				cell.style.cursor = "default";
-			}
+            if (val > 0 
+                && currentFF === "Kulturen i Lund" 
+                && currentKategori === "Alla kategorier"
+                && document.getElementById("toggleVerksamhet").checked) {
+                cell.onclick = () => showKategoriBreakdown(y, mIdx);
+                cell.style.cursor = "pointer";
+            } else {
+                cell.style.cursor = "default";
+            }
 
             if (
                 selectedMonths.has(mIdx) &&
@@ -2044,34 +2121,32 @@ function updateTable() {
     totalLabelCell.textContent = "TOTALT";
     totalLabelCell.style.textAlign = "left";
 
-	yearsInScope.forEach(y => {
-			let totalForYear = 0;
-	
-			visitRows.filter(isRowMatchingFilters).forEach(r => {
-				const monthIndex = monthMap[r.månad];
-				if (r.år === y && selectedMonths.has(monthIndex)) {
-					totalForYear += r.antal;
-				}
-			});
-	
-			const cell = footerRow.insertCell();
-			cell.textContent = formatSwedishNumber(totalForYear);
-			
-			// GÖR TOTALCELLEN KLICKBAR OM VILLKOREN ÄR UPPFYLLDA
-			if (totalForYear > 0 
-				&& currentFF === "Kulturen i Lund" 
-				&& currentKategori === "Alla kategorier"
-				&& document.getElementById("toggleVerksamhet").checked) {
-				
-				cell.onclick = () => showÅrsKategoriBreakdown(y);
-				cell.style.cursor = "pointer";
-				cell.title = `Klicka för att se hela årets fördelning för ${y}`;
-			} else {
-				cell.style.cursor = "default";
-			}
-		});
-}
+    yearsInScope.forEach(y => {
+        let totalForYear = 0;
 
+        visitRows.filter(isRowMatchingFilters).forEach(r => {
+            const monthIndex = monthMap[r.månad];
+            if (r.år === y && selectedMonths.has(monthIndex)) {
+                totalForYear += r.antal;
+            }
+        });
+
+        const cell = footerRow.insertCell();
+        cell.textContent = formatSwedishNumber(totalForYear);
+        
+        if (totalForYear > 0 
+            && currentFF === "Kulturen i Lund" 
+            && currentKategori === "Alla kategorier"
+            && document.getElementById("toggleVerksamhet").checked) {
+            
+            cell.onclick = () => showÅrsKategoriBreakdown(y);
+            cell.style.cursor = "pointer";
+            cell.title = `Klicka för att se hela årets fördelning för ${y}`;
+        } else {
+            cell.style.cursor = "default";
+        }
+    });
+}
 
 /* =========================================================
    DIAGRAMVY
@@ -2539,10 +2614,11 @@ document.getElementById("saveImage").onclick = async function() {
 
     if (!target) return;
 
-    let hiddenCheckboxes = [];
+	let hiddenCheckboxes = [];
     if (isTable) {
-        hiddenCheckboxes = [...document.querySelectorAll(".month-toggle")];
-        hiddenCheckboxes.forEach(cb => { cb.style.visibility = "hidden"; });
+        // Lägg även till master-checkboxen i listan över saker som döljs temporärt under fotograferingen
+        hiddenCheckboxes = [...document.querySelectorAll(".month-toggle"), document.getElementById("masterMonthToggle")];
+        hiddenCheckboxes.forEach(cb => { if(cb) cb.style.visibility = "hidden"; });
     }
 
     const originalOverflow = target.style.overflow;
