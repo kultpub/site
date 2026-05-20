@@ -705,6 +705,53 @@ h1 {
   opacity: 0.65;
 }
 
+/* Styling för den övergripande master-checkboxen i th */
+#masterMonthToggle {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid #bbb;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  position: relative;
+  transition: background 150ms ease, border-color 150ms ease;
+}
+
+#masterMonthToggle:checked {
+  background: #2f2f2f;
+  border-color: #2f2f2f;
+}
+
+#masterMonthToggle:checked::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 0px;
+  width: 5px;
+  height: 9px;
+  border: 2px solid #fff;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg);
+}
+
+#masterMonthToggle:indeterminate {
+  background: #2f2f2f;
+  border-color: #2f2f2f;
+}
+
+#masterMonthToggle:indeterminate::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 6px;
+  width: 6px;
+  height: 2px;
+  background: #fff;
+}
+
 
 /* =========================================================
    13. BÄSTA MÅNAD
@@ -2000,8 +2047,8 @@ function updateTable() {
     headerDisplay.textContent = "Entréintäkter";
 
     /*
-       Vilka år som ska visas.
-       toggleLundRegion betyder i tabellvyn: Senaste 5 åren.
+        Vilka år som ska visas.
+        toggleLundRegion betyder i tabellvyn: Senaste 5 åren.
     */
     let yearsToShow = [...availableYears].sort((a, b) => a - b);
 
@@ -2010,7 +2057,7 @@ function updateTable() {
     }
 
     /*
-       Tabellens breddläge.
+        Tabellens breddläge.
     */
     const tableView = document.getElementById("tableView");
 
@@ -2025,9 +2072,9 @@ function updateTable() {
     }
 
     /*
-       Förberäkna intäkter per år och månad.
-       Detta gör tabellen snabbare än att loopa igenom revenueRows
-       om och om igen inne i varje cell.
+        Förberäkna intäkter per år och månad.
+        Detta gör tabellen snabbare än att loopa igenom revenueRows
+        om och om igen inne i varje cell.
     */
     const sumsByYearMonth = {};
 
@@ -2046,9 +2093,15 @@ function updateTable() {
     });
 
     /*
-       Tabellhuvud.
+        Tabellhuvud med perfekt linjerad master-checkbox.
     */
-    let headerHtml = `<tr><th style="text-align:center">Månad</th>`;
+    let headerHtml = `<tr>
+        <th style="background:#f5f5f5 !important; color:#000000 !important; font-weight:700; text-align:center; padding:8px 6px 8px 10px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; width:100%; height:20px; line-height:1.15; padding-right:3px;">
+                <span>Månad</span>
+                <input type="checkbox" id="masterMonthToggle" style="margin:0;">
+            </div>
+        </th>`;
 
     yearsToShow.forEach(year => {
         headerHtml += `<th>${year}</th>`;
@@ -2059,8 +2112,34 @@ function updateTable() {
     thead.innerHTML = headerHtml;
     tbody.innerHTML = "";
 
+    // Styr tillståndet på topp-checkboxen (Bock, tomt eller streck)
+    const masterToggle = document.getElementById("masterMonthToggle");
+    if (masterToggle) {
+        if (selectedMonths.size === 12) {
+            masterToggle.checked = true;
+            masterToggle.indeterminate = false;
+        } else if (selectedMonths.size === 0) {
+            masterToggle.checked = false;
+            masterToggle.indeterminate = false;
+        } else {
+            masterToggle.checked = false;
+            masterToggle.indeterminate = true;
+        }
+
+        // Klickfunktion för master-checkboxen
+        masterToggle.onclick = event => {
+            event.stopPropagation();
+            if (masterToggle.checked) {
+                selectedMonths = new Set([...Array(12).keys()]);
+            } else {
+                selectedMonths.clear();
+            }
+            updateTable();
+        };
+    }
+
     /*
-       Månadsrader.
+        Månadsrader.
     */
     monthNamesShort.forEach((monthName, monthIndex) => {
         const row = tbody.insertRow();
@@ -2115,8 +2194,8 @@ function updateTable() {
         nameCell.appendChild(monthCellInner);
 
         /*
-           Hitta bästa värde för aktuell månad inom visade år.
-           toggleLund betyder i tabellvyn: Bästa månad.
+            Hitta bästa värde för aktuell månad inom visade år.
+            toggleLund betyder i tabellvyn: Bästa månad.
         */
         const currentMaxInScope = Math.max(
             ...yearsToShow.map(year => sumsByYearMonth[year][monthIndex] || 0)
@@ -2141,8 +2220,8 @@ function updateTable() {
     });
 
     /*
-       Totalrad.
-       Endast valda månader räknas med.
+        Totalrad.
+        Endast valda månader räknas med.
     */
     const footerRow = tbody.insertRow();
     footerRow.classList.add("total-row");
@@ -2164,7 +2243,7 @@ function updateTable() {
     });
 
     /*
-       Uppdatera vänsterpanelens tabellinfo, om den finns.
+        Uppdatera vänsterpanelens tabellinfo, om den finns.
     */
     if (
         typeof renderTableInfoFacts === "function" &&
