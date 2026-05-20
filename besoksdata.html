@@ -356,7 +356,6 @@ h1 {
   gap: 4px;
 }
 
-
 /* =========================================================
    6. HÖGERPANEL / KONTROLLER
    ========================================================= */
@@ -1517,6 +1516,28 @@ function getBesokTypPrefix() {
     return document.getElementById("toggleAnlaggning").checked ? "Anläggningsbesök" : "Verksamhetsbesök";
 }
 
+function getKategoriSuffix() {
+    if (currentFF !== "Kulturen i Lund") return "";
+    
+    if (selectedKategorier.size === 0) {
+        return "";
+    } else if (selectedKategorier.size === 1) {
+        const singelKat = [...selectedKategorier][0];
+        return ` (${singelKat === "Skola (allt)" ? "skola" : singelKat.toLowerCase()})`;
+    } else if (selectedKategorier.size === 2) {
+        // Dina två exakta specialfall för sammansatta kategorier
+        if (selectedKategorier.has("Skola barn") && selectedKategorier.has("Skola vuxen")) {
+            return " (skola)";
+        } else if (selectedKategorier.has("Skola barn") && selectedKategorier.has("Barn")) {
+            return " (barn och skolbarn)";
+        } else {
+            return " (urval)";
+        }
+    } else {
+        return " (urval)";
+    }
+}
+
 
 /* =========================================================
    CSV OCH DATANORMALISERING (UPDATERAD FÖR NY CSV)
@@ -2009,7 +2030,7 @@ function updateTable() {
         toggle5Years.parentElement.style.opacity = "0.4"; 
         toggle5Years.parentElement.style.cursor = "not-allowed";
 
-        yearsInScope = historicYears;       
+        yearsInScope = historicYears;        
     } else {
         toggle5Years.disabled = false;      
         toggle5Years.parentElement.style.opacity = "1";
@@ -2034,9 +2055,10 @@ function updateTable() {
         toggleOlder.parentElement.style.cursor = "pointer";
     }
 
-	const prefix = getBesokTypPrefix();
-    const totalKategorierCount = KATEGORI_OPTIONS.length - 1;
-	let katSuffix = "";
+    const prefix = getBesokTypPrefix();
+    
+    // Inbäddad, ren rubrikhantering med dina exakta specialfall
+    let katSuffix = "";
     if (currentFF === "Kulturen i Lund") {
         if (selectedKategorier.size === 0) {
             katSuffix = "";
@@ -2044,7 +2066,6 @@ function updateTable() {
             const singelKat = [...selectedKategorier][0];
             katSuffix = ` (${singelKat === "Skola (allt)" ? "skola" : singelKat.toLowerCase()})`;
         } else if (selectedKategorier.size === 2) {
-            // Specialfall för två valda kategorier
             if (selectedKategorier.has("Skola barn") && selectedKategorier.has("Skola vuxen")) {
                 katSuffix = " (skola)";
             } else if (selectedKategorier.has("Skola barn") && selectedKategorier.has("Barn")) {
@@ -2083,7 +2104,7 @@ function updateTable() {
         }
     }
 
-    // NYTT: Bygg första TH-cellen med en master-checkbox i en flexbox-layout
+// BYGG FÖRSTA TH-CELLEN MED EN MASTER-CHECKBOX I EN FLEXBOX-LAYOUT
     let headerHtml = `<tr>
         <th style="background:#f5f5f5 !important; color:#000000 !important; font-weight:700; text-align:center; padding:8px 6px 8px 10px;">
             <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; width:100%; height:20px; line-height:1.15; padding-right:3px;">
@@ -2196,16 +2217,15 @@ function updateTable() {
             const cell = row.insertCell();
             cell.textContent = val > 0 ? formatSwedishNumber(val) : "-";
 
-			const totalKategorierCount = KATEGORI_OPTIONS.length - 1;
-			if (val > 0
-				&& currentFF === "Kulturen i Lund"
-				&& (selectedKategorier.size === 0 || selectedKategorier.size >= 2)
-				&& document.getElementById("toggleVerksamhet").checked) {
-				cell.onclick = () => showKategoriBreakdown(y, mIdx);
-				cell.style.cursor = "pointer";
-			} else {
-				cell.style.cursor = "default";
-			}
+            if (val > 0
+                && currentFF === "Kulturen i Lund"
+                && (selectedKategorier.size === 0 || selectedKategorier.size >= 2)
+                && document.getElementById("toggleVerksamhet").checked) {
+                cell.onclick = () => showKategoriBreakdown(y, mIdx);
+                cell.style.cursor = "pointer";
+            } else {
+                cell.style.cursor = "default";
+            }
 
             if (
                 selectedMonths.has(mIdx) &&
@@ -2238,17 +2258,16 @@ function updateTable() {
         const cell = footerRow.insertCell();
         cell.textContent = formatSwedishNumber(totalForYear);
         
-		const totalKategorierCount = KATEGORI_OPTIONS.length - 1;
-		if (totalForYear > 0
-			&& currentFF === "Kulturen i Lund"
-			&& (selectedKategorier.size === 0 || selectedKategorier.size >= 2)
-			&& document.getElementById("toggleVerksamhet").checked) {
-			cell.onclick = () => showÅrsKategoriBreakdown(y);
-			cell.style.cursor = "pointer";
-			cell.title = `Klicka för att se hela årets fördelning för ${y}`;
-		} else {
-			cell.style.cursor = "default";
-		}
+        if (totalForYear > 0
+            && currentFF === "Kulturen i Lund"
+            && (selectedKategorier.size === 0 || selectedKategorier.size >= 2)
+            && document.getElementById("toggleVerksamhet").checked) {
+            cell.onclick = () => showÅrsKategoriBreakdown(y);
+            cell.style.cursor = "pointer";
+            cell.title = `Klicka för att se hela årets fördelning för ${y}`;
+        } else {
+            cell.style.cursor = "default";
+        }
     });
 }
 
@@ -2298,19 +2317,26 @@ function updateChart(data, forceResetAnimation = false) {
         const endMName = monthNamesShort[endMonth].toLowerCase();
         const tidsSpann = `${startMName} ${startYear} – ${endMName} ${endYear}`;
         
-        // Här rensar vi bort (allt) om valet är Skola (allt)
-		const totalKategorierCount = KATEGORI_OPTIONS.length - 1;
-		let katSuffix = "";
-		if (currentFF === "Kulturen i Lund") {
-			if (selectedKategorier.size === 0) {
-				katSuffix = "";
-			} else if (selectedKategorier.size === 1) {
-				const singelKat = [...selectedKategorier][0];
-				katSuffix = ` (${singelKat === "Skola (allt)" ? "skola" : singelKat.toLowerCase()})`;
-			} else {
-				katSuffix = " (urval)";
-			}
-		}
+        let katSuffix = "";
+        if (currentFF === "Kulturen i Lund") {
+            if (selectedKategorier.size === 0) {
+                katSuffix = "";
+            } else if (selectedKategorier.size === 1) {
+                const singelKat = [...selectedKategorier][0];
+                katSuffix = ` (${singelKat === "Skola (allt)" ? "skola" : singelKat.toLowerCase()})`;
+            } else if (selectedKategorier.size === 2) {
+                // Samma exakta specialfall som i tabellvyn
+                if (selectedKategorier.has("Skola barn") && selectedKategorier.has("Skola vuxen")) {
+                    katSuffix = " (skola)";
+                } else if (selectedKategorier.has("Skola barn") && selectedKategorier.has("Barn")) {
+                    katSuffix = " (barn och skolbarn)";
+                } else {
+                    katSuffix = " (urval)";
+                }
+            } else {
+                katSuffix = " (urval)";
+            }
+        }
         
         if (currentFF === "Alla besöksmål") {
             cHeader.textContent = `${prefix} alla besöksmål ${tidsSpann}`;
@@ -2579,7 +2605,19 @@ function initKategoriSelect() {
     cols.appendChild(masterOpt);
 
     // ── Individuella kategorier ───────────────────────────────
+    let katIndex = 0; // Räknare för att hålla koll på när vi ska byta kolumn
+
     KATEGORI_OPTIONS.filter(o => o !== "Alla kategorier").forEach(option => {
+        
+        // När kolumn 1 är fylld (efter 5 element), skjut in ett tomt utrymme överst i kolumn 2
+        if (katIndex === 5) {
+            const emptySpacer = document.createElement("div");
+            emptySpacer.className = "dropdown-option";
+            emptySpacer.innerHTML = "&nbsp;"; // Ger den höjd så den matchar raderna
+            emptySpacer.style.pointerEvents = "none"; // Gör den oklickbar
+            cols.appendChild(emptySpacer);
+        }
+
         const opt = document.createElement("div");
         opt.className = "dropdown-option" + (selectedKategorier.has(option) ? " selected" : "");
         opt.textContent = option;
@@ -2594,6 +2632,8 @@ function initKategoriSelect() {
             updateAfterKategoriChange();
         };
         cols.appendChild(opt);
+        
+        katIndex++;
     });
 
     // ── Triggerknapp ──────────────────────────────────────────
