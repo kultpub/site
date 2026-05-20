@@ -291,11 +291,16 @@ h1 {
 .dropdown-grid-years {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(4, auto);
+  grid-template-rows: repeat(7, auto);
   grid-auto-flow: column;
-  gap: 8px;
+  gap: 4px;                  /* Minskat från 8px till 4px för att rymmas på 250px */
   padding: 10px;
-  min-width: 280px;
+}
+
+#fromYearWrapper .custom-select-dropdown,
+#toYearWrapper .custom-select-dropdown {
+  min-width: 250px !important;
+  width: 250px !important;
 }
 
 .dropdown-grid-months {
@@ -928,10 +933,63 @@ h1 {
 #chartView.visible {
   opacity: 1;
 }
+
+/* =========================================================   18. MOBIL- OCH SURFPLATTESPÄRR   ========================================================= */
+#screenBlocker {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #2f2f2f;
+  color: #ffffff;
+  z-index: 99999;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+  text-align: center;
+  box-sizing: border-box;
+}
+#screenBlocker i {
+  font-size: 48px;
+  color: #f28c28;
+  margin-bottom: 20px;
+}
+#screenBlocker h2 {
+  font-size: 24px;
+  margin: 0 0 12px 0;
+  letter-spacing: -0.02em;
+}
+#screenBlocker p {
+  font-size: 16px;
+  color: #ccc;
+  margin: 0;
+  max-width: 400px;
+  line-height: 1.5;
+}
+
+/* Aktiveras för skärmar mindre än 1024px (täcker mobiler och de flesta surfplattor i stående läge) */
+@media (max-width: 1024px) {
+  #screenBlocker {
+    display: flex;
+  }
+  body {
+    overflow: hidden !important;
+  }
+}
 </style>
 </head>
 
 <body>
+
+<!-- BLOCKERARE FÖR SMÅ SKÄRMAR -->
+<div id="screenBlocker">
+  <i class="fa-solid fa-display"></i>
+  <h2>Skärmen är för liten</h2>
+  <p>Denna sida är ej avsedd för mobiltelefoner och surfplattor (tablets). Vänligen använd en större skärm.</p>
+</div>
 
   <!-- MODAL -->
   <div id="dataModal" class="modal-overlay">
@@ -1091,14 +1149,21 @@ h1 {
       <span id="labelLund">Bästa månad ★</span>
     </label>
 
-    <label class="toggle">
+	<label class="toggle">
       <input type="checkbox" id="toggleLundRegion">
       <span class="toggle-track"></span>
       <span id="labelLundRegion">Senaste 5 åren</span>
     </label>
+	
+	<!-- NY TOGGLE FÖR HISTORISK DATA -->
+	<label class="toggle" id="rowOlderData">
+	<input type="checkbox" id="toggleOlderData">
+	<span class="toggle-track"></span>
+	<span id="labelOlderData">Äldre data</span>
+	</label>
 
     <!-- Hjälp och export -->
-    <button class="tips-btn" id="showTips">Tips</button>
+    <button class="tips-btn" id="showTips">Information</button>
     <button class="save-btn" id="saveImage">Spara tabell JPG</button>
 
   </div>
@@ -1196,6 +1261,54 @@ const KATEGORI_MAP = {
 
 // Fast skoldata för 2017 och delar av 2018 som saknas i den externa filen
 const hardcodedSkolData = [
+    { år: 2015, månad: "jan", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 608 },
+    { år: 2015, månad: "jan", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 67 },
+    { år: 2015, månad: "feb", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 663 },
+    { år: 2015, månad: "feb", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 138 },
+    { år: 2015, månad: "mar", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1294 },
+    { år: 2015, månad: "mar", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 167 },
+    { år: 2015, månad: "apr", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1503 },
+    { år: 2015, månad: "apr", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 218 },
+    { år: 2015, månad: "maj", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 2276 },
+    { år: 2015, månad: "maj", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 267 },
+    { år: 2015, månad: "jun", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 2246 },
+    { år: 2015, månad: "jun", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 50 },
+    { år: 2015, månad: "jul", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 315 },
+    { år: 2015, månad: "jul", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 64 },
+    { år: 2015, månad: "aug", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 833 },
+    { år: 2015, månad: "aug", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 142 },
+    { år: 2015, månad: "sep", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1324 },
+    { år: 2015, månad: "sep", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 192 },
+    { år: 2015, månad: "okt", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 805 },
+    { år: 2015, månad: "okt", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 285 },
+    { år: 2015, månad: "nov", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1067 },
+    { år: 2015, månad: "nov", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 222 },
+    { år: 2015, månad: "dec", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1533 },
+    { år: 2015, månad: "dec", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 90 },
+    { år: 2016, månad: "jan", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 594 },
+    { år: 2016, månad: "jan", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 78 },
+    { år: 2016, månad: "feb", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 598 },
+    { år: 2016, månad: "feb", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 213 },
+    { år: 2016, månad: "mar", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 886 },
+    { år: 2016, månad: "mar", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 217 },
+    { år: 2016, månad: "apr", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1205 },
+    { år: 2016, månad: "apr", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 346 },
+    { år: 2016, månad: "maj", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 3288 },
+    { år: 2016, månad: "maj", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 156 },
+    { år: 2016, månad: "jun", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 2249 },
+    { år: 2016, månad: "jun", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 43 },
+    { år: 2016, månad: "jul", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 386 },
+    { år: 2016, månad: "jul", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 78 },
+    { år: 2016, månad: "aug", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 758 },
+    { år: 2016, månad: "aug", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 254 },
+    { år: 2016, månad: "sep", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1000 },
+    { år: 2016, månad: "sep", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 280 },
+    { år: 2016, månad: "okt", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1018 },
+    { år: 2016, månad: "okt", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 460 },
+    { år: 2016, månad: "nov", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1100 },
+    { år: 2016, månad: "nov", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 303 },
+    { år: 2016, månad: "dec", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1376 },
+    { år: 2016, månad: "dec", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 62 },
     { år: 2017, månad: "jan", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 393 },
     { år: 2017, månad: "jan", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 93 },
     { år: 2017, månad: "feb", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 358 },
@@ -1346,6 +1459,8 @@ function updateTableCursor() {
     const showPointer = currentFF === "Kulturen i Lund" 
         && currentKategori === "Alla kategorier"
         && document.getElementById("toggleVerksamhet").checked;
+        
+    // Uppdaterar både vanliga dataceller och datacellerna i totalraden
     document.querySelectorAll("#statsTable td:not(:first-child)").forEach(td => {
         td.style.cursor = showPointer ? "pointer" : "default";
     });
@@ -1354,7 +1469,8 @@ function updateTableCursor() {
 function showKategoriBreakdown(year, monthIndex) {
     const monthName = monthNamesShort[monthIndex];
 
-    const breakdown = KATEGORI_OPTIONS
+    // 1. Hämta rådatan för alla kategorier
+    let rawBreakdown = KATEGORI_OPTIONS
         .filter(kat => kat !== "Alla kategorier")
         .map(kat => {
             const katId = KATEGORI_MAP[kat];
@@ -1371,7 +1487,29 @@ function showKategoriBreakdown(year, monthIndex) {
                 return r.kategori === katId;
             }).reduce((sum, r) => sum + r.antal, 0);
             return { kat, antal };
-        })
+        });
+
+    // 2. Normalisera och slå ihop skolkategorierna till en enhetlig "Skola"
+    let consolidatedData = {};
+
+    rawBreakdown.forEach(item => {
+        let currentKat = item.kat;
+        
+        // Om kategorin innehåller ordet "Skola", mappa om namnet till "Skola"
+        if (currentKat === "Skola barn" || currentKat === "Skola vuxen" || currentKat === "Skola (allt)") {
+            currentKat = "Skola";
+        }
+
+        // Summera antalet för den transformerade kategorin
+        if (!consolidatedData[currentKat]) {
+            consolidatedData[currentKat] = 0;
+        }
+        consolidatedData[currentKat] += item.antal;
+    });
+
+    // 3. Konvertera tillbaka till en sorterad array och rensa bort nollvärden
+    const breakdown = Object.keys(consolidatedData)
+        .map(kat => ({ kat, antal: consolidatedData[kat] }))
         .filter(r => r.antal > 0)
         .sort((a, b) => b.antal - a.antal);
 
@@ -1415,6 +1553,92 @@ function showKategoriBreakdown(year, monthIndex) {
     modalContent.classList.remove("tips-modal");
     modalContent.style.width = "360px";
     modal.querySelector("h3").textContent = `${monthName} ${year}: Kategorier`;
+    document.getElementById("modalMessage").innerHTML = html;
+    modal.style.display = "flex";
+}
+
+function showÅrsKategoriBreakdown(year) {
+    // 1. Hämta rådatan för hela det valda året
+    let rawBreakdown = KATEGORI_OPTIONS
+        .filter(kat => kat !== "Alla kategorier")
+        .map(kat => {
+            const katId = KATEGORI_MAP[kat];
+            const antal = visitRows.filter(r => {
+                if (r.år !== year) return false;
+                if (r.besöksmål !== "kulturenilund") return false;
+
+                if (r.typ !== "kombinerat") {
+                    const checkedTyp = document.getElementById("toggleAnlaggning").checked ? "anläggning" : "verksamhet";
+                    if (r.typ !== checkedTyp) return false;
+                }
+
+                return r.kategori === katId;
+            }).reduce((sum, r) => sum + r.antal, 0);
+            return { kat, antal };
+        });
+
+    // 2. Normalisera och slå ihop skolkategorierna till en enhetlig "Skola"
+    let consolidatedData = {};
+
+    rawBreakdown.forEach(item => {
+        let currentKat = item.kat;
+        
+        if (currentKat === "Skola barn" || currentKat === "Skola vuxen" || currentKat === "Skola (allt)") {
+            currentKat = "Skola";
+        }
+
+        if (!consolidatedData[currentKat]) {
+            consolidatedData[currentKat] = 0;
+        }
+        consolidatedData[currentKat] += item.antal;
+    });
+
+    // 3. Konvertera till sorterad array och rensa nollvärden
+    const breakdown = Object.keys(consolidatedData)
+        .map(kat => ({ kat, antal: consolidatedData[kat] }))
+        .filter(r => r.antal > 0)
+        .sort((a, b) => b.antal - a.antal);
+
+    if (breakdown.length === 0) return;
+
+    const total = breakdown.reduce((sum, r) => sum + r.antal, 0);
+
+    let rows = breakdown.map(r => {
+        const pct = ((r.antal / total) * 100).toFixed(1).replace(".", ",");
+        return `
+            <tr>
+                <td style="padding:7px 0; font-weight:500; border-bottom:1px solid #eee; text-align:left;">${r.kat}</td>
+                <td style="padding:7px 0; text-align:right; border-bottom:1px solid #eee;
+                           font-variant-numeric:tabular-nums; color:#f28c28; font-weight:700;">
+                    ${formatSwedishNumber(r.antal)}
+                </td>
+                <td style="padding:7px 0 7px 16px; text-align:right; border-bottom:1px solid #eee;
+                           font-variant-numeric:tabular-nums; color:#999; font-size:13px;">
+                    ${pct} %
+                </td>
+            </tr>`;
+    }).join("");
+
+    const html = `
+        <table style="width:100%; border-collapse:collapse; margin-top:14px;">
+            <tbody>
+                ${rows}
+                <tr>
+                    <td style="padding:9px 0 4px; font-weight:700; text-align:left;">Totalt</td>
+                    <td style="padding:9px 0 4px; text-align:right;
+                               font-variant-numeric:tabular-nums; color:#f28c28; font-weight:700;">
+                        ${formatSwedishNumber(total)}
+                    </td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>`;
+
+    const modal = document.getElementById("dataModal");
+    const modalContent = modal.querySelector(".modal-content");
+    modalContent.classList.remove("tips-modal");
+    modalContent.style.width = "360px";
+    modal.querySelector("h3").textContent = `Helåret ${year}: Kategorier`;
     document.getElementById("modalMessage").innerHTML = html;
     modal.style.display = "flex";
 }
@@ -1628,19 +1852,58 @@ function updateTable() {
 
     if (!tbody || !headerDisplay) return;
 
-    const currentYear = new Date().getFullYear();
-    
-    let yearsInScope = availableYears
+	const currentYear = new Date().getFullYear();        
+    let allAvailable = availableYears
         .filter(y => y <= currentYear)
         .sort((a, b) => a - b);
 
-    if (yearsInScope.length > 10) {
-        yearsInScope = yearsInScope.slice(-10);
+    const showOlder = document.getElementById("toggleOlderData").checked;
+    const toggle5Years = document.getElementById("toggleLundRegion"); 
+    let yearsInScope = [];
+
+    // 1. Dela upp åren i nuvarande fönster (de 10 senaste) och historiska poolen (de 10 åren innan dess)
+    let standardYears = allAvailable.slice(-10);
+    let olderYearsPool = allAvailable.slice(0, -10);
+    let historicYears = olderYearsPool.slice(-10); // Plockar max 10 år till bakåt (totalt 20 år)
+
+	// 2. Hantera inbördes beroende mellan togglarna
+    // ÄNDRAT: Kontrollera att tableView faktiskt är synlig innan vi rör toggle5Years
+    const isTableActive = document.getElementById("tableView").style.display !== "none";
+
+    if (showOlder && historicYears.length > 0 && isTableActive) {
+        toggle5Years.checked = false;        
+        toggle5Years.disabled = true;       
+        toggle5Years.parentElement.style.opacity = "0.4"; 
+        toggle5Years.parentElement.style.cursor = "not-allowed";
+
+        yearsInScope = historicYears;       
+    } else {
+        // Körs om vi är i nutidsläge ELLER om vi har växlat över till diagramvyn
+        toggle5Years.disabled = false;      
+        toggle5Years.parentElement.style.opacity = "1";
+        toggle5Years.parentElement.style.cursor = "pointer";
+
+        yearsInScope = standardYears;
     }
 
-    if (toggleLundRegion.checked) {
+    // 3. Krymp fönstret om "Senaste 5 åren" är ikryssat (körs bara i nutidsläget)
+    if (toggle5Years.checked) {
         yearsInScope = yearsInScope.slice(-5);
     }
+
+	// 4. Hantera om äldre data saknas helt i filen
+		const toggleOlder = document.getElementById("toggleOlderData");
+		if (historicYears.length === 0) {
+			toggleOlder.checked = false;
+			toggleOlder.disabled = true;
+			toggleOlder.parentElement.style.opacity = "0.4";
+			toggleOlder.parentElement.style.cursor = "not-allowed";
+		} else if (!showOlder) {
+			// Om det finns data och den inte är aktiv, se till att den har full opacitet
+			toggleOlder.disabled = false;
+			toggleOlder.parentElement.style.opacity = "1";
+			toggleOlder.parentElement.style.cursor = "pointer";
+		}
 
     const prefix = getBesokTypPrefix();
     let katDisplay = currentKategori === "Skola (allt)" ? "skola" : currentKategori.toLowerCase();
@@ -1781,19 +2044,32 @@ function updateTable() {
     totalLabelCell.textContent = "TOTALT";
     totalLabelCell.style.textAlign = "left";
 
-    yearsInScope.forEach(y => {
-        let totalForYear = 0;
-
-        visitRows.filter(isRowMatchingFilters).forEach(r => {
-            const monthIndex = monthMap[r.månad];
-            if (r.år === y && selectedMonths.has(monthIndex)) {
-                totalForYear += r.antal;
-            }
-        });
-
-        const cell = footerRow.insertCell();
-        cell.textContent = formatSwedishNumber(totalForYear);
-    });
+	yearsInScope.forEach(y => {
+			let totalForYear = 0;
+	
+			visitRows.filter(isRowMatchingFilters).forEach(r => {
+				const monthIndex = monthMap[r.månad];
+				if (r.år === y && selectedMonths.has(monthIndex)) {
+					totalForYear += r.antal;
+				}
+			});
+	
+			const cell = footerRow.insertCell();
+			cell.textContent = formatSwedishNumber(totalForYear);
+			
+			// GÖR TOTALCELLEN KLICKBAR OM VILLKOREN ÄR UPPFYLLDA
+			if (totalForYear > 0 
+				&& currentFF === "Kulturen i Lund" 
+				&& currentKategori === "Alla kategorier"
+				&& document.getElementById("toggleVerksamhet").checked) {
+				
+				cell.onclick = () => showÅrsKategoriBreakdown(y);
+				cell.style.cursor = "pointer";
+				cell.title = `Klicka för att se hela årets fördelning för ${y}`;
+			} else {
+				cell.style.cursor = "default";
+			}
+		});
 }
 
 
@@ -2009,11 +2285,19 @@ function switchView(viewId, btn) {
 
     appElement.classList.remove("full-width", "chart-active");
 
-    if (viewId === "chart") {
+	if (viewId === "chart") {
         appElement.classList.add("chart-active");
         labelLund.textContent = "Mjuk linje";
         labelLundRegion.textContent = "Visa antal";
         saveBtn.textContent = "Spara diagram PNG";
+
+        // Göm "Äldre data"-togglan helt i diagramvyn
+        document.getElementById("rowOlderData").style.display = "none";
+
+        // NYTT: Säkerställ att den delade togglan är helt upplåst och aktiv i diagramvyn
+        toggleLundRegion.disabled = false;
+        toggleLundRegion.parentElement.style.opacity = "1";
+        toggleLundRegion.parentElement.style.cursor = "pointer";
 
         targetView.style.display = "block";
         targetView.classList.add("visible");
@@ -2024,11 +2308,14 @@ function switchView(viewId, btn) {
 		});
 		updateKategoriHint();
 		updateTableCursor();
-    } else {
+	} else {
         appElement.classList.add("full-width");
         labelLund.textContent = "Bästa månad ★";
         labelLundRegion.textContent = "Senaste 5 åren";
         saveBtn.textContent = "Spara tabell JPG";
+
+        // NYTT: Visa "Äldre data"-togglan igen när vi går tillbaka till tabellen
+        document.getElementById("rowOlderData").style.display = "flex";
 
         targetView.style.display = "block";
         targetView.classList.add("visible");
@@ -2070,6 +2357,11 @@ toggleLundRegion.onchange = () => {
     const isChart = document.getElementById("chartView").style.display !== "none";
     if (isChart) updateChart(lastFilteredData);
     else updateTable();
+};
+
+// EVENT-LYSSNARE FÖR DEN DYNAMISKA HISTORIK-TOGGLEN
+document.getElementById("toggleOlderData").onchange = () => {
+    updateTable();
 };
 
 
@@ -2202,7 +2494,7 @@ function initFFSelect() {
 document.getElementById("resetFilters").onclick = function() {
     currentFF = "Alla besöksmål";
     currentKategori = "Alla kategorier";
-	typeToggleCount = 0;
+    typeToggleCount = 0;
     
     document.getElementById("ffSelectLabel").textContent = "Alla besöksmål";
     document.getElementById("mainSiteHeader").textContent = "Alla besöksmål";
@@ -2210,18 +2502,32 @@ document.getElementById("resetFilters").onclick = function() {
     toggleVerksamhet.checked = true;
     toggleAnlaggning.checked = false;
     toggleLund.checked = false;
-    toggleLundRegion.checked = false;
+    
+    // 1. Återställ "Senaste 5 åren"-togglan och dess visuella stil
+    const toggle5Years = document.getElementById("toggleLundRegion");
+    toggle5Years.checked = false;
+    toggle5Years.disabled = false;
+    toggle5Years.parentElement.style.opacity = "1";
+    toggle5Years.parentElement.style.cursor = "pointer";
+
+    // 2. Återställ den nya historik-togglan och dess visuella stil
+    const toggleOlder = document.getElementById("toggleOlderData");
+    toggleOlder.checked = false;
+    toggleOlder.disabled = false;
+    toggleOlder.parentElement.style.opacity = "1";
+    toggleOlder.parentElement.style.cursor = "pointer";
 
     updateKategoriVisibility(); 
     selectedMonths = new Set([...Array(12).keys()]);
     initDateSelects();
 
+    // Denna kommer nu att rita om tabellen med rätt startår (de 10 senaste)
     if (document.getElementById("tableView").style.display !== "none") {
         updateTable();
     }
-	
-	updateKategoriHint();
-	updateTableCursor();
+    
+    updateKategoriHint();
+    updateTableCursor();
 };
 
 document.getElementById("saveImage").onclick = async function() {
@@ -2301,12 +2607,13 @@ window.onclick = function(event) {
 
 const tipsContent = {
     table: {
-        title: "Tips för tabellvyn",
+		title: "Tips för tabellvyn",
         body: `<div style="text-align:left; line-height:1.55;">
                 <p>Tabellen visar antalet besök per år och månad utifrån valda filterinställningar.</p>
                 <p>Checkboxarna vid månadsnamnen styr vilka månader som tas med i totalraden.</p>
                 <p>Använd reglagen <strong>Verksamhet</strong> och <strong>Anläggning</strong> för att växla <em>verksamhets-</em> och <em>anläggningsbesök</em>. Verksamhetsbesök avser besök där personen tar del av museets verksamhet, t.ex. utställningar, visningar, program eller evenemang. Anläggningsbesök avser besök på själva museianläggningen/platsen, oavsett vad personen gör där.</p>
-                <p>Om du väljer besöksmålet <strong>Kulturen i Lund</strong> och kategori <strong>Alla kategorier</strong> kan du även klicka på tabellens celler för att bryta ner data per demografisk kategori (vuxen, barn, student etc.).</p>
+                <p>Om du väljer besöksmålet <strong>Kulturen i Lund</strong> och kategori <strong>Alla kategorier</strong> kan du även klicka på tabellens celler eller totalcellen längst ner för att bryta ner data per demografisk kategori (vuxen, barn, student etc.).</p>
+                <p>Observera att när man tittar på äldre data kan tabellen för vissa besöksmål vara ofullständig eller sakna data. Detta beror dels på att månatlig fördelning saknas i tillgänglig dokumentation, dels på att data har utlämnats i de fall de baserat sig på grova uppskattningar snarare än faktiska registreringar.</p>
                </div>`
     },
     chart: {
