@@ -2085,13 +2085,13 @@ function updateTable() {
         if (currentFF === "Alla besöksmål") {
             headerDisplay.textContent = `${prefix} alla besöksmål ${displayStartYear}–${displayEndYear}`;
         } else {
-            headerDisplay.textContent = `${prefix} på ${currentFF}${katSuffix} ${displayStartYear}–${displayEndYear}`;
+            headerDisplay.textContent = `${prefix} ${currentFF}${katSuffix} ${displayStartYear}–${displayEndYear}`;
         }
     } else {
         if (currentFF === "Alla besöksmål") {
             headerDisplay.textContent = `${prefix} alla besöksmål`;
         } else {
-            headerDisplay.textContent = `${prefix} på ${currentFF}${katSuffix}`;
+            headerDisplay.textContent = `${prefix} ${currentFF}${katSuffix}`;
         }
     }
 
