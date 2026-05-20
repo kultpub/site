@@ -1307,7 +1307,109 @@ const KATEGORI_MAP = {
 };
 
 // Fast skoldata för 2017 och delar av 2018 som saknas i den externa filen
+
 const hardcodedSkolData = [
+    // 2011
+    { år: 2011, månad: "jan", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 550 },
+    { år: 2011, månad: "jan", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 324 },
+    { år: 2011, månad: "feb", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 605 },
+    { år: 2011, månad: "feb", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 255 },
+    { år: 2011, månad: "mar", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1273 },
+    { år: 2011, månad: "mar", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 166 },
+    { år: 2011, månad: "apr", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1486 },
+    { år: 2011, månad: "apr", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 117 },
+    { år: 2011, månad: "maj", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1603 },
+    { år: 2011, månad: "maj", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 501 },
+    { år: 2011, månad: "jun", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1156 },
+    { år: 2011, månad: "jun", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 143 },
+    { år: 2011, månad: "jul", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 201 },
+    { år: 2011, månad: "jul", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 29 },
+    { år: 2011, månad: "aug", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 568 },
+    { år: 2011, månad: "aug", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 263 },
+    { år: 2011, månad: "sep", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 855 },
+    { år: 2011, månad: "sep", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 487 },
+    { år: 2011, månad: "okt", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1094 },
+    { år: 2011, månad: "okt", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 81 },
+    { år: 2011, månad: "nov", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 905 },
+    { år: 2011, månad: "nov", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 139 },
+    { år: 2011, månad: "dec", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1299 },
+    { år: 2011, månad: "dec", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 292 },
+    // 2012
+    { år: 2012, månad: "jan", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 541 },
+    { år: 2012, månad: "jan", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 63 },
+    { år: 2012, månad: "feb", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 657 },
+    { år: 2012, månad: "feb", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 49 },
+    { år: 2012, månad: "mar", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 993 },
+    { år: 2012, månad: "mar", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 179 },
+    { år: 2012, månad: "apr", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1193 },
+    { år: 2012, månad: "apr", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 61 },
+    { år: 2012, månad: "maj", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 3091 },
+    { år: 2012, månad: "maj", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 152 },
+    { år: 2012, månad: "jun", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1553 },
+    { år: 2012, månad: "jun", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 106 },
+    { år: 2012, månad: "jul", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 394 },
+    { år: 2012, månad: "jul", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 32 },
+    { år: 2012, månad: "aug", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 458 },
+    { år: 2012, månad: "aug", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 19 },
+    { år: 2012, månad: "sep", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 953 },
+    { år: 2012, månad: "sep", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 145 },
+    { år: 2012, månad: "okt", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1194 },
+    { år: 2012, månad: "okt", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 289 },
+    { år: 2012, månad: "nov", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1823 },
+    { år: 2012, månad: "nov", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 111 },
+    { år: 2012, månad: "dec", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1652 },
+    { år: 2012, månad: "dec", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 163 },
+    // 2013
+    { år: 2013, månad: "jan", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 291 },
+    { år: 2013, månad: "jan", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 59 },
+    { år: 2013, månad: "feb", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 580 },
+    { år: 2013, månad: "feb", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 90 },
+    { år: 2013, månad: "mar", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1201 },
+    { år: 2013, månad: "mar", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 70 },
+    { år: 2013, månad: "apr", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1711 },
+    { år: 2013, månad: "apr", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 261 },
+    { år: 2013, månad: "maj", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 2119 },
+    { år: 2013, månad: "maj", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 196 },
+    { år: 2013, månad: "jun", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1209 },
+    { år: 2013, månad: "jun", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 84 },
+    { år: 2013, månad: "jul", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 327 },
+    { år: 2013, månad: "jul", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 84 },
+    { år: 2013, månad: "aug", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 551 },
+    { år: 2013, månad: "aug", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 209 },
+    { år: 2013, månad: "sep", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 949 },
+    { år: 2013, månad: "sep", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 234 },
+    { år: 2013, månad: "okt", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 930 },
+    { år: 2013, månad: "okt", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 268 },
+    { år: 2013, månad: "nov", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 891 },
+    { år: 2013, månad: "nov", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 230 },
+    { år: 2013, månad: "dec", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1553 },
+    { år: 2013, månad: "dec", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 130 },
+    // 2014
+    { år: 2014, månad: "jan", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 480 },
+    { år: 2014, månad: "jan", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 153 },
+    { år: 2014, månad: "feb", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 750 },
+    { år: 2014, månad: "feb", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 207 },
+    { år: 2014, månad: "mar", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1209 },
+    { år: 2014, månad: "mar", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 93 },
+    { år: 2014, månad: "apr", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1220 },
+    { år: 2014, månad: "apr", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 116 },
+    { år: 2014, månad: "maj", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 2201 },
+    { år: 2014, månad: "maj", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 154 },
+    { år: 2014, månad: "jun", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1087 },
+    { år: 2014, månad: "jun", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 135 },
+    { år: 2014, månad: "jul", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 322 },
+    { år: 2014, månad: "jul", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 37 },
+    { år: 2014, månad: "aug", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 810 },
+    { år: 2014, månad: "aug", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 88 },
+    { år: 2014, månad: "sep", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 940 },
+    { år: 2014, månad: "sep", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 193 },
+    { år: 2014, månad: "okt", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 973 },
+    { år: 2014, månad: "okt", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 105 },
+    { år: 2014, månad: "nov", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1289 },
+    { år: 2014, månad: "nov", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 180 },
+    { år: 2014, månad: "dec", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1910 },
+    { år: 2014, månad: "dec", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 217 },
+    // 2015
     { år: 2015, månad: "jan", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 608 },
     { år: 2015, månad: "jan", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 67 },
     { år: 2015, månad: "feb", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 663 },
@@ -1332,6 +1434,7 @@ const hardcodedSkolData = [
     { år: 2015, månad: "nov", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 222 },
     { år: 2015, månad: "dec", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1533 },
     { år: 2015, månad: "dec", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 90 },
+    // 2016
     { år: 2016, månad: "jan", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 594 },
     { år: 2016, månad: "jan", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 78 },
     { år: 2016, månad: "feb", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 598 },
@@ -1356,6 +1459,7 @@ const hardcodedSkolData = [
     { år: 2016, månad: "nov", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 303 },
     { år: 2016, månad: "dec", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1376 },
     { år: 2016, månad: "dec", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 62 },
+    // 2017
     { år: 2017, månad: "jan", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 393 },
     { år: 2017, månad: "jan", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 93 },
     { år: 2017, månad: "feb", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 358 },
@@ -1380,6 +1484,7 @@ const hardcodedSkolData = [
     { år: 2017, månad: "nov", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 692 },
     { år: 2017, månad: "dec", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 1523 },
     { år: 2017, månad: "dec", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 294 },
+    // 2018
     { år: 2018, månad: "jan", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 358 },
     { år: 2018, månad: "jan", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 116 },
     { år: 2018, månad: "feb", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 373 },
@@ -1400,7 +1505,6 @@ const hardcodedSkolData = [
     { år: 2018, månad: "sep", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 267 },
     { år: 2018, månad: "okt", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-barn", antal: 868 },
     { år: 2018, månad: "okt", besöksmål: "kulturenilund", typ: "verksamhet", kategori: "skola-vuxen", antal: 500 }
-
 ];
 
 const KATEGORI_OPTIONS = Object.keys(KATEGORI_MAP);
@@ -2599,6 +2703,9 @@ document.getElementById("resetFilters").onclick = function() {
     document.getElementById("ffSelectLabel").textContent = "Alla besöksmål";
     document.getElementById("mainSiteHeader").textContent = "Alla besöksmål";
     
+    // HÄR RENSAS BESÖKSMÅLSDROPDOWNEN: Tvingar listan att rita om sig och markera "Alla besöksmål"
+    initFFSelect();
+
     toggleVerksamhet.checked = true;
     toggleAnlaggning.checked = false;
     toggleLund.checked = false;
@@ -2616,6 +2723,11 @@ document.getElementById("resetFilters").onclick = function() {
     toggleOlder.disabled = false;
     toggleOlder.parentElement.style.opacity = "1";
     toggleOlder.parentElement.style.cursor = "pointer";
+
+    // Nollställ och rita om kategorigriden direkt vid återställning
+    selectedKategorier = new Set();
+    document.getElementById("kategoriSelectLabel").textContent = "Alla kategorier";
+    initKategoriSelect(); 
 
     updateKategoriVisibility(); 
     selectedMonths = new Set([...Array(12).keys()]);
