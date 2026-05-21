@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Månadens besök</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:           #f0ede8;
+  --surface:      #faf8f5;
+  --surface2:     #f0ede8;
+  --surface3:     #e8e4dd;
+  --text:         #1c1a17;
+  --muted:        #7a756c;
+  --border:       rgba(28,26,23,.10);
+  --border2:      rgba(28,26,23,.16);
+  --accent:       #2a5c8f;
+  --accent-dark:  #1b3d60;
+  --accent-light: #e8f0f9;
+  --success:      #2b7a3e;
+  --danger:       #c0392b;
+  --radius:       18px;
+  --radius-md:    12px;
+  --radius-sm:    8px;
+  --shadow:       0 2px 8px rgba(28,26,23,.07);
+  --shadow-lg:    0 8px 32px rgba(28,26,23,.12);
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+
+body {
+  font-family:'DM Sans',system-ui,sans-serif;
+  font-size:15px;
+  color:var(--text);
+  background:var(--bg);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ── LAYOUT ── */
+main {
+  width:min(1080px,94vw);
+  margin:0 auto;
+  padding:44px 0 80px;
+  display:grid;
+  gap:18px;
+}
+
+/* ── HEADER ── */
+.header-card {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:32px 36px;
+  box-shadow:var(--shadow);
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:24px;
+  flex-wrap:wrap;
+}
+
+.header-left .kicker {
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:10px;
+}
+
+.header-left h1 {
+  font-size:30px;
+  font-weight:600;
+  letter-spacing:-.02em;
+  margin-bottom:6px;
+  line-height:1.1;
+}
+
+.header-left .dateline {
+  font-family:'DM Mono',monospace;
+  font-size:13px;
+  color:var(--muted);
+}
+
+/* ── STATS ROW ── */
+.stats-row {
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:flex-end;
+}
+
+.stat-box {
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  padding:10px 16px;
+  min-width:105px;
+  flex:1 0 auto;
+}
+
+.stat-num {
+  font-family:'DM Mono',monospace;
+  font-size:18px;
+  font-weight:500;
+  color:var(--text);
+  line-height:1.2;
+}
+
+.stat-label {
+  font-size:10px;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  color:var(--muted);
+  margin-top:3px;
+  line-height:1.3;
+}
+
+/* ── PANEL ── */
+.panel {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:28px;
+  box-shadow:var(--shadow);
+}
+
+.panel-label {
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:20px;
+}
+
+/* ── ACTION GRID ── */
+.action-grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+}
+
+.action-btn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  text-align: left;
+  
+  /* Första värdet (top), andra (right), tredje (bottom), fjärde (vänster padding) */
+  padding: 22px 24px 18px 45px; /* Minskat från 24px till 14px på slutet för att dra ikonen till vänster */
+  gap: 25px; /* Ökat något för att hålla kvar texten till höger */
+  
+  justify-content: flex-start; 
+  min-height: 128px;
+  
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  color: var(--text);
+  transition: border-color .2s, transform .2s, box-shadow .2s;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Gemensam hover-effekt för lyft och skugga */
+.action-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(28, 26, 23, 0.08);
+}
+
+/* ── UNIKA FÄRGER PER BESÖKSMÅL ── */
+
+/* Kulturen i Lund (Blå) */
+.action-btn[data-modal="kulturen"] { background: #f0f7ff; }
+.action-btn[data-modal="kulturen"]:hover { 
+  background: #dbeafe; 
+  border-color: #1d4ed8; 
+  box-shadow: 0 10px 24px rgba(29, 78, 216, 0.15);
+}
+.action-btn[data-modal="kulturen"] .fa-icon { fill: #1d4ed8; }
+
+/* Kulturens Östarp (Grön) */
+.action-btn[data-modal="ostarp"] { background: #f0fdf4; }
+.action-btn[data-modal="ostarp"]:hover { 
+  background: #dcfce7; 
+  border-color: #15803d; 
+  box-shadow: 0 10px 24px rgba(21, 128, 61, 0.15);
+}
+.action-btn[data-modal="ostarp"] .fa-icon { fill: #15803d; }
+
+/* Livets museum (Gul) */
+.action-btn[data-modal="livets"] { background: #fefce8; }
+.action-btn[data-modal="livets"]:hover { 
+  background: #fef9c3; 
+  border-color: #a16207; 
+  box-shadow: 0 10px 24px rgba(161, 98, 7, 0.15);
+}
+.action-btn[data-modal="livets"] .fa-icon { fill: #a16207; }
+
+/* Hökeriet (Rosa) */
+.action-btn[data-modal="hokeriet"] { background: #fdf2f8; }
+.action-btn[data-modal="hokeriet"]:hover { 
+  background: #fce7f3; 
+  border-color: #be185d; 
+  box-shadow: 0 10px 24px rgba(190, 24, 93, 0.15);
+}
+.action-btn[data-modal="hokeriet"] .fa-icon { fill: #be185d; }
+
+/* Tegnérmuseet (Lila) */
+.action-btn[data-modal="tegner"] { background: #faf5ff; }
+.action-btn[data-modal="tegner"]:hover { 
+  background: #ede9fe; 
+  border-color: #6d28d9; 
+  box-shadow: 0 10px 24px rgba(109, 40, 217, 0.15);
+}
+.action-btn[data-modal="tegner"] .fa-icon { fill: #6d28d9; }
+
+/* Övrigt (Grå) */
+.action-btn[data-modal="ovrigt"] { background: var(--surface2); }
+.action-btn[data-modal="ovrigt"]:hover { 
+  background: var(--surface3); 
+  border-color: var(--muted); 
+  box-shadow: 0 10px 24px rgba(122, 117, 108, 0.15);
+}
+.action-btn[data-modal="ovrigt"] .fa-icon { fill: var(--muted); }
+
+/* Icon zone — takes all remaining space, icons zoom here */
+.icon-wrap {
+  flex: 0 0 54px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-wrap .venue-icon,
+.icon-wrap .fa-icon {
+  transition: transform .28s cubic-bezier(.34,1.56,.64,1);
+  display: block;
+}
+
+.venue-icon       { width: 50px; height: 50px; object-fit: contain; }
+.fa-icon          { width: 28px; height: 28px; fill: var(--accent); }
+
+.action-btn:hover .icon-wrap .venue-icon,
+.action-btn:hover .icon-wrap .fa-icon {
+  transform: scale(1.5);
+}
+
+/* Text-container för att hålla ihop rubrik och beskrivning */
+.btn-text-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0; /* Förhindrar overflow vid långa ord */
+}
+
+/* Text always at bottom */
+.btn-title {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.3;
+  display: block;
+}
+
+.btn-desc {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted);
+  line-height: 1.4;
+  display: block;
+}
+
+/* Green dot when entry exists */
+.entry-dot {
+  position:absolute;
+  top:12px;
+  right:12px;
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--success);
+  display:none;
+}
+.action-btn.has-entry .entry-dot { display:block; }
+
+/* ── ENTRIES ── */
+.entries-list { display:grid; gap:8px; }
+
+.entry-row {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  padding:14px 20px;
+  display:flex;
+  align-items:center;
+  gap:16px;
+  cursor:pointer;
+  transition:border-color .15s, transform .15s;
+  animation:slideIn .18s ease;
+}
+
+.entry-row:hover {
+  border-color:var(--accent);
+  background:var(--accent-light);
+  transform:translateX(4px);
+}
+
+.entry-badge {
+  font-size:11px;
+  font-weight:600;
+  padding:4px 12px;
+  border-radius:20px;
+  white-space:nowrap;
+  flex-shrink:0;
+  width:158px;
+  text-align:center;
+  letter-spacing:.01em;
+}
+
+.badge-kulturen { background:#dbeafe; color:#1d4ed8; }
+.badge-ostarp   { background:#dcfce7; color:#15803d; }
+.badge-livets   { background:#fef9c3; color:#a16207; }
+.badge-hokeriet { background:#fce7f3; color:#be185d; }
+.badge-tegner   { background:#ede9fe; color:#6d28d9; }
+.badge-ovrigt   { background:var(--surface2); color:var(--muted); }
+
+.entry-body  { flex:1; min-width:0; }
+.entry-title { font-size:15px; font-weight:600; margin-bottom:3px; }
+.entry-meta  { font-size:12px; color:var(--muted); }
+
+.entry-time {
+  font-family:'DM Mono',monospace;
+  font-size:11px;
+  color:var(--muted);
+  text-align:right;
+  line-height:1.7;
+  white-space:nowrap;
+}
+.entry-time strong {
+  display:block;
+  font-size:12px;
+  color:var(--text);
+  font-weight:500;
+}
+
+/* ── MODAL ── */
+.modal-overlay {
+  position:fixed;
+  inset:0;
+  background:rgba(28,26,23,.45);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:16px;
+  z-index:100;
+  backdrop-filter:blur(3px);
+}
+.modal-overlay.open { display:flex; }
+
+.modal {
+  background: var(--surface);
+  border-radius: var(--radius);
+  /* Ändrad maxbredd från 660px till 460px för ett snyggare, mer kompakt utseende */
+  width: min(460px, 96vw); 
+  max-height: 92vh;
+  overflow-y: auto;
+  padding: 32px;
+  box-shadow: var(--shadow-lg);
+  animation: modalIn .18s ease;
+}
+
+.modal-top {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:24px;
+}
+
+.modal-top h2 {
+  font-size:20px;
+  font-weight:600;
+  letter-spacing:-.02em;
+}
+
+.modal-close {
+  width:38px;height:38px;
+  border-radius:50%;
+  border:1px solid var(--border2);
+  background:var(--surface);
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+  transition:all .25s cubic-bezier(.4,0,.2,1);
+  flex-shrink:0;
+}
+.modal-close::before,.modal-close::after {
+  content:'';position:absolute;
+  width:16px;height:1.5px;
+  background:var(--text);border-radius:2px;
+}
+.modal-close::before { transform:rotate(45deg); }
+.modal-close::after  { transform:rotate(-45deg); }
+.modal-close:hover {
+  background:var(--danger);
+  border-color:var(--danger);
+  transform:rotate(90deg);
+}
+.modal-close:hover::before,
+.modal-close:hover::after { background:#fff; }
+
+/* ── FORM ELEMENTS ── */
+.field-label {
+  font-size:11px;font-weight:600;
+  text-transform:uppercase;letter-spacing:.05em;
+  color:var(--muted);
+  margin-bottom:8px;margin-top:18px;
+  display:block;
+}
+.field-label:first-child { margin-top:0; }
+
+select,input,textarea {
+  width:100%;
+  border:1px solid var(--border2);
+  border-radius:var(--radius-sm);
+  padding:11px 13px;
+  font-family:inherit;font-size:15px;
+  background:var(--surface);
+  color:var(--text);
+  transition:border-color .15s, box-shadow .15s;
+}
+select:focus,input:focus,textarea:focus {
+  outline:none;
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px var(--accent-light);
+}
+
+/* ── VISITOR CATEGORY GRID ── */
+.cat-grid  { display:grid; gap:8px; margin-top:4px; }
+
+.cat-row {
+  display:grid;
+  grid-template-columns:1fr 140px;
+  align-items:center;
+  gap:12px;
+}
+
+.cat-label { font-size:14px; font-weight:500; color:var(--text); }
+
+.cat-input {
+  text-align: right !important;
+  font-variant-numeric: tabular-nums;
+  /* Ändrat från 'DM Mono' till 'DM Sans' för ett renare och snyggare utseende */
+  font-family: 'DM Sans', system-ui, sans-serif !important; 
+  font-weight: 500;
+  padding: 9px 12px !important;
+}
+
+.cat-total-row {
+  display:grid;
+  grid-template-columns:1fr 140px;
+  align-items:center;
+  gap:12px;
+  margin-top:6px;
+  padding-top:12px;
+  border-top:1px solid var(--border2);
+}
+
+.cat-total-label { font-size:14px; font-weight:700; }
+
+.cat-total-val {
+  text-align: right;
+  font-size: 20px;
+  font-weight: 600;
+  /* Ändrat till 'DM Sans' för att matcha resten av layouten */
+  font-family: 'DM Sans', system-ui, sans-serif; 
+  color: var(--accent);
+}
+
+/* ── FORM FOOTER ── */
+.form-footer {
+  display:flex;align-items:center;gap:10px;
+  margin-top:24px;padding-top:20px;
+  border-top:1px solid var(--border);
+}
+
+.btn-primary {
+  background:var(--accent);color:#fff;
+  border:none;border-radius:30px;
+  padding:10px 24px;font-weight:600;font-size:14px;
+  cursor:pointer;transition:background .18s;
+  font-family:inherit;
+}
+.btn-primary:hover { background:var(--accent-dark); }
+
+.btn-secondary {
+  background:var(--surface2);
+  border:1px solid var(--border2);
+  border-radius:30px;
+  padding:10px 20px;font-weight:500;font-size:14px;
+  cursor:pointer;font-family:inherit;color:var(--text);
+  transition:background .15s;
+}
+.btn-secondary:hover { background:var(--surface3); }
+
+.btn-danger-outline {
+  color:var(--danger);background:transparent;
+  border:1px solid var(--border);border-radius:30px;
+  padding:10px 20px;margin-right:auto;
+  cursor:pointer;font-size:14px;font-family:inherit;
+  transition:background .15s, border-color .15s;
+}
+.btn-danger-outline:hover { background:#fff5f5; border-color:var(--danger); }
+
+.status-msg { font-size:13px; color:var(--danger); }
+
+/* ── DELETE MODAL ── */
+.delete-modal-inner {
+  max-width:400px;
+  text-align:center;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes slideIn {
+  from { opacity:0; transform:translateY(-4px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+@keyframes modalIn {
+  from { opacity:0; transform:scale(.97) translateY(8px); }
+  to   { opacity:1; transform:scale(1)   translateY(0); }
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:680px) {
+  .action-grid { grid-template-columns:1fr 1fr; }
+  .stats-row { gap:8px; }
+  .header-card { padding:24px; }
+  .panel { padding:20px; }
+}
+@media(max-width:440px) {
+  .action-grid { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<main>
+
+  <!-- HEADER -->
+  <div class="header-card">
+    <div class="header-left">
+      <div class="kicker">Registrera</div>
+      <h1>Månadsstatistik</h1>
+      <div class="dateline" id="dateline">Laddar…</div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="stat-num" id="statKulturen">–</div>
+        <div class="stat-label">Kulturen i Lund</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" id="statOstarp">–</div>
+        <div class="stat-label">Kulturens Östarp</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" id="statLivets">–</div>
+        <div class="stat-label">Livets museum</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" id="statHokeriet">–</div>
+        <div class="stat-label">Hökeriet</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" id="statTegner">–</div>
+        <div class="stat-label">Tegnérmuseet</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" id="statOvrigt">–</div>
+        <div class="stat-label">Övrigt</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VENUE BUTTONS -->
+  <div class="panel">
+    <div class="panel-label">Registrera besöksmål</div>
+    <div class="action-grid">
+
+<!-- Kulturen i Lund -->
+<button class="action-btn" data-modal="kulturen">
+  <div class="entry-dot"></div>
+  <div class="icon-wrap">
+    <img src="kulturen-i-lund.svg" alt="" class="venue-icon">
+  </div>
+  <div class="btn-text-group">
+    <span class="btn-title">Kulturen i Lund</span>
+  </div>
+</button>
+
+<!-- Kulturens Östarp -->
+<button class="action-btn" data-modal="ostarp">
+  <div class="entry-dot"></div>
+  <div class="icon-wrap">
+    <img src="kulturens-ostarp.svg" alt="" class="venue-icon">
+  </div>
+  <div class="btn-text-group">
+    <span class="btn-title">Kulturens Östarp</span>
+  </div>
+</button>
+
+<!-- Livets museum -->
+<button class="action-btn" data-modal="livets">
+  <div class="entry-dot"></div>
+  <div class="icon-wrap">
+    <img src="livetsmuseum.svg" alt="" class="venue-icon">
+  </div>
+  <div class="btn-text-group">
+    <span class="btn-title">Livets museum</span>
+  </div>
+</button>
+
+<!-- Hökeriet -->
+<button class="action-btn" data-modal="hokeriet">
+  <div class="entry-dot"></div>
+  <div class="icon-wrap">
+    <img src="hokeriet.svg" alt="" class="venue-icon">
+  </div>
+  <div class="btn-text-group">
+    <span class="btn-title">Hökeriet</span>
+  </div>
+</button>
+
+<!-- Tegnérmuseet -->
+<button class="action-btn" data-modal="tegner">
+  <div class="entry-dot"></div>
+  <div class="icon-wrap">
+    <img src="tegner.svg" alt="" class="venue-icon">
+  </div>
+  <div class="btn-text-group">
+    <span class="btn-title">Tegnérmuseet</span>
+  </div>
+</button>
+
+<!-- Övrigt -->
+<button class="action-btn" data-modal="ovrigt">
+  <div class="entry-dot"></div>
+  <div class="icon-wrap">
+    <img src="ovrigt.svg" alt="" class="venue-icon">
+  </div>
+  <div class="btn-text-group">
+    <span class="btn-title">Övrigt</span>
+  </div>
+</button>
+
+    </div>
+  </div>
+
+  <!-- ENTRIES LIST -->
+  <div class="panel">
+    <div class="panel-label">Registrerade besöksmål denna månad</div>
+    <div class="entries-list" id="entriesList">
+      <div id="emptyState" style="color:var(--muted);font-size:14px;">Inga besöksmål registrerade än.</div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ENTRY MODAL -->
+<div class="modal-overlay" id="overlay">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-top">
+      <h2 id="modalTitle">Registrering</h2>
+      <button class="modal-close" id="modalClose" aria-label="Stäng"></button>
+    </div>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<!-- DELETE CONFIRM MODAL -->
+<div class="modal-overlay" id="deleteOverlay">
+  <div class="modal delete-modal-inner">
+    <div style="width:52px;height:52px;border-radius:50%;background:#fef2f2;border:1px solid #fecaca;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+        <path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
+      </svg>
+    </div>
+    <h2 style="font-size:18px;font-weight:600;margin-bottom:8px;">Radera registrering?</h2>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:28px;">Detta går inte att ångra.</p>
+    <div style="display:flex;gap:10px;justify-content:center;">
+      <button class="btn-secondary" onclick="closeDeleteModal()">Avbryt</button>
+      <button onclick="confirmDelete()" style="background:var(--danger);color:#fff;border:none;border-radius:30px;padding:10px 24px;font-weight:600;cursor:pointer;font-family:inherit;font-size:14px;">Ja, radera</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const VENUES = {
+  kulturen: {
+    label:"Kulturen i Lund",
+    badge:"badge-kulturen",
+    cats:["Vuxen","Pensionär","Student","Rabatt","Fri vuxen","Barn","Medlem"]
+  },
+  ostarp: {
+    label:"Kulturens Östarp",
+    badge:"badge-ostarp",
+    cats:["Vuxen","Barn"]
+  },
+  livets: {
+    label:"Livets museum",
+    badge:"badge-livets",
+    cats:["Vuxen","Barn"]
+  },
+  hokeriet: {
+    label:"Hökeriet",
+    badge:"badge-hokeriet",
+    cats:["Vuxen","Barn"]
+  },
+  tegner: {
+    label:"Tegnérmuseet",
+    badge:"badge-tegner",
+    cats:["Vuxen","Barn"]
+  },
+  ovrigt: {
+    label:"Övrigt",
+    badge:"badge-ovrigt",
+    cats:["Vuxen","Pensionär","Student","Rabatt","Fri vuxen","Barn","Medlem"]
+  }
+};
+
+let entries = {};
+let activeModal = null;
+
+const MONTHS_SV = ["Januari","Februari","Mars","April","Maj","Juni","Juli","Augusti","September","Oktober","November","December"];
+
+function getPreviousMonthYear() {
+  const now = new Date();
+  let month = now.getMonth();
+  let year  = now.getFullYear();
+  if (month === 0) { month = 12; year--; }
+  return { month, year };
+}
+
+function fmtMonth(month, year) {
+  return `${MONTHS_SV[month-1]} ${year}`;
+}
+
+function fmtInt(n) {
+  if (!n && n !== 0) return "–";
+  return Math.round(n).toLocaleString("sv-SE");
+}
+
+function esc(v) {
+  return String(v||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+function buildMonthSelect(selMonth, selYear) {
+  const now = new Date();
+  const opts = [];
+  for (let i = 0; i < 12; i++) {
+    let m = now.getMonth() + 1 - i;
+    let y = now.getFullYear();
+    if (m <= 0) { m += 12; y--; }
+    const sel = (m === selMonth && y === selYear) ? " selected" : "";
+    opts.push(`<option value="${y}-${String(m).padStart(2,'0')}"${sel}>${fmtMonth(m,y)}</option>`);
+  }
+  return `<label class="field-label">Avser månad</label>
+    <select id="fMonth" style="width:220px;">${opts.join('')}</select>`;
+}
+
+function buildVenueForm(venueId, existing) {
+  const venue = VENUES[venueId];
+  const def  = getPreviousMonthYear();
+  const selM = existing ? existing.month : def.month;
+  const selY = existing ? existing.year  : def.year;
+
+  const rows = venue.cats.map(cat => {
+    const val = (existing && existing.cats[cat] != null) ? existing.cats[cat] : "";
+    const id  = `fCat_${cat.replace(/\s/g,'_')}`;
+    return `<div class="cat-row">
+      <div class="cat-label">${esc(cat)}</div>
+      <input type="number" id="${id}" class="cat-input" inputmode="numeric"
+             min="0" placeholder="0" value="${val}"
+             oninput="recalcTotal('${venueId}')">
+    </div>`;
+  }).join('');
+
+  // Skapa kommentarsfältet specifikt för "Övrigt"
+  let commentHtml = '';
+  if (venueId === 'ovrigt') {
+    const commentVal = existing && existing.comment ? existing.comment : '';
+    commentHtml = `
+      <label class="field-label" style="margin-top:20px;">Kommentar (Obligatorisk)</label>
+      <input type="text" id="fComment" placeholder="Ange varför eller var besöken registrerats..." value="${esc(commentVal)}" style="width:100%;">
+    `;
+  }
+
+  const isEdit = !!existing;
+  return `${buildMonthSelect(selM,selY)}
+    <label class="field-label" style="margin-top:20px;">Antal besökare per kategori</label>
+    <div class="cat-grid">
+      ${rows}
+      <div class="cat-total-row">
+        <div class="cat-total-label">Totalt</div>
+        <div class="cat-total-val" id="catTotal">0</div>
+      </div>
+    </div>
+    ${commentHtml}
+    <div class="form-footer">
+      <span class="status-msg" id="formStatus"></span>
+      ${isEdit ? `<button class="btn-danger-outline" onclick="deleteEntry()">Radera</button>` : ''}
+      <button class="btn-secondary" onclick="closeModal()">Avbryt</button>
+      <button class="btn-primary" id="saveBtn">${isEdit ? 'Spara ändringar' : 'Spara'}</button>
+    </div>`;
+}
+
+function recalcTotal(venueId) {
+  const venue = VENUES[venueId];
+  let total = 0;
+  venue.cats.forEach(cat => {
+    const el = document.getElementById(`fCat_${cat.replace(/\s/g,'_')}`);
+    if (el) total += parseInt(el.value) || 0;
+  });
+  const el = document.getElementById("catTotal");
+  if (el) el.textContent = fmtInt(total);
+}
+
+function openModal(venueId) {
+  activeModal = venueId;
+  const existing = entries[venueId] || null;
+  const venue    = VENUES[venueId];
+  document.getElementById("modalTitle").textContent =
+    (existing ? "Redigera – " : "Registrera – ") + venue.label;
+  document.getElementById("modalBody").innerHTML = buildVenueForm(venueId, existing);
+  recalcTotal(venueId);
+  document.getElementById("overlay").classList.add("open");
+  document.getElementById("saveBtn").addEventListener("click", () => saveEntry(venueId));
+}
+
+function closeModal() {
+  document.getElementById("overlay").classList.remove("open");
+  activeModal = null;
+}
+
+function deleteEntry() {
+  document.getElementById("deleteOverlay").classList.add("open");
+}
+
+function closeDeleteModal() {
+  document.getElementById("deleteOverlay").classList.remove("open");
+}
+
+function confirmDelete() {
+  if (activeModal) {
+    delete entries[activeModal];
+    renderEntries();
+    updateStats();
+    updateDots();
+  }
+  closeDeleteModal();
+  closeModal();
+}
+
+function saveEntry(venueId) {
+  const venue    = VENUES[venueId];
+  const monthVal = document.getElementById("fMonth").value;
+  const [year, month] = monthVal.split("-").map(Number);
+  const cats = {};
+  let total  = 0;
+  
+  venue.cats.forEach(cat => {
+    const el = document.getElementById(`fCat_${cat.replace(/\s/g,'_')}`);
+    const v  = parseInt(el?.value) || 0;
+    cats[cat] = v;
+    total += v;
+  });
+  
+  if (total === 0) {
+    const st = document.getElementById("formStatus");
+    if (st) st.textContent = "Ange minst ett besöksvärde.";
+    return;
+  }
+
+  // Validering för "Övrigt"-kommentaren
+  let comment = '';
+  if (venueId === 'ovrigt') {
+    const commentEl = document.getElementById("fComment");
+    comment = commentEl ? commentEl.value.trim() : '';
+    if (!comment) {
+      const st = document.getElementById("formStatus");
+      if (st) st.textContent = "Du måste fylla i en kommentar.";
+      commentEl.focus();
+      return;
+    }
+  }
+
+  entries[venueId] = { venueId, month, year, cats, total, comment, logTs: new Date().toISOString() };
+  renderEntries();
+  updateStats();
+  updateDots();
+  closeModal();
+}
+
+function renderEntries() {
+  const list  = document.getElementById("entriesList");
+  const empty = document.getElementById("emptyState");
+  list.querySelectorAll(".entry-row").forEach(r => r.remove());
+  if (!Object.keys(entries).length) { empty.style.display = "block"; return; }
+  empty.style.display = "none";
+
+  Object.keys(VENUES).forEach(venueId => {
+    const e = entries[venueId];
+    if (!e) return;
+    const venue = VENUES[venueId];
+    const row   = document.createElement("div");
+    row.className = "entry-row";
+    
+    let parts = venue.cats.filter(c => e.cats[c] > 0).map(c => `${c}: ${fmtInt(e.cats[c])}`).join(" · ");
+    
+    // Om det finns en kommentar, häng på den snyggt i listvyn
+    if (e.comment) {
+      parts += ` <br><span style="color:var(--text); font-style:italic; display:inline-block; margin-top:4px;">💬 ${esc(e.comment)}</span>`;
+    }
+    
+    const logTime = new Date(e.logTs);
+    const logStr  = logTime.toLocaleTimeString("sv-SE",{hour:"2-digit",minute:"2-digit"});
+    const logDate = logTime.toLocaleDateString("sv-SE");
+    row.innerHTML = `
+      <span class="entry-badge ${venue.badge}">${esc(venue.label)}</span>
+      <div class="entry-body">
+        <div class="entry-title">${fmtInt(e.total)} besökare</div>
+        <div class="entry-meta">${parts}</div>
+      </div>
+      <div class="entry-time">
+        <strong>${fmtMonth(e.month,e.year)}</strong>
+        <span>Loggat: ${logDate} ${logStr}</span>
+      </div>`;
+    row.onclick = () => openModal(venueId);
+    list.appendChild(row);
+  });
+}
+
+function updateStats() {
+  Object.keys(VENUES).forEach(venueId => {
+    const id = `stat${venueId.charAt(0).toUpperCase()+venueId.slice(1)}`;
+    const el = document.getElementById(id);
+    if (!el) return;
+    const e = entries[venueId];
+    el.textContent = e ? fmtInt(e.total) : "–";
+  });
+}
+
+function updateDots() {
+  document.querySelectorAll(".action-btn").forEach(btn => {
+    const v = btn.dataset.modal;
+    btn.classList.toggle("has-entry", !!entries[v]);
+  });
+}
+
+// Init
+document.querySelectorAll(".action-btn").forEach(btn => {
+  btn.addEventListener("click", () => openModal(btn.dataset.modal));
+});
+document.getElementById("modalClose").addEventListener("click", closeModal);
+document.getElementById("overlay").addEventListener("click", e => { if(e.target.id==="overlay") closeModal(); });
+document.getElementById("deleteOverlay").addEventListener("click", e => { if(e.target.id==="deleteOverlay") closeDeleteModal(); });
+
+(function(){
+  const prev = getPreviousMonthYear();
+  document.getElementById("dateline").textContent = `Aktuell månad: ${fmtMonth(prev.month,prev.year)}`;
+})();
+
+updateStats();
+</script>
+</body>
+</html>
