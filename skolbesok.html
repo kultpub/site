@@ -1934,10 +1934,12 @@ function parseCSV(text) {
                 månad: row.månad,
                 kommun: row.kommun,
                 skolnivå: normaliseSchoolLevel(row.skolnivå),
-                antal: Number(row.antal) || 0
+                // Hämtar alltid värdet från kolumnen "skola"
+                antal: Number(row.skola) || 0
             };
         });
 }
+
 
 function normaliseSchoolLevel(level) {
     if (!level) return "";
@@ -3185,7 +3187,7 @@ document.addEventListener("click", closeAllSelects);
 
 async function loadCSVData() {
     try {
-        const response = await fetch("https://kultpub.github.io/site/skoldata.csv");
+        const response = await fetch("https://kultpub.github.io/site/masterCSV.csv");
         const text = await response.text();
 
         visitRows = parseCSV(text);
