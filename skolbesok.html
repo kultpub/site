@@ -1928,14 +1928,35 @@ function parseCSV(text) {
             headers.forEach((header, index) => {
                 row[header] = values[index];
             });
+            return row;
+        })
+        // 1. Titta ENBART på de rader som är relevanta för denna sida
+        .filter(row => 
+            row.posttyp?.toLowerCase() === "skolbesök" && 
+            row.periodtyp?.toLowerCase() === "månad"
+        )
+        .map(row => {
+            // Snygga till skiftläge på kommun (t.ex. "kävlinge" -> "Kävlinge")
+            let kommunNamn = row.kommun || "";
+            if (kommunNamn) {
+                kommunNamn = kommunNamn.charAt(0).toUpperCase() + kommunNamn.slice(1);
+            }
+
+            // Snygga till skiftläge på månad (t.ex. "nov" -> "Nov")
+            let manadNamn = row.månad || "";
+            if (manadNamn) {
+                manadNamn = manadNamn.charAt(0).toUpperCase() + manadNamn.slice(1).toLowerCase();
+            }
 
             return {
                 år: parseInt(row.år),
-                månad: row.månad,
-                kommun: row.kommun,
+                månad: manadNamn,
+                kommun: kommunNamn,
                 skolnivå: normaliseSchoolLevel(row.skolnivå),
-                // Hämtar alltid värdet från kolumnen "skola"
-                antal: Number(row.skola) || 0
+                // 2. Hämtar alltid värdet från kolumnen "skola"
+                antal: Number(row.skola) || 0,
+                // 3. Sparar din ja/nej-flagga för barn/vuxen-filtreringen på sidan
+                isSkolaBarn: row.skola_barn?.toLowerCase() === "ja"
             };
         });
 }
