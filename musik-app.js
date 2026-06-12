@@ -16,7 +16,12 @@
     visibleCount: document.querySelector("#visibleCount"),
     results: document.querySelector("#results"),
     detail: document.querySelector("#detail"),
-    exportButton: document.querySelector("#exportButton")
+    exportButton: document.querySelector("#exportButton"),
+    detailModal: document.querySelector("#detailModal"),
+    modalDetail: document.querySelector("#modalDetail"),
+    modalTitle: document.querySelector("#modalTitle"),
+    closeModal: document.querySelector("#closeModal"),
+    modalBackdrop: document.querySelector("#modalBackdrop")
   };
 
   const catalogOptions = [
@@ -40,6 +45,9 @@
   ];
   const yearTypeLabels = new Map(yearTypeOptions.map((option) => [option.value, option.label]));
   const fieldAliases = new Map(data.fields.map((field) => [normalize(field.label), field.id]));
+  const mobileMedia = window.matchMedia("(max-width: 760px)");
+  const desktopSearchPlaceholder = els.searchInput.placeholder;
+  const mobileSearchPlaceholder = "Filtreras när du skriver...";
   let selectedId = "";
   let visibleRecords = [];
 
@@ -97,7 +105,15 @@
     els.resetFilters.addEventListener("click", resetAllFilters);
 
     els.exportButton.addEventListener("click", exportCsv);
+    els.closeModal.addEventListener("click", closeDetailModal);
+    els.modalBackdrop.addEventListener("click", closeDetailModal);
     document.addEventListener("keydown", handleKeys);
+    if (mobileMedia.addEventListener) {
+      mobileMedia.addEventListener("change", handleMobileModeChange);
+    } else {
+      mobileMedia.addListener(handleMobileModeChange);
+    }
+    syncSearchPlaceholder();
 
     render();
   }
@@ -114,6 +130,7 @@
     els.yearFromFilter.value = "";
     els.yearToFilter.value = "";
     selectedId = "";
+    closeDetailModal();
     render();
   }
 
@@ -160,16 +177,17 @@
   }
 
   function render() {
+    const mobileMode = isMobileView();
     const query = parseQuery(els.searchInput.value);
-    const orQuery = parseQuery(els.orInput.value);
-    const excludeQuery = parseQuery(els.excludeInput.value);
+    const orQuery = mobileMode ? parseQuery("") : parseQuery(els.orInput.value);
+    const excludeQuery = mobileMode ? parseQuery("") : parseQuery(els.excludeInput.value);
     const displayQuery = combineQueries(query, orQuery);
-    const group = normalize(els.groupFilter.value);
-    const subject = normalize(els.subjectFilter.value);
-    const material = normalize(els.materialFilter.value);
-    const method = normalize(els.methodFilter.value);
-    const yearType = els.yearTypeFilter.value;
-    const yearRange = selectedYearRange();
+    const group = mobileMode ? "" : normalize(els.groupFilter.value);
+    const subject = mobileMode ? "" : normalize(els.subjectFilter.value);
+    const material = mobileMode ? "" : normalize(els.materialFilter.value);
+    const method = mobileMode ? "" : normalize(els.methodFilter.value);
+    const yearType = mobileMode ? "" : els.yearTypeFilter.value;
+    const yearRange = mobileMode ? null : selectedYearRange();
 
     const matches = prepared
       .map((record) => ({ record, score: scoreRecord(record, query, orQuery) }))
@@ -340,6 +358,9 @@
         selectedId = button.dataset.id;
         renderResults(query);
         renderDetail(query);
+        if (isMobileView()) {
+          openDetailModal(query);
+        }
       });
     });
   }
@@ -351,13 +372,46 @@
       return;
     }
 
+    els.detail.innerHTML = detailHtml(record, query);
+  }
+
+  function openDetailModal(query) {
+    const record = prepared.find((item) => item.id === selectedId);
+    if (!record) return;
+
+    els.modalTitle.textContent = record.inventory || record.id;
+    els.modalDetail.innerHTML = detailHtml(record, query);
+    els.detailModal.hidden = false;
+    document.body.classList.add("modal-open");
+  }
+
+  function closeDetailModal() {
+    els.detailModal.hidden = true;
+    document.body.classList.remove("modal-open");
+  }
+
+  function isMobileView() {
+    return mobileMedia.matches;
+  }
+
+  function handleMobileModeChange() {
+    closeDetailModal();
+    syncSearchPlaceholder();
+    render();
+  }
+
+  function syncSearchPlaceholder() {
+    els.searchInput.placeholder = isMobileView() ? mobileSearchPlaceholder : desktopSearchPlaceholder;
+  }
+
+  function detailHtml(record, query) {
     const importantIds = new Set(["113", "118", "120", "121", "123", "125", "142", "144", "205", "206", "229", "235", "240", "242", "244", "255", "1610172", "1610192", "1610193", "1610194", "1610195", "1610196", "1610198", "1609812"]);
     const entries = Object.values(record.fields).sort((a, b) => {
       const importantDelta = Number(importantIds.has(b.id)) - Number(importantIds.has(a.id));
       return importantDelta || a.label.localeCompare(b.label, "sv");
     });
 
-    els.detail.innerHTML = `
+    return `
       <div class="detail-header">
         <div class="detail-topline">
           <span class="source">${escapeHtml(record.source)} · objekt ${escapeHtml(record.id)}</span>
@@ -681,6 +735,11 @@
   }
 
   function handleKeys(event) {
+    if (event.key === "Escape" && !els.detailModal.hidden) {
+      closeDetailModal();
+      return;
+    }
+
     if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
       event.preventDefault();
       els.searchInput.focus();

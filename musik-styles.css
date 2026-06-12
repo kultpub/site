@@ -435,6 +435,71 @@ button:focus-visible {
   color: var(--muted);
 }
 
+.detail-modal[hidden] {
+  display: none;
+}
+
+.modal-open {
+  overflow: hidden;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  border: 0;
+  padding: 0;
+  background: rgba(23, 33, 29, 0.42);
+  cursor: pointer;
+}
+
+.modal-dialog {
+  position: fixed;
+  inset: 7vh 16px 16px;
+  z-index: 21;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: 0 24px 70px rgba(21, 35, 31, 0.26);
+}
+
+.modal-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid var(--line);
+  padding: 10px 12px;
+  background: var(--surface);
+}
+
+.modal-bar h2 {
+  overflow: hidden;
+  font-size: 1rem;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.modal-close {
+  width: 40px;
+  min-height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-2);
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 1.45rem;
+  line-height: 1;
+}
+
+.modal-detail {
+  overflow: auto;
+}
+
 @media (max-width: 1120px) {
   .filters {
     grid-template-columns: repeat(3, minmax(140px, 1fr));
@@ -447,37 +512,119 @@ button:focus-visible {
 
 @media (max-width: 760px) {
   .app-shell {
-    padding: 10px;
+    padding: 12px;
   }
 
-  .topbar,
+  .search-panel,
+  .results-panel {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+  }
+
+  .search-panel {
+    padding: 0;
+  }
+
+  .topbar {
+    display: block;
+  }
+
+  .eyebrow,
+  .stats,
+  .filters,
+  .or-search-box,
+  .exclude-search-box,
   .results-header,
-  .panel-heading {
-    align-items: flex-start;
-    flex-direction: column;
+  .detail-panel {
+    display: none;
   }
 
-  .stats {
-    justify-content: flex-start;
+  h1 {
+    margin: 0 0 12px;
+    font-size: 1.55rem;
+    line-height: 1.05;
   }
 
-  .filters {
+  .search-row {
     grid-template-columns: 1fr;
+    margin-top: 0;
+  }
+
+  .search-box input {
+    min-height: 48px;
+    padding-left: 44px;
+    background: var(--surface);
+    font-size: 1rem;
   }
 
   .content-grid {
-    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    display: block;
+    margin-top: 10px;
   }
 
-  .results-panel,
-  .detail-panel {
+  .results-panel {
     max-height: none;
+    min-height: 0;
+    padding: 0;
+    overflow: visible;
+  }
+
+  .results {
+    gap: 8px;
+    margin-top: 0;
+  }
+
+  .result-card {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    align-items: start;
+    border-radius: 8px;
+    padding: 10px;
+    background: var(--surface);
+  }
+
+  .result-card .result-line {
+    display: -webkit-box;
+    overflow: hidden;
+    font-size: 0.95rem;
+    line-height: 1.35;
+    white-space: normal;
+    text-overflow: clip;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  .carlotta-button {
+    min-height: 34px;
+    padding: 0 9px;
+    font-size: 0.82rem;
+  }
+
+  .modal-dialog {
+    inset: 10px;
+  }
+
+  .modal-detail .detail-header {
+    position: static;
+  }
+
+  .modal-detail .detail-topline {
+    align-items: flex-start;
+  }
+
+  .modal-detail .detail-header h2 {
+    font-size: 1.25rem;
   }
 }
 
 @media (max-width: 560px) {
-  .content-grid,
-  .result-card {
+  .content-grid {
     grid-template-columns: 1fr;
+  }
+
+  .result-card {
+    grid-template-columns: minmax(0, 1fr) auto;
   }
 }
