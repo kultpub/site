@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Musikföremål</title>
+    <link rel="stylesheet" href="musik-styles.css?v=2">
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="search-panel" aria-label="Sök musikföremål">
+        <div class="topbar">
+          <div>
+            <p class="eyebrow">Kulturens samlingar</p>
+            <h1>Musikföremål</h1>
+          </div>
+          <div class="stats">
+            <span id="totalCount">0 objekt</span>
+            <span id="visibleCount">0 träffar</span>
+          </div>
+        </div>
+
+        <div class="search-row">
+          <label class="search-box">
+            <span class="icon" aria-hidden="true">⌕</span>
+            <input id="searchInput" type="search" autocomplete="off" placeholder="Sök inventarienummer, benämning, person, plats, material, text...">
+          </label>
+          <label class="search-box or-search-box">
+            <span class="or-label">ELLER</span>
+            <input id="orInput" type="search" autocomplete="off" placeholder="Ta även med poster som matchar något av detta...">
+          </label>
+          <label class="search-box exclude-search-box">
+            <span class="exclude-label">UTESLUT</span>
+            <input id="excludeInput" type="search" autocomplete="off" placeholder="Ta inte med detta...">
+          </label>
+        </div>
+
+        <div class="filters">
+          <label>
+            <span>Katalog</span>
+            <select id="groupFilter"></select>
+          </label>
+          <label>
+            <span>Sakord</span>
+            <select id="subjectFilter"></select>
+          </label>
+          <label>
+            <span>Material</span>
+            <select id="materialFilter"></select>
+          </label>
+          <label>
+            <span>Förvärv</span>
+            <select id="methodFilter"></select>
+          </label>
+          <label>
+            <span>Årstyp</span>
+            <select id="yearTypeFilter"></select>
+          </label>
+          <label>
+            <span>Från</span>
+            <input id="yearFromFilter" type="search" inputmode="numeric" placeholder="t.ex. 1800">
+          </label>
+          <label>
+            <span>Till</span>
+            <input id="yearToFilter" type="search" inputmode="numeric" placeholder="t.ex. 1899">
+          </label>
+          <div class="filter-action">
+            <button id="resetFilters" class="reset-button" type="button">Återställ</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="content-grid">
+        <section class="results-panel" aria-label="Sökresultat">
+          <div class="results-header">
+            <h2>Träffar</h2>
+            <button id="exportButton" class="text-button" type="button">Exportera CSV</button>
+          </div>
+          <div id="results" class="results"></div>
+        </section>
+
+        <aside class="detail-panel" aria-label="Detaljer">
+          <div id="detail" class="detail-empty">Välj ett objekt i listan.</div>
+        </aside>
+      </section>
+    </main>
+
+    <script src="musik-data.js"></script>
+    <script src="musik-app.js?v=2"></script>
+  </body>
+</html>
