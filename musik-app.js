@@ -460,9 +460,9 @@
     const tags = [];
 
     Object.entries(record.fields || {}).forEach(([fieldId, field]) => {
-      if (fieldId === "242") return;
-
       const label = field.label || `Fält ${fieldId}`;
+      if (isNonYearField(fieldId, label)) return;
+
       (field.values || []).forEach((value) => {
         const original = scalar(value);
         if (!original) return;
@@ -477,6 +477,11 @@
       const typeOrder = ["object", "acquisition", "registration", "reference", "exhibition", "mentioned"];
       return typeOrder.indexOf(a.type) - typeOrder.indexOf(b.type) || a.start - b.start || a.end - b.end;
     });
+  }
+
+  function isNonYearField(fieldId, label) {
+    const normalizedLabel = normalize(label);
+    return fieldId === "242" || normalizedLabel === "forvarvsnummer" || normalizedLabel === "arendenummer";
   }
 
   function yearTypeForField(fieldId, label, value) {
@@ -589,7 +594,7 @@
       const after = text.slice(match.index + match[0].length, match.index + match[0].length + 12);
       if (/f\.?\s*kr\.?|e\.?\s*kr\.?|tal/i.test(`${match[0]}${after}`)) continue;
       const start = Number(match[1]);
-      tags.push(makeYearTag(type, start, 999999, match[0], fieldId, fieldLabel, "öppet intervall"));
+      tags.push(makeYearTag(type, start, start, match[0], fieldId, fieldLabel, "startår"));
     }
   }
 
