@@ -1930,11 +1930,6 @@ function parseCSV(text) {
             });
             return row;
         })
-        // 1. Titta ENBART på de rader som är relevanta för denna sida
-        .filter(row => 
-            row.posttyp?.toLowerCase() === "skolbesök" && 
-            row.periodtyp?.toLowerCase() === "månad"
-        )
         .map(row => {
             // Snygga till skiftläge på kommun (t.ex. "kävlinge" -> "Kävlinge")
             let kommunNamn = row.kommun || "";
@@ -1953,10 +1948,7 @@ function parseCSV(text) {
                 månad: manadNamn,
                 kommun: kommunNamn,
                 skolnivå: normaliseSchoolLevel(row.skolnivå),
-                // 2. Hämtar alltid värdet från kolumnen "skola"
-                antal: Number(row.skola) || 0,
-                // 3. Sparar din ja/nej-flagga för barn/vuxen-filtreringen på sidan
-                isSkolaBarn: row.skola_barn?.toLowerCase() === "ja"
+                antal: Number(row.antal) || 0
             };
         });
 }
@@ -3208,7 +3200,10 @@ document.addEventListener("click", closeAllSelects);
 
 async function loadCSVData() {
     try {
-        const response = await fetch("https://kultpub.github.io/site/masterCSV.csv");
+        const response = await fetch("skoldata.csv", { cache: "no-store" });
+        if (!response.ok) {
+            throw new Error(`Kunde inte läsa skoldata.csv (${response.status})`);
+        }
         const text = await response.text();
 
         visitRows = parseCSV(text);
