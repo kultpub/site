@@ -330,6 +330,20 @@ main {
 
 .modal.narrow { width: min(400px, 96vw); }
 
+.modal.daily-viewings-modal {
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+}
+
+.group-count-warning-overlay { z-index: 300; }
+
+.group-count-warning-message {
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.55;
+  margin-bottom: 24px;
+}
+
 .modal-top {
   display: flex;
   align-items: center;
@@ -422,6 +436,8 @@ select:focus, input:focus, textarea:focus {
 
 textarea { min-height: 120px; resize: vertical; }
 
+#fReport { min-height: 145px; }
+
 input::placeholder, textarea::placeholder {
   color: var(--muted);
   opacity: 0.6;
@@ -501,6 +517,70 @@ input[type="date"] {
 .dropdown-cols-2 { display: grid; grid-template-columns: repeat(2, 1fr); grid-auto-flow: column; grid-template-rows: repeat(7, auto); padding: 8px; gap: 2px; }
 .dropdown-cols-2-r4 { display: grid; grid-template-columns: repeat(2, 1fr); grid-auto-flow: column; grid-template-rows: repeat(4, auto); padding: 8px; gap: 2px; }
 
+#groupTypeWrapper .custom-select-dropdown {
+  width: 100%;
+  min-width: 0;
+}
+
+#groupTypeDropdownCols .dropdown-option {
+  white-space: normal;
+  line-height: 1.35;
+  overflow: visible;
+}
+
+.group-option-danger { color: var(--danger); }
+.group-option-success { color: var(--success); }
+
+.group-info {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 17px;
+  height: 17px;
+  margin-left: 5px;
+  border: 1px solid var(--muted);
+  border-radius: 50%;
+  color: var(--muted);
+  background: var(--surface);
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1;
+  vertical-align: middle;
+  cursor: help;
+}
+
+.group-info-tooltip {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 7px);
+  z-index: 300;
+  width: max-content;
+  max-width: 260px;
+  padding: 7px 9px;
+  border-radius: 5px;
+  background: var(--text);
+  color: var(--surface);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.35;
+  text-align: left;
+  white-space: normal;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translate(-50%, 3px);
+  transition: opacity .15s, transform .15s, visibility .15s;
+}
+
+.group-info:hover .group-info-tooltip,
+.group-info:focus .group-info-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}
+
 .dropdown-option {
   padding: 7px 10px; border-radius: 4px; cursor: pointer;
   font-size: 14px; color: var(--text); transition: background 0.1s;
@@ -546,6 +626,125 @@ input[type="date"] {
 .side-field { flex: 1; }
 
 .form-row .field-label { margin-top: 0; }
+
+.group-type-field { margin-top: 16px; }
+
+.group-count-fields {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.group-count-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 110px;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.group-count-label {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.group-count-input { text-align: right; }
+.group-count-input::placeholder { font-style: normal; }
+
+.group-payment-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+}
+
+.group-payment-question {
+  flex: 1 1 360px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.group-payment-choice {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.group-payment-choice input {
+  width: auto;
+  cursor: pointer;
+}
+
+.daily-viewings-section {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.daily-viewings-title {
+  margin-bottom: 12px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.daily-viewings-rows {
+  display: grid;
+  gap: 10px;
+}
+
+.daily-viewing-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 100px 36px;
+  align-items: center;
+  gap: 10px;
+}
+
+.daily-viewing-count { text-align: right; }
+.daily-viewing-count::placeholder { font-style: normal; }
+
+.daily-viewing-remove,
+.daily-viewing-add {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--border2);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  transition: all .2s;
+}
+
+.daily-viewing-remove:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+  background: #fff5f5;
+}
+
+.daily-viewing-add {
+  display: block;
+  margin-top: 10px;
+  color: var(--accent);
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.daily-viewing-add:hover {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
 
 .form-row-triple {
   display: flex;
@@ -695,6 +894,20 @@ input[type="date"] {
     flex: 0 0 100% !important;
     width: 100%;
   }
+
+  .group-count-row {
+    grid-template-columns: minmax(0, 1fr) 90px;
+  }
+
+  .daily-viewing-row {
+    grid-template-columns: minmax(0, 1fr) 82px 36px;
+  }
+
+  .dropdown-cols-2-r4 {
+    grid-template-columns: 1fr;
+    grid-auto-flow: row;
+    grid-template-rows: none;
+  }
 }
 </style>
 </head>
@@ -721,7 +934,7 @@ input[type="date"] {
           <img src="skola.svg" alt="" class="venue-icon">
           <div class="stat-num" id="statSchool">0</div>
         </div>
-        <div class="stat-box" id="statBox_group" title="Gruppbesök">
+        <div class="stat-box" id="statBox_group" title="Grupper och evenemang">
           <img src="grupp.svg" alt="" class="venue-icon">
           <div class="stat-num" id="statGroup">0</div>
         </div>
@@ -765,8 +978,8 @@ input[type="date"] {
             <img src="grupp.svg" alt="" class="fa-icon">
           </div>
           <div class="btn-text-group">
-            <span class="btn-title">Gruppbesök</span>
-            <span class="btn-desc">Visningar, bröllop, konferens etc.</span>
+            <span class="btn-title">Grupper och evenemang</span>
+            <span class="btn-desc">Bröllop, kalas, konferens, faktura etc.</span>
           </div>
         </button>
 
@@ -855,10 +1068,24 @@ input[type="date"] {
     </div>
   </div>
 
+  <!-- Varning vid fel antal för fakturagrupper -->
+  <div class="modal-overlay group-count-warning-overlay" id="groupCountWarningOverlay">
+    <div class="modal" style="max-width: 480px;">
+      <div class="modal-top">
+        <h2>Kontrollera antal</h2>
+        <button class="modal-close" type="button" aria-label="Stäng" onclick="closeGroupCountWarning()"></button>
+      </div>
+      <p class="group-count-warning-message" id="groupCountWarningMessage"></p>
+      <div style="display: flex; justify-content: flex-end;">
+        <button class="btn-primary" type="button" onclick="closeGroupCountWarning()">Okej</button>
+      </div>
+    </div>
+  </div>
+
 <script>
 const TYPE_LABELS = {
   school: "skolbesök",
-  group: "gruppbesök",
+  group: "grupper och evenemang",
   tickets: "entréintäkt",
   sales: "butiksförsäljning",
   cafe: "kaféförsäljning",
@@ -877,12 +1104,103 @@ const ICONS = {
 const PLACES = ["Bjuv","Bromölla","Burlöv","Båstad","Eslöv","Helsingborg","Hässleholm","Höganäs","Hörby","Höör","Klippan","Kristianstad","Kävlinge","Landskrona","Lomma","Lund","Malmö","Osby","Perstorp","Simrishamn","Sjöbo","Skurup","Staffanstorp","Svalöv","Svedala","Tomelilla","Trelleborg","Vellinge","Ystad","Åstorp","Ängelholm","Örkelljunga","Östra Göinge","Övrigt"];
 const BASE_LEVELS = ["Förskola","Förskoleklass","Åk 1","Åk 2","Åk 3","Åk 4","Åk 5","Åk 6","Åk 7","Åk 8","Åk 9","Gymnasium","Vuxenutbildning"];
 const EXTRA = { Lund:["Lunds universitet"], Helsingborg:["Campus Helsingborg"], Malmö:["Malmö universitet"], Kristianstad:["Högskolan Kristianstad"], Lomma:["SLU"], Övrigt:["Högskola, universitet"] };
-const GROUP_TYPES = ["", "Barnkalas", "Bröllop", "Konferens", "Kostnadsfri lokalupplåtelse", "Programvisning", "Visning mot betalning", "Nordenstedtska seminariet", "Övrigt"];
+
+function groupInfo(text) {
+  return `<span class="group-info" tabindex="0" aria-label="${esc(text)}">i<span class="group-info-tooltip" role="tooltip">${esc(text)}</span></span>`;
+}
+
+const GROUP_TYPES = [
+  {
+    value: "Barnkalas",
+    optionHtml: "Barnkalas",
+    countFields: [
+      {
+        key: "freeAdults",
+        label: "Vuxna med fri entré",
+        categories: ["Fri vuxen"],
+        max: 5,
+        rangeMessage: 'Max 5 vuxna har fri entré vid barnkalas. Övriga betalar full pris och ska läggas in på "Vuxna som betalar entré".'
+      },
+      { key: "adults", label: "Vuxna som betalar entré", categories: ["Vuxen"] },
+      { key: "children", label: "Barn", categories: ["Barn"] }
+    ],
+    paymentQuestion: "Betalades kostnaden för evenemanget vid ankomst receptionen?"
+  },
+  {
+    value: "Bröllop och vigsel",
+    optionHtml: "Bröllop och vigsel",
+    countFields: [
+      { key: "freeAdults", label: "Vuxna", categories: ["Fri vuxen"] },
+      { key: "children", label: "Barn", categories: ["Barn"] }
+    ],
+    paymentQuestion: "Betalades kostnaden för evenemanget vid ankomst receptionen?"
+  },
+  {
+    value: "Dop och namngivning",
+    optionHtml: "Dop och namngivning",
+    countFields: [
+      { key: "freeAdults", label: "Vuxna", categories: ["Fri vuxen"] },
+      { key: "children", label: "Barn", categories: ["Barn"] }
+    ],
+    paymentQuestion: "Betalades kostnaden för evenemanget vid ankomst receptionen?"
+  },
+  {
+    value: "Konferens",
+    optionHtml: "Konferens",
+    countFields: [
+      { key: "freeAdults", label: "Antal deltagare", categories: ["Fri vuxen"] }
+    ]
+  },
+  {
+    value: "Kostnadsfritt Kulturen-evenemang",
+    optionHtml: `Kostnadsfritt <strong>Kulturen-evenemang</strong>${groupInfo("T.ex. föreläsningar i Nordenstedtska seminariet")}`,
+    countFields: [
+      { key: "freeAdults", label: "Vuxna", categories: ["Fri vuxen"] },
+      { key: "children", label: "Barn", categories: ["Barn"] }
+    ]
+  },
+  {
+    value: "Kostnadsfritt externt evenemang",
+    optionHtml: `Kostnadsfritt <strong>externt evenemang</strong>${groupInfo("T.ex. föreläsningar arrangerade av Gamla Lund")}`,
+    countFields: [
+      { key: "freeAdults", label: "Vuxna", categories: ["Fri vuxen"] },
+      { key: "children", label: "Barn", categories: ["Barn"] }
+    ]
+  },
+  {
+    value: "Entréavgift mot faktura ej rabatt",
+    optionHtml: `Entréavgift mot faktura <strong class="group-option-danger">ej rabatt</strong>${groupInfo("Max 9 personer")}`,
+    countFields: [
+      {
+        key: "adults",
+        label: "Antal personer",
+        categories: ["Vuxen", "varav mot faktura"],
+        max: 9,
+        rangeMessage: 'Vid 10 eller fler personer, är entrén rabatterad. Välj istället "Entréavgift mot faktura <strong class="group-option-success">med rabatt</strong>".'
+      }
+    ]
+  },
+  {
+    value: "Entréavgift mot faktura med rabatt",
+    optionHtml: `Entréavgift mot faktura <strong class="group-option-success">med rabatt</strong>${groupInfo("10 eller fler personer")}`,
+    countFields: [
+      {
+        key: "discount",
+        label: "Antal personer",
+        categories: ["Rabatt", "varav mot faktura"],
+        min: 10,
+        rangeMessage: 'Vid färre än 10 personer, betalar samtliga fullt pris. Välj istället "Entréavgift mot faktura <strong class="group-option-danger">ej rabatt</strong>".'
+      }
+    ]
+  }
+];
 const MONTHS_SHORT = ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"];
 
 let entries = [];
 let activeModal = null;
 let editingId = null;
+let groupCountWarningInput = null;
+let dailyViewingRowId = 0;
 
 // --- HJÄLPFUNKTIONER ---
 function getDayName(dateStr) {
@@ -1083,31 +1401,25 @@ function buildSchoolForm(e) {
 function buildGroupForm(e) {
   const isEdit = !!e;
   const selectedType = e ? e.groupType : "";
-  const hasPaymentInfo = e && (e.paid === "Ja" || e.paid === "Nej");
 
   return `
     ${buildDateField(e ? e.ts.split('T')[0] : null)}
-    <div class="form-row">
-      <div class="field-group main-field">
-        <label class="field-label">Typ av grupp</label>
-        <div class="custom-select-wrapper" id="groupTypeWrapper">
-          <div class="custom-select-trigger" id="groupTypeTrigger">
-            <span id="groupTypeLabel">${selectedType ? esc(selectedType) : "Välj typ…"}</span>
-            <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-          </div>
-          <div class="custom-select-dropdown">
-            <div class="dropdown-cols-2-r4" id="groupTypeDropdownCols"></div>
-          </div>
+    <div class="field-group group-type-field">
+      <label class="field-label">Typ av grupp</label>
+      <div class="custom-select-wrapper" id="groupTypeWrapper">
+        <div class="custom-select-trigger" id="groupTypeTrigger">
+          <span id="groupTypeLabel">Välj typ…</span>
+          <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
         </div>
-        <input type="hidden" id="fGroupType" value="${esc(selectedType)}" />
+        <div class="custom-select-dropdown">
+          <div class="dropdown-cols-2-r4" id="groupTypeDropdownCols"></div>
+        </div>
       </div>
-      <div class="field-group side-field">
-        <label class="field-label">Antal</label>
-        <input type="number" id="fCount" inputmode="numeric" value="${e ? e.count : ''}" />
-      </div>
+      <input type="hidden" id="fGroupType" value="${esc(selectedType)}" />
     </div>
-    
-    <div id="paymentStatusRow" style="margin-top: 16px;"></div>
+
+    <div id="groupCountFields" class="group-count-fields"></div>
+    <div id="paymentStatusRow"></div>
 
     <label class="field-label">Valfri notering</label>
     <input type="text" id="fNote" value="${e ? esc(e.note) : ''}" />
@@ -1129,7 +1441,50 @@ function buildAmountForm(e, label) {
 
 function buildDailyForm(e) {
   const isEdit = !!e;
-  return `${buildDateField(e ? e.ts.split('T')[0] : null)}<label class="field-label">Rapport</label><textarea id="fReport">${e ? esc(e.report) : ''}</textarea>${buildFormFooter(isEdit)}`;
+  dailyViewingRowId = 0;
+  const viewings = e?.viewings?.length ? e.viewings : [{}];
+
+  return `
+    ${buildDateField(e ? e.ts.split('T')[0] : null)}
+    <label class="field-label">Rapport</label>
+    <textarea id="fReport"
+              placeholder="Beskriv dagen – vad hände, vad fungerade bra och mindre bra, och finns det något annat som organisationen bör känna till?&#10;&#10;Hade vi programvisningar idag? Skriv gärna något även om dessa, men vänligen lista dem separat under &quot;Dagens programvisningar och antal personer&quot;."
+              spellcheck="false">${e ? esc(e.report) : ""}</textarea>
+
+    <section class="daily-viewings-section">
+      <h3 class="daily-viewings-title">Dagens programvisningar och antal personer</h3>
+      <div class="daily-viewings-rows" id="dailyViewingsRows">
+        ${viewings.map(buildDailyViewingRow).join("")}
+      </div>
+      <button class="daily-viewing-add" type="button" onclick="addDailyViewingRow()" aria-label="Lägg till ytterligare visning" title="Lägg till ytterligare visning">+</button>
+    </section>
+
+    ${buildFormFooter(isEdit)}`;
+}
+
+function buildDailyViewingRow(viewing = {}) {
+  const rowId = `dailyViewing_${dailyViewingRowId++}`;
+  return `
+    <div class="daily-viewing-row" data-viewing-row>
+      <input type="text" id="${rowId}_name" class="daily-viewing-name"
+             placeholder="T.ex. visningens namn och vem som höll i den"
+             value="${esc(viewing.name || "")}" />
+      <input type="number" id="${rowId}_count" class="daily-viewing-count"
+             min="1" step="1" inputmode="numeric" placeholder="Antal"
+             aria-label="Antal deltagare" value="${viewing.participants || ""}" />
+      <button class="daily-viewing-remove" type="button" onclick="removeDailyViewingRow(this)"
+              aria-label="Ta bort visning" title="Ta bort visning">×</button>
+    </div>`;
+}
+
+function addDailyViewingRow() {
+  const container = document.getElementById("dailyViewingsRows");
+  container.insertAdjacentHTML("beforeend", buildDailyViewingRow());
+  container.lastElementChild.querySelector(".daily-viewing-name").focus();
+}
+
+function removeDailyViewingRow(button) {
+  button.closest("[data-viewing-row]").remove();
 }
 
 // --- LOGIK ---
@@ -1141,7 +1496,9 @@ function openModal(key, entry = null) {
   editingId = entry ? entry.id : null;
   const builders = { school:buildSchoolForm, group:buildGroupForm, tickets:()=>buildAmountForm(entry,"Entré"), sales:()=>buildAmountForm(entry,"Butik"), cafe:()=>buildAmountForm(entry,"Kafé"), daily:buildDailyForm };
   const label = TYPE_LABELS[key] || key;
-  document.getElementById("modalTitle").textContent = (entry ? "Redigera " : "Registrera ") + label;
+  document.getElementById("modalTitle").textContent = key === "group"
+    ? "Registrera grupp eller evenemang"
+    : (entry ? "Redigera " : "Registrera ") + label;
   document.getElementById("modalBody").innerHTML = builders[key](entry);
   document.getElementById("overlay").classList.add("open");
   const modalEl = document.querySelector(".modal");
@@ -1150,6 +1507,7 @@ function openModal(key, entry = null) {
   } else {
     modalEl.classList.remove("narrow");
   }
+  modalEl.classList.toggle("daily-viewings-modal", key === "daily");
 if (activeModal === "school") {
   initPlaceSelect();
 }
@@ -1250,51 +1608,35 @@ function initGroupTypeSelect() {
   oldTrigger.parentNode.replaceChild(newTrigger, oldTrigger);
   const labelEl = newTrigger.querySelector("#groupTypeLabel");
 
-  const sortedTypes = [...GROUP_TYPES].filter(t => t !== "").sort((a,b) => a.localeCompare(b, 'sv'));
   const selectedType = hidden.value;
-
   cols.innerHTML = "";
 
-  // Funktion för att visa/dölja betalningsfrågan
-  const togglePaymentField = (type) => {
-    const container = document.getElementById("paymentStatusRow");
-    if (!container) return;
-    
-    const triggerTypes = ["Bröllop", "Barnkalas", "Visning mot betalning"];
-    if (triggerTypes.includes(type)) {
-      // Hämta befintligt värde om vi redigerar en post
-      const currentEntry = entries.find(e => e.id === editingId);
-      const isPaid = currentEntry ? currentEntry.paid : "";
-
-      container.innerHTML = `
-        <div style="display: flex; align-items: center; gap: 16px; background: var(--surface2); padding: 12px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border2);">
-          <span style="font-weight: 600; font-size: 14px; color: var(--text);">Har betalats?</span>
-          <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 14px;">
-            <input type="radio" name="fPaid" value="Ja" ${isPaid === "Ja" ? "checked" : ""} style="width: auto; cursor: pointer;"> Ja
-          </label>
-          <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 14px;">
-            <input type="radio" name="fPaid" value="Nej" ${isPaid === "Nej" ? "checked" : ""} style="width: auto; cursor: pointer;"> Nej
-          </label>
-        </div>
-      `;
-    } else {
-      container.innerHTML = "";
+  const setGroupTypeLabel = (groupType) => {
+    labelEl.innerHTML = groupType.optionHtml;
+    const info = labelEl.querySelector(".group-info");
+    if (info) {
+      info.addEventListener("click", event => event.stopPropagation());
+      info.addEventListener("keydown", event => event.stopPropagation());
     }
   };
 
-  sortedTypes.forEach(t => {
+  GROUP_TYPES.forEach(groupType => {
     const opt = document.createElement("div");
-    opt.className = "dropdown-option" + (t === selectedType ? " selected" : "");
-    opt.textContent = t;
+    opt.className = "dropdown-option" + (groupType.value === selectedType ? " selected" : "");
+    opt.dataset.value = groupType.value;
+    opt.innerHTML = groupType.optionHtml;
+    const info = opt.querySelector(".group-info");
+    if (info) {
+      info.addEventListener("click", event => event.stopPropagation());
+      info.addEventListener("keydown", event => event.stopPropagation());
+    }
     opt.addEventListener("click", () => {
-      hidden.value = t;
-      labelEl.textContent = t;
+      hidden.value = groupType.value;
+      setGroupTypeLabel(groupType);
       wrapper.querySelectorAll(".dropdown-option").forEach(o => o.classList.remove("selected"));
       opt.classList.add("selected");
       wrapper.classList.remove("open");
-      
-      // Kör kollen när användaren väljer i listan
-      togglePaymentField(t);
+      renderGroupDependentFields(groupType);
     });
     cols.appendChild(opt);
   });
@@ -1309,10 +1651,97 @@ function initGroupTypeSelect() {
   wrapper.querySelector(".custom-select-dropdown")
     .addEventListener("click", ev => ev.stopPropagation());
 
-  // Om vi redigerar och ett värde redan är satt, kör kollen direkt vid start
   if (selectedType) {
-    togglePaymentField(selectedType);
+    const selectedConfig = GROUP_TYPES.find(groupType => groupType.value === selectedType);
+    if (selectedConfig) {
+      setGroupTypeLabel(selectedConfig);
+      renderGroupDependentFields(selectedConfig);
+    }
   }
+}
+
+function renderGroupDependentFields(groupType) {
+  const countContainer = document.getElementById("groupCountFields");
+  const paymentContainer = document.getElementById("paymentStatusRow");
+  const currentEntry = entries.find(entry => entry.id === editingId && entry.groupType === groupType.value);
+  const savedCounts = currentEntry?.counts || {};
+
+  countContainer.innerHTML = groupType.countFields.map((field, index) => {
+    const legacyValue = !currentEntry?.counts && groupType.countFields.length === 1 && index === 0
+      ? (currentEntry?.count || "")
+      : "";
+    const value = savedCounts[field.key] ?? legacyValue;
+    const minAttribute = field.min !== undefined ? field.min : 0;
+    const maxAttribute = field.max !== undefined ? ` max="${field.max}"` : "";
+
+    return `
+      <div class="group-count-row">
+        <label class="group-count-label" for="fGroupCount_${field.key}">${field.label}</label>
+        <input class="group-count-input" type="number" id="fGroupCount_${field.key}"
+               data-count-key="${field.key}" min="${minAttribute}"${maxAttribute} step="1" inputmode="numeric"
+               placeholder="Antal" value="${value}" />
+      </div>`;
+  }).join("");
+
+  countContainer.querySelectorAll(".group-count-input").forEach(input => {
+    const field = groupType.countFields.find(item => item.key === input.dataset.countKey);
+    input.addEventListener("change", () => {
+      const message = getGroupCountRangeMessage(input, field);
+      if (message) {
+        markGroupCountInvalid(input);
+        openGroupCountWarning(message, input);
+      } else {
+        input.style.borderColor = "";
+        input.style.boxShadow = "";
+      }
+    });
+  });
+
+  if (!groupType.paymentQuestion) {
+    paymentContainer.innerHTML = "";
+    return;
+  }
+
+  const isPaid = currentEntry?.paid || "";
+  paymentContainer.innerHTML = `
+    <div class="group-payment-row">
+      <span class="group-payment-question">${groupType.paymentQuestion}</span>
+      <label class="group-payment-choice">
+        <input type="radio" name="fPaid" value="Ja" ${isPaid === "Ja" ? "checked" : ""}> Ja
+      </label>
+      <label class="group-payment-choice">
+        <input type="radio" name="fPaid" value="Nej" ${isPaid === "Nej" ? "checked" : ""}> Nej
+      </label>
+    </div>`;
+}
+
+function getGroupCountRangeMessage(input, field) {
+  const rawValue = input.value.trim();
+  if (!rawValue || !field?.rangeMessage) return "";
+
+  const value = Number(rawValue);
+  if (!Number.isFinite(value)) return "";
+  if (field.max !== undefined && value > field.max) return field.rangeMessage;
+  if (field.min !== undefined && value < field.min) return field.rangeMessage;
+  return "";
+}
+
+function markGroupCountInvalid(input) {
+  input.style.borderColor = "var(--danger)";
+  input.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
+}
+
+function openGroupCountWarning(messageHtml, input) {
+  groupCountWarningInput = input;
+  document.getElementById("groupCountWarningMessage").innerHTML = messageHtml;
+  document.getElementById("groupCountWarningOverlay").classList.add("open");
+}
+
+function closeGroupCountWarning() {
+  document.getElementById("groupCountWarningOverlay").classList.remove("open");
+  const input = groupCountWarningInput;
+  groupCountWarningInput = null;
+  if (input) input.focus();
 }
 
 function openEditModal(entry) { openModal(entry.type, entry); }
@@ -1389,28 +1818,65 @@ function saveEntry() {
 
 } else if (activeModal === "group") {
     entry.groupType = document.getElementById("fGroupType").value;
-    entry.count = parseInt(document.getElementById("fCount").value) || 0;
     const groupTrigger = document.getElementById("groupTypeWrapper").querySelector(".custom-select-trigger");
-    const countInput = document.getElementById("fCount");
 
-    // Kontroll: Typ av grupp saknas
     if (!entry.groupType) {
       groupTrigger.style.borderColor = "var(--danger)";
       groupTrigger.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
       setStatus("Välj typ av grupp.", "error");
       return;
     }
-    // Kontroll: Antal saknas
-    if (!entry.count) {
-      countInput.style.borderColor = "var(--danger)";
-      countInput.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
-      setStatus("Ange antal personer.", "error");
+
+    const groupType = GROUP_TYPES.find(type => type.value === entry.groupType);
+    const countInputs = [...document.querySelectorAll(".group-count-input")];
+    const hasInvalidCount = countInputs.some(input => {
+      const value = Number(input.value || 0);
+      return !Number.isInteger(value) || value < 0;
+    });
+
+    if (hasInvalidCount) {
+      countInputs.forEach(input => {
+        const value = Number(input.value || 0);
+        if (!Number.isInteger(value) || value < 0) {
+          input.style.borderColor = "var(--danger)";
+          input.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
+        }
+      });
+      setStatus("Antal måste anges med heltal, noll eller större.", "error");
       return;
     }
 
-    // NYTT: Hantera betalningsstatus för specifika grupper
-    const triggerTypes = ["Bröllop", "Barnkalas", "Visning mot betalning"];
-    if (triggerTypes.includes(entry.groupType)) {
+    const rangeError = countInputs.map(input => {
+      const field = groupType.countFields.find(item => item.key === input.dataset.countKey);
+      return { input, message: getGroupCountRangeMessage(input, field) };
+    }).find(result => result.message);
+
+    if (rangeError) {
+      markGroupCountInvalid(rangeError.input);
+      openGroupCountWarning(rangeError.message, rangeError.input);
+      return;
+    }
+
+    entry.counts = Object.fromEntries(countInputs.map(input => [
+      input.dataset.countKey,
+      Number(input.value || 0)
+    ]));
+    entry.countCategories = Object.fromEntries(groupType.countFields.map(field => [
+      field.key,
+      field.categories
+    ]));
+    entry.count = Object.values(entry.counts).reduce((sum, count) => sum + count, 0);
+
+    if (entry.count === 0) {
+      countInputs.forEach(input => {
+        input.style.borderColor = "var(--danger)";
+        input.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
+      });
+      setStatus("Ange antal personer i minst en kategori.", "error");
+      return;
+    }
+
+    if (groupType?.paymentQuestion) {
       const paidRadio = document.querySelector('input[name="fPaid"]:checked');
       if (!paidRadio) {
         const paymentRow = document.getElementById("paymentStatusRow").firstElementChild;
@@ -1418,10 +1884,10 @@ function saveEntry() {
           paymentRow.style.borderColor = "var(--danger)";
           paymentRow.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
         }
-        setStatus("Du måste välja om gruppen har betalat.", "error");
+        setStatus("Välj Ja eller Nej på betalningsfrågan.", "error");
         return;
       }
-      entry.paid = paidRadio.value; // Sparar "Ja" eller "Nej" i objektet
+      entry.paid = paidRadio.value;
     }
 
     entry.note = document.getElementById("fNote").value.trim();
@@ -1450,6 +1916,44 @@ function saveEntry() {
       setStatus("Rapporten kan inte vara tom.", "error");
       return;
     }
+
+    const viewingRows = [...document.querySelectorAll("[data-viewing-row]")];
+    const viewings = [];
+    let hasInvalidViewing = false;
+
+    viewingRows.forEach(row => {
+      const nameInput = row.querySelector(".daily-viewing-name");
+      const countInput = row.querySelector(".daily-viewing-count");
+      const name = nameInput.value.trim();
+      const rawCount = countInput.value.trim();
+
+      if (!name && !rawCount) return;
+
+      const participants = Number(rawCount);
+      if (!name) {
+        nameInput.style.borderColor = "var(--danger)";
+        nameInput.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
+        hasInvalidViewing = true;
+      }
+      if (!rawCount || !Number.isInteger(participants) || participants < 1) {
+        countInput.style.borderColor = "var(--danger)";
+        countInput.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
+        hasInvalidViewing = true;
+      }
+
+      if (name && rawCount && Number.isInteger(participants) && participants >= 1) {
+        viewings.push({ name, participants });
+      }
+    });
+
+    if (hasInvalidViewing) {
+      setStatus("Fyll i både visning och ett giltigt antal deltagare.", "error");
+      return;
+    }
+
+    // Visningsdeltagare sparas separat och får aldrig summeras i besöksstatistiken.
+    entry.viewings = viewings;
+    entry.viewingAttendanceExcludedFromCalculations = true;
   }
 
   // --- SPARA ---
@@ -1458,6 +1962,77 @@ function saveEntry() {
   
   renderEntries(); 
   closeModal();
+}
+
+function formatDailyDataRecord(entry) {
+  const cleanReport = entry.report
+    .replace(/;/g, ",")
+    .replace(/\r?\n/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  const reportSentence = /[.!?]$/.test(cleanReport) ? cleanReport : `${cleanReport}.`;
+
+  let value = `dagsrapport: ${reportSentence}`;
+  const viewings = (entry.viewings || []).map(viewing => {
+    const cleanName = viewing.name
+      .replace(/;/g, ",")
+      .replace(/\r?\n/g, " ")
+      .replace(/\s+/g, " ")
+      .replace(/[.!?]+$/, "")
+      .trim();
+    return `${cleanName}, antal deltagare: ${viewing.participants}.`;
+  });
+
+  if (viewings.length) {
+    value += ` Dagens programvisningar: ${viewings.join(" ")}`;
+  }
+  if (viewings.length >= 2) {
+    const totalParticipants = entry.viewings.reduce(
+      (sum, viewing) => sum + Number(viewing.participants || 0),
+      0
+    );
+    value += ` Totalt antal deltagare i programvisningar: ${totalParticipants}.`;
+  }
+
+  return `${entry.ts.split('T')[0]}; ${value}`;
+}
+
+function formatGroupDataRecords(entry) {
+  const dateStr = entry.ts.split('T')[0];
+  const date = new Date(dateStr);
+  const year = date.getFullYear();
+  const monthShort = MONTHS_SHORT[date.getMonth()].toLowerCase();
+  const allowedGroupTypes = [
+    "",
+    "barnkalas",
+    "bröllop och vigsel",
+    "dop och namngivning",
+    "konferens",
+    "kostnadsfritt kulturen-evenemang",
+    "kostnadsfritt externt evenemang",
+    "entréavgift mot faktura ej rabatt",
+    "entréavgift mot faktura med rabatt"
+  ];
+  const requestedGroupType = (entry.groupType || "").toLowerCase();
+  const groupType = allowedGroupTypes.includes(requestedGroupType) ? requestedGroupType : "";
+  const triggerTypes = ["barnkalas", "bröllop och vigsel", "dop och namngivning"];
+  const invoiceTypes = ["entréavgift mot faktura ej rabatt", "entréavgift mot faktura med rabatt"];
+  const paymentCategory = triggerTypes.includes(groupType) ? "ja" : "nej";
+  const paid = paymentCategory === "ja"
+    ? (entry.paid?.toLowerCase() === "ja" ? "ja" : "nej")
+    : "";
+  const cleanNote = (entry.note || "").replace(/;/g, ",").replace(/\r?\n/g, " ");
+  const counts = entry.counts || { total: entry.count };
+
+  return Object.entries(counts).flatMap(([key, count]) => {
+    if (!count) return [];
+
+    const categories = entry.countCategories?.[key] || [entry.groupType];
+    const category = categories.find(value => value !== "varav mot faktura") || "";
+    const invoiceCount = invoiceTypes.includes(groupType) ? Number(count) : "";
+
+    return [`${year};${monthShort};${dateStr};kulturenilund;verksamhet;${category.toLowerCase()};${groupType};${paymentCategory};${paid};${count};${invoiceCount};${cleanNote}`];
+  });
 }
 
 function sendDataEmail() {
@@ -1480,23 +2055,10 @@ function sendDataEmail() {
     schoolCsv += `${year};${monthShort};${e.place};${e.level};${e.count};${cleanNote}\n`;
   });
 
-  // 2. Gruppbesök CSV
-  let groupCsv = "2. Gruppbesök\n\når;mån;datum;kategori;betalkat;betald;antal;notering\n";
+  // 2. Grupper och evenemang CSV
+  let groupCsv = "2. Grupper och evenemang\n\når;månad;datum;besöksmål;typ;kategori;grupptyp;betalkategori;betald;antal;varav mot faktura;notering\n";
   getSortedData("group").forEach(e => {
-    const d = new Date(e.ts.split('T')[0]);
-    const year = d.getFullYear();
-    const monthShort = MONTHS_SHORT[d.getMonth()].toLowerCase();
-    const dateStr = e.ts.split('T')[0];
-    const category = e.groupType.toLowerCase();
-    
-    const triggerTypes = ["bröllop", "barnkalas", "visning mot betalning"];
-    const betalkat = triggerTypes.includes(category) ? "ja" : "nej";
-    const betald = e.paid ? e.paid.toLowerCase() : "nej";
-    
-    // Rensa noteringen från semikolon och radbrytningar
-    const cleanNote = (e.note || "").replace(/;/g, ",").replace(/\r?\n/g, " ");
-    
-    groupCsv += `${year};${monthShort};${dateStr};${category};${betalkat};${betald};${e.count};${cleanNote}\n`;
+    groupCsv += `${formatGroupDataRecords(e).join("\n")}\n`;
   });
 
   // 3. Entréintäkter CSV
@@ -1520,8 +2082,7 @@ function sendDataEmail() {
   // 6. Dagsrapport CSV
   let dailyCsv = "6. Dagsrapport\n\ndatum;dagsrapport\n";
   getSortedData("daily").forEach(e => {
-    const cleanReport = e.report.replace(/\r?\n/g, " ");
-    dailyCsv += `${e.ts.split('T')[0]};${cleanReport}\n`;
+    dailyCsv += `${formatDailyDataRecord(e)}\n`;
   });
 
   // Slå samman alla block till en enda stor textmassa
@@ -1544,6 +2105,9 @@ document.addEventListener("click", () => {
 });
 document.getElementById("deleteOverlay").addEventListener("click", e => {
   if (e.target.id === "deleteOverlay") closeDeleteModal();
+});
+document.getElementById("groupCountWarningOverlay").addEventListener("click", e => {
+  if (e.target.id === "groupCountWarningOverlay") closeGroupCountWarning();
 });
 updateStats();
 </script>
