@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Startsida</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f1e8;
+      --surface: #fffdf8;
+      --text: #18201b;
+      --muted: #4d5a50;
+      --border: #cfc8b8;
+      --green: #1f7a55;
+      --green-dark: #15563c;
+      --blue: #2869a8;
+      --blue-dark: #1f507f;
+      --red: #b5483d;
+      --red-dark: #85332c;
+      --gold: #8a6819;
+      --gold-dark: #624a12;
+      --teal: #2a7677;
+      --teal-dark: #1f5657;
+      --purple: #6a548f;
+      --purple-dark: #4d3d68;
+      --orange: #b65d2a;
+      --orange-dark: #81411e;
+      --indigo: #405f9f;
+      --indigo-dark: #304777;
+      --slate: #4f6470;
+      --slate-dark: #3a4a52;
+      --shadow: 0 10px 24px rgba(25, 33, 29, 0.12);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      min-height: 100dvh;
+      background: var(--bg);
+      color: var(--text);
+      padding: clamp(14px, 2.4vh, 24px);
+      overflow: hidden;
+    }
+
+    main {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      gap: clamp(12px, 2vh, 20px);
+      width: 100%;
+      max-width: 1120px;
+      height: calc(100dvh - (2 * clamp(14px, 2.4vh, 24px)));
+      margin: 0 auto;
+    }
+
+    .today {
+      width: 100%;
+      margin: 0;
+      padding: clamp(14px, 2.5vh, 26px);
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .today-label {
+      margin: 0 0 8px;
+      font-size: clamp(2.1rem, 6vh, 4.6rem);
+      font-weight: 900;
+      line-height: 0.95;
+      letter-spacing: 0;
+    }
+
+    .today-date {
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(1.3rem, 3vh, 2.15rem);
+      font-weight: 700;
+      line-height: 1.18;
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+
+    .today-time {
+      margin: 8px 0 0;
+      color: var(--text);
+      font-size: clamp(1.8rem, 5vh, 3.5rem);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-rows: repeat(3, minmax(0, 1fr));
+      gap: clamp(10px, 1.8vh, 18px);
+      min-height: 0;
+    }
+
+    .button {
+      display: flex;
+      min-height: 0;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(12px, 2vh, 22px);
+      border: 0;
+      border-radius: 8px;
+      color: #fff;
+      text-align: center;
+      text-decoration: none;
+      box-shadow: var(--shadow);
+      transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease;
+    }
+
+    .button-content {
+      display: flex;
+      width: 100%;
+      min-width: 0;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .button-icon {
+      width: clamp(2.35rem, 6vh, 4.4rem);
+      height: clamp(2.35rem, 6vh, 4.4rem);
+      margin-bottom: clamp(8px, 1.4vh, 14px);
+      flex: 0 0 auto;
+      fill: currentColor;
+    }
+
+    .button:focus-visible {
+      outline: 6px solid #111;
+      outline-offset: 5px;
+    }
+
+    .button:hover {
+      filter: brightness(1.04);
+      transform: translateY(-2px);
+    }
+
+    .button:active {
+      transform: translateY(0);
+      box-shadow: 0 5px 12px rgba(25, 33, 29, 0.18);
+    }
+
+    .button-title {
+      display: block;
+      margin-bottom: 8px;
+      font-size: clamp(1.45rem, 3.35vh, 2.85rem);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .button-subtitle {
+      display: block;
+      font-size: clamp(1rem, 2vh, 1.45rem);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .email {
+      background: var(--green);
+    }
+
+    .email:hover {
+      background: var(--green-dark);
+    }
+
+    .intranet {
+      background: var(--blue);
+    }
+
+    .intranet:hover {
+      background: var(--blue-dark);
+    }
+
+    .documents {
+      background: var(--gold);
+    }
+
+    .documents:hover {
+      background: var(--gold-dark);
+    }
+
+    .news {
+      background: var(--red);
+    }
+
+    .news:hover {
+      background: var(--red-dark);
+    }
+
+    .phone {
+      background: var(--teal);
+    }
+
+    .phone:hover {
+      background: var(--teal-dark);
+    }
+
+    .help {
+      background: var(--purple);
+    }
+
+    .help:hover {
+      background: var(--purple-dark);
+    }
+
+    .internet {
+      background: var(--orange);
+    }
+
+    .internet:hover {
+      background: var(--orange-dark);
+    }
+
+    .earth {
+      background: var(--indigo);
+    }
+
+    .earth:hover {
+      background: var(--indigo-dark);
+    }
+
+    .kulturen {
+      background: var(--slate);
+    }
+
+    .kulturen:hover {
+      background: var(--slate-dark);
+    }
+
+    @media (max-width: 900px) {
+      .button-icon {
+        width: clamp(2rem, 5vh, 3.4rem);
+        height: clamp(2rem, 5vh, 3.4rem);
+      }
+
+      .button-title {
+        font-size: clamp(1.25rem, 3vh, 2rem);
+      }
+
+      .button-subtitle {
+        font-size: clamp(0.95rem, 1.8vh, 1.2rem);
+      }
+    }
+
+    @media (max-width: 560px) {
+      body {
+        min-height: 100%;
+        overflow: auto;
+        padding: 16px;
+      }
+
+      main {
+        height: auto;
+        min-height: calc(100dvh - 32px);
+      }
+
+      .buttons {
+        grid-template-columns: 1fr;
+        grid-template-rows: none;
+        gap: 14px;
+      }
+
+      .button {
+        min-height: 112px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .today-date {
+        font-size: 1.2rem;
+      }
+
+      .today-time {
+        font-size: 1.7rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .button {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Font Awesome Free solid icons, embedded so the page works offline. -->
+  <svg aria-hidden="true" focusable="false" width="0" height="0" style="position:absolute">
+    <symbol id="fa-envelope" viewBox="0 0 512 512">
+      <path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/>
+    </symbol>
+    <symbol id="fa-network-wired" viewBox="0 0 640 512">
+      <path d="M256 64h128v96H256V64zM224 0c-17.7 0-32 14.3-32 32V192c0 17.7 14.3 32 32 32h64v48H96c-17.7 0-32 14.3-32 32v48H32c-17.7 0-32 14.3-32 32v96c0 17.7 14.3 32 32 32h128c17.7 0 32-14.3 32-32V384c0-17.7-14.3-32-32-32H128V336h384v16H480c-17.7 0-32 14.3-32 32v96c0 17.7 14.3 32 32 32H608c17.7 0 32-14.3 32-32V384c0-17.7-14.3-32-32-32H576V304c0-17.7-14.3-32-32-32H352V224h64c17.7 0 32-14.3 32-32V32c0-17.7-14.3-32-32-32H224z"/>
+    </symbol>
+    <symbol id="fa-folder-open" viewBox="0 0 576 512">
+      <path d="M88.7 223.8L0 384V96C0 60.7 28.7 32 64 32H181.5c17 0 33.3 6.7 45.3 18.7L256 80H448c35.3 0 64 28.7 64 64v48H144c-23.3 0-44.8 12.7-56.1 33.1l.8-1.3zM142.7 240H560c12.8 0 20.6 14 14 25.1L474.7 433.4C463.2 452.8 442.4 464 419.9 464H64c-23.2 0-38.6-24.1-28.7-45.1L100.9 273.1C108.6 253 124.6 240 142.7 240z"/>
+    </symbol>
+    <symbol id="fa-newspaper" viewBox="0 0 512 512">
+      <path d="M96 96c0-35.3 28.7-64 64-64H448c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H80c-44.2 0-80-35.8-80-80V128c0-17.7 14.3-32 32-32s32 14.3 32 32V400c0 8.8 7.2 16 16 16s16-7.2 16-16V96zm80 48v96H432V144H176zm0 144v32H288V288H176zm144 0v32H432V288H320zM176 352v32H288V352H176zm144 0v32H432V352H320z"/>
+    </symbol>
+    <symbol id="fa-address-book" viewBox="0 0 448 512">
+      <path d="M96 0C60.7 0 32 28.7 32 64V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H96zM0 112c0-8.8 7.2-16 16-16H32v64H16c-8.8 0-16-7.2-16-16V112zm0 128c0-8.8 7.2-16 16-16H32v64H16c-8.8 0-16-7.2-16-16V240zm0 128c0-8.8 7.2-16 16-16H32v64H16c-8.8 0-16-7.2-16-16V368zM224 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128zm-96 256c0-44.2 35.8-80 80-80h32c44.2 0 80 35.8 80 80c0 17.7-14.3 32-32 32H160c-17.7 0-32-14.3-32-32z"/>
+    </symbol>
+    <symbol id="fa-circle-question" viewBox="0 0 512 512">
+      <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM169.8 165.3c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1-64 0z"/>
+    </symbol>
+    <symbol id="fa-globe" viewBox="0 0 512 512">
+      <path d="M352 256c0 22.2-1.2 43.6-3.3 64H163.3c-2.2-20.4-3.3-41.8-3.3-64s1.2-43.6 3.3-64H348.7c2.2 20.4 3.3 41.8 3.3 64zM503.9 192c5.3 20.5 8.1 41.9 8.1 64s-2.8 43.5-8.1 64H397.4c1.7-20.5 2.6-41.9 2.6-64s-.9-43.5-2.6-64H503.9zM256 8c60.5 0 112.9 73.2 137.5 176H118.5C143.1 81.2 195.5 8 256 8zM8.1 192H114.6c-1.7 20.5-2.6 41.9-2.6 64s.9 43.5 2.6 64H8.1C2.8 299.5 0 278.1 0 256s2.8-43.5 8.1-64zM256 504c-60.5 0-112.9-73.2-137.5-176H393.5C368.9 430.8 316.5 504 256 504zM48.2 368h76.1c10.8 48.6 29.7 89.6 54.1 118.9C122.1 468.3 75 426.7 48.2 368zM124.3 144H48.2C75 85.3 122.1 43.7 178.4 25.1C154 54.4 135.1 95.4 124.3 144zM333.6 486.9c24.4-29.3 43.3-70.3 54.1-118.9h76.1c-26.8 58.7-73.9 100.3-130.2 118.9zM387.7 144C376.9 95.4 358 54.4 333.6 25.1C389.9 43.7 437 85.3 463.8 144H387.7z"/>
+    </symbol>
+    <symbol id="fa-seedling" viewBox="0 0 512 512">
+      <path d="M512 32c0 113.6-84.6 207.5-194.2 222c-7.1-53.4-30.6-101.6-65.3-139.3C290.8 46.3 384 0 512 0V32zM0 96C0 42.9 42.9 0 96 0C224 0 317.2 46.3 355.5 114.7c-34.7 37.7-58.2 85.9-65.3 139.3C180.6 239.5 96 145.6 96 32V0C42.9 0 0 42.9 0 96zM288 512H224V288C100.3 278.7 0 174.3 0 48V32C0 14.3 14.3 0 32 0H96V32C96 127.7 160.3 208 248 233.6C275.3 148.7 354.9 88 448 88h32c17.7 0 32 14.3 32 32v16c0 126.3-100.3 230.7-224 240V512z"/>
+    </symbol>
+    <symbol id="fa-landmark" viewBox="0 0 512 512">
+      <path d="M240.1 4.2c9.8-5.6 21.9-5.6 31.8 0l224 128c12.6 7.2 18.8 22 15.1 36s-16.4 23.8-30.9 23.8H32c-14.5 0-27.2-9.8-30.9-23.8s2.5-28.8 15.1-36l224-128zM64 224h64V416h40V224h64V416h48V224h64V416h40V224h64V416h32c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H64V224z"/>
+    </symbol>
+  </svg>
+
+  <main aria-label="Startsida">
+    <section class="today" aria-labelledby="today-heading">
+      <h1 id="today-heading" class="today-label">IDAG</h1>
+      <p id="today-date" class="today-date">Onsdag 1 juli 2026</p>
+      <p id="today-time" class="today-time">00:00</p>
+    </section>
+
+    <nav class="buttons" aria-label="Genvägar">
+      <a class="button email" href="https://outlook.cloud.microsoft/mail/" target="_blank" rel="noopener" aria-label="E-post, läs dina mejl">
+        <span class="button-content">
+          <svg class="button-icon" aria-hidden="true" focusable="false"><use href="#fa-envelope"></use></svg>
+          <span class="button-title">E-POST</span>
+          <span class="button-subtitle">Läs dina mejl</span>
+        </span>
+      </a>
+      <a class="button intranet" href="https://kulturen.sharepoint.com/" target="_blank" rel="noopener" aria-label="Intranät, Kulturens interna webbsida">
+        <span class="button-content">
+          <svg class="button-icon" aria-hidden="true" focusable="false"><use href="#fa-network-wired"></use></svg>
+          <span class="button-title">INTRANÄT</span>
+          <span class="button-subtitle">Kulturens interna webbsida</span>
+        </span>
+      </a>
+      <a class="button documents" href="https://kulturen-my.sharepoint.com/my" target="_blank" rel="noopener" aria-label="Mina dokument, alla dina egna saker">
+        <span class="button-content">
+          <svg class="button-icon" aria-hidden="true" focusable="false"><use href="#fa-folder-open"></use></svg>
+          <span class="button-title">MINA DOKUMENT</span>
+          <span class="button-subtitle">Alla dina egna saker</span>
+        </span>
+      </a>
+      <a class="button news" href="https://kulturen.sharepoint.com/sites/Nyhetscenter" target="_blank" rel="noopener" aria-label="Nyheter, Kulturens senaste nyheter">
+        <span class="button-content">
+          <svg class="button-icon" aria-hidden="true" focusable="false"><use href="#fa-newspaper"></use></svg>
+          <span class="button-title">NYHETER</span>
+          <span class="button-subtitle">Kulturens senaste nyheter</span>
+        </span>
+      </a>
+      <a class="button phone" href="https://kulturen.sharepoint.com/_layouts/15/search.aspx/people" target="_blank" rel="noopener" aria-label="Dina kollegor, telefonnummer och e-post">
+        <span class="button-content">
+          <svg class="button-icon" aria-hidden="true" focusable="false"><use href="#fa-address-book"></use></svg>
+          <span class="button-title">DINA KOLLEGOR</span>
+          <span class="button-subtitle">Telefonnummer och e-post</span>
+        </span>
+      </a>
+      <a class="button help" href="nihelp.html" target="_blank" rel="noopener" aria-label="Hjälp, lathundar och förklaringar">
+        <span class="button-content">
+          <svg class="button-icon" aria-hidden="true" focusable="false"><use href="#fa-circle-question"></use></svg>
+          <span class="button-title">HJÄLP</span>
+          <span class="button-subtitle">Lathundar och förklaringar</span>
+        </span>
+      </a>
+      <a class="button internet" href="https://www.google.com/" target="_blank" rel="noopener" aria-label="Internet, surfa på Google">
+        <span class="button-content">
+          <svg class="button-icon" aria-hidden="true" focusable="false"><use href="#fa-globe"></use></svg>
+          <span class="button-title">INTERNET</span>
+          <span class="button-subtitle">Surfa på Google</span>
+        </span>
+      </a>
+      <a class="button earth" href="https://kulturen-my.sharepoint.com/my?id=%2Fpersonal%2Fjohan%5Fhofvendahl%5Fkulturen%5Fcom%2FDocuments%2FKommunikation%2FDigitalt%20bibliotek%2FModer%20Jord&amp;FolderCTID=0x012000F874AA5A51E1B24496C7C668A4D43760" target="_blank" rel="noopener" aria-label="Moder Jord, ett av dina projekt">
+        <span class="button-content">
+          <svg class="button-icon" aria-hidden="true" focusable="false"><use href="#fa-seedling"></use></svg>
+          <span class="button-title">MODER JORD</span>
+          <span class="button-subtitle">Ett av dina projekt</span>
+        </span>
+      </a>
+      <a class="button kulturen" href="https://www.kulturen.com/" target="_blank" rel="noopener" aria-label="kulturen.com, Kulturens webbsida">
+        <span class="button-content">
+          <svg class="button-icon" aria-hidden="true" focusable="false"><use href="#fa-landmark"></use></svg>
+          <span class="button-title">kulturen.com</span>
+          <span class="button-subtitle">Kulturens webbsida</span>
+        </span>
+      </a>
+    </nav>
+  </main>
+
+  <script>
+    const dateElement = document.getElementById("today-date");
+    const timeElement = document.getElementById("today-time");
+    const dateFormatter = new Intl.DateTimeFormat("sv-SE", {
+      timeZone: "Europe/Stockholm",
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    });
+    const timeFormatter = new Intl.DateTimeFormat("sv-SE", {
+      timeZone: "Europe/Stockholm",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false
+    });
+
+    function updateDateAndTime() {
+      const now = new Date();
+      const formatted = dateFormatter.format(now);
+      dateElement.textContent = formatted.charAt(0).toUpperCase() + formatted.slice(1);
+      timeElement.textContent = timeFormatter.format(now);
+    }
+
+    updateDateAndTime();
+    setInterval(updateDateAndTime, 60 * 1000);
+  </script>
+</body>
+</html>

@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hjälp</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f1e8;
+      --surface: #fffdf8;
+      --text: #17201b;
+      --muted: #4d5a50;
+      --border: #cfc8b8;
+      --green: #1f7a55;
+      --green-dark: #15563c;
+      --blue: #2869a8;
+      --blue-dark: #1f507f;
+      --red: #b5483d;
+      --red-dark: #85332c;
+      --gold: #8a6819;
+      --gold-dark: #624a12;
+      --purple: #6a548f;
+      --purple-dark: #4d3d68;
+      --shadow: 0 10px 24px rgba(25, 33, 29, 0.12);
+      --top-height: clamp(76px, 11vh, 104px);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100dvh;
+      background: var(--bg);
+      color: var(--text);
+      padding: clamp(10px, 1.8vh, 18px);
+      overflow: hidden;
+    }
+
+    main {
+      display: grid;
+      grid-template-rows: var(--top-height) minmax(0, 1fr);
+      gap: clamp(12px, 2vh, 20px);
+      width: min(1248px, 100%);
+      height: calc(100dvh - (2 * clamp(10px, 1.8vh, 18px)));
+      margin: 0 auto;
+    }
+
+    .top {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: center;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.6rem, 8vh, 5.2rem);
+      font-weight: 900;
+      line-height: 0.95;
+      letter-spacing: 0;
+    }
+
+    .home {
+      display: inline-flex;
+      min-height: clamp(54px, 8vh, 68px);
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 12px 18px;
+      border-radius: 8px;
+      background: var(--text);
+      color: #fff;
+      font-size: clamp(1rem, 2vh, 1.3rem);
+      font-weight: 900;
+      line-height: 1;
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+
+    .home svg {
+      width: 1.4em;
+      height: 1.4em;
+      fill: currentColor;
+    }
+
+    .contacts {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: repeat(2, minmax(0, 1fr));
+      gap: clamp(10px, 1.7vh, 18px);
+      min-height: 0;
+    }
+
+    .contact {
+      display: grid;
+      grid-template-columns: minmax(104px, 136px) minmax(0, 1fr);
+      gap: clamp(14px, 1.8vw, 20px);
+      min-height: 0;
+      overflow: hidden;
+      padding: clamp(14px, 2.2vh, 22px);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .contact:nth-child(1) {
+      border-top: 8px solid var(--green);
+    }
+
+    .contact:nth-child(2) {
+      border-top: 8px solid var(--blue);
+    }
+
+    .contact:nth-child(3) {
+      border-top: 8px solid var(--gold);
+    }
+
+    .contact:nth-child(4) {
+      border-top: 8px solid var(--red);
+    }
+
+    .photo {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1;
+      align-self: start;
+      overflow: hidden;
+      border: 3px solid var(--border);
+      border-radius: 50%;
+      background: #e7e0d1;
+    }
+
+    .photo img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .initials {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: clamp(2.2rem, 5vw, 4.2rem);
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .photo img:not([hidden]) + .initials {
+      display: none;
+    }
+
+    .role {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: clamp(1rem, 2.05vh, 1.25rem);
+      font-weight: 800;
+      line-height: 1.16;
+      letter-spacing: 0;
+      min-height: 3.55em;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: clamp(1.72rem, 3.8vh, 2.65rem);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .line {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 10px 0;
+      font-size: clamp(1.02rem, 2.05vh, 1.24rem);
+      font-weight: 800;
+      line-height: 1.18;
+      overflow-wrap: anywhere;
+      white-space: nowrap;
+    }
+
+    .line svg {
+      width: 1.4em;
+      height: 1.4em;
+      flex: 0 0 auto;
+      fill: currentColor;
+    }
+
+    .line a {
+      color: var(--text);
+    }
+
+    .line:has(a[href^="mailto:"]) {
+      gap: 8px;
+      font-size: clamp(0.86rem, 1.62vh, 0.98rem);
+    }
+
+    .line:has(a[href^="mailto:"]) svg {
+      width: 1.2em;
+      height: 1.2em;
+    }
+
+    .mail-button {
+      display: inline-flex;
+      min-height: clamp(52px, 7.3vh, 64px);
+      align-items: center;
+      justify-content: center;
+      margin-top: clamp(12px, 1.8vh, 18px);
+      padding: 12px 18px;
+      border-radius: 8px;
+      background: var(--green);
+      color: #fff;
+      font-size: clamp(1.02rem, 2.05vh, 1.24rem);
+      font-weight: 900;
+      line-height: 1.1;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .mail-button:hover {
+      background: var(--green-dark);
+    }
+
+    .contact:nth-child(2) .mail-button {
+      background: var(--blue);
+    }
+
+    .contact:nth-child(2) .mail-button:hover {
+      background: var(--blue-dark);
+    }
+
+    .contact:nth-child(3) .mail-button {
+      background: var(--gold);
+    }
+
+    .contact:nth-child(3) .mail-button:hover {
+      background: var(--gold-dark);
+    }
+
+    .contact:nth-child(4) .mail-button {
+      background: var(--red);
+    }
+
+    .contact:nth-child(4) .mail-button:hover {
+      background: var(--red-dark);
+    }
+
+    a:focus-visible {
+      outline: 6px solid #111;
+      outline-offset: 5px;
+    }
+
+    @media (max-width: 900px) {
+      body {
+        overflow: auto;
+      }
+
+      main {
+        height: auto;
+        min-height: calc(100dvh - (2 * clamp(10px, 1.8vh, 18px)));
+      }
+
+      .top,
+      .contacts,
+      .contact {
+        grid-template-columns: 1fr;
+      }
+
+      .contacts {
+        grid-template-rows: none;
+      }
+
+      .home {
+        width: 100%;
+      }
+
+      .photo {
+        width: min(170px, 52vw);
+      }
+
+      .line {
+        white-space: normal;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        scroll-behavior: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Font Awesome Free solid icons, embedded so the page works offline. -->
+  <svg aria-hidden="true" focusable="false" width="0" height="0" style="position:absolute">
+    <symbol id="fa-house" viewBox="0 0 576 512">
+      <path d="M575.8 255.5c0 18-15 32.1-32 32.1h-32l.7 160.2c0 2.7-.2 5.4-.5 8.1V472c0 22.1-17.9 40-40 40H456c-1.1 0-2.2 0-3.3-.1c-1.4.1-2.8.1-4.2.1H392c-22.1 0-40-17.9-40-40V384c0-17.7-14.3-32-32-32H256c-17.7 0-32 14.3-32 32v88c0 22.1-17.9 40-40 40H128.1c-1.5 0-3-.1-4.5-.2c-1.2.1-2.4.2-3.6.2H104c-22.1 0-40-17.9-40-40V360c0-.9 0-1.9.1-2.8V287.6H32c-18 0-32-14-32-32.1c0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 2 21 7L564.8 231.5c8 7 12 15 11 24z"/>
+    </symbol>
+    <symbol id="fa-envelope" viewBox="0 0 512 512">
+      <path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/>
+    </symbol>
+    <symbol id="fa-phone" viewBox="0 0 512 512">
+      <path d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/>
+    </symbol>
+  </svg>
+
+  <main>
+    <header class="top">
+      <h1>HJÄLP</h1>
+      <a class="home" href="nistart.html">
+        <svg aria-hidden="true" focusable="false"><use href="#fa-house"></use></svg>
+        Till startsidan
+      </a>
+    </header>
+
+    <section class="contacts" aria-label="Viktiga kontakter">
+      <article class="contact">
+        <div class="photo">
+          <img src="https://kultpub.github.io/site/karinhermeren.jpg" data-fallback="img/help/karin-hermeren.jpg" alt="Foto på Karin Hermerén" onerror="useFallbackPhoto(this)">
+          <span class="initials">KH</span>
+        </div>
+        <div>
+          <p class="role">Din chef</p>
+          <h2>Karin Hermerén</h2>
+          <p class="line">
+            <svg aria-hidden="true" focusable="false"><use href="#fa-envelope"></use></svg>
+            <a href="mailto:karin.hermeren@kulturen.com">karin.hermeren@kulturen.com</a>
+          </p>
+          <p class="line">
+            <svg aria-hidden="true" focusable="false"><use href="#fa-phone"></use></svg>
+            <a href="tel:+46765390416">076-539 04 16</a>
+          </p>
+          <a class="mail-button" href="mailto:karin.hermeren@kulturen.com">Skicka mejl till Karin</a>
+        </div>
+      </article>
+
+      <article class="contact">
+        <div class="photo">
+          <img src="https://kultpub.github.io/site/ivanbakran.jpg" data-fallback="img/help/ivan-bakran.jpg" alt="Foto på Ivan Bakran" onerror="useFallbackPhoto(this)">
+          <span class="initials">IB</span>
+        </div>
+        <div>
+          <p class="role">Om du behöver hjälp med dit dator,<br>ska du kontakta:</p>
+          <h2>Ivan Bakran</h2>
+          <p class="line">
+            <svg aria-hidden="true" focusable="false"><use href="#fa-envelope"></use></svg>
+            <a href="mailto:ivan.bakran@kulturen.com">ivan.bakran@kulturen.com</a>
+          </p>
+          <p class="line">
+            <svg aria-hidden="true" focusable="false"><use href="#fa-phone"></use></svg>
+            <a href="tel:+46765390414">076-539 04 14</a>
+          </p>
+          <a class="mail-button" href="mailto:ivan.bakran@kulturen.com">Skicka mejl till Ivan</a>
+        </div>
+      </article>
+
+      <article class="contact">
+        <div class="photo">
+          <img src="https://kultpub.github.io/site/mariannetjebbes.jpg" data-fallback="img/help/marianne-tjebbes.jpg" alt="Foto på Marianne Tjebbes" onerror="useFallbackPhoto(this)">
+          <span class="initials">MT</span>
+        </div>
+        <div>
+          <p class="role">Om du har frågor om semester eller<br>ledighet, ska du kontakta:</p>
+          <h2>Marianne Tjebbes</h2>
+          <p class="line">
+            <svg aria-hidden="true" focusable="false"><use href="#fa-envelope"></use></svg>
+            <a href="mailto:marianne.tjebbes@kulturen.com">marianne.tjebbes@kulturen.com</a>
+          </p>
+          <p class="line">
+            <svg aria-hidden="true" focusable="false"><use href="#fa-phone"></use></svg>
+            <a href="tel:+46709366805">070-936 68 05</a>
+          </p>
+          <a class="mail-button" href="mailto:marianne.tjebbes@kulturen.com">Skicka mejl till Marianne</a>
+        </div>
+      </article>
+
+      <article class="contact">
+        <div class="photo">
+          <img src="https://kultpub.github.io/site/christelmeijerhoffer.jpg" data-fallback="img/help/christel-meijerhoffer.jpg" alt="Foto på Christel Meijerhöffer" onerror="useFallbackPhoto(this)">
+          <span class="initials">CM</span>
+        </div>
+        <div>
+          <p class="role">Om du har frågor om din lön,<br>ska du kontakta:</p>
+          <h2>Christel Meijerhöffer</h2>
+          <p class="line">
+            <svg aria-hidden="true" focusable="false"><use href="#fa-envelope"></use></svg>
+            <a href="mailto:christel.meijerhoffer@kulturen.com">christel.meijerhoffer@kulturen.com</a>
+          </p>
+          <p class="line">
+            <svg aria-hidden="true" focusable="false"><use href="#fa-phone"></use></svg>
+            <a href="tel:+46765390404">076-539 04 04</a>
+          </p>
+          <a class="mail-button" href="mailto:christel.meijerhoffer@kulturen.com">Skicka mejl till Christel</a>
+        </div>
+      </article>
+    </section>
+  </main>
+  <script>
+    function useFallbackPhoto(image) {
+      const fallback = image.dataset.fallback;
+      if (fallback && image.src.indexOf(fallback) === -1) {
+        image.src = fallback;
+        return;
+      }
+      image.hidden = true;
+    }
+  </script>
+</body>
+</html>
