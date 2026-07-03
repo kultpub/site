@@ -1871,6 +1871,16 @@ paymentContainer.innerHTML = "";
         </label>
       </div>`);
   }
+  
+  if (groupType.entrancePaymentQuestion) {
+	paymentContainer.insertAdjacentHTML("beforeend", buildGroupChoiceSection({
+		id: "entrancePaymentRow",
+		questionHtml: groupType.entrancePaymentQuestion,
+		name: "fEntrancePayment",
+		options: groupType.entrancePaymentOptions,
+		selectedValue: currentEntry?.entrancePayment || ""
+	}));
+	}
 
   if (groupType.viewingQuestion) {
     paymentContainer.insertAdjacentHTML("beforeend", buildGroupChoiceSection({
