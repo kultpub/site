@@ -2714,17 +2714,26 @@
 
         .color-picker-overlay.active { display: flex; }
 
-        .custom-options-panel {
-                    background: #22252a;
-                    border-radius: 12px;
-                    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-                    padding: 20px;
-                    width: 90%;
-                    max-width: 650px;
-                    max-height: 85vh;
-                    overflow-y: auto;
-                    border: 1px solid #3f444e;
-                }
+.custom-options-panel {
+    background: #22252a;
+    border-radius: 12px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    padding: 25px;
+    width: 100%;
+    max-width: 880px;
+    height: calc(78vh - 95px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid #3f444e;
+}
+
+#color-options-container {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: 5px;
+}
 
         .color-category-title {
                     color: #94a3b8;
@@ -2739,7 +2748,7 @@
 
         .color-category-title:first-child { margin-top: 0; }
 
-        .color-options-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .color-options-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
 
         .color-option-card { background: #2d3139; border: 1px solid #3f444e; border-radius: 8px; padding: 10px; display: flex; align-items: center; cursor: pointer; transition: all 0.2s; }
 
@@ -3367,9 +3376,9 @@ function syncTimelineScale() {
 syncTimelineScale();
 
 const categorizedPalette = [
-    { category: "Djärva & Klara", colors: [{ name: "Oceanblå", hex: "#378ADD" }, { name: "Smaragdgrön", hex: "#1D9E75" }, { name: "Lavendel", hex: "#7F77DD" }, { name: "Terrakotta", hex: "#D85A30" }, { name: "Hallon", hex: "#D84537" }, { name: "Bärnsten", hex: "#BA7517" }, { name: "Olivgrön", hex: "#639922" }] },
-    { category: "Mjuka & Luftiga", colors: [{ name: "Himmelsblå", hex: "#85B7EB" }, { name: "Mintgrön", hex: "#5DCAA5" }, { name: "Lila dimma", hex: "#AFA9EC" }, { name: "Persika", hex: "#F0997B" }, { name: "Blomrosa", hex: "#ED93B1" }, { name: "Honungsguld", hex: "#FAC775" }, { name: "Limegrön", hex: "#97C459" }] },
-    { category: "Djupa & Mörka", colors: [{ name: "Nattblå", hex: "#185FA5" }, { name: "Skogsgrönt", hex: "#3B6D11" }, { name: "Indigo", hex: "#534AB7" }, { name: "Djup blågrön", hex: "#0F6E56" }, { name: "Stålgrå", hex: "#888780" }, { name: "Vinröd", hex: "#993556" }] }
+    { category: "Djärva & Klara", colors: [{ name: "Oceanblå", hex: "#378ADD" }, { name: "Smaragdgrön", hex: "#1D9E75" }, { name: "Lavendel", hex: "#7F77DD" }, { name: "Terrakotta", hex: "#D85A30" }, { name: "Hallon", hex: "#D84537" }, { name: "Bärnsten", hex: "#BA7517" }, { name: "Olivgrön", hex: "#639922" }, { name: "Kobolt", hex: "#2563EB" }] },
+    { category: "Mjuka & Luftiga", colors: [{ name: "Himmelsblå", hex: "#85B7EB" }, { name: "Mintgrön", hex: "#5DCAA5" }, { name: "Lila dimma", hex: "#AFA9EC" }, { name: "Persika", hex: "#F0997B" }, { name: "Blomrosa", hex: "#ED93B1" }, { name: "Honungsguld", hex: "#FAC775" }, { name: "Limegrön", hex: "#97C459" }, { name: "Puderblå", hex: "#B7D7F2" }] },
+    { category: "Djupa & Mörka", colors: [{ name: "Nattblå", hex: "#185FA5" }, { name: "Skogsgrönt", hex: "#3B6D11" }, { name: "Indigo", hex: "#534AB7" }, { name: "Djup blågrön", hex: "#0F6E56" }, { name: "Stålgrå", hex: "#888780" }, { name: "Vinröd", hex: "#993556" }, { name: "Plommon", hex: "#6D2E8A" }, { name: "Petrol", hex: "#075E70" }] }
 ];
 const flatColorPalette = categorizedPalette.flatMap(c => c.colors);
 
@@ -6141,7 +6150,7 @@ function rebuildGantt() {
 }
 
 function getActivityColorText(hex) {
-    const soft = ["#85B7EB", "#5DCAA5", "#AFA9EC", "#F0997B", "#ED93B1", "#FAC775", "#97C459"];
+    const soft = ["#85B7EB", "#5DCAA5", "#AFA9EC", "#F0997B", "#ED93B1", "#FAC775", "#97C459", "#B7D7F2"];
     return soft.includes((hex || '').toUpperCase()) ? '#334155' : 'white';
 }
 
