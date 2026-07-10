@@ -2045,6 +2045,11 @@
                     background: #fff;
                 }
 
+.whole-activity-intensity-field {
+    width: 25%;
+    min-width: 180px;
+}
+
         .manager-modal-content { max-width: 760px; max-height: 68vh; display: flex; flex-direction: column; }
 
         .people-manager-content { max-width: 900px; max-height: calc(68vh + 4px); }
@@ -7183,9 +7188,9 @@ function openIntensityModal() {
                 <i class="fa-solid fa-circle-info"></i>
                 <span>Aktiviteten är inte indelad i faser. Den intensitetsnivå du väljer gäller därför hela aktiviteten. Om intensiteten varierar under löptiden, kan det vara praktiskt att definiera olika faser ("Hantera faser"). Varje fas har sitt eget intensitetsvärde.</span>
             </div>
-            <div class="activity-log-field">
-                <label for="whole-activity-intensity">Intensitet för hela aktiviteten *</label>
-                <select id="whole-activity-intensity" class="intensity-select">
+<div class="activity-log-field whole-activity-intensity-field">
+    <label for="whole-activity-intensity">Intensitet för hela aktiviteten *</label>
+    <select id="whole-activity-intensity" class="intensity-select">
                     <option value="">Välj intensitet...</option>
                     <option value="low" ${currentIntensity === 'low' ? 'selected' : ''}>Låg</option>
                     <option value="normal" ${currentIntensity === 'normal' ? 'selected' : ''}>Normal</option>
