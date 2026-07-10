@@ -1947,35 +1947,38 @@
                     font-size: 15px;
                 }
 
-        .intensity-modal-content {
-                    max-width: 390px;
-                    max-height: 78vh;
-                    display: flex;
-                    flex-direction: column;
-                }
+.intensity-modal-content {
+    max-width: 880px;
+    height: calc(78vh - 95px);
+    display: flex;
+    flex-direction: column;
+}
 
-        .intensity-modal-content.has-phases {
-                    max-width: 650px;
-                }
+.intensity-modal-content.has-phases {
+    max-width: 880px;
+}
 
-        .intensity-modal-body {
-                    overflow-y: auto;
-                    padding-right: 5px;
-                }
+.intensity-modal-body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: 5px;
+}
 
-        .intensity-guidance {
-                    display: grid;
-                    grid-template-columns: 22px 1fr;
-                    gap: 8px;
-                    align-items: start;
-                    padding: 10px 12px;
-                    border: 1px solid #bfdbfe;
-                    border-radius: 5px;
-                    background: #eff6ff;
-                    color: #1e3a5f;
-                    font-size: 12px;
-                    line-height: 1.45;
-                }
+.intensity-guidance {
+    display: grid;
+    grid-template-columns: 22px 1fr;
+    gap: 8px;
+    align-items: start;
+    padding: 10px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    background: #f1f5f9;
+    color: #334155;
+    font-size: 13px;
+    line-height: 1.45;
+    font-weight: 500;
+}
 
         .intensity-guidance i {
                     margin-top: 2px;
@@ -1983,22 +1986,23 @@
                     text-align: center;
                 }
 
-        .intensity-phase-list {
-                    display: flex;
-                    flex-direction: column;
-                    border: 1px solid var(--border-color);
-                    border-radius: 6px;
-                    overflow: hidden;
-                }
+.intensity-phase-list {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    overflow: hidden;
+    background: #fff;
+}
 
-        .intensity-phase-row {
-                    display: grid;
-                    grid-template-columns: minmax(0, 1fr) 150px;
-                    gap: 14px;
-                    align-items: center;
-                    padding: 10px 12px;
-                    background: #fff;
-                }
+.intensity-phase-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 180px;
+    gap: 16px;
+    align-items: center;
+    padding: 12px 14px;
+    background: #fff;
+}
 
         .intensity-phase-row + .intensity-phase-row {
                     border-top: 1px solid var(--border-color);
@@ -6392,7 +6396,7 @@ mb.innerHTML = `
                 <label class="activity-label-with-info">Logg och resurser<span class="location-info-icon" tabindex="0" aria-label="Information om logg och resurser" onmouseenter="showActivityModalInfo(event, 'log')" onmousemove="moveLocationAvailabilityInfo(event)" onmouseleave="hideLocationAvailabilityInfo()" onfocus="showActivityModalInfo(event, 'log')" onblur="hideLocationAvailabilityInfo()">i</span></label>
                 <button type="button" id="btn-activity-log" class="drp-trigger" onclick="openActivityLogModal()">
                     <i class="fa-solid fa-clipboard-list" style="font-size: 14px; margin-right: 2px;"></i>
-                    <span>Hantera logg</span>
+                    <span>Logg och resurser</span>
                 </button>
             </div>
             <div class="filter-group"><label class="activity-label-with-info">Färgkodning<span class="location-info-icon" tabindex="0" aria-label="Information om färgkodning" onmouseenter="showActivityModalInfo(event, 'color')" onmousemove="moveLocationAvailabilityInfo(event)" onmouseleave="hideLocationAvailabilityInfo()" onfocus="showActivityModalInfo(event, 'color')" onblur="hideLocationAvailabilityInfo()">i</span></label><div class="custom-select-trigger" id="activity-color-trigger" onclick="openColorPicker()"><div class="trigger-text"><i class="fa-solid fa-paint-roller"></i><span id="selected-color-name-text">Välj färg...</span></div></div><input type="hidden" id="form-color"></div>
