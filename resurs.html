@@ -2799,7 +2799,7 @@
     <div class="filter-group search-filter-group">
         <label for="filter-global">Sök i schemat</label>
         <div class="search-container" style="margin-top: 10px;">
-            <input type="text" id="filter-global" placeholder="Sök på titel, person, plats..." oninput="handleSearchInput()">
+            <input type="text" id="filter-global" autocomplete="off" placeholder="Sök på titel, person, plats..." oninput="handleSearchInput()">
             <button type="button" class="search-clear-inline" id="search-clear-x" onclick="clearSearchInput()">&times;</button>
         </div>
     </div>
@@ -2981,7 +2981,7 @@
                 <div class="filter-group manager-search-group">
                     <label for="people-manager-search">Sök person</label>
                     <div class="manager-search-wrap">
-                        <input type="text" id="people-manager-search" placeholder="Sök förnamn eller efternamn..." oninput="renderPeopleManager()">
+                        <input type="text" autocomplete="off" id="people-manager-search" placeholder="Sök förnamn eller efternamn..." oninput="renderPeopleManager()">
                         <button type="button" class="search-clear-inline" id="people-manager-search-clear" onclick="clearPeopleManagerSearch()" title="Rensa sökning">&times;</button>
                     </div>
                 </div>
@@ -3021,7 +3021,7 @@
                 <div class="filter-group manager-search-group">
                     <label for="location-manager-search">Sök lokal</label>
                     <div class="manager-search-wrap">
-                        <input type="text" id="location-manager-search" placeholder="Sök lokal, besöksmål eller överordnad lokal..." oninput="renderLocationManager()">
+                        <input type="text" autocomplete="off" id="location-manager-search" placeholder="Sök lokal, besöksmål eller överordnad lokal..." oninput="renderLocationManager()">
                         <button type="button" class="search-clear-inline" id="location-manager-search-clear" onclick="clearLocationManagerSearch()" title="Rensa sökning">&times;</button>
                     </div>
                 </div>
@@ -3059,11 +3059,11 @@
             <div class="manager-detail-row">
                 <div class="activity-log-field">
                     <label for="person-editor-first-name">Förnamn</label>
-                    <input type="text" id="person-editor-first-name" maxlength="80" placeholder="Förnamn">
+                    <input type="text" autocomplete="off" id="person-editor-first-name" maxlength="80" placeholder="Förnamn">
                 </div>
                 <div class="activity-log-field">
                     <label for="person-editor-last-name">Efternamn</label>
-                    <input type="text" id="person-editor-last-name" maxlength="80" placeholder="Efternamn">
+                    <input type="text" autocomplete="off" id="person-editor-last-name" maxlength="80" placeholder="Efternamn">
                 </div>
             </div>
             <div class="manager-detail-row">
@@ -3099,16 +3099,16 @@
         <div class="modal-body manager-detail-body">
             <div class="activity-log-field">
                 <label for="location-editor-name">Lokalnamn</label>
-                <input type="text" id="location-editor-name" maxlength="100" placeholder="Lokalnamn">
+                <input type="text" autocomplete="off" id="location-editor-name" maxlength="100" placeholder="Lokalnamn">
             </div>
             <div class="manager-detail-row">
                 <div class="activity-log-field">
                     <label for="location-editor-site">Besöksmål</label>
-                    <input type="text" id="location-editor-site" maxlength="100" placeholder="Besöksmål">
+                    <input type="text" autocomplete="off" id="location-editor-site" maxlength="100" placeholder="Besöksmål">
                 </div>
                 <div class="activity-log-field">
                     <label for="location-editor-parent">Ingår i (valfritt)</label>
-                    <input type="text" id="location-editor-parent" maxlength="100" placeholder="Ingår i (valfritt)">
+                    <input type="text" autocomplete="off" id="location-editor-parent" maxlength="100" placeholder="Ingår i (valfritt)">
                 </div>
             </div>
         </div>
@@ -6286,7 +6286,7 @@ mb.innerHTML = `
         <div class="modal-form-row">
             <div class="filter-group" style="flex: 0 0 calc(40% - 9px); min-width: 0;">
                 <label for="form-title">Rubrik *</label>
-                <input type="text" id="form-title" value="${act?act.title:''}" placeholder="Ange kort rubrik..." required oninput="updateActivityCreationState()">
+                <input type="text" autocomplete="off" id="form-title" value="${act?act.title:''}" placeholder="Ange kort rubrik..." required oninput="updateActivityCreationState()">
             </div>
             <div class="filter-group" style="flex: 0 0 calc(60% - 6px); min-width: 0;">
                 <label for="form-responsible-input">Huvudansvar *</label>
@@ -6946,7 +6946,7 @@ function renderPhaseDetail() {
                     <div class="phase-form-main">
                         <div class="activity-log-field phase-period-field" style="margin-bottom:14px;">
                             <label for="phase-short-title">Kort rubrik</label>
-                            <input type="text" id="phase-short-title" value="${escapeAttribute(phase.shortTitle || '')}" maxlength="60" placeholder="Rubrik ...">
+                            <input type="text" autocomplete="off" id="phase-short-title" value="${escapeAttribute(phase.shortTitle || '')}" maxlength="60" placeholder="Rubrik ...">
                         </div>
                         <div class="activity-log-field phase-period-field" style="margin-bottom:14px;">
                             <label>Start- och slutdatum</label>
@@ -7354,11 +7354,11 @@ function renderActivityLogEntryModal() {
             <div class="activity-log-meta-row">
                 <div class="activity-log-field">
                     <label for="log-entry-title">Rubrik</label>
-                    <input type="text" id="log-entry-title" value="${escapeAttribute(entry.title)}" maxlength="80" placeholder="Skriv en tydlig rubrik">
+                    <input type="text" autocomplete="off" id="log-entry-title" value="${escapeAttribute(entry.title)}" maxlength="80" placeholder="Skriv en tydlig rubrik">
                 </div>
                 <div class="activity-log-field">
                     <label for="log-entry-author">Skriven av</label>
-                    <input type="text" id="log-entry-author" value="${escapeAttribute(entry.author)}" maxlength="60" placeholder="Ange ditt namn...">
+                    <input type="text" autocomplete="off" id="log-entry-author" value="${escapeAttribute(entry.author)}" maxlength="60" placeholder="Ange ditt namn...">
                 </div>
             </div>
             <div class="activity-log-field">
@@ -7557,11 +7557,11 @@ function renderExternalContactDetail() {
             <div class="activity-log-meta-row">
                 <div class="activity-log-field">
                     <label for="external-contact-company">Namn, företag eller kontakt</label>
-                    <input type="text" id="external-contact-company" value="${escapeAttribute(contact.companyContact || '')}" maxlength="100" placeholder="Ange namn eller företag...">
+                    <input type="text" autocomplete="off" id="external-contact-company" value="${escapeAttribute(contact.companyContact || '')}" maxlength="100" placeholder="Ange namn eller företag...">
                 </div>
                 <div class="activity-log-field">
                     <label for="external-contact-task">Relation eller uppdrag</label>
-                    <input type="text" id="external-contact-task" value="${escapeAttribute(contact.task || '')}" maxlength="120" placeholder="Beskriv relationen...">
+                    <input type="text" autocomplete="off" id="external-contact-task" value="${escapeAttribute(contact.task || '')}" maxlength="120" placeholder="Beskriv relationen...">
                 </div>
             </div>
             <div class="activity-log-meta-row">
@@ -9393,7 +9393,7 @@ function addLocationRequirementRow(req = {}, deferUpdate = false) {
         <div>
             <div class="location-search-wrap">
                 <div class="ta-ghost"></div>
-                <input type="text" class="ta-input loc-req-name" value="${escapeHtml(name)}" placeholder="${escapeAttribute(locationPlaceholder)}" autocomplete="off" spellcheck="false" oninput="locationNameInput(this)" onkeydown="locationNameKey(event, this)" onblur="locationNameBlur(this)">
+                <input type="text" autocomplete="off" class="ta-input loc-req-name" value="${escapeHtml(name)}" placeholder="${escapeAttribute(locationPlaceholder)}" autocomplete="off" spellcheck="false" oninput="locationNameInput(this)" onkeydown="locationNameKey(event, this)" onblur="locationNameBlur(this)">
             </div>
         </div>
         <div>
