@@ -21,7 +21,7 @@
             --radius: 8px;
             --transition: all 0.2s ease-in-out;
             
-            /* Färger för fasas-ut-kortet */
+            /* Färger för utgående/kommande kort */
             --deprecated-border: #f59e0b;
             --deprecated-bg: #fffbf5;
             --deprecated-badge-bg: #fef3c7;
@@ -148,7 +148,7 @@
             line-height: 1.4;
         }
 
-        /* Särskild stil för fasas-ut-kortet */
+        /* Särskild stil för uppmärksammade kort (kommande / utgående) */
         .card-deprecated {
             background-color: var(--deprecated-bg);
             border-color: #fcd34d;
@@ -174,7 +174,7 @@
             vertical-align: middle;
         }
 
-        /* Tooltip för utgående metod */
+        /* Tooltip för kort */
         [data-tooltip] {
             position: relative;
         }
@@ -250,7 +250,6 @@
             .grid {
                 grid-template-columns: 1fr;
             }
-            /* Dölj tooltip-pilen på mobiler för att undvika överlappning */
             [data-tooltip]::before {
                 white-space: normal;
                 width: 200px;
@@ -314,10 +313,10 @@
                     Rapportera in data
                 </h2>
                 <div class="grid">
-                    <a href="https://kultpub.github.io/site/reg-manad.html" target="_blank" rel="noopener noreferrer" class="card">
+                    <a href="https://kultpub.github.io/site/reg-manad.html" target="_blank" rel="noopener noreferrer" class="card card-deprecated" data-tooltip="Denna sida lanseras hösten 2026. Använd &quot;Äldre sätt&quot; under tiden.">
                         <div>
                             <div class="card-header">
-                                <h3 class="card-title">Månatligt utfall</h3>
+                                <h3 class="card-title">Månadsutfall <span class="badge-warning">på gång</span></h3>
                                 <svg class="card-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
                             </div>
                             <p class="card-description">Inrapportering månadens utfall · Alla besöksmål</p>
@@ -337,7 +336,7 @@
                     <a href="https://kulturen.sharepoint.com/Lists/Inrapportering%20besksstatistik/AllItems.aspx" target="_blank" rel="noopener noreferrer" class="card card-deprecated" data-tooltip="Denna metod kommer att tas bort under hösten 2026!">
                         <div>
                             <div class="card-header">
-                                <h3 class="card-title">Äldre metod <span class="badge-warning">Utgår</span></h3>
+                                <h3 class="card-title">Äldre sätt <span class="badge-warning">utgår snart</span></h3>
                                 <svg class="card-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
                             </div>
                             <p class="card-description">SharePoint-lista · Alla besöksmål</p>
