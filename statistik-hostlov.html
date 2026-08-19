@@ -1,0 +1,468 @@
+<!DOCTYPE html><html lang="sv"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Höstlov</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+/* =========================================================   1. GLOBAL RESET OCH SIDGRUND   ========================================================= */
+* { box-sizing: border-box; }
+html,body { margin: 0; width: 100%; min-height: 100%; background: #ffffff; }
+body { min-height: 100vh; background: #ffffff; overflow: hidden; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+h1 { margin: 0; font-size: clamp(30px, 4vw, 44px); font-weight: 700; letter-spacing: -0.04em; line-height: 1.05; height: 95px; display: flex; align-items: flex-start; }
+
+/* =========================================================   2. HUVUDLAYOUT   ========================================================= */
+.app, .app.full-width { position: fixed; top: 10vh; left: 0; display: flex !important; justify-content: center; align-items: flex-start !important; width: 100vw; margin: 0 !important; padding-left: 270px; padding-right: 240px; box-sizing: border-box; }
+.main-view, .app.full-width .main-view { width: 100% !important; max-width: 1000px !important; height: auto; }
+.view-container { width: 100%; height: auto; }
+
+/* =========================================================   3. VÄNSTERPANEL   ========================================================= */
+.ff-filter { position: fixed; top: 22px; left: 24px; z-index: 900; width: 230px; display: flex; flex-direction: column; }
+
+/* =========================================================   4. VYVÄXLARE   ========================================================= */
+.view-selector { display: flex; gap: 4px; margin: 20px 0 25px 0; background: #f0f0f0; padding: 4px; border-radius: 10px; width: 100%; }
+.view-btn { flex: 1; padding: 8px 12px; border: none; border-radius: 7px; background: transparent; font-size: 13px; font-weight: 600; color: #666; cursor: pointer; transition: all 0.2s; }
+.view-btn.active { background: #2f2f2f; color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+
+/* =========================================================   5. HÖGERPANEL   ========================================================= */
+.highlight-controls { position: fixed; top: 22px; right: 24px; z-index: 900; display: flex; flex-direction: column; gap: 14px; align-items: flex-start; background: #fff; padding: 16px; border-radius: 12px; border: 1px solid #ddd; box-shadow: 0 4px 12px rgba(0,0,0,0.1); min-width: 200px; }
+
+/* =========================================================   6. TOGGLAR   ========================================================= */
+.toggle { display: flex; align-items: center; gap: 10px; cursor: pointer; width: 100%; }
+.toggle input { display: none; }
+.toggle-track { width: 42px; height: 24px; border-radius: 999px; background: #d6d6d6; position: relative; transition: background 160ms ease; }
+.toggle-track::after { content: ""; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.25); transition: transform 160ms ease; }
+.toggle input:checked + .toggle-track { background: #f28c28; }
+.toggle input:checked + .toggle-track::after { transform: translateX(18px); }
+
+/* =========================================================   7. KNAPPAR   ========================================================= */
+.save-btn { width: 100%; padding: 10px 15px; background: #2f2f2f; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; margin-top: 8px; }
+.save-btn:hover { background: #000; }
+
+/* =========================================================   8. VYRUBRIKER   ========================================================= */
+#tableHeaderDisplay { width: 100%; margin: 0 0 20px 0 !important; color: #2f2f2f; border-left: 4px solid #f28c28; padding-left: 15px; font-size: 28px; letter-spacing: -0.02em; line-height: 1.2; display: block; box-sizing: border-box; }
+
+/* =========================================================   9. TABELLVY   ========================================================= */
+#tableView { width: 100% !important; max-width: 1000px !important; margin: 0 auto !important; transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+#tableView.compact-table { max-width: 750px !important; }
+.table-scroll { width: 100% !important; box-sizing: border-box; margin: 0 !important; border: none; border-radius: 16px; overflow: visible; }
+
+/* =========================================================   10. TABELL   ========================================================= */
+
+/* RUNDA HÖRN PÅ TABELLEN */
+#statsTable thead tr:first-child th:first-child { border-top-left-radius: 12px; }
+#statsTable thead tr:first-child th:last-child { border-top-right-radius: 12px; }
+#statsTable tbody tr.total-row td:first-child { border-bottom-left-radius: 12px; }
+#statsTable tbody tr.total-row td:last-child { border-bottom-right-radius: 12px; }
+
+#statsTable { width: 100%; min-width: 600px; table-layout: fixed; border-collapse: separate; border-spacing: 0; font-size: 15px; }
+#statsTable th, #statsTable td { border: 1px solid #ddd; padding: 8px 10px 8px 12px; text-align: right; }
+#statsTable th { background: #2f2f2f; color: white; font-size: 14px; padding: 12px 8px; white-space: nowrap; min-width: 80px; cursor: default; }
+#statsTable td { border-bottom: 1px solid #eee; color: #222; transition: background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease; text-align: right; }
+
+#statsTable th:first-child, #statsTable td:first-child { width: 130px; background: #f5f5f5; color: #000000 !important; font-weight: 600; padding: 8px 8px 8px 10px !important; }
+#statsTable thead th:first-child { background: #f5f5f5 !important; color: #000000 !important; text-align: left !important; font-weight: 700; cursor: default; }
+#statsTable tbody tr:not(.total-row) td:first-child { text-align: left !important; cursor: pointer; }
+#statsTable tbody tr.total-row td:first-child { text-align: left !important; cursor: default !important; pointer-events: none; }
+
+.month-cell-inner { display: grid; grid-template-columns: 1fr 16px; align-items: center; width: 100%; height: 20px; line-height: 1.15; }
+.month-cell-inner span { text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.month-toggle, #masterMonthToggle { appearance: none; -webkit-appearance: none; width: 16px; height: 16px; border: 1.5px solid #bbb; border-radius: 4px; background: #fff; cursor: pointer; flex-shrink: 0; position: relative; transition: background 150ms ease, border-color 150ms ease; justify-self: end; margin: 0; }
+.month-toggle:checked, #masterMonthToggle:checked { background: #2f2f2f; border-color: #2f2f2f; }
+.month-toggle:checked::after, #masterMonthToggle:checked::after { content: ""; position: absolute; left: 4px; top: 0px; width: 5px; height: 9px; border: 2px solid #fff; border-top: none; border-left: none; transform: rotate(45deg); }
+#masterMonthToggle:indeterminate { background: #2f2f2f; border-color: #2f2f2f; }
+#masterMonthToggle:indeterminate::after { content: ""; position: absolute; left: 4px; top: 6px; width: 6px; height: 2px; background: #fff; }
+
+.month-row-disabled td:not(:first-child) { color: #aaa !important; background: #f7f7f7 !important; }
+.month-row-disabled td:first-child { opacity: 0.65; }
+
+/* TOOLTIP FÖR N/A CELLER */
+.na-cell { position: relative; cursor: help; }
+.na-info-icon { color: #0073e6; margin-left: 4px; font-size: 12px; vertical-align: middle; }
+
+.na-cell::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-6px);
+    background: #1e1e1e;
+    color: #ffffff;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.35;
+    width: max-content;
+    max-width: 220px;
+    white-space: pre-line;
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 999;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+}
+.na-cell::before {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(0px);
+    border-width: 5px;
+    border-style: solid;
+    border-color: #1e1e1e transparent transparent transparent;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 999;
+}
+.na-cell:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-8px);
+}
+.na-cell:hover::before {
+    opacity: 1;
+}
+
+#statsTable tbody tr.total-row td.best-cell {
+    background-color: #fff9db !important;
+    color: #2f2f2f !important;
+    font-weight: 700 !important;
+    border: 1px solid #ffe082 !important;
+}
+
+/* ZEBRA OCH HOVER */
+#statsTable tbody tr:nth-child(even) td:not(:first-child) { background-color: #f3f3f3; }
+#statsTable tbody tr:nth-child(odd) td:not(:first-child) { background-color: #ffffff; }
+#statsTable tbody tr:not(.total-row):hover td { background-color: #fff1bd !important; }
+#statsTable tbody tr:not(.total-row):hover td:first-child { background-color: #ffe39a !important; color: #000 !important; }
+#statsTable tbody tr:not(.total-row):hover td:not(:first-child) { box-shadow: inset 0 1px 0 rgba(242, 140, 40, 0.35), inset 0 -1px 0 rgba(242, 140, 40, 0.35); }
+#statsTable tbody tr:not(.total-row) td:hover:not(:first-child) { background-color: #ffd86b !important; color: #000; }
+
+/* TOTALRAD */
+#statsTable tbody tr.total-row { background-color: #2f2f2f !important; color: white !important; font-weight: 300; }
+#statsTable tbody tr.total-row:hover td { background-color: #2f2f2f !important; }
+#statsTable tbody tr.total-row td { position: sticky; bottom: 0; background-color: #2f2f2f !important; color: white !important; font-weight: 600; z-index: 5; border-top: 2px solid #111; text-align: right; }
+
+.best-cell { position: relative; background-color: #fff9db !important; color: #2f2f2f !important; font-weight: 700 !important; border: 1px solid #ffe082 !important; }
+.best-cell::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background-color: #f28c28; }
+
+#screenBlocker { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #2f2f2f; color: #ffffff; z-index: 99999; flex-direction: column; justify-content: center; align-items: center; padding: 30px; text-align: center; box-sizing: border-box; }
+#screenBlocker i { font-size: 48px; color: #f28c28; margin-bottom: 20px; }
+#screenBlocker h2 { font-size: 24px; margin: 0 0 12px 0; letter-spacing: -0.04em; }
+#screenBlocker p { font-size: 16px; color: #ccc; margin: 0; max-width: 400px; line-height: 1.5; }
+@media (max-width: 1024px) { #screenBlocker { display: flex; } body { overflow: hidden !important; } }
+</style>
+</head>
+<body>
+
+<div id="screenBlocker">
+  <i class="fa-solid fa-display"></i>
+  <h2>Skärmen är för liten</h2>
+  <p>Denna sida är ej avsedd för mobiltelefoner och surfplattor. Vänligen använd en större skärm.</p>
+</div>
+
+<!-- VÄNSTERPANEL -->
+<div class="ff-filter">
+  <h1>Höstlov</h1>
+
+  <!-- Vyväljare -->
+  <div class="view-selector">
+    <button class="view-btn active" id="btnDag" onclick="switchTable('dag', this)">Dagligt utfall</button>
+    <button class="view-btn" id="btnKat" onclick="switchTable('kat', this)">Kategorier</button>
+  </div>
+</div>
+
+<!-- HÖGERPANEL -->
+<div class="highlight-controls">
+  <label class="toggle">
+    <input type="checkbox" id="toggleBest">
+    <span class="toggle-track"></span>
+    <span>Bästa utfall ★</span>
+  </label>
+  <label class="toggle">
+    <input type="checkbox" id="toggle5Years">
+    <span class="toggle-track"></span>
+    <span>Senaste 5 åren</span>
+  </label>
+  <label class="toggle" id="rowOlderData">
+    <input type="checkbox" id="toggleOlderData">
+    <span class="toggle-track"></span>
+    <span>Äldre data</span>
+  </label>
+  <button class="save-btn" id="saveImage">Spara tabell JPG</button>
+</div>
+
+<!-- HUVUDYTA -->
+<div class="app full-width">
+  <div class="main-view">
+    <div id="tableView" class="view-container">
+      <h2 id="tableHeaderDisplay">&nbsp;</h2>
+      <div class="table-scroll">
+        <table id="statsTable">
+          <thead></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const yearsList = [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
+
+const dagData = [
+    { label: "Lör (v.43)", data: [140, 110, 175, 115, 144, 249, 293, 212, 285, 433, 359, 295, 387, 288, 337, 270] },
+    { label: "Sön (v.43)", data: [171, 457, 180, 180, 142, 168, 221, 248, 257, 309, 288, 312, 280, 241, 355, 377] },
+    { label: "Mån", data: [null, null, null, null, null, null, null, 377, 325, 348, 211, 250, 398, 395, 542, 317] },
+    { label: "Tis", data: [199, 260, 285, 246, 262, 296, 288, 334, 418, 492, 211, 397, 314, 376, 473, 490] },
+    { label: "Ons", data: [206, 384, 362, 306, 230, 291, 439, 361, 407, 576, 264, 673, 379, 397, 430, 467] },
+    { label: "Tor", data: [262, 371, 315, 355, 249, 516, 339, 467, 334, 589, 210, 444, 646, 871, 501, 564] },
+    { label: "Fre", data: [127, 182, 284, 164, 173, 162, 214, 371, 406, 374, 180, 346, 316, 396, 301, 332] },
+    { label: "Lör", data: [214, 176, 233, 122, 165, 189, 286, 377, 319, 441, 189, 320, 347, 388, 317, 304] },
+    { label: "Sön", data: [142, 271, 165, 109, 99, 158, 151, 295, 275, 377, 114, 208, 221, 177, 230, 262] }
+];
+
+const katData = [
+    { label: "Vuxen", data: [567, 868, 555, 376, 332, 551, 749, 885, 884, 1148, 586, 895, 987, 923, 993, 981] },
+    { label: "Pensionär", data: [null, 103, 119, 113, 184, 173, 244, 268, 262, 375, 143, 310, 321, 348, 263, 272] },
+    { label: "Student", data: [113, 101, 96, 106, 86, 116, 140, 169, 162, 169, 121, 181, 194, 168, 150, 134] },
+    { label: "Rabatt", data: [99, 70, 20, 21, 19, 23, 37, 58, 36, 51, 56, 39, 16, 57, 192, 40] },
+    { label: "Fri vuxen", data: [31, 66, 23, 23, 61, 149, 45, 28, 24, 81, 48, 84, 36, 73, 49, 31] },
+    { label: "Barn", data: [319, 650, 969, 605, 546, 740, 685, 1025, 1105, 1494, 723, 1183, 1284, 1368, 1419, 1431] },
+    { label: "Medlem", data: [144, 140, 114, 147, 146, 136, 193, 285, 302, 344, 251, 410, 320, 426, 327, 345] },
+    { label: "Konferens", data: [60, 70, 0, 0, 0, 0, 0, 88, 40, 0, 0, 0, 0, 0, 0, 33] },
+    { label: "Skola", data: [128, 143, 103, 206, 90, 141, 138, 236, 211, 277, 98, 143, 130, 166, 93, 116] }
+];
+
+let currentMode = "dag";
+let selectedRows = new Set();
+
+function getCurrentDataset() {
+    return currentMode === "dag" ? dagData : katData;
+}
+
+function formatSwedishNumber(v) {
+    if (v === null || v === undefined) return 'n/a<i class="fa-solid fa-circle-info na-info-icon"></i>';
+    return new Intl.NumberFormat("sv-SE").format(v);
+}
+
+function switchTable(mode, btn) {
+    currentMode = mode;
+    document.querySelectorAll(".view-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    selectedRows = new Set([...Array(getCurrentDataset().length).keys()]);
+    updateTable();
+}
+
+function updateTable() {
+    const activeData = getCurrentDataset();
+    const table = document.getElementById("statsTable");
+    const thead = table.querySelector("thead");
+    const tbody = table.querySelector("tbody");
+    const headerDisplay = document.getElementById("tableHeaderDisplay");
+
+    const showOlder = document.getElementById("toggleOlderData").checked;
+    const toggle5Years = document.getElementById("toggle5Years");
+    let yearsInScope = [];
+
+    // Dynamisk 10 + 10-årslogik:
+    // Standard: Sista 10 åren
+    // Äldre data: Föregående (max) 10 åren innan standardåren
+    let standardYears = yearsList.slice(-10);
+    let olderYears = yearsList.slice(Math.max(0, yearsList.length - 20), yearsList.length - 10);
+
+    if (showOlder) {
+        yearsInScope = olderYears;
+    } else {
+        yearsInScope = standardYears;
+    }
+
+    if (toggle5Years.checked) {
+        yearsInScope = yearsInScope.slice(-5);
+    }
+
+    const firstY = yearsInScope[0];
+    const lastY = yearsInScope[yearsInScope.length - 1];
+    
+    if (currentMode === "dag") {
+        headerDisplay.textContent = `Höstlov Kulturen i Lund (${firstY}–${lastY}): Dagligt utfall`;
+    } else {
+        headerDisplay.textContent = `Höstlov Kulturen i Lund (${firstY}–${lastY}): Utfall kategori`;
+    }
+
+    const tableView = document.getElementById("tableView");
+    if (toggle5Years.checked) {
+        tableView.classList.add("compact-table");
+    } else {
+        tableView.classList.remove("compact-table");
+    }
+
+    let headerHtml = `<tr>
+        <th style="background:#f5f5f5 !important; color:#000 !important; font-weight:700; text-align:left;">
+            <div class="month-cell-inner">
+                <span>${currentMode === "dag" ? "Dag" : "Kategori"}</span>
+                <input type="checkbox" id="masterMonthToggle">
+            </div>
+        </th>`;
+    yearsInScope.forEach(y => { headerHtml += `<th>${y}</th>`; });
+    headerHtml += `</tr>`;
+
+    thead.innerHTML = headerHtml;
+    tbody.innerHTML = "";
+
+    const masterToggle = document.getElementById("masterMonthToggle");
+    if (selectedRows.size === activeData.length) {
+        masterToggle.checked = true;
+        masterToggle.indeterminate = false;
+    } else if (selectedRows.size === 0) {
+        masterToggle.checked = false;
+        masterToggle.indeterminate = false;
+    } else {
+        masterToggle.checked = false;
+        masterToggle.indeterminate = true;
+    }
+
+    masterToggle.onclick = e => {
+        e.stopPropagation();
+        if (masterToggle.checked) {
+            selectedRows = new Set([...Array(activeData.length).keys()]);
+        } else {
+            selectedRows.clear();
+        }
+        updateTable();
+    };
+
+    activeData.forEach((rowObj, rIdx) => {
+        const row = tbody.insertRow();
+        const nameCell = row.insertCell();
+
+        if (!selectedRows.has(rIdx)) {
+            row.classList.add("month-row-disabled");
+        }
+
+        nameCell.style.fontWeight = "600";
+        nameCell.style.background = "#f5f5f5";
+
+        const innerDiv = document.createElement("div");
+        innerDiv.className = "month-cell-inner";
+
+        const labelSpan = document.createElement("span");
+        labelSpan.textContent = rowObj.label;
+
+        const rowCb = document.createElement("input");
+        rowCb.type = "checkbox";
+        rowCb.className = "month-toggle";
+        rowCb.checked = selectedRows.has(rIdx);
+
+        rowCb.onclick = e => {
+            e.stopPropagation();
+            if (rowCb.checked) selectedRows.add(rIdx);
+            else selectedRows.delete(rIdx);
+            updateTable();
+        };
+
+        nameCell.onclick = e => {
+            if (e.target === rowCb) return;
+            rowCb.checked = !rowCb.checked;
+            if (rowCb.checked) selectedRows.add(rIdx);
+            else selectedRows.delete(rIdx);
+            updateTable();
+        };
+
+        innerDiv.appendChild(labelSpan);
+        innerDiv.appendChild(rowCb);
+        nameCell.appendChild(innerDiv);
+
+        let maxValInScope = 0;
+        yearsInScope.forEach(y => {
+            const yrIdx = yearsList.indexOf(y);
+            const val = rowObj.data[yrIdx];
+            if (val !== null && val > maxValInScope) maxValInScope = val;
+        });
+
+        yearsInScope.forEach(y => {
+            const yrIdx = yearsList.indexOf(y);
+            const val = rowObj.data[yrIdx];
+            const cell = row.insertCell();
+            cell.innerHTML = formatSwedishNumber(val);
+
+            if (val === null) {
+                cell.classList.add("na-cell");
+                let tooltipText = "Fram till 2016 hade Kulturen\nstängt Höstlovets måndag.";
+                if (currentMode === "kat" && rowObj.label === "Pensionär" && y === 2010) {
+                    tooltipText = 'Besökskategorin "Pensionär"\nfanns inte (infördes 2011).';
+                }
+                cell.setAttribute("data-tooltip", tooltipText);
+            }
+
+            if (selectedRows.has(rIdx) && document.getElementById("toggleBest").checked && val !== null && val > 0 && val === maxValInScope) {
+                cell.classList.add("best-cell");
+            }
+        });
+    });
+
+    // 1. Räkna ut maxvärdet för TOTALT bland valda rader i synligt tidsspann
+    let maxTotalInScope = 0;
+    yearsInScope.forEach(y => {
+        const yrIdx = yearsList.indexOf(y);
+        let sum = 0;
+        activeData.forEach((rowObj, rIdx) => {
+            if (selectedRows.has(rIdx)) {
+                const val = rowObj.data[yrIdx];
+                if (val !== null) sum += val;
+            }
+        });
+        if (sum > maxTotalInScope) maxTotalInScope = sum;
+    });
+
+    // 2. Skapa Totalraden
+    const totalRow = tbody.insertRow();
+    totalRow.classList.add("total-row");
+
+    const totalLabelCell = totalRow.insertCell();
+    totalLabelCell.textContent = "TOTALT";
+
+    // 3. Bygg cellerna i totalraden och applicera "best-cell" vid träff
+    yearsInScope.forEach(y => {
+        const yrIdx = yearsList.indexOf(y);
+        let sum = 0;
+        activeData.forEach((rowObj, rIdx) => {
+            if (selectedRows.has(rIdx)) {
+                const val = rowObj.data[yrIdx];
+                if (val !== null) sum += val;
+            }
+        });
+        
+        const cell = totalRow.insertCell();
+        cell.textContent = formatSwedishNumber(sum);
+
+        // Markera bästa årsresultat om toggeln är aktiv
+        if (document.getElementById("toggleBest").checked && sum > 0 && sum === maxTotalInScope) {
+            cell.classList.add("best-cell");
+        }
+    });
+}
+
+document.getElementById("toggleBest").onchange = updateTable;
+document.getElementById("toggle5Years").onchange = updateTable;
+document.getElementById("toggleOlderData").onchange = updateTable;
+
+document.getElementById("saveImage").onclick = async function() {
+    const target = document.getElementById("tableView");
+    if (!target) return;
+
+    const hiddenCbs = [...document.querySelectorAll(".month-toggle"), document.getElementById("masterMonthToggle")];
+    hiddenCbs.forEach(cb => { if(cb) cb.style.visibility = "hidden"; });
+
+    html2canvas(target, { backgroundColor: "#ffffff", scale: 2 }).then(canvas => {
+        const link = document.createElement("a");
+        const timestamp = new Date().toISOString().slice(0, 10);
+        link.download = `hostlov_${currentMode}_${timestamp}.jpg`;
+        link.href = canvas.toDataURL("image/jpeg", 0.95);
+        link.click();
+        hiddenCbs.forEach(cb => { if(cb) cb.style.visibility = ""; });
+    });
+};
+
+selectedRows = new Set([...Array(dagData.length).keys()]);
+updateTable();
+</script>
+</body></html>
