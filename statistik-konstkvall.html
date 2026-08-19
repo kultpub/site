@@ -1,24 +1,53 @@
-<!DOCTYPE html><html lang="sv"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Konstkvällsstatistik – Kulturen i Lund</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Konstkvällen</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-/* =========================================================   1. GLOBAL RESET OCH SIDGRUND   ========================================================= */
+/* =========================================================
+   1. GLOBAL RESET OCH SIDGRUND
+   ========================================================= */
 * { box-sizing: border-box; }
 html,body { margin: 0; width: 100%; min-height: 100%; background: #ffffff; }
-body { min-height: 100vh; background: #ffffff; overflow: hidden; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+body { min-height: 100vh; background: #ffffff; overflow-x: hidden; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
 h1 { margin: 0; font-size: clamp(30px, 4vw, 44px); font-weight: 700; letter-spacing: -0.04em; line-height: 1.05; height: 95px; display: flex; align-items: flex-start; }
 
-/* =========================================================   2. HUVUDLAYOUT   ========================================================= */
-.app, .app.full-width { position: fixed; top: 10vh; left: 0; display: flex !important; justify-content: center; align-items: flex-start !important; width: 100vw; margin: 0 !important; padding-left: 270px; padding-right: 240px; box-sizing: border-box; }
+/* =========================================================
+   2. HUVUDLAYOUT
+   ========================================================= */
+.app, .app.full-width { 
+  position: absolute; 
+  top: 10vh; 
+  left: 0; 
+  display: flex !important; 
+  justify-content: center; 
+  align-items: flex-start !important; 
+  width: 100vw; 
+  margin: 0 !important; 
+  padding-left: 270px; 
+  padding-right: 240px; 
+  padding-bottom: 60px;
+  box-sizing: border-box; 
+}
 .main-view, .app.full-width .main-view { width: 100% !important; max-width: 1000px !important; height: auto; }
 .view-container { width: 100%; height: auto; }
 
-/* =========================================================   3. VÄNSTERPANEL   ========================================================= */
+/* =========================================================
+   3. VÄNSTERPANEL
+   ========================================================= */
 .ff-filter { position: fixed; top: 22px; left: 24px; z-index: 900; width: 230px; display: flex; flex-direction: column; }
 
-/* =========================================================   4. HÖGERPANEL   ========================================================= */
+/* =========================================================
+   4. HÖGERPANEL
+   ========================================================= */
 .highlight-controls { position: fixed; top: 22px; right: 24px; z-index: 900; display: flex; flex-direction: column; gap: 14px; align-items: flex-start; background: #fff; padding: 16px; border-radius: 12px; border: 1px solid #ddd; box-shadow: 0 4px 12px rgba(0,0,0,0.1); min-width: 200px; }
 
-/* =========================================================   5. TOGGLAR   ========================================================= */
+/* =========================================================
+   5. TOGGLAR
+   ========================================================= */
 .toggle { display: flex; align-items: center; gap: 10px; cursor: pointer; width: 100%; }
 .toggle input { display: none; }
 .toggle-track { width: 42px; height: 24px; border-radius: 999px; background: #d6d6d6; position: relative; transition: background 160ms ease; }
@@ -26,21 +55,27 @@ h1 { margin: 0; font-size: clamp(30px, 4vw, 44px); font-weight: 700; letter-spac
 .toggle input:checked + .toggle-track { background: #f28c28; }
 .toggle input:checked + .toggle-track::after { transform: translateX(18px); }
 
-/* =========================================================   6. KNAPPAR   ========================================================= */
+/* =========================================================
+   6. KNAPPAR
+   ========================================================= */
 .save-btn { width: 100%; padding: 10px 15px; background: #2f2f2f; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; margin-top: 8px; }
 .save-btn:hover { background: #000; }
 
-/* =========================================================   7. VYRUBRIKER   ========================================================= */
+/* =========================================================
+   7. VYRUBRIKER
+   ========================================================= */
 #tableHeaderDisplay { width: 100%; margin: 0 0 20px 0 !important; color: #2f2f2f; border-left: 4px solid #f28c28; padding-left: 15px; font-size: 28px; letter-spacing: -0.02em; line-height: 1.2; display: block; box-sizing: border-box; }
 
-/* =========================================================   8. TABELLVY   ========================================================= */
+/* =========================================================
+   8. TABELLVY
+   ========================================================= */
 #tableView { width: 100% !important; max-width: 1000px !important; margin: 0 auto !important; transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
 #tableView.compact-table { max-width: 750px !important; }
 .table-scroll { width: 100% !important; box-sizing: border-box; margin: 0 !important; border: none; border-radius: 16px; overflow: visible; }
 
-/* =========================================================   9. TABELL   ========================================================= */
-
-/* RUNDA HÖRN PÅ TABELLEN */
+/* =========================================================
+   9. TABELL
+   ========================================================= */
 #statsTable thead tr:first-child th:first-child { border-top-left-radius: 12px; }
 #statsTable thead tr:first-child th:last-child { border-top-right-radius: 12px; }
 #statsTable tbody tr:last-child td:first-child { border-bottom-left-radius: 12px; }
@@ -95,13 +130,8 @@ h1 { margin: 0; font-size: clamp(30px, 4vw, 44px); font-weight: 700; letter-spac
     transition: opacity 0.2s ease;
     z-index: 999;
 }
-.na-cell:hover::after {
-    opacity: 1;
-    transform: translateX(-50%) translateY(-8px);
-}
-.na-cell:hover::before {
-    opacity: 1;
-}
+.na-cell:hover::after { opacity: 1; transform: translateX(-50%) translateY(-8px); }
+.na-cell:hover::before { opacity: 1; }
 
 /* ZEBRA OCH HOVER */
 #statsTable tbody tr:nth-child(even) td:not(:first-child) { background-color: #f3f3f3; }
@@ -113,6 +143,46 @@ h1 { margin: 0; font-size: clamp(30px, 4vw, 44px); font-weight: 700; letter-spac
 
 .best-cell { position: relative; background-color: #fff9db !important; color: #2f2f2f !important; font-weight: 700 !important; border: 1px solid #ffe082 !important; }
 .best-cell::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background-color: #f28c28; }
+
+/* =========================================================
+   10. TEXTKORT UNDER TABELL
+   ========================================================= */
+.info-card {
+  margin-top: 32px;
+  padding: 24px 28px;
+  background: #f9f9f9;
+  border-radius: 12px;
+  border: 1px solid #e2e2e2;
+  border-left: 4px solid #f28c28;
+  color: #2f2f2f;
+  line-height: 1.6;
+}
+.info-card h3 {
+  margin: 0 0 12px 0;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.info-card p {
+  margin: 0 0 16px 0;
+  font-size: 15px;
+  color: #4a4a4a;
+}
+.info-card p:last-child {
+  margin-bottom: 0;
+}
+.info-card ul {
+  margin: 0 0 16px 0;
+  padding-left: 20px;
+}
+.info-card li {
+  margin-bottom: 8px;
+  font-size: 15px;
+  color: #4a4a4a;
+}
+.info-card li strong {
+  color: #1a1a1a;
+}
 
 #screenBlocker { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #2f2f2f; color: #ffffff; z-index: 99999; flex-direction: column; justify-content: center; align-items: center; padding: 30px; text-align: center; box-sizing: border-box; }
 #screenBlocker i { font-size: 48px; color: #f28c28; margin-bottom: 20px; }
@@ -131,7 +201,7 @@ h1 { margin: 0; font-size: clamp(30px, 4vw, 44px); font-weight: 700; letter-spac
 
 <!-- VÄNSTERPANEL -->
 <div class="ff-filter">
-  <h1>Konstkväll</h1>
+  <h1>Konstkvällen</h1>
 </div>
 
 <!-- HÖGERPANEL -->
@@ -166,15 +236,27 @@ h1 { margin: 0; font-size: clamp(30px, 4vw, 44px); font-weight: 700; letter-spac
         </table>
       </div>
     </div>
+
+    <!-- INFOTEXT UNDER TABELLEN -->
+    <section class="info-card">
+      <h3>Om Konstkväll Lund</h3>
+      <p>Konstkväll Lund är ett årligt kulturevenemang där Lunds konstscen öppnar upp sina dörrar för allmänheten under en kväll med fri entré. Syftet är att göra stadens konstliv tillgängligt, lyfta både etablerade och unga konstnärer samt skapa nya mötesplatser för konst och kultur.</p>
+      <p>Under kvällen deltar en mängd olika aktörer – däribland Lunds konsthall, Galleri Aura (Krognoshuset), privata gallerier, muséer, oberoende konstnärskollektiv och ateljéer. Programmet brukar rymma utställningar, konstnärssamtal, visningar, filmvisningar och workshops.</p>
+      
+      <h3>Fakta</h3>
+      <ul>
+        <li><strong>Startår:</strong> Evenemanget grundades 2009 (initierat/samordnat via bland annat Konstföreningen Aura).</li>
+        <li><strong>Infaller:</strong> Konstkvällen arrangeras varje år under en lördag i mitten av oktober.</li>
+        <li><strong>Tider:</strong> De flesta aktörer håller öppet mellan kl. 17.00 och 22.00.</li>
+      </ul>
+    </section>
+
   </div>
 </div>
 
 <script>
 const yearsList = [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
-
-const katData = [
-    { label: "Besök", data: [null, null, 270, 392, 384, 251, 381, 214, 218, 451, 114, 171, 235, 316, 207, 329] }
-];
+const katData = [ { label: "Besök", data: [null, null, 270, 392, 384, 251, 381, 214, 218, 451, 114, 171, 235, 316, 207, 329] } ];
 
 function formatSwedishNumber(v) {
     if (v === null || v === undefined) return 'n/a<i class="fa-solid fa-circle-info na-info-icon"></i>';
@@ -279,4 +361,5 @@ document.getElementById("saveImage").onclick = async function() {
 
 updateTable();
 </script>
-</body></html>
+</body>
+</html>
