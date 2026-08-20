@@ -631,11 +631,12 @@ svg.hover-active .visit-label[data-for-municipality="active"] {
 }
 
 #tableView .table-scroll {
-  overflow-x: hidden;
-  overflow-y: auto;
-  transition:
-    box-shadow 520ms ease,
-    border-color 520ms ease;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-radius: 16px;
+    transition:
+        box-shadow 520ms ease,
+        border-color 520ms ease;
 }
 
 #tableView.compact-table .table-scroll {
@@ -3109,90 +3110,106 @@ document.getElementById("saveImage").onclick = async function() {
     if (isMap) {
         target = document.getElementById("mapView");
         filePrefix = "karta";
-    }
-    else if (isTable) {
-        // För tabellen vill vi helst fånga hela scroll-ytan om den rullar
-        target = document.querySelector("#tableView .table-scroll") || document.getElementById("tableView");
+    } else if (isTable) {
+        target = document.getElementById("tableView");
         filePrefix = "tabell";
-    }
-    else if (isChart) {
+    } else if (isChart) {
         target = document.getElementById("chartView");
         filePrefix = "diagram";
-
-        if (myChart) {
-            myChart.options.devicePixelRatio = 3;
-            myChart.resize();
-            myChart.update("none");
-            myChart.draw();
-        }
     }
 
     if (!target) return;
 
-    const originalOverflow = target.style.overflow;
-    const originalBackground = target.style.background;
-    const originalPadding = target.style.padding;
-    const originalMaxHeight = target.style.maxHeight;
+    const timestamp = new Date().toISOString().slice(0, 10);
+    const safeFF = currentFF
+        .replace(/[^\p{L}\p{N}]+/gu, "_")
+        .replace(/^_+|_+$/g, "");
 
-    target.style.overflow = "visible";
-    target.style.background = "#ffffff";
-
+    /* =====================================================
+       TABELL
+       ===================================================== */
     if (isTable) {
-        // Expandera höjden tillfälligt så att hela tabellen kommer med på bilden utan avklipp
-        target.style.maxHeight = "none";
-    } else if (!isMap) {
-        target.style.padding = "0";
+        const tableScroll = target.querySelector(".table-scroll");
+
+        const oldHeight = tableScroll.style.height;
+        const oldOverflowX = tableScroll.style.overflowX;
+        const oldOverflowY = tableScroll.style.overflowY;
+
+        /*
+           Öppna hela tabellen temporärt så att html2canvas
+           fotograferar samtliga rader.
+        */
+        tableScroll.style.height = "auto";
+        tableScroll.style.overflowX = "visible";
+        tableScroll.style.overflowY = "visible";
+
+        await new Promise(requestAnimationFrame);
+
+        try {
+            const canvas = await html2canvas(target, {
+                backgroundColor: "#ffffff",
+                scale: 2,
+                useCORS: true,
+                logging: false
+            });
+
+            const link = document.createElement("a");
+            link.download = `${filePrefix}_${safeFF}_${timestamp}.jpg`;
+            link.href = canvas.toDataURL("image/jpeg", 0.95);
+
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+
+        } finally {
+            /*
+               Återställ alltid tabellens ursprungliga utseende,
+               även om exporten skulle misslyckas.
+            */
+            tableScroll.style.height = oldHeight;
+            tableScroll.style.overflowX = oldOverflowX;
+            tableScroll.style.overflowY = oldOverflowY;
+        }
+
+        return;
     }
 
-    await new Promise(requestAnimationFrame);
+    /* =====================================================
+       DIAGRAM
+       ===================================================== */
+    if (isChart && myChart) {
+        myChart.resize();
+        myChart.update("none");
+        myChart.draw();
 
-    const rect = target.getBoundingClientRect();
+        await new Promise(requestAnimationFrame);
+    }
 
-    html2canvas(target, {
+    /* =====================================================
+       KARTA / DIAGRAM
+       ===================================================== */
+    const canvas = await html2canvas(target, {
         backgroundColor: "#ffffff",
         scale: 2,
         useCORS: true,
-        logging: false,
-        scrollX: 0,
-        scrollY: 0,
-        width: Math.ceil(target.scrollWidth || rect.width),
-        height: Math.ceil(target.scrollHeight || rect.height),
-        windowWidth: document.documentElement.scrollWidth,
-        windowHeight: document.documentElement.scrollHeight
-    }).then(canvas => {
-        const link = document.createElement("a");
-        const timestamp = new Date().toISOString().slice(0, 10);
-        const safeFF = currentFF
-            .replace(/[^\p{L}\p{N}]+/gu, "_")
-            .replace(/^_+|_+$/g, "");
-
-        if (isChart) {
-            link.download = `${filePrefix}_${safeFF}_${timestamp}.png`;
-            link.href = canvas.toDataURL("image/png");
-        } else {
-            link.download = `${filePrefix}_${safeFF}_${timestamp}.jpg`;
-            link.href = canvas.toDataURL("image/jpeg", 0.95);
-        }
-
-        link.click();
-
-        // Återställ stilar och chart-inställningar
-        if (isChart && myChart) {
-            myChart.options.devicePixelRatio = window.devicePixelRatio || 1;
-            myChart.resize();
-            myChart.update("none");
-        }
-
-        target.style.overflow = originalOverflow;
-        target.style.background = originalBackground;
-        target.style.padding = originalPadding;
-        target.style.maxHeight = originalMaxHeight;
-    }).catch(err => {
-        console.error("Fel vid skapande av bild:", err);
+        logging: false
     });
+
+    const link = document.createElement("a");
+
+    if (isChart) {
+        link.download = `${filePrefix}_${safeFF}_${timestamp}.png`;
+        link.href = canvas.toDataURL("image/png");
+    } else {
+        link.download = `${filePrefix}_${safeFF}_${timestamp}.jpg`;
+        link.href = canvas.toDataURL("image/jpeg", 0.95);
+    }
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
 };
-
-
+	
 /* =========================================================
    MODAL: STÄNGNING
    ========================================================= */
