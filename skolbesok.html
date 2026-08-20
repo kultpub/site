@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Skolbesök</title>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 
@@ -915,7 +916,7 @@ svg.hover-active .visit-label[data-for-municipality="active"] {
 
 
 /* =========================================================
-   16. BÄSTA MÅNAD
+   16. BÄSTA UTFALL
    ========================================================= */
 
 .best-cell {
@@ -934,6 +935,14 @@ svg.hover-active .visit-label[data-for-municipality="active"] {
   bottom: 0;
   width: 4px;
   background-color: #f28c28;
+}
+
+/* Styling för bästa år i totalraden */
+#statsTable tbody tr.total-row td.best-cell {
+  background-color: #fff9db !important;
+  color: #2f2f2f !important;
+  font-weight: 700 !important;
+  border: 1px solid #ffe082 !important;
 }
 
 
@@ -1070,10 +1079,68 @@ svg.hover-active .visit-label[data-for-municipality="active"] {
 #chartView.visible {
   opacity: 1;
 }
+
+/* =========================================================
+   21. MOBIL- OCH SURFPLATTESPÄRR
+   ========================================================= */
+#screenBlocker {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #2f2f2f;
+  color: #ffffff;
+  z-index: 99999;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+#screenBlocker i {
+  font-size: 48px;
+  color: #f28c28;
+  margin-bottom: 20px;
+}
+
+#screenBlocker h2 {
+  font-size: 24px;
+  margin: 0 0 12px 0;
+  letter-spacing: -0.02em;
+}
+
+#screenBlocker p {
+  font-size: 16px;
+  color: #ccc;
+  margin: 0;
+  max-width: 400px;
+  line-height: 1.5;
+}
+
+/* Aktiveras för skärmar mindre än 1024px */
+@media (max-width: 1024px) {
+  #screenBlocker {
+    display: flex;
+  }
+  body {
+    overflow: hidden !important;
+  }
+}
 </style>
 </head>
 
 <body>
+
+<!-- BLOCKERARE FÖR SMÅ SKÄRMAR -->
+  <div id="screenBlocker">
+    <i class="fa-solid fa-display"></i>
+    <h2>Skärmen är för liten</h2>
+    <p>Denna sida är ej avsedd för mobiltelefoner och surfplattor (tablets). Vänligen använd en större skärm.</p>
+  </div>
 
   <!-- =====================================================
        MODAL
@@ -2423,7 +2490,7 @@ function updateTable() {
         }
     }
 
-// Genom att matcha layouten med cellerna under men lägga till padding-right: 6px
+    // Genom att matcha layouten med cellerna under men lägga till padding-right: 6px
     // hamnar master-checkboxen i en perfekt, spikrak linje med resten.
     let headerHtml = `<tr>
         <th style="background:#f5f5f5 !important; color:#000000 !important; font-weight:700; text-align:center; padding:8px 6px 8px 10px;">
@@ -2561,12 +2628,19 @@ function updateTable() {
         });
     });
 
+    // =========================================================
+    // TOTALRAD (FOOTER)
+    // =========================================================
     const footerRow = tbody.insertRow();
     footerRow.classList.add("total-row");
 
     const totalLabelCell = footerRow.insertCell();
     totalLabelCell.textContent = "TOTALT";
     totalLabelCell.style.textAlign = "left";
+
+    // 1. Beräkna totalsumma och spara fördelningsdata för alla visade år
+    const yearTotals = {};
+    const yearBreakdowns = {};
 
     yearsToShow.forEach(y => {
         let totalForYear = 0;
@@ -2581,6 +2655,16 @@ function updateTable() {
             }
         });
 
+        yearTotals[y] = totalForYear;
+        yearBreakdowns[y] = yearData;
+    });
+
+    // 2. Ta reda på det högsta totalvärdet bland åren
+    const maxYearTotal = Math.max(...Object.values(yearTotals), 0);
+
+    // 3. Skapa cellerna i totalraden och applicera styling om det är det bästa året
+    yearsToShow.forEach(y => {
+        const totalForYear = yearTotals[y];
         const cell = footerRow.insertCell();
 
         cell.textContent = formatSwedishNumber(totalForYear);
@@ -2589,7 +2673,7 @@ function updateTable() {
             cell.style.cursor = "pointer";
 
             cell.onclick = () => {
-                const breakdown = Object.entries(yearData)
+                const breakdown = Object.entries(yearBreakdowns[y])
                     .sort((a, b) => b[1] - a[1])
                     .map(([kommun, antal]) => ({ kommun, antal }));
 
@@ -2602,6 +2686,15 @@ function updateTable() {
                 document.getElementById("modalMessage").innerHTML = message;
                 modal.style.display = "flex";
             };
+        }
+
+        // Markera bästa årsresultat om "Bästa utfall"-toggeln är aktiv
+        if (
+            toggleLund.checked &&
+            totalForYear > 0 &&
+            totalForYear === maxYearTotal
+        ) {
+            cell.classList.add("best-cell");
         }
     });
 }
@@ -2860,7 +2953,7 @@ function switchView(viewId, btn) {
     else if (viewId === "table") {
         appElement.classList.add("full-width");
 
-        labelLund.textContent = "Bästa månad ★";
+        labelLund.textContent = "Bästa utfall ★";
         labelLundRegion.textContent = "Senaste 5 åren";
         saveBtn.textContent = "Spara tabell JPG";
 
@@ -3144,7 +3237,7 @@ const tipsContent = {
 				<p>Tabellen visar antalet skolbesök per år och månad, utifrån vald skolnivå.</p>
 				<p>Klicka på ett värde i tabellen för att se hur antalet fördelar sig över Skånes kommuner. Skolbesök från skolor utanför Skåne redovisas samlat som <strong>Övrigt</strong>.</p>
 				<p>Checkboxarna vid månadsnamnen styr vilka månader som tas med i totalraden. På så sätt kan du jämföra utfallet för en vald period över flera år, till exempel januari–mars.</p>
-				<p><strong>Bästa månad</strong> markerar den högsta siffran för varje månad.</p>
+				<p><strong>Bästa utfall</strong> markerar det bästa månads-/årsresultatet.</p>
 				<p><strong>Senaste 5 åren</strong> krymper tabellen och visar bara de fem senaste åren.</p>
 				<p>Knappen <strong>Spara tabell JPG</strong> laddar ner tabellen som bild.</p>
 			</div>
