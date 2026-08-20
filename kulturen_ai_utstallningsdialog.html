@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI och Kulturens utställningsprocess – dialog</title>
+<style>
+  :root {
+    --bg: #f4f5f7;
+    --panel: #ffffff;
+    --text: #202124;
+    --muted: #6b7280;
+    --user: #0a7cff;
+    --assistant: #e4e6eb;
+    --assistant-text: #111827;
+    --border: #e5e7eb;
+    --shadow: 0 10px 30px rgba(0,0,0,.06);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  .shell {
+    max-width: 980px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background: var(--panel);
+    box-shadow: var(--shadow);
+  }
+
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(255,255,255,.94);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 24px;
+  }
+
+  header h1 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -.01em;
+  }
+
+  header p {
+    margin: 4px 0 0;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  main {
+    padding: 24px 18px 56px;
+  }
+
+  .message {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+    margin: 16px 0;
+  }
+
+  .message.user {
+    flex-direction: row-reverse;
+  }
+
+  .avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    flex: 0 0 34px;
+    font-size: 11px;
+    font-weight: 700;
+    background: #d1d5db;
+    color: #374151;
+  }
+
+  .message.user .avatar {
+    background: var(--user);
+    color: white;
+  }
+
+  .bubble-wrap {
+    max-width: min(74%, 720px);
+  }
+
+  .sender {
+    font-size: 11px;
+    color: var(--muted);
+    margin: 0 10px 5px;
+  }
+
+  .message.user .sender {
+    text-align: right;
+  }
+
+  .bubble {
+    width: 100%;
+    border: 0;
+    text-align: left;
+    cursor: pointer;
+    padding: 12px 42px 12px 15px;
+    border-radius: 20px;
+    font: inherit;
+    line-height: 1.4;
+    position: relative;
+    transition: transform .12s ease, box-shadow .12s ease;
+    background: var(--assistant);
+    color: var(--assistant-text);
+  }
+
+  .message.user .bubble {
+    background: var(--user);
+    color: white;
+  }
+
+  .bubble:hover {
+    box-shadow: 0 3px 12px rgba(0,0,0,.10);
+  }
+
+  .bubble:active {
+    transform: scale(.995);
+  }
+
+  .bubble:focus-visible {
+    outline: 3px solid rgba(10,124,255,.28);
+    outline-offset: 2px;
+  }
+
+  .chevron {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-52%);
+    font-size: 17px;
+    opacity: .75;
+    transition: transform .18s ease;
+  }
+
+  .message.open .chevron {
+    transform: translateY(-52%) rotate(180deg);
+  }
+
+  .expanded {
+    margin-top: 7px;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: #fff;
+  }
+
+  .message.user .expanded {
+    border-color: rgba(10,124,255,.18);
+    background: #f8fbff;
+  }
+
+  .expanded-inner {
+    padding: 17px 18px;
+    line-height: 1.58;
+    font-size: 15px;
+    white-space: normal;
+  }
+
+  .expanded-inner p {
+    margin: 0 0 12px;
+  }
+
+  .expanded-inner p:last-child {
+    margin-bottom: 0;
+  }
+
+  .hint {
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    margin: 4px 0 24px;
+  }
+
+  @media (max-width: 700px) {
+    header { padding: 15px 16px; }
+    main { padding: 18px 10px 40px; }
+    .bubble-wrap { max-width: 84%; }
+    .avatar { width: 30px; height: 30px; flex-basis: 30px; }
+    .expanded-inner { font-size: 14px; }
+  }
+
+  @media print {
+    header { position: static; }
+    .bubble { display: none; }
+    .expanded { display: block !important; }
+    .message { break-inside: avoid; }
+    .hint { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+  <header>
+    <h1>AI och Kulturens utställningsprocess</h1>
+    <p>Dialog om idéprövning, förstudier, kunskapsbas och arbetssätt</p>
+  </header>
+
+  <main>
+    <div class="hint">Klicka på en fråga eller ett svar för att expandera. Bara ett meddelande kan vara öppet åt gången.</div>
+    
+    <article class="message user" data-index="0">
+      <div class="avatar" aria-hidden="true">J</div>
+      <div class="bubble-wrap">
+        <div class="sender">Du</div>
+        <button class="bubble" type="button" aria-expanded="false">
+          <span class="preview">Det behövs ett verktyg som kan utvärdera en idé om en ny utställning. Såhär funkar det idag: Om en idé anses til…</span>
+          <span class="chevron">⌄</span>
+        </button>
+        <div class="expanded" hidden>
+          <div class="expanded-inner"><p>Det behövs ett verktyg som kan utvärdera en idé om en ny utställning. Såhär funkar det idag: Om en idé anses tillräckligt bra, ska man genomföra en s.k. förstudie – vilket i praktiken innebär att utställningen kommer att bli av – där man besvarar ett antal frågor. Många av dessa är svåra att mäta och luddiga, men handlar bland annat om:<br>• Vilka projektmål som ska uppnås<br>• Vilka effektmål den kan uppnå<br>• Kvalitetsnivå<br>• Ambitionsnivå<br>• Vilken publik den ska locka/nå<br>• Vilka lokaler den behöver uppta<br>• Vilken period den ska stå<br>• Vilken budget den kommer att kräva<br>• Om den behöver extern finansiering<br>• Vilka resurs- och kompetensbehov som krävs (internt och externt)<br>• Fördelar och nackdelar (luddigt)<br>• Förutsättningar (luddigt)</p><p>Om vi kan ha hjälp av AI att utvärdera en utställningsidé, vad behöver då AI veta för att göra ett professionellt jobb? Det finns ju både stora och små utställningar som kan vara helt fantastiska (eller usla) och viktiga (eller helt irrelevanta) som når massvis av människor (eller knappt någon). Vad är grunderna i detta för att gå vidare?</p></div>
+        </div>
+      </div>
+    </article>
+    
+
+    <article class="message assistant" data-index="1">
+      <div class="avatar" aria-hidden="true">AI</div>
+      <div class="bubble-wrap">
+        <div class="sender">ChatGPT</div>
+        <button class="bubble" type="button" aria-expanded="false">
+          <span class="preview">Ja. Men jag skulle inte börja med att låta AI bedöma förstudien. Problemet ligger ett steg tidigare: ni behöver …</span>
+          <span class="chevron">⌄</span>
+        </button>
+        <div class="expanded" hidden>
+          <div class="expanded-inner"><p>Ja. Men jag skulle inte börja med att låta AI bedöma förstudien. Problemet ligger ett steg tidigare: ni behöver ett strukturerat sätt att avgöra vilka idéer som över huvud taget förtjänar en förstudie.</p><p>Det viktiga är att modellen inte premierar stort, dyrt och publikdragande framför litet, billigt och innehållsligt briljant. Bedömningen måste därför vara relativ till idéns syfte och skala.</p><p>1. Först: vilken fråga ska AI egentligen besvara?</p><p>Inte:<br>”Är detta en bra utställning?”</p><p>utan:<br>”Finns det tillräckligt starka skäl att använda museets resurser till att utveckla denna idé vidare?”</p><p>Det är en mycket bättre beslutsfråga.</p><p>AI:n bör sedan kunna lämna exempelvis fyra utfall:<br>A. Mycket stark idé – gå vidare<br>B. Lovande idé – behöver preciseras först<br>C. Intressant men fel just nu<br>D. Svag idé – rekommenderas inte</p><p>2. Jag skulle bedöma idén längs åtta huvudaxlar:</p><p>1. Relevans – Varför ska museet göra just detta?<br>2. Innehållslig styrka – Finns det faktiskt tillräckligt bra material och berättelser?<br>3. Publikvärde – För vem blir detta intressant, angeläget eller meningsfullt?<br>4. Särart – Vad gör denna utställning värd att göra i stället för något annat?<br>5. Gestaltningspotential – Går ämnet att göra till en bra fysisk utställningsupplevelse?<br>6. Genomförbarhet – Kan den realistiskt produceras?<br>7. Resurseffektivitet – Är nyttan rimlig i förhållande till pengar, lokaler och arbetstid?<br>8. Portföljvärde – Hur passar den tillsammans med museets övriga utställningar och verksamhet?</p><p>3. Några av dimensionerna måste hållas isär</p><p>Relevans ≠ publikpotential.<br>En utställning kan vara mycket viktig men bara relevant för 8 000 personer. Det kan ändå vara en utmärkt satsning.</p><p>Kvalitet ≠ ambitionsnivå.<br>En utställning på 40 m² med tio föremål kan vara liten i ambition men extremt hög i kvalitet. En utställning på 800 m² med scenografi, film, interaktivitet och 8 miljoner i budget kan vara mycket ambitiös men medioker.</p><p>4. Vad måste AI känna till om museet?</p><p>AI:n behöver en institutionell grundprofil som ligger bakom varje bedömning:<br>• uppdrag och strategi<br>• publik<br>• utställningshistorik<br>• produktionsförutsättningar<br>• kalender och utställningsportfölj</p><p>5. Sedan behöver AI:n ganska få uppgifter om själva idén</p><p>Jag skulle inte börja med dagens långa förstudiefrågor. Första idéprövningen skulle kanske bara kräva 10–15 frågor om själva idén.</p><p>6. AI:n ska inte bara ge poäng</p><p>Jag skulle undvika en modell som bara säger ”76/100 – rekommenderas”. Det ser objektivt ut utan att vara det.</p><p>AI:n bör i stället redovisa:<br>• samlad bedömning<br>• styrkor<br>• svagheter<br>• kritiska antaganden<br>• kunskapsluckor<br>• rekommendation</p><p>7. AI:n behöver också skilja mellan tre saker</p><p>VÄRDE – Är idén värd att göra?<br>GENOMFÖRBARHET – Går den att göra?<br>PRIORITET – Bör vi göra den framför andra saker?</p><p>8. Då löser man också problemet med stora och små utställningar</p><p>AI:n bör hela tiden bedöma proportionalitet: publikvärde, kostnad och resursåtgång i relation till utställningens storlek, syfte och förväntade värde.</p><p>9. Jag skulle därför bygga systemet i två steg</p><p>Steg 1 – Idéprövning<br>Mycket lättviktigt. AI:n analyserar värde × genomförbarhet × prioritet × osäkerhet och rekommenderar om idén bör utvecklas vidare.</p><p>Steg 2 – Förstudie<br>Först när idén klarat steg 1 går man in i detaljer: budget, projektorganisation, effektmål, tidsplan, finansiering, kompetenser, riskregister osv.</p><p>Det första ni behöver skapa är därför inte en AI-prompt utan en bedömningsmodell. AI:n kommer sedan vara mycket bra på att använda den.</p></div>
+        </div>
+      </div>
+    </article>
+    
+
+    <article class="message user" data-index="2">
+      <div class="avatar" aria-hidden="true">J</div>
+      <div class="bubble-wrap">
+        <div class="sender">Du</div>
+        <button class="bubble" type="button" aria-expanded="false">
+          <span class="preview">Så, vi behöver leverera en del viktig information för att få detta att fungera på ett professionellt sätt, t.ex.…</span>
+          <span class="chevron">⌄</span>
+        </button>
+        <div class="expanded" hidden>
+          <div class="expanded-inner"><p>Så, vi behöver leverera en del viktig information för att få detta att fungera på ett professionellt sätt, t.ex. vilka vi är, vad vi gör, hur många vi är, vilken kompetens vi har, hur våra samlingar ser ut och kommer att se ut (inriktning insamling), vilken omvärld vi har (i Lund med omnejd, andra aktörer), vilka vanliga samarbetspartner vi har eller parter som definierar vår miljö (Lunds universitet etc.), vår vision etc. Tänk vidare i detta spår.</p></div>
+        </div>
+      </div>
+    </article>
+    
+
+    <article class="message assistant" data-index="3">
+      <div class="avatar" aria-hidden="true">AI</div>
+      <div class="bubble-wrap">
+        <div class="sender">ChatGPT</div>
+        <button class="bubble" type="button" aria-expanded="false">
+          <span class="preview">Ja. Det ni egentligen behöver skapa först är en institutionell kunskapsbas för utställningsbedömning. AI:n måste…</span>
+          <span class="chevron">⌄</span>
+        </button>
+        <div class="expanded" hidden>
+          <div class="expanded-inner"><p>Ja. Det ni egentligen behöver skapa först är en institutionell kunskapsbas för utställningsbedömning. AI:n måste förstå Kulturen som organisation, annars bedömer den bara om en idé låter intressant i största allmänhet.</p><p>Jag skulle dela kunskapen i fyra lager.</p><p>1. Vilka är vi?<br>Uppdrag, vision, värderingar, strategiska mål, profil, historia, organisation och ekonomisk modell.</p><p>2. Vad har vi att arbeta med?<br>Samlingarna, kompetensen och produktionskapaciteten. AI:n behöver förstå både samlingarnas nuvarande styrkor och framtida insamlingsinriktning samt organisationens verkliga kompetenser och flaskhalsar.</p><p>3. Vilken värld verkar vi i?<br>Lund, Skåne och Öresundsregionen; turism; universitetet; kommunen; andra museer; arkiv; bibliotek; skolor; föreningsliv; forskningsmiljöer; näringsliv och civilsamhälle.</p><p>4. Vilka människor finns på andra sidan?<br>Befintlig publik, variation över året, skolor, turister, Lundabor, internationella besökare, medlemmar, återkommande besökare samt de grupper Kulturen i dag når dåligt men vill nå bättre.</p><p>Därutöver behövs:</p><p>5. Vad har fungerat tidigare?<br>Ett institutionellt utställningsminne med titel, ämne, år, lokal, yta, visningstid, budget, arbetsinsats, besök, målgrupper, skolbesök, programverksamhet, mediegenomslag, finansiering, samarbetspartner och erfarenheter.</p><p>6. Lokalerna måste beskrivas som resurser<br>Yta, takhöjd, tillgänglighet, klimat, säkerhet, dagsljus, AV, publikflöden, placering och vilka typer av utställningar lokalen lämpar sig för.</p><p>7. Ekonomiska referensvärden<br>Normalspann för små, medelstora och stora utställningar samt typiska kostnader för scenografi, grafik, AV, interaktivitet, transporter, inlån, rättigheter, externa resurser och marknadsföring.</p><p>8. Museets redaktionella hållning<br>Hur Kulturen vill berätta historia: föremålens roll, forskning, personhistorier, lokalhistoria, samtid, representation, källkritik, interaktivitet, barnperspektiv osv.</p><p>9. Begränsningar och principer<br>Etik, känsliga samlingar, upphovsrätt, tillgänglighet, säkerhet, klimatkrav, arbetsmiljö, hållbarhet, AI-policy och vetenskaplig kvalitet.</p><p>10. Framtiden<br>Strategiska inriktningar, planerad insamling, digitalisering, forskning, nya målgrupper, förändringar i lokaler, jubileer, större projekt och möjliga finansieringsspår.</p><p>Jag skulle sammanfatta detta som en Kulturen-kontext i cirka 12 delar:<br>1. Uppdrag, vision och strategi<br>2. Organisation och beslutsstruktur<br>3. Personal, kompetenser och kapacitet<br>4. Samlingar och insamlingsstrategi<br>5. Utställningslokaler och tekniska förutsättningar<br>6. Publik och besöksdata<br>7. Önskade och underrepresenterade målgrupper<br>8. Tidigare utställningar och deras resultat<br>9. Ekonomiska referensdata<br>10. Lund/Skåne och omvärlden<br>11. Partner, nätverk och konkurrerande aktörer<br>12. Museologiska, etiska och redaktionella principer</p><p>Ovanpå detta lägger man den aktuella utställningsportföljen och kalendern, som är mer föränderlig information.</p></div>
+        </div>
+      </div>
+    </article>
+    
+
+    <article class="message user" data-index="4">
+      <div class="avatar" aria-hidden="true">J</div>
+      <div class="bubble-wrap">
+        <div class="sender">Du</div>
+        <button class="bubble" type="button" aria-expanded="false">
+          <span class="preview">MEN, om jag förstår dig rätt... Detta ska delas upp i två bitar:</span>
+          <span class="chevron">⌄</span>
+        </button>
+        <div class="expanded" hidden>
+          <div class="expanded-inner"><p>MEN, om jag förstår dig rätt... Detta ska delas upp i två bitar:</p><p>1. Information som behövs för att UTVÄRDERA IDÉN<br>2. Information som behövs för att UTVÄRDERA FÖRSTUDIEN</p><p>Tänker du att AI är involverad i båda dessa steg – eller bara i det första?</p></div>
+        </div>
+      </div>
+    </article>
+    
+
+    <article class="message assistant" data-index="5">
+      <div class="avatar" aria-hidden="true">AI</div>
+      <div class="bubble-wrap">
+        <div class="sender">ChatGPT</div>
+        <button class="bubble" type="button" aria-expanded="false">
+          <span class="preview">Ja — jag tänker att AI bör vara involverad i båda stegen, men med olika uppgift, olika informationsunderlag och …</span>
+          <span class="chevron">⌄</span>
+        </button>
+        <div class="expanded" hidden>
+          <div class="expanded-inner"><p>Ja — jag tänker att AI bör vara involverad i båda stegen, men med olika uppgift, olika informationsunderlag och olika beslutspunkt.</p><p>1. Utvärdera idén</p><p>Frågan är:<br>”Är detta en tillräckligt stark och relevant idé för att vi ska lägga resurser på en förstudie?”</p><p>AI:n behöver då framför allt förstå Kulturens uppdrag, vision och strategi, samlingarna och insamlingsinriktningen, befintlig och önskad publik, Lund/Skåne och omvärlden, andra aktörer och möjliga samarbetspartner, tidigare och planerade utställningar, Kulturens profil och kompetenser samt grova resursmässiga förutsättningar.</p><p>Själva utställningsidén kan beskrivas ganska kortfattat.</p><p>AI:n bedömer exempelvis relevans, innehållslig potential, publikpotential, särart, strategisk passform, gestaltningspotential och rimlig genomförbarhet.</p><p>Resultat: gå vidare till förstudie / utveckla idén först / avvakta / gå inte vidare.</p><p>2. Utvärdera förstudien</p><p>Frågan är:<br>”Är den föreslagna utställningen, såsom den nu har planerats, tillräckligt stark, genomförbar och välmotiverad för att besluta om produktion?”</p><p>Nu behöver AI:n betydligt mer detaljer: projektmål, effekter, målgrupper, innehåll, föremål, lokal, yta, gestaltning, ambitionsnivå, tidplan, budget, finansiering, bemanning, intern arbetsinsats, externa kompetenser, inlån, rättigheter, teknik, risker, beroenden, marknadsföring, pedagogik och hållbarhet.</p><p>AI:n ska då snarare granska om projektet hänger ihop och är realistiskt.</p><p>De två systemen bör hållas tydligt isär:<br>• Idéprövning: Bör vi undersöka detta vidare?<br>• Förstudieprövning: Bör vi genomföra detta projekt?</p><p>En viktig principiell skillnad:<br>Steg 1 ska vara generöst mot idéer men hårt mot irrelevans.<br>Steg 2 ska vara hårt mot önsketänkande.</p><p>Så ja: AI i båda stegen — men egentligen två olika AI-bedömningar. Den första bedömer idéns värde och potential. Den andra bedömer projektets kvalitet och realism.</p></div>
+        </div>
+      </div>
+    </article>
+    
+
+    <article class="message user" data-index="6">
+      <div class="avatar" aria-hidden="true">J</div>
+      <div class="bubble-wrap">
+        <div class="sender">Du</div>
+        <button class="bubble" type="button" aria-expanded="false">
+          <span class="preview">Exakt, vi vill inte ha ett arbetssätt där den som skriver ihop en idé om en utställning samtidigt måste ha en do…</span>
+          <span class="chevron">⌄</span>
+        </button>
+        <div class="expanded" hidden>
+          <div class="expanded-inner"><p>Exakt, vi vill inte ha ett arbetssätt där den som skriver ihop en idé om en utställning samtidigt måste ha en doktorsexamen i nationalekonomi och kunna allt där finns att veta om Lund med omnejd och alla utfall om tidigare utställningar – detta ska AI:n bakom idéstadiet ha kunskap om. Stämmer tanken?</p></div>
+        </div>
+      </div>
+    </article>
+    
+
+    <article class="message assistant" data-index="7">
+      <div class="avatar" aria-hidden="true">AI</div>
+      <div class="bubble-wrap">
+        <div class="sender">ChatGPT</div>
+        <button class="bubble" type="button" aria-expanded="false">
+          <span class="preview">Ja, exakt. Det är själva poängen med modellen.</span>
+          <span class="chevron">⌄</span>
+        </button>
+        <div class="expanded" hidden>
+          <div class="expanded-inner"><p>Ja, exakt. Det är själva poängen med modellen.</p><p>Den som lämnar en utställningsidé ska i princip behöva vara expert på idén, inte på hela organisationen.</p><p>Idégivaren ska exempelvis behöva beskriva:<br>• Vad handlar utställningen om?<br>• Varför är ämnet intressant eller viktigt?<br>• Vad skulle besökaren kunna möta, förstå eller uppleva?<br>• Finns det särskilt material, föremål, berättelser eller forskning som gör idén stark?<br>• Finns någon uppenbar målgrupp eller tänkt samarbetspartner?<br>• Finns några kända särskilda förutsättningar?</p><p>Det ska kunna vara ganska kort.</p><p>AI:n ska redan känna till:<br>• Kulturens uppdrag, vision och strategi<br>• samlingarnas styrkor och framtida inriktning<br>• organisationens kompetens och kapacitet<br>• lokalerna<br>• ekonomiska normalvärden<br>• publikdata och tidigare utställningsutfall<br>• Lunds och Skånes demografi och besöksmarknad<br>• universitetet, kommunen, andra museer och relevanta aktörer<br>• befintliga samarbeten<br>• utställningsprogrammet framåt<br>• vilka målgrupper Kulturen redan når respektive vill nå bättre<br>• erfarenheter från tidigare projekt</p><p>Därmed kan AI:n själv göra mycket av det arbete som annars skulle kräva att idégivaren frågar runt i organisationen.</p><p>Det leder till en viktig designprincip:<br>Formuläret för idéstadiet ska innehålla så lite information som möjligt som AI:n rimligen kan hämta eller redan känna till.</p><p>Annars bygger ni bara ett digitalt formulär för dagens arbetsprocess. Målet bör snarare vara att flytta kunskapsbördan från idégivaren till systemet.</p></div>
+        </div>
+      </div>
+    </article>
+    
+
+    <article class="message user" data-index="8">
+      <div class="avatar" aria-hidden="true">J</div>
+      <div class="bubble-wrap">
+        <div class="sender">Du</div>
+        <button class="bubble" type="button" aria-expanded="false">
+          <span class="preview">Okej, så var börjar vi? Vi behöver en arbetsplan för att få detta till stånd. Vi har massa dokument och planer o…</span>
+          <span class="chevron">⌄</span>
+        </button>
+        <div class="expanded" hidden>
+          <div class="expanded-inner"><p>Okej, så var börjar vi? Vi behöver en arbetsplan för att få detta till stånd. Vi har massa dokument och planer och info om tidigare utställningar. Vi har genomförda slutrapporter av tidigare utställningar – okänt hur många. Vi har information om samtliga utställningar i Kulturens historia, dock enbart titel och utställningslängd och i förekommande fall placering. Jag uppskattar att vi har mer detaljerad information angående historiska utställningar avseende möjligen de senaste 10-15 åren vilket skulle handla om cirka 100 utställningar. Vi har information om Kulturen stadgar, vision, historik, omvärlden i sig, omvärldens kulturpolitiska mål och så vidare. Var börjar vi – och VAR bygger vi AI:n?</p></div>
+        </div>
+      </div>
+    </article>
+    
+
+    <article class="message assistant" data-index="9">
+      <div class="avatar" aria-hidden="true">AI</div>
+      <div class="bubble-wrap">
+        <div class="sender">ChatGPT</div>
+        <button class="bubble" type="button" aria-expanded="false">
+          <span class="preview">Jag skulle nu göra detta till ett eget projekt med två delprojekt:</span>
+          <span class="chevron">⌄</span>
+        </button>
+        <div class="expanded" hidden>
+          <div class="expanded-inner"><p>Jag skulle nu göra detta till ett eget projekt med två delprojekt:</p><p>1. AI för idéprövning – byggs först.<br>2. AI för förstudiegranskning – byggs senare och återanvänder mycket av samma kunskapsbas.</p><p>Jag skulle inte börja med att mata in alla dokument ni har.</p><p>Fas 1 – Bestäm vad AI:n ska kunna avgöra<br>Definiera bedömningsmodellen för idéstadiet: relevans, innehållslig styrka, samlingskoppling, publikpotential, nya målgrupper, särart, gestaltningspotential, strategisk passform, relation till utställningsprogrammet, ungefärlig genomförbarhet, samarbets- och finansieringsmöjligheter samt risker och kunskapsluckor.</p><p>Fas 2 – Inventera kunskapen<br>Dela materialet i:<br>A. Institutionell kunskap – ganska stabil<br>B. Institutionellt minne – erfarenhetsdata<br>C. Föränderlig omvärldskunskap</p><p>Fas 3 – Skapa en ”Kulturenprofil för AI”<br>Ett auktoritativt grunddokument om uppdrag, vision, strategi, kulturhistorisk profil, samlingar, publik, organisation, kompetenser, lokaler, ekonomi, Lund/Skåne, universitetet, partner, kulturpolitik, utställningshistorik och museologiska principer.</p><p>Fas 4 – Börja inte med alla 100 utställningar<br>Välj 20–30 mycket olika projekt som pilotmaterial. För dessa samlar ni ihop idé, förstudie, projektplan, budget, besöksutfall och slutrapport.</p><p>Fas 5 – Testa AI:n baklänges<br>Ge systemet gamla utställningsidéer som om de vore nya. AI:n får inte veta utfallet. Jämför sedan dess bedömning med slutrapport, publikutfall, budgetutfall och interna erfarenheter.</p><p>Fas 6 – Först därefter bygger vi användargränssnittet<br>Det bör vara enkelt: användaren beskriver idén och svarar på några få frågor. AI:n levererar ett strukturerat beslutsunderlag med relevans, potential, koppling till samlingar, publik, möjliga samarbeten, jämförbara tidigare utställningar, styrkor, svagheter, kunskapsluckor och rekommendation.</p><p>Var bygger vi AI:n?</p><p>Jag skulle inte börja med att träna en egen modell. Ni bygger en agent ovanpå en befintlig språkmodell, med Kulturens egna dokument och data som kunskapslager och en uttrycklig bedömningsmodell som instruktion.</p><p>Ett naturligt förstahandsalternativ är Microsoft Copilot Studio + SharePoint:<br>• SharePoint – dokument och grundinformation<br>• SharePoint-listor eller Dataverse – strukturerade utställningsdata<br>• Copilot Studio – AI-agenten och bedömningslogiken</p><p>ChatGPT är också ett reellt alternativ, särskilt för snabb pilot och prototyp.</p><p>Jag skulle göra följande i ordning:<br>1. Formulera bedömningsmodellen för idéer.<br>2. Inventera informationskällorna.<br>3. Skapa Kulturenprofilen.<br>4. Skapa en strukturerad grundtabell över samtliga utställningar.<br>5. Bygg kompletta data för 20–30 representativa moderna utställningar.<br>6. Skapa en första AI-prototyp.<br>7. Testa retrospektivt.<br>8. Justera bedömningsmodellen.<br>9. Bestäm produktionsplattform.<br>10. Bygg motsvarande system för förstudier.</p></div>
+        </div>
+      </div>
+    </article>
+    
+
+    <article class="message user" data-index="10">
+      <div class="avatar" aria-hidden="true">J</div>
+      <div class="bubble-wrap">
+        <div class="sender">Du</div>
+        <button class="bubble" type="button" aria-expanded="false">
+          <span class="preview">Det vi gör egentligen, är att vi ser över alla steg från idé till slutrapport, eller hur? Jag behöver en text fr…</span>
+          <span class="chevron">⌄</span>
+        </button>
+        <div class="expanded" hidden>
+          <div class="expanded-inner"><p>Det vi gör egentligen, är att vi ser över alla steg från idé till slutrapport, eller hur? Jag behöver en text från dig som sammanfattar hela ambitionen här. Den ska motivera varför vi behöver göra detta och vad Kulturen kan tjäna på detta. Texten ska vara tydlig men inte sväva ut. Ge mig ett förslag.</p></div>
+        </div>
+      </div>
+    </article>
+    
+
+    <article class="message assistant" data-index="11">
+      <div class="avatar" aria-hidden="true">AI</div>
+      <div class="bubble-wrap">
+        <div class="sender">ChatGPT</div>
+        <button class="bubble" type="button" aria-expanded="false">
+          <span class="preview">AI-stött arbetssätt för utställningsprocessen</span>
+          <span class="chevron">⌄</span>
+        </button>
+        <div class="expanded" hidden>
+          <div class="expanded-inner"><p>AI-stött arbetssätt för utställningsprocessen</p><p>Kulturen behöver se över hela processen för utställningsarbete – från den första idén, via förstudie och beslut, till genomförande, uppföljning och slutrapport. I dag finns mycket kunskap i organisationen, men den är spridd mellan dokument, statistik, tidigare projekt och enskilda medarbetares erfarenheter. Det gör att bedömningar riskerar att bli personberoende och att lärdomar från tidigare utställningar inte alltid tas till vara systematiskt.</p><p>Ambitionen är att utveckla ett gemensamt och tydligare arbetssätt där AI används som stöd i flera steg av processen. På idéstadiet ska AI kunna sätta en föreslagen utställning i relation till Kulturens uppdrag, vision, samlingar, publik, kompetenser, omvärld, samarbetspartner och tidigare erfarenheter. Den som lämnar en idé ska alltså inte själv behöva behärska all denna kunskap. AI:n ska bidra med den institutionella kontext som krävs för en kvalificerad första bedömning.</p><p>Om en idé går vidare till förstudie förändras AI:ns roll. Då ska den kunna granska om projektets mål, målgrupper, ambitionsnivå, budget, resurser, lokaler, tidsplan, finansiering och andra förutsättningar hänger ihop och är realistiska. Efter genomförandet bör samma struktur användas för uppföljning och slutrapportering, så att erfarenheter och resultat återförs till kunskapsbasen och förbättrar framtida bedömningar.</p><p>Detta innebär inte att AI ska fatta beslut om vilka utställningar Kulturen ska göra. Syftet är att skapa ett bättre beslutsunderlag: mer konsekvent, mer kunskapsbaserat och mindre beroende av vem som råkar ha tillgång till viss information eller erfarenhet.</p><p>För Kulturen kan ett sådant arbetssätt ge flera vinster. Lovande idéer kan identifieras tidigare, svaga eller ogenomtänkta projekt kan upptäckas innan stora resurser har lagts ned, förstudier kan bli mer relevanta och jämförbara och tidigare erfarenheter kan användas betydligt bättre. Samtidigt skapas en sammanhängande kunskapskedja från idé till genomförd utställning och tillbaka till nästa idé.</p><p>Målet är därför större än att skapa ett AI-verktyg för att bedöma utställningsförslag. Det handlar om att utveckla hela Kulturens system för att initiera, bedöma, planera, genomföra och lära av utställningar – med AI som ett kvalificerat stöd genom processen.</p></div>
+        </div>
+      </div>
+    </article>
+    
+  </main>
+</div>
+
+<script>
+  const items = [...document.querySelectorAll('.message')];
+
+  function closeAll(except = null) {
+    items.forEach(item => {
+      if (item === except) return;
+      item.classList.remove('open');
+      const button = item.querySelector('.bubble');
+      const expanded = item.querySelector('.expanded');
+      button.setAttribute('aria-expanded', 'false');
+      expanded.hidden = true;
+    });
+  }
+
+  items.forEach(item => {
+    const button = item.querySelector('.bubble');
+    const expanded = item.querySelector('.expanded');
+
+    button.addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      closeAll();
+      if (!isOpen) {
+        item.classList.add('open');
+        button.setAttribute('aria-expanded', 'true');
+        expanded.hidden = false;
+        setTimeout(() => item.scrollIntoView({behavior:'smooth', block:'nearest'}), 40);
+      }
+    });
+  });
+</script>
+</body>
+</html>
