@@ -3110,12 +3110,11 @@ document.getElementById("saveImage").onclick = async function() {
         target = document.getElementById("mapView");
         filePrefix = "karta";
     }
-
     else if (isTable) {
-        target = document.getElementById("tableView");
+        // För tabellen vill vi helst fånga hela scroll-ytan om den rullar
+        target = document.querySelector("#tableView .table-scroll") || document.getElementById("tableView");
         filePrefix = "tabell";
     }
-
     else if (isChart) {
         target = document.getElementById("chartView");
         filePrefix = "diagram";
@@ -3133,16 +3132,15 @@ document.getElementById("saveImage").onclick = async function() {
     const originalOverflow = target.style.overflow;
     const originalBackground = target.style.background;
     const originalPadding = target.style.padding;
+    const originalMaxHeight = target.style.maxHeight;
 
     target.style.overflow = "visible";
     target.style.background = "#ffffff";
 
-    /*
-       Viktigt:
-       Sätt inte padding: 0 på kartvyn.
-       Det var sannolikt det som fick kartvyn att hoppa.
-    */
-    if (!isMap) {
+    if (isTable) {
+        // Expandera höjden tillfälligt så att hela tabellen kommer med på bilden utan avklipp
+        target.style.maxHeight = "none";
+    } else if (!isMap) {
         target.style.padding = "0";
     }
 
@@ -3157,8 +3155,8 @@ document.getElementById("saveImage").onclick = async function() {
         logging: false,
         scrollX: 0,
         scrollY: 0,
-        width: Math.ceil(rect.width),
-        height: Math.ceil(rect.height),
+        width: Math.ceil(target.scrollWidth || rect.width),
+        height: Math.ceil(target.scrollHeight || rect.height),
         windowWidth: document.documentElement.scrollWidth,
         windowHeight: document.documentElement.scrollHeight
     }).then(canvas => {
@@ -3178,6 +3176,7 @@ document.getElementById("saveImage").onclick = async function() {
 
         link.click();
 
+        // Återställ stilar och chart-inställningar
         if (isChart && myChart) {
             myChart.options.devicePixelRatio = window.devicePixelRatio || 1;
             myChart.resize();
@@ -3187,10 +3186,9 @@ document.getElementById("saveImage").onclick = async function() {
         target.style.overflow = originalOverflow;
         target.style.background = originalBackground;
         target.style.padding = originalPadding;
-
-        hiddenCheckboxes.forEach(cb => {
-            cb.style.visibility = "";
-        });
+        target.style.maxHeight = originalMaxHeight;
+    }).catch(err => {
+        console.error("Fel vid skapande av bild:", err);
     });
 };
 
