@@ -1085,6 +1085,14 @@ svg.hover-active .visit-label[data-for-municipality="active"] {
   opacity: 1;
 }
 
+.filter-mini-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #666;
+}
+
 /* =========================================================
    21. MOBIL- OCH SURFPLATTESPÄRR
    ========================================================= */
@@ -1180,8 +1188,10 @@ svg.hover-active .visit-label[data-for-municipality="active"] {
     </div>
 
 
-    <!-- Skolnivåfilter -->
-    <div class="custom-select-wrapper" id="ffSelectWrapper" style="margin-bottom: 10px;">
+<!-- Skolnivåfilter -->
+<label class="filter-mini-label">Datakälla</label>
+
+<div class="custom-select-wrapper" id="ffSelectWrapper" style="margin-bottom: 10px;">
       <div class="custom-select-trigger" id="ffSelectTrigger">
         <span id="ffSelectLabel">All data</span>
 
