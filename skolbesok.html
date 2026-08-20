@@ -3113,101 +3113,71 @@ document.getElementById("saveImage").onclick = async function() {
     } else if (isTable) {
         target = document.getElementById("tableView");
         filePrefix = "tabell";
-    } else if (isChart) {
+    } else {
         target = document.getElementById("chartView");
         filePrefix = "diagram";
     }
 
     if (!target) return;
 
-    const timestamp = new Date().toISOString().slice(0, 10);
-    const safeFF = currentFF
-        .replace(/[^\p{L}\p{N}]+/gu, "_")
-        .replace(/^_+|_+$/g, "");
+    let hiddenCheckboxes = [];
 
-    /* =====================================================
-       TABELL
-       ===================================================== */
     if (isTable) {
-        const tableScroll = target.querySelector(".table-scroll");
+        hiddenCheckboxes = [
+            ...document.querySelectorAll(".month-toggle"),
+            document.getElementById("masterMonthToggle")
+        ];
 
-        const oldHeight = tableScroll.style.height;
-        const oldOverflowX = tableScroll.style.overflowX;
-        const oldOverflowY = tableScroll.style.overflowY;
-
-        /*
-           Öppna hela tabellen temporärt så att html2canvas
-           fotograferar samtliga rader.
-        */
-        tableScroll.style.height = "auto";
-        tableScroll.style.overflowX = "visible";
-        tableScroll.style.overflowY = "visible";
-
-        await new Promise(requestAnimationFrame);
-
-        try {
-            const canvas = await html2canvas(target, {
-                backgroundColor: "#ffffff",
-                scale: 2,
-                useCORS: true,
-                logging: false
-            });
-
-            const link = document.createElement("a");
-            link.download = `${filePrefix}_${safeFF}_${timestamp}.jpg`;
-            link.href = canvas.toDataURL("image/jpeg", 0.95);
-
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-
-        } finally {
-            /*
-               Återställ alltid tabellens ursprungliga utseende,
-               även om exporten skulle misslyckas.
-            */
-            tableScroll.style.height = oldHeight;
-            tableScroll.style.overflowX = oldOverflowX;
-            tableScroll.style.overflowY = oldOverflowY;
-        }
-
-        return;
+        hiddenCheckboxes.forEach(cb => {
+            if (cb) cb.style.visibility = "hidden";
+        });
     }
 
-    /* =====================================================
-       DIAGRAM
-       ===================================================== */
-    if (isChart && myChart) {
-        myChart.resize();
-        myChart.update("none");
-        myChart.draw();
+    const originalOverflow = target.style.overflow;
+    const originalBackground = target.style.background;
+    const originalPadding = target.style.padding;
 
-        await new Promise(requestAnimationFrame);
-    }
+    target.style.overflow = "visible";
+    target.style.background = "#ffffff";
+    target.style.padding = "0";
 
-    /* =====================================================
-       KARTA / DIAGRAM
-       ===================================================== */
-    const canvas = await html2canvas(target, {
+    await new Promise(requestAnimationFrame);
+
+    const rect = target.getBoundingClientRect();
+
+    html2canvas(target, {
         backgroundColor: "#ffffff",
         scale: 2,
         useCORS: true,
-        logging: false
+        logging: false,
+        width: Math.ceil(rect.width),
+        height: Math.ceil(rect.height)
+    }).then(canvas => {
+        const link = document.createElement("a");
+        const timestamp = new Date().toISOString().slice(0, 10);
+
+        const safeFF = currentFF
+            .replace(/[^\p{L}\p{N}]+/gu, "_")
+            .replace(/^_+|_+$/g, "");
+
+        if (isChart) {
+            link.download = `${filePrefix}_${safeFF}_${timestamp}.png`;
+            link.href = canvas.toDataURL("image/png");
+        } else {
+            link.download = `${filePrefix}_${safeFF}_${timestamp}.jpg`;
+            link.href = canvas.toDataURL("image/jpeg", 0.95);
+        }
+
+        link.click();
+
+        target.style.overflow = originalOverflow;
+        target.style.background = originalBackground;
+        target.style.padding = originalPadding;
+
+        hiddenCheckboxes.forEach(cb => {
+            if (cb) cb.style.visibility = "";
+        });
     });
-
-    const link = document.createElement("a");
-
-    if (isChart) {
-        link.download = `${filePrefix}_${safeFF}_${timestamp}.png`;
-        link.href = canvas.toDataURL("image/png");
-    } else {
-        link.download = `${filePrefix}_${safeFF}_${timestamp}.jpg`;
-        link.href = canvas.toDataURL("image/jpeg", 0.95);
-    }
-
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
 };
 	
 /* =========================================================
