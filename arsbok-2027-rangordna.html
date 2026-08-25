@@ -1,0 +1,685 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rangordning</title>
+  <style>
+    :root{
+      --bg:#f3f5f7;
+      --panel:#ffffff;
+      --text:#17212b;
+      --muted:#697684;
+      --line:#d9e0e6;
+      --accent:#245f73;
+      --accent-2:#e9f2f5;
+      --ok:#1d7a55;
+      --danger:#a33a3a;
+      --shadow:0 14px 38px rgba(20,33,43,.08);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:linear-gradient(180deg,#eef2f4 0,#f7f8f9 100%);
+      color:var(--text);
+    }
+    .page{max-width:1180px;margin:0 auto;padding:34px 22px 56px}
+    header{margin-bottom:24px}
+    h1{font-size:clamp(2rem,4vw,3.15rem);line-height:1.05;margin:0 0 10px;letter-spacing:-.035em}
+    .lead{margin:0;color:var(--muted);max-width:780px;font-size:1.02rem;line-height:1.55}
+    .card{
+      background:rgba(255,255,255,.94);
+      border:1px solid rgba(217,224,230,.95);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+    .identity{padding:20px;margin-bottom:18px}
+    label{display:block;font-weight:700;font-size:.9rem;margin-bottom:8px}
+    input,textarea{
+      width:100%;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--text);
+      font:inherit;padding:12px 14px;outline:none;transition:.15s border-color,.15s box-shadow;
+    }
+    input:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(36,95,115,.12)}
+    .ranking-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .bucket{padding:18px;min-height:540px}
+    .bucket-head{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;margin-bottom:14px}
+    .bucket h2{font-size:1.05rem;margin:0 0 4px}
+    .bucket p{margin:0;color:var(--muted);font-size:.88rem;line-height:1.4}
+    .count{white-space:nowrap;background:var(--accent-2);color:var(--accent);font-weight:800;border-radius:999px;padding:7px 10px;font-size:.8rem}
+    .dropzone{
+      min-height:420px;padding:8px;border:1.5px dashed #c8d1d8;border-radius:14px;background:#f8fafb;
+      transition:.15s background,.15s border-color;
+    }
+    .dropzone.drag-over{background:#edf5f7;border-color:var(--accent)}
+    .item{
+      display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;
+      background:#fff;border:1px solid var(--line);border-radius:12px;padding:11px 10px;margin:8px 0;
+      cursor:grab;box-shadow:0 3px 10px rgba(21,31,40,.035);user-select:none;
+    }
+    .item:active{cursor:grabbing}
+    .item.dragging{opacity:.35}
+    .handle{color:#96a2ad;font-size:1.15rem;line-height:1}
+    .item-actions{
+      margin-left:auto;
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      gap:4px;
+    }
+    .reorder-grip{
+      display:none;
+      width:36px;height:36px;
+      padding:0;
+      align-items:center;
+      justify-content:center;
+      color:#7f8c97;
+      cursor:grab;
+      border-radius:9px;
+      flex:0 0 36px;
+    }
+    .reorder-grip:hover{background:#eef2f4;color:var(--accent)}
+    .reorder-grip svg{
+      width:18px;height:18px;
+      display:block;
+      margin:0;
+    }
+    .item.ranked.reorderable .reorder-grip{display:flex}
+    .rank{
+      width:30px;height:30px;border-radius:9px;background:var(--accent);color:#fff;display:grid;place-items:center;
+      font-size:.82rem;font-weight:800;
+    }
+    .item-title{font-weight:650;line-height:1.25}
+    .move-btn{
+      border:0;
+      background:transparent;
+      color:var(--accent);
+      font-weight:800;
+      font-size:1rem;
+      cursor:pointer;
+      width:36px;
+      height:36px;
+      padding:0;
+      border-radius:9px;
+      display:grid;
+      place-items:center;
+      flex:0 0 36px;
+      line-height:1;
+    }
+    .move-btn:hover{background:var(--accent-2)}
+    .move-btn.select{
+      background:var(--accent-2);
+      color:var(--accent);
+      border:1px solid rgba(36,95,115,.18);
+    }
+    .move-btn.select:hover{
+      background:#dcecef;
+      border-color:rgba(36,95,115,.34);
+    }
+    .move-btn.delete{color:var(--danger)}
+    .move-btn.delete:hover{background:#f8eaea}
+    .move-btn svg{width:18px;height:18px;display:block;margin:0}
+    .candidate{margin-top:18px;padding:18px}
+    .candidate-row{display:grid;grid-template-columns:1fr auto;gap:10px}
+    button{
+      font:inherit;border:0;border-radius:12px;padding:11px 16px;font-weight:750;cursor:pointer;transition:.15s transform,.15s opacity,.15s background;
+    }
+    button:active{transform:translateY(1px)}
+    .secondary{background:var(--accent-2);color:var(--accent)}
+    .comments{margin-top:18px;padding:18px}
+    textarea{min-height:150px;resize:vertical}
+    .footer-actions{
+      margin-top:18px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap
+    }
+    .status{color:var(--muted);font-size:.9rem}
+    .action-group{display:flex;gap:10px;flex-wrap:wrap}
+    .ghost{background:#e9edf0;color:#42505d}
+    .primary{background:var(--accent);color:#fff;padding-inline:22px}
+    .primary:disabled{opacity:.42;cursor:not-allowed}
+    .hint{margin-top:8px;color:var(--muted);font-size:.8rem}
+    .error{color:var(--danger);font-weight:650}
+    .success{color:var(--ok);font-weight:650}
+    .hidden-submit{display:none}
+
+    .modal-backdrop{
+      position:fixed;
+      inset:0;
+      background:rgba(15,23,31,.48);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      z-index:1000;
+      animation:fadeIn .18s ease-out;
+    }
+    .modal-backdrop.open{display:flex}
+    .modal{
+      position:relative;
+      width:min(440px,100%);
+      background:var(--panel);
+      color:var(--text);
+      border:1px solid var(--line);
+      border-radius:18px;
+      box-shadow:0 24px 70px rgba(0,0,0,.22);
+      padding:34px 56px 34px 32px;
+      animation:modalIn .22s ease-out;
+    }
+    .modal-message{
+      margin:0;
+      font-size:1.2rem;
+      line-height:1.45;
+      font-weight:750;
+    }
+    .modal-close{
+      position:absolute;
+      top:12px;
+      right:12px;
+      width:38px;
+      height:38px;
+      padding:0;
+      display:grid;
+      place-items:center;
+      border-radius:10px;
+      background:transparent;
+      color:var(--muted);
+      cursor:pointer;
+    }
+    .modal-close:hover{
+      background:#eef2f4;
+      color:var(--text);
+    }
+    .modal-close svg{
+      width:20px;
+      height:20px;
+      display:block;
+      transition:transform .22s ease;
+    }
+    .modal-close:hover svg{
+      transform:rotate(90deg) scale(1.08);
+    }
+    @keyframes fadeIn{
+      from{opacity:0}
+      to{opacity:1}
+    }
+    @keyframes modalIn{
+      from{opacity:0;transform:translateY(8px) scale(.98)}
+      to{opacity:1;transform:translateY(0) scale(1)}
+    }
+
+    .empty{
+      min-height:100px;display:grid;place-items:center;text-align:center;color:#99a4ae;
+      padding:20px;font-size:.9rem
+    }
+    .own-idea-shortcut{
+      position:fixed;
+      top:18px;
+      right:18px;
+      z-index:900;
+      background:var(--accent);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow:0 10px 28px rgba(20,33,43,.18);
+      padding:11px 16px;
+      border-radius:999px;
+      font-weight:800;
+      cursor:pointer;
+    }
+    .own-idea-shortcut:hover{
+      filter:brightness(1.06);
+    }
+    #candidateHeading{
+      display:inline-block;
+      border-radius:8px;
+      padding:3px 7px;
+      margin-left:-7px;
+      transition:background-color .18s ease, box-shadow .18s ease, color .18s ease;
+    }
+    .blink-target{
+      animation:ideaPulse .5s ease-in-out 4;
+    }
+    @keyframes ideaPulse{
+      0%,100%{
+        background:transparent;
+        box-shadow:0 0 0 0 rgba(36,95,115,0);
+        color:var(--text);
+      }
+      50%{
+        background:rgba(36,95,115,.11);
+        box-shadow:0 0 0 5px rgba(36,95,115,.08);
+        color:var(--accent);
+      }
+    }
+
+    @media (max-width:800px){
+      .page{padding:22px 14px 40px}
+      .ranking-grid{grid-template-columns:1fr}
+      .bucket{min-height:auto}
+      .dropzone{min-height:250px}
+      .candidate-row{grid-template-columns:1fr}
+      .footer-actions{align-items:stretch}
+      .action-group{width:100%}
+      .action-group button{flex:1}
+    }
+  </style>
+</head>
+<body>
+  <button class="own-idea-shortcut" id="ownIdeaShortcut" type="button">Ange egen idé</button>
+  <main class="page">
+    <header>
+      <h1>Artikelidéer till årsbok 2027</h1>
+      <p class="lead">Årsbok 2027 har temat <strong>”60–70-talen”</strong>. Uppgiften består av <strong>två tydliga moment</strong>: <strong>1. Urval</strong> – välj ut minst 12 artikelidéer totalt genom att flytta dem från vänster till höger. Du får kandidera egna idéer, och dessa räknas in i de 12. <strong>Exempel: två egna idéer innebär att du dessutom behöver välja minst tio av de befintliga idéerna.</strong> <strong>2. Rangordning</strong> – ordna därefter de utvalda idéerna i prioriteringsordning, med den viktigaste överst. Du kan också lämna en kommentar.</p>
+    </header>
+
+    <section class="identity card">
+      <label for="name">1. Ditt namn</label>
+      <input id="name" type="text" autocomplete="off" placeholder="För- och efternamn">
+    </section>
+
+    <section class="ranking-grid" aria-label="Rangordning">
+      <div class="bucket card">
+        <div class="bucket-head">
+          <div>
+            <h2>Moment 1: Urval</h2>
+            <p>Välj och/eller ange de idéer du vill prioritera (minst 12).</p>
+          </div>
+          <div class="count" id="leftCount">20 kvar</div>
+        </div>
+        <div class="dropzone" id="availableList" data-zone="available"></div>
+      </div>
+
+      <div class="bucket card">
+        <div class="bucket-head">
+          <div>
+            <h2>Moment 2: Rangordning</h2>
+            <p>Plats 1 är högst prioriterad. Dra för att ändra ordningen.</p>
+          </div>
+          <div class="count" id="rankedCount">0 av 20</div>
+        </div>
+        <div class="dropzone" id="rankedList" data-zone="ranked"></div>
+      </div>
+    </section>
+
+    <section class="candidate card" id="candidateSection">
+      <label for="candidateInput" id="candidateHeading">Kandidera nytt alternativ</label>
+      <div class="candidate-row">
+        <input id="candidateInput" type="text" maxlength="160" autocomplete="off" placeholder="Skriv ett nytt alternativ">
+        <button class="secondary" id="addCandidate" type="button">Lägg till</button>
+      </div>
+      <div class="hint">Egna idéer räknas in i minimikravet på 12 rangordnade idéer. Två egna idéer innebär alltså att minst tio av de befintliga idéerna också måste väljas och rangordnas.</div>
+    </section>
+
+    <section class="comments card">
+      <label for="comments">Kommentar</label>
+      <textarea id="comments" maxlength="1500" autocomplete="off" placeholder="Kommentar till din rangordning, motivering, reservationer eller annat du vill tillägga."></textarea>
+      <div class="hint"><span id="commentCount">0</span> / 1500 tecken</div>
+    </section>
+
+    <div class="footer-actions">
+      <div class="status" id="status">Välj och rangordna minst 12 artikelidéer totalt. Egna idéer räknas in.</div>
+      <div class="action-group">
+        <button class="ghost" id="resetBtn" type="button">Återställ</button>
+        <button class="primary" id="sendBtn" type="button" disabled>3. Skicka</button>
+      </div>
+    </div>
+
+    <div class="modal-backdrop" id="successModal" role="dialog" aria-modal="true" aria-labelledby="successModalText">
+      <div class="modal" id="successModalBox">
+        <button class="modal-close" id="successModalClose" type="button" aria-label="Stäng">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <path d="M6 6l12 12"></path>
+            <path d="M18 6L6 18"></path>
+          </svg>
+        </button>
+        <p class="modal-message" id="successModalText">Ditt mail har skickats. Tack!</p>
+      </div>
+    </div>
+
+    <form id="gmailForm" class="hidden-submit" method="post" target="gmailSubmitFrame">
+      <input type="hidden" name="name" id="postName">
+      <input type="hidden" name="ranking" id="postRanking">
+      <input type="hidden" name="comments" id="postComments">
+      <input type="hidden" name="submittedAt" id="postSubmittedAt">
+    </form>
+    <iframe id="gmailSubmitFrame" class="hidden-submit" name="gmailSubmitFrame" title="Skickar formulär"></iframe>
+  </main>
+
+<script>
+  // BYT UT TEXTERNA HÄR MOT DE 20 RIKTIGA ALTERNATIVEN.
+  const INITIAL_OPTIONS = [
+    "Mats Engström: utställningsnära text",
+    "Orvar Löfgren: tema 60-70-tal",
+    "Niklas Ingmarsson och Johan Hofvendahl: Moder Jord",
+    "Arkeologi: nya metoder, nya upptäckter",
+    "Byggnadsvård: Lund rivs och räddas (växande byggnadsvård)",
+    "Musiken: Skivspelare, popkultur, proggens Lund",
+    "Barnens 60- och 70-tal: leksaker, barn-TV, serietidningar",
+    "Kvinnoliv i förändring: p-piller, arbetsliv, jämställdhet",
+    "Engångssamhället: förpackningar, plast, papperstallrikar, snabbmat",
+    "Färgen exploderar: orange, brunt, grönt, mönster",
+    "Lund 1968: demonstrationerna och vad förändringarna gjorde med staden",
+    "Lund växer: Norra fäladen, Klostergården, Linero",
+    "Super 8: privatfilm som nytt kulturhistoriskt källmaterial",
+    "Olympen: När världen kom till Lund",
+    "Sverige börjar äta annorlunda: pizza, spaghetti, paprika, vin, chips",
+    "Fritiden blir en marknad: camping, charter, husvagn, sommarstuga, fritidskläder",
+    "Charterresan: Mallorca, Kanarieöarna, souvenirer och fotografier",
+    "Postorder-Sverige vaknar: kataloger, beställningar, nya konsumtionsmöjligheter",
+    "Grillen blir folklig, och att grilla sig (sola; solbränna) ger status",
+    "Bantning, jogging och motionsvågen"
+  ];
+
+  // Klistra in Apps Script-webbappens /exec-adress här efter publicering.
+  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxU9fCzF-Q5TmKpBjV6V0989Vn0SOsbG8DTHbJsADWYJrd1xuGI-W5ZRLG_MmcMpHwBUQ/exec";
+
+  const availableList = document.getElementById("availableList");
+  const rankedList = document.getElementById("rankedList");
+  const leftCount = document.getElementById("leftCount");
+  const rankedCount = document.getElementById("rankedCount");
+  const nameInput = document.getElementById("name");
+  const candidateInput = document.getElementById("candidateInput");
+  const addCandidateBtn = document.getElementById("addCandidate");
+  const ownIdeaShortcut = document.getElementById("ownIdeaShortcut");
+  const candidateSection = document.getElementById("candidateSection");
+  const candidateHeading = document.getElementById("candidateHeading");
+  const comments = document.getElementById("comments");
+  const commentCount = document.getElementById("commentCount");
+  const sendBtn = document.getElementById("sendBtn");
+  const resetBtn = document.getElementById("resetBtn");
+  const status = document.getElementById("status");
+  const successModal = document.getElementById("successModal");
+  const successModalBox = document.getElementById("successModalBox");
+  const successModalClose = document.getElementById("successModalClose");
+  const gmailForm = document.getElementById("gmailForm");
+  const gmailSubmitFrame = document.getElementById("gmailSubmitFrame");
+  const postName = document.getElementById("postName");
+  const postRanking = document.getElementById("postRanking");
+  const postComments = document.getElementById("postComments");
+  const postSubmittedAt = document.getElementById("postSubmittedAt");
+  let formWasSubmitted = false;
+
+  let itemId = 0;
+  let dragged = null;
+
+  function makeItem(text, zone = "available") {
+    const item = document.createElement("div");
+    item.className = "item";
+    item.draggable = true;
+    item.dataset.id = "item-" + (++itemId);
+    item.dataset.text = text;
+
+    const marker = document.createElement("div");
+    marker.className = zone === "ranked" ? "rank" : "handle";
+    marker.textContent = zone === "ranked" ? "" : "⋮⋮";
+
+    const reorderGrip = document.createElement("div");
+    reorderGrip.className = "reorder-grip";
+    reorderGrip.title = "Dra för att ändra placering";
+    reorderGrip.setAttribute("aria-hidden", "true");
+    reorderGrip.innerHTML = `
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <circle cx="8" cy="5" r="1.6"></circle><circle cx="16" cy="5" r="1.6"></circle>
+        <circle cx="8" cy="12" r="1.6"></circle><circle cx="16" cy="12" r="1.6"></circle>
+        <circle cx="8" cy="19" r="1.6"></circle><circle cx="16" cy="19" r="1.6"></circle>
+      </svg>`;
+
+    const title = document.createElement("div");
+    title.className = "item-title";
+    title.textContent = text;
+
+    const actions = document.createElement("div");
+    actions.className = "item-actions";
+
+    const move = document.createElement("button");
+    move.type = "button";
+    move.className = "move-btn";
+    move.title = zone === "ranked" ? "Ta bort ur rangordningen" : "Lägg i rangordningen";
+    move.textContent = zone === "ranked" ? "" : "→";
+    move.addEventListener("click", () => {
+      if (item.parentElement === availableList) {
+        rankedList.appendChild(item);
+      } else {
+        availableList.appendChild(item);
+      }
+      updateUI();
+    });
+
+    actions.append(reorderGrip, move);
+    item.append(marker, title, actions);
+
+    item.addEventListener("dragstart", () => {
+      dragged = item;
+      item.classList.add("dragging");
+      requestAnimationFrame(() => item.style.display = "");
+    });
+    item.addEventListener("dragend", () => {
+      item.classList.remove("dragging");
+      dragged = null;
+      document.querySelectorAll(".dropzone").forEach(z => z.classList.remove("drag-over"));
+      updateUI();
+    });
+
+    return item;
+  }
+
+  function getDragAfterElement(container, y) {
+    const els = [...container.querySelectorAll(".item:not(.dragging)")];
+    return els.reduce((closest, child) => {
+      const box = child.getBoundingClientRect();
+      const offset = y - box.top - box.height / 2;
+      if (offset < 0 && offset > closest.offset) return {offset, element: child};
+      return closest;
+    }, {offset: Number.NEGATIVE_INFINITY}).element;
+  }
+
+  [availableList, rankedList].forEach(zone => {
+    zone.addEventListener("dragover", e => {
+      e.preventDefault();
+      zone.classList.add("drag-over");
+      if (!dragged) return;
+      const after = getDragAfterElement(zone, e.clientY);
+      if (after == null) zone.appendChild(dragged);
+      else zone.insertBefore(dragged, after);
+      updateUI(false);
+    });
+    zone.addEventListener("dragleave", e => {
+      if (!zone.contains(e.relatedTarget)) zone.classList.remove("drag-over");
+    });
+    zone.addEventListener("drop", e => {
+      e.preventDefault();
+      zone.classList.remove("drag-over");
+      updateUI();
+    });
+  });
+
+  function updateUI(announce = true) {
+    const leftItems = [...availableList.querySelectorAll(".item")];
+    const rankedItems = [...rankedList.querySelectorAll(".item")];
+    const total = leftItems.length + rankedItems.length;
+
+    leftItems.forEach(item => {
+      item.classList.remove("ranked", "reorderable");
+      const marker = item.children[0];
+      marker.className = "handle";
+      marker.textContent = "⋮⋮";
+      const btn = item.querySelector(".move-btn");
+      btn.className = "move-btn select";
+      btn.title = "Välj och lägg i rangordningen";
+      btn.setAttribute("aria-label", "Välj och lägg i rangordningen");
+      btn.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"
+             aria-hidden="true">
+          <path d="M5 12h13"></path>
+          <path d="M13 6l6 6-6 6"></path>
+        </svg>`;
+    });
+
+    rankedItems.forEach((item, index) => {
+      item.classList.add("ranked");
+      item.classList.toggle("reorderable", rankedItems.length >= 2);
+
+      const marker = item.children[0];
+      marker.className = "rank";
+      marker.textContent = index + 1;
+
+      const btn = item.querySelector(".move-btn");
+      btn.className = "move-btn delete";
+      btn.title = "Ta bort ur rangordningen";
+      btn.setAttribute("aria-label", "Ta bort ur rangordningen");
+      btn.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"
+             aria-hidden="true">
+          <path d="M3 6h18"></path>
+          <path d="M8 6V4h8v2"></path>
+          <path d="M19 6l-1 14H6L5 6"></path>
+          <path d="M10 10v6"></path>
+          <path d="M14 10v6"></path>
+        </svg>`;
+    });
+
+    leftCount.textContent = leftItems.length + " kvar";
+    rankedCount.textContent = rankedItems.length + " av " + total;
+
+    const complete = rankedItems.length >= 12;
+    const hasName = nameInput.value.trim().length > 0;
+    sendBtn.disabled = !(complete && hasName);
+
+    if (complete && hasName) {
+      status.className = "status success";
+      status.textContent = `Du har rangordnat ${rankedItems.length} artikelidéer och kan skicka.`;
+    } else if (complete && !hasName) {
+      status.className = "status error";
+      status.textContent = "Ange ditt namn för att kunna skicka.";
+    } else {
+      status.className = "status";
+      const remaining = 12 - rankedItems.length;
+      status.textContent = `Välj och rangordna minst 12 artikelidéer totalt. Egna idéer räknas in. ${remaining} återstår.`;
+    }
+  }
+
+  function openSuccessModal() {
+    successModal.classList.add("open");
+    successModalClose.focus();
+  }
+
+  function closeSuccessModal() {
+    successModal.classList.remove("open");
+  }
+
+  successModalClose.addEventListener("click", closeSuccessModal);
+
+  successModal.addEventListener("click", (e) => {
+    if (e.target === successModal) closeSuccessModal();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && successModal.classList.contains("open")) {
+      closeSuccessModal();
+    }
+  });
+
+  function init() {
+    availableList.innerHTML = "";
+    rankedList.innerHTML = "";
+    itemId = 0;
+    INITIAL_OPTIONS.forEach(text => availableList.appendChild(makeItem(text)));
+    nameInput.value = "";
+    candidateInput.value = "";
+    comments.value = "";
+    commentCount.textContent = "0";
+    updateUI();
+  }
+
+  ownIdeaShortcut.addEventListener("click", () => {
+    candidateSection.scrollIntoView({behavior: "smooth", block: "center"});
+
+    // Starta om blinkningen varje gång, även om användaren redan är vid sektionen.
+    candidateHeading.classList.remove("blink-target");
+    void candidateHeading.offsetWidth;
+    candidateHeading.classList.add("blink-target");
+
+    window.setTimeout(() => {
+      candidateHeading.classList.remove("blink-target");
+    }, 2100);
+  });
+
+  addCandidateBtn.addEventListener("click", () => {
+    const text = candidateInput.value.trim();
+    if (!text) {
+      candidateInput.focus();
+      return;
+    }
+    availableList.appendChild(makeItem(text));
+    candidateInput.value = "";
+    candidateInput.focus();
+    updateUI();
+  });
+
+  candidateInput.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addCandidateBtn.click();
+    }
+  });
+
+  nameInput.addEventListener("input", updateUI);
+  comments.addEventListener("input", () => {
+    commentCount.textContent = comments.value.length;
+  });
+
+  resetBtn.addEventListener("click", () => {
+    if (confirm("Vill du återställa hela formuläret?")) init();
+  });
+
+  sendBtn.addEventListener("click", () => {
+    const name = nameInput.value.trim();
+    const ranked = [...rankedList.querySelectorAll(".item")].map((item, i) => ({
+      rank: i + 1,
+      option: item.dataset.text
+    }));
+    const comment = comments.value.trim();
+
+    if (!name || ranked.length < 12) {
+      updateUI();
+      return;
+    }
+
+    if (!GOOGLE_SCRIPT_URL.startsWith("https://script.google.com/")) {
+      status.className = "status error";
+      status.textContent = "Apps Script-adressen är ännu inte inlagd i sidan.";
+      return;
+    }
+
+    postName.value = name;
+    postRanking.value = JSON.stringify(ranked);
+    postComments.value = comment;
+    postSubmittedAt.value = new Date().toISOString();
+
+    gmailForm.action = GOOGLE_SCRIPT_URL;
+    formWasSubmitted = true;
+
+    sendBtn.disabled = true;
+    sendBtn.textContent = "Skickar …";
+    status.className = "status";
+    status.textContent = "Skickar rangordningen …";
+
+    gmailForm.submit();
+  });
+
+  gmailSubmitFrame.addEventListener("load", () => {
+    if (!formWasSubmitted) return;
+    formWasSubmitted = false;
+    sendBtn.textContent = "Skickat";
+    sendBtn.disabled = true;
+    status.className = "status success";
+    status.textContent = "Tack. Din rangordning har skickats.";
+    openSuccessModal();
+  });
+
+  init();
+</script>
+</body>
+</html>
