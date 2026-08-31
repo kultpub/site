@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anmälan</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #f4f5f7;
+      color: #1f2933;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 24px 16px;
+    }
+
+    .form-card {
+      width: 100%;
+      max-width: 440px;
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 24px 20px;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    h1 {
+      margin: 0 0 24px;
+      font-size: 1.5rem;
+      font-weight: 650;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      margin: -12px 0 24px;
+      color: #52606d;
+      font-size: 0.98rem;
+      line-height: 1.45;
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    input,
+    select {
+      width: 100%;
+      height: 48px;
+      border: 1px solid #cbd2d9;
+      border-radius: 10px;
+      padding: 0 13px;
+      background: #fff;
+      color: #1f2933;
+      font: inherit;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #52606d;
+      box-shadow: 0 0 0 3px rgba(82, 96, 109, 0.12);
+    }
+
+    button {
+      width: 100%;
+      min-height: 50px;
+      margin-top: 4px;
+      border: 0;
+      border-radius: 10px;
+      background: #263238;
+      color: #ffffff;
+      font: inherit;
+      font-size: 1rem;
+      font-weight: 650;
+      cursor: pointer;
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    button:disabled {
+      opacity: 0.65;
+      cursor: default;
+      transform: none;
+    }
+
+    .status {
+      display: none;
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 0;
+        background: #ffffff;
+      }
+
+      .form-card {
+        max-width: none;
+        min-height: 100vh;
+        border-radius: 0;
+        box-shadow: none;
+        padding: 28px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <main class="form-card">
+    <h1>Projektkurs 2026</h1>
+    <p class="subtitle">Meddela dina kontaktuppgifter och vilken grupp du tillhör</p>
+
+    <form id="registrationForm">
+      <div class="field">
+        <label for="firstName">Förnamn</label>
+        <input
+          type="text"
+          id="firstName"
+          name="fornamn"
+          autocomplete="given-name"
+          required
+        >
+      </div>
+
+      <div class="field">
+        <label for="lastName">Efternamn</label>
+        <input
+          type="text"
+          id="lastName"
+          name="efternamn"
+          autocomplete="family-name"
+          required
+        >
+      </div>
+
+      <div class="field">
+        <label for="group">Grupp</label>
+        <select id="group" name="grupp" required>
+          <option value="" selected disabled>Välj grupp</option>
+          <option value="1">Grupp 1</option>
+          <option value="2">Grupp 2</option>
+          <option value="3">Grupp 3</option>
+          <option value="4">Grupp 4</option>
+          <option value="5">Grupp 5</option>
+          <option value="6">Grupp 6</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="email">E-postadress</label>
+        <input
+          type="email"
+          id="email"
+          name="epost"
+          autocomplete="email"
+          inputmode="email"
+          required
+        >
+      </div>
+
+      <button type="submit">Skicka</button>
+
+      <div id="status" class="status" aria-live="polite"></div>
+    </form>
+  </main>
+
+  <script>
+    // Klistra in webbadressen till din publicerade Google Apps Script-webbapp här.
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzY7ouWDl786FS3QAjRdX1XUQ_XgkBKWDxJY1z_mkE1q3awNjIKyFRDPAqGlGpwwSJuEQ/exec";
+
+    const form = document.getElementById("registrationForm");
+    const statusBox = document.getElementById("status");
+    const submitButton = form.querySelector('button[type="submit"]');
+
+    form.addEventListener("submit", async function(event) {
+      event.preventDefault();
+
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes("KListra_IN")) {
+        alert("Google Apps Script-adressen är ännu inte infogad i HTML-filen.");
+        return;
+      }
+
+      const data = {
+        fornamn: document.getElementById("firstName").value.trim(),
+        efternamn: document.getElementById("lastName").value.trim(),
+        grupp: document.getElementById("group").value,
+        epost: document.getElementById("email").value.trim()
+      };
+
+      submitButton.disabled = true;
+      submitButton.textContent = "Skickar…";
+      statusBox.style.display = "none";
+
+      try {
+        await fetch(APPS_SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+          },
+          body: JSON.stringify(data)
+        });
+
+        form.reset();
+        statusBox.textContent = "Tack! Dina uppgifter har skickats.";
+        statusBox.style.display = "block";
+        statusBox.style.background = "#ecfdf3";
+        statusBox.style.color = "#166534";
+      } catch (error) {
+        statusBox.textContent = "Något gick fel. Försök igen.";
+        statusBox.style.display = "block";
+        statusBox.style.background = "#fef2f2";
+        statusBox.style.color = "#991b1b";
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = "Skicka";
+      }
+    });
+  </script>
+
+</body>
+</html>
