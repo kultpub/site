@@ -1,0 +1,1103 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Författarinstruktioner Kulturens årsbok</title>
+  <meta name="description" content="En ren och tydlig webbversion av författarinstruktioner för Kulturens årsbok.">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f7f5f0;
+      --panel: #ffffff;
+      --panel-soft: #fbfaf7;
+      --text: #20201d;
+      --muted: #64615b;
+      --line: #ded9cf;
+      --accent: #0d6f73;
+      --accent-strong: #064f54;
+      --example: #f1ece1;
+      --shadow: 0 24px 70px rgba(32, 32, 29, 0.12);
+      --radius: 8px;
+      --content: min(100% - 40px, 920px);
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body.dark {
+      color-scheme: dark;
+      --bg: #151615;
+      --panel: #20211f;
+      --panel-soft: #191a19;
+      --text: #f2eee5;
+      --muted: #beb8ad;
+      --line: #393a35;
+      --accent: #76c7c5;
+      --accent-strong: #a5e5e0;
+      --example: #2a2a26;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.32);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scrollbar-gutter: stable;
+      overflow-y: scroll;
+    }
+
+    body {
+      margin: 0;
+      padding-top: 74px;
+      background:
+        linear-gradient(180deg, rgba(13, 111, 115, 0.08), transparent 420px),
+        var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 17px;
+      line-height: 1.68;
+      overflow-x: hidden;
+      transition: background-color 240ms ease, color 240ms ease;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration-thickness: 0.09em;
+      text-underline-offset: 0.18em;
+    }
+
+    a:hover {
+      color: var(--accent-strong);
+    }
+
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      backdrop-filter: blur(18px);
+      background: color-mix(in srgb, var(--bg) 84%, transparent);
+      border-bottom: 1px solid color-mix(in srgb, var(--line) 72%, transparent);
+    }
+
+    body.menu-open .topbar {
+      z-index: 60;
+      pointer-events: none;
+      background: transparent;
+      border-bottom-color: transparent;
+      backdrop-filter: none;
+    }
+
+    .topbar-inner {
+      width: var(--content);
+      margin: 0 auto;
+      min-height: 74px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .site-title {
+      display: flex;
+      align-items: center;
+      min-width: 0;
+      margin: 0;
+      overflow: hidden;
+      color: var(--text);
+      font-family: var(--serif);
+      font-size: clamp(1.08rem, 2vw, 1.28rem);
+      font-weight: 600;
+      line-height: 1.1;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 0 0 auto;
+    }
+
+    body.menu-open .site-title,
+    body.menu-open .theme-toggle {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .theme-toggle {
+      position: relative;
+      width: 68px;
+      height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel);
+      color: var(--muted);
+      cursor: pointer;
+      transition: border-color 180ms ease, background-color 180ms ease;
+    }
+
+    .theme-toggle i {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.84rem;
+      pointer-events: none;
+    }
+
+    .theme-toggle .fa-sun {
+      left: 11px;
+      color: #b87910;
+    }
+
+    .theme-toggle .fa-moon {
+      right: 11px;
+      color: #6d7786;
+    }
+
+    .theme-toggle::after {
+      content: "";
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+      transition: transform 220ms ease, background-color 180ms ease;
+    }
+
+    body.dark .theme-toggle::after {
+      transform: translateX(32px);
+    }
+
+    .hamburger {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: var(--panel);
+      cursor: pointer;
+    }
+
+    body.menu-open .hamburger {
+      pointer-events: auto;
+    }
+
+    .hamburger-lines {
+      position: relative;
+      width: 19px;
+      height: 14px;
+    }
+
+    .hamburger-lines span {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      border-radius: 999px;
+      background: var(--text);
+      transition: transform 220ms ease, opacity 160ms ease, top 220ms ease;
+    }
+
+    .hamburger-lines span:nth-child(1) { top: 0; }
+    .hamburger-lines span:nth-child(2) { top: 6px; }
+    .hamburger-lines span:nth-child(3) { top: 12px; }
+
+    body.menu-open .hamburger-lines span:nth-child(1) {
+      top: 6px;
+      transform: rotate(45deg);
+    }
+
+    body.menu-open .hamburger-lines span:nth-child(2) {
+      opacity: 0;
+      transform: translateX(5px);
+    }
+
+    body.menu-open .hamburger-lines span:nth-child(3) {
+      top: 6px;
+      transform: rotate(-45deg);
+    }
+
+    .scrim {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      background: rgba(0, 0, 0, 0.32);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 220ms ease;
+    }
+
+    body.menu-open .scrim {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      z-index: 40;
+      width: min(86vw, 370px);
+      height: 100dvh;
+      padding: 30px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      transform: translateX(105%);
+      transition: transform 260ms cubic-bezier(.2, .8, .2, 1);
+      overflow-y: auto;
+    }
+
+    body.menu-open .drawer {
+      transform: translateX(0);
+    }
+
+    .drawer h2 {
+      margin: 0 0 18px;
+      font-family: var(--serif);
+      font-size: 1.55rem;
+      line-height: 1.15;
+    }
+
+    .drawer-group {
+      margin-top: 26px;
+      padding-top: 22px;
+      border-top: 1px solid var(--line);
+    }
+
+    .drawer-label {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .drawer nav,
+    .link-list {
+      display: grid;
+      gap: 4px;
+    }
+
+    .drawer a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 9px 0;
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+    }
+
+    .drawer a:hover {
+      color: var(--accent-strong);
+    }
+
+    .drawer i {
+      color: var(--accent);
+      font-size: 0.84rem;
+    }
+
+    .hero {
+      width: var(--content);
+      margin: 0 auto;
+      padding: clamp(54px, 9vw, 98px) 0 clamp(34px, 6vw, 62px);
+    }
+
+    .eyebrow {
+      margin: 0 0 15px;
+      color: var(--accent-strong);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 820px;
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(2.55rem, 6.2vw, 5.35rem);
+      font-weight: 500;
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    .intro {
+      max-width: 720px;
+      margin: 28px 0 0;
+      color: var(--muted);
+      font-size: clamp(1.05rem, 2.2vw, 1.24rem);
+      line-height: 1.58;
+    }
+
+    .quick-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 30px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 8px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel);
+      color: var(--text);
+      font-size: 0.94rem;
+      text-decoration: none;
+    }
+
+    .pill i {
+      color: var(--accent);
+    }
+
+    main {
+      width: var(--content);
+      margin: 0 auto;
+      padding-bottom: 76px;
+    }
+
+    .content-shell {
+      display: grid;
+      gap: 18px;
+    }
+
+    section {
+      scroll-margin-top: 96px;
+      padding: clamp(24px, 4vw, 38px);
+      border-bottom: 1px solid var(--line);
+      background: transparent;
+    }
+
+    section h2 {
+      margin: 0 0 13px;
+      font-family: var(--serif);
+      font-size: clamp(1.55rem, 2.6vw, 2rem);
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+
+    p {
+      margin: 0 0 16px;
+    }
+
+    .top-gap {
+      margin-top: 32px;
+    }
+
+    p:last-child,
+    ul:last-child {
+      margin-bottom: 0;
+    }
+
+    ul {
+      margin: 12px 0 0;
+      padding-left: 1.35rem;
+    }
+
+    li {
+      margin: 8px 0;
+      padding-left: 0.25rem;
+    }
+
+    strong {
+      font-weight: 760;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    .example {
+      margin: 18px 0 0;
+      padding: 18px 18px 18px 20px;
+      border-left: 4px solid var(--accent);
+      border-radius: var(--radius);
+      background: var(--example);
+    }
+
+    .example-label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--accent-strong);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    blockquote {
+      margin: 10px 0 0;
+      color: var(--text);
+      font-family: var(--serif);
+      font-size: 1.18rem;
+      line-height: 1.5;
+    }
+
+    .example p,
+    .example blockquote {
+      margin: 10px 0 0;
+      color: var(--text);
+      font-family: var(--serif);
+      font-size: 1.18rem;
+      line-height: 1.5;
+    }
+
+    .article-reader {
+      margin-top: 22px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: 0 18px 48px rgba(32, 32, 29, 0.08);
+      overflow: hidden;
+    }
+
+    .article-reader:focus-within {
+      outline: 2px solid color-mix(in srgb, var(--accent) 42%, transparent);
+      outline-offset: 3px;
+    }
+
+    .article-reader:fullscreen {
+      width: 100vw;
+      height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      margin: 0;
+      border: 0;
+      border-radius: 0;
+      background: var(--panel);
+    }
+
+    .article-reader:fullscreen .reader-toolbar,
+    .article-reader:fullscreen .reader-footer {
+      flex: 0 0 auto;
+    }
+
+    .article-reader:fullscreen .reader-stage {
+      min-height: 0;
+      height: 100%;
+      padding: 6px clamp(12px, 2vw, 24px) 18px;
+      overflow: hidden;
+    }
+
+    .article-reader:fullscreen .reader-stage img {
+      width: auto;
+      max-width: calc(100vw - 48px);
+      max-height: calc(100vh - 194px);
+      object-fit: contain;
+    }
+
+    .reader-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel-soft);
+    }
+
+    .reader-status {
+      min-width: 9ch;
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .reader-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .reader-button {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: var(--panel);
+      color: var(--text);
+      cursor: pointer;
+      transition: border-color 180ms ease, color 180ms ease, transform 180ms ease;
+    }
+
+    .reader-button:hover:not(:disabled) {
+      color: var(--accent-strong);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .reader-button:disabled {
+      cursor: not-allowed;
+      opacity: 0.42;
+    }
+
+    .reader-stage {
+      position: relative;
+      min-height: clamp(260px, 56vw, 620px);
+      display: grid;
+      place-items: center;
+      padding: clamp(16px, 3vw, 28px);
+      background:
+        linear-gradient(135deg, color-mix(in srgb, var(--accent) 12%, transparent), transparent 48%),
+        color-mix(in srgb, var(--panel-soft) 88%, var(--bg));
+      perspective: 1200px;
+      overflow: hidden;
+      touch-action: pan-y;
+    }
+
+    .reader-stage img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 4px;
+      background: #fff;
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.22);
+      transform-origin: center;
+    }
+
+    .reader-stage.flipping-next img {
+      animation: pageNext 260ms ease both;
+    }
+
+    .reader-stage.flipping-prev img {
+      animation: pagePrev 260ms ease both;
+    }
+
+    .reader-message {
+      max-width: 520px;
+      margin: 0;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .reader-progress {
+      width: 100%;
+      margin: 0;
+      accent-color: var(--accent);
+    }
+
+    .reader-footer {
+      display: grid;
+      gap: 10px;
+      padding: 14px 16px 16px;
+      border-top: 1px solid var(--line);
+      background: var(--panel);
+    }
+
+    .reader-link {
+      justify-self: start;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.94rem;
+    }
+
+    @keyframes pageNext {
+      from {
+        opacity: 0;
+        transform: translateX(38px) rotateY(-7deg);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0) rotateY(0);
+      }
+    }
+
+    @keyframes pagePrev {
+      from {
+        opacity: 0;
+        transform: translateX(-38px) rotateY(7deg);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0) rotateY(0);
+      }
+    }
+
+    .note {
+      color: var(--muted);
+    }
+
+    .footer {
+      width: var(--content);
+      margin: 0 auto;
+      padding: 0 0 54px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      text-align: center;
+    }
+
+    @media (max-width: 720px) {
+      :root {
+        --content: min(100% - 24px, 920px);
+      }
+
+      body {
+        font-size: 16px;
+        padding-top: 64px;
+      }
+
+      .topbar-inner {
+        min-height: 64px;
+      }
+
+      .site-title {
+        max-width: 46vw;
+        font-size: 1rem;
+      }
+
+      .theme-toggle {
+        width: 62px;
+        height: 34px;
+      }
+
+      body.dark .theme-toggle::after {
+        transform: translateX(28px);
+      }
+
+      .theme-toggle::after {
+        width: 24px;
+        height: 24px;
+      }
+
+      .hero {
+        padding-top: 48px;
+      }
+
+      .quick-links {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .pill {
+        justify-content: center;
+        width: 100%;
+      }
+
+      section {
+        padding: 23px 18px;
+      }
+
+      .drawer {
+        padding: 24px;
+      }
+
+      .reader-toolbar {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .reader-controls {
+        justify-content: space-between;
+      }
+
+      .reader-button {
+        width: 44px;
+        height: 44px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+      }
+
+      .reader-stage.flipping-next img,
+      .reader-stage.flipping-prev img {
+        animation: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <p class="site-title">Instruktioner artiklar Kulturens årsbok</p>
+      <div class="actions">
+        <button class="theme-toggle" type="button" id="themeToggle" aria-label="Växla mörkt läge" aria-pressed="false">
+          <i class="fa-solid fa-sun" aria-hidden="true"></i>
+          <i class="fa-solid fa-moon" aria-hidden="true"></i>
+        </button>
+        <button class="hamburger" type="button" id="menuToggle" aria-label="Öppna meny" aria-expanded="false" aria-controls="drawer">
+          <span class="hamburger-lines" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="scrim" id="scrim" hidden></div>
+
+  <aside class="drawer" id="drawer" aria-label="Sidomeny" aria-hidden="true">
+    <h2>Innehåll</h2>
+    <nav aria-label="Navigationslänkar">
+      <a href="#malgrupp">Målgrupp <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+      <a href="#omfattning">Omfattning <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+      <a href="#format">Format <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+      <a href="#citat">Citat <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+      <a href="#bilder">Bilder <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+      <a href="#kallhanvisning">Källhänvisning och lästips <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+      <a href="#inlamning">Inlämning text <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+      <a href="#artikelexempel">Artikelexempel <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+    </nav>
+
+    <div class="drawer-group">
+      <p class="drawer-label">Viktiga länkar</p>
+      <div class="link-list">
+        <a href="mailto:johan.hofvendahl@kulturen.com">Johan Hofvendahl <i class="fa-solid fa-envelope" aria-hidden="true"></i></a>
+        <a href="mailto:nina.davis@kulturen.com">Nina Davis <i class="fa-solid fa-envelope" aria-hidden="true"></i></a>
+        <a href="mailto:nelly.hercberg@kulturen.com">Nelly Hercberg <i class="fa-solid fa-envelope" aria-hidden="true"></i></a>
+        <a href="https://carl.kulturen.com/web" target="_blank" rel="noopener">Kulturens föremålsdatabas <i class="fa-solid fa-up-right-from-square" aria-hidden="true"></i></a>
+      </div>
+    </div>
+  </aside>
+
+  <div id="top" class="hero">
+    <p class="eyebrow">Kulturhistoriska föreningen för södra Sverige</p>
+    <h1>Författarinstruktioner Kulturens årsbok</h1>
+    <div class="quick-links" aria-label="Snabblänkar">
+      <a class="pill" href="#format"><i class="fa-solid fa-file-word" aria-hidden="true"></i> Format</a>
+      <a class="pill" href="#bilder"><i class="fa-solid fa-image" aria-hidden="true"></i> Bilder</a>
+      <a class="pill" href="#kallhanvisning"><i class="fa-solid fa-book-open" aria-hidden="true"></i> Källor</a>
+      <a class="pill" href="#artikelexempel"><i class="fa-solid fa-book" aria-hidden="true"></i> Artikelexempel</a>
+      <a class="pill" href="mailto:johan.hofvendahl@kulturen.com"><i class="fa-solid fa-envelope" aria-hidden="true"></i> Skicka text</a>
+    </div>
+  </div>
+
+  <main>
+    <div class="content-shell">
+      <section id="malgrupp">
+        <h2>Målgrupp</h2>
+        <p>Kulturens årsbok vänder sig i första hand till föreningens medlemmar. Texterna ska ligga på en nivå som påminner om populärvetenskapliga tidningsartiklar: lättillgängliga, engagerande och informativa.</p>
+        <p>Till skillnad från vetenskapliga texter används inte formella stilgrepp eller akademisk källhantering. I slutet av varje artikel listas i stället de viktigaste källorna som använts, tillsammans med förslag på vidare läsning. Mer information om detta finns under rubriken <a href="#kallhanvisning">Källhänvisning, källhantering, litteratur och lästips</a>.</p>
+      </section>
+
+      <section id="omfattning">
+        <h2>Omfattning</h2>
+        <p>Omfattningen på artiklar i Kulturens årsbok har alltid varierat, beroende på ämne och framställning, och så ska det även fortsätta vara.</p>
+        <p>Som riktmärke gäller en textmängd på cirka 7-8 sidor i tryckt format. Detta motsvarar ungefär 3 A4-sidor i Word, eller cirka 13 500 tecken inklusive blanksteg. Det finns utrymme för flexibilitet, men meddela gärna redaktören i god tid om din artikel behöver avvika från detta omfång.</p>
+      </section>
+
+      <section id="format">
+        <h2>Format</h2>
+        <p>Alla artiklar genomgår en omfattande grafisk formgivning. Det är därför inte aktuellt att använda någon stilmall. Skicka din text i Word-format via e-post till <a href="mailto:johan.hofvendahl@kulturen.com">johan.hofvendahl@kulturen.com</a>.</p>
+      </section>
+
+      <section id="artikelns-titel">
+        <h2>Artikelns titel</h2>
+        <p>Titeln får innehålla högst 60 tecken inklusive blanksteg.</p>
+      </section>
+
+      <section id="artal">
+        <h2>Årtal och årtalsperioder</h2>
+        <ul>
+          <li>Skriv <em>1930-talet</em>, <em>1800-talet</em> etc. - <strong>inte</strong> <em>trettiotalet</em>, <em>artonhundratalet</em>.</li>
+          <li>Använd långt tankstreck i årtalsperioder: <em>1936&ndash;2003</em> - <strong>inte</strong> <em>1936-2003</em>.</li>
+          <li>Upprepa inte samma århundrade: skriv <em>1936&ndash;42</em> - <strong>inte</strong> <em>1936&ndash;1942</em>.</li>
+        </ul>
+      </section>
+
+      <section id="forkortningar">
+        <h2>Inga förkortningar - skriv ut allt</h2>
+        <ul>
+          <li>Skriv <em>till exempel</em>, <em>bland annat</em>, <em>det vill säga</em> - <strong>inte</strong> <em>t.ex.</em>, <em>bl.a.</em>, <em>d.v.s.</em> etc.</li>
+          <li>Skriv <em>procent</em>, <em>kvadratmeter</em>, <em>millimeter</em> - <strong>inte</strong> <em>%</em>, <em>m²</em>, <em>mm</em> etc.</li>
+        </ul>
+      </section>
+
+      <section id="citat">
+        <h2>Citat - korta i löptext, långa som blockcitat</h2>
+        <ul>
+          <li>Korta citat skrivs med citattecken i löptext.</li>
+          <li>Längre citat skrivs som blockcitat, det vill säga med blankrad före och efter citat.</li>
+          <li>Utelämnade ord i citat anges med hakparenteser och tre punkter.</li>
+        </ul>
+        <div class="example">
+          <span class="example-label">Kort citat i löptext</span>
+          <p>En tid han kallar ”mina hundår”.</p>
+        </div>
+        <div class="example">
+          <span class="example-label">Utelämnade ord</span>
+          <blockquote>Detta […] beror på en längre tids dålig sömn.</blockquote>
+        </div>
+      </section>
+
+      <section id="tabeller">
+        <h2>Tabeller, diagram och figurer</h2>
+        <p>Om du behöver tabeller, diagram eller andra illustrationer:</p>
+        <ul>
+          <li>Skicka allt underlag, det vill säga all data, till redaktör i Excel-fil eller annat lämpligt format.</li>
+          <li>Placera illustrationen på den plats i texten där du önskar att den ska vara.</li>
+          <li>Skriv förklarande text under illustrationen. Vad illustrerar tabellen eller diagrammet?</li>
+        </ul>
+      </section>
+
+      <section id="bilder">
+        <h2>Bilder</h2>
+        <p>En del författare har egna bildönskemål, andra behöver redaktionell hjälp. I <a href="https://carl.kulturen.com/web" target="_blank" rel="noopener">Kulturens föremålsdatabas</a> och arkiv finns ett stort utbud av bilder och redaktionen hjälper gärna till att leta rätt på bra bildmaterial till din text.</p>
+        <p>Det finns också möjlighet att ta helt nya bilder och visst utrymme för att köpa bildrättigheter. Dock krävs god framförhållning, så kommunicera dina bildbehov så tidigt som möjligt.</p>
+        <p>Om du behöver hjälp, kontakta intendent Nina Davis (<a href="mailto:nina.davis@kulturen.com">nina.davis@kulturen.com</a>, 076-539 04 22) och/eller fotograf Nelly Hercberg (<a href="mailto:nelly.hercberg@kulturen.com">nelly.hercberg@kulturen.com</a>, 076-539 04 93).</p>
+        <p>Viktigt i arbetet med bilder är att du informerar redaktionen, gärna i din text, var du önskar att bilderna uppträder, att du skriver egna bildtexter och att du anger all nödvändig bildinformation: fotograf och källa.</p>
+      </section>
+
+      <section id="titlar">
+        <h2>Titlar och namn på företeelser och ting</h2>
+        <p>Titlar och namn på till exempel böcker, tidningar, utställningar och projekt ska skrivas kursivt.</p>
+        <div class="example">
+          <span class="example-label">Exempel</span>
+          <p>I utställningen <em>Metropolis</em> finns ett föremål som...</p>
+        </div>
+      </section>
+
+      <section id="rubriker">
+        <h2>Rubriker och rubriknivåer</h2>
+        <p>Vi föredrar artiklar utan rubriker, men i vissa fall kan det vara nödvändigt på grund av ämnets art och behandling. Om du behöver använda rubriker, använd högst två nivåer, var konsekvent och låt nivåerna framträda tydligt i din text.</p>
+      </section>
+
+      <section id="kallhanvisning">
+        <h2>Källhänvisning, källhantering, litteratur och lästips</h2>
+        <p>Kulturens årsboksartiklar skiljer sig lite från praxis i vetenskapliga artiklar. Fotnoter används inte. Källor anges direkt i löptext. Vid användning av citat ska även sidnummer anges, alternativt webbadress och datum.</p>
+        <div class="example">
+          <span class="example-label">Källhänvisning i löptext</span>
+          <blockquote>Berndt Tallerud skriver i sin artikel <em>Pesten i Sverige 1710&ndash;13</em> (2010) att ”kropparna i åtskilliga fall fick ligga ojordade länge” (s. 930).</blockquote>
+        </div>
+        <p class="top-gap">I stället för referenslista, där alla källor anges, ska artikeln avslutas med ett avsnitt, <em>Litteratur och lästips</em>. Där listar du de högst fem källor som har varit viktigast i ditt arbete samt högst fem tips för vidare läsning.</p>
+        <p>Format spelar ingen roll, så länge du är tydlig med vilka källor och tips du hänvisar till.</p>
+      </section>
+
+      <section id="inlamning">
+        <h2>Inlämning text</h2>
+        <p>Texter och bilder skickas till <a href="mailto:johan.hofvendahl@kulturen.com">johan.hofvendahl@kulturen.com</a>.</p>
+        <p><strong>Notera:</strong> Vi praktiserar endast ett inlämningstillfälle. Även om Kulturens årsboksredaktion kommer att korrekturläsa din text och göra de ändringar som anses vara nödvändiga - i tveksamma fall kommer vi att kontakta dig - förväntas din inskickade text vara av tillräckligt hög kvalitet för publicering.</p>
+        <p>Vi förutsätter att du noggrant redigerar och granskar din artikel innan du skickar in den. Texten ska vara välstrukturerad, fri från syftningsfel och stavfel samt hålla hög standard av språklig klarhet och precision.</p>
+      </section>
+
+      <section id="artikelexempel">
+        <h2>Artikelexempel</h2>
+        <p>Här visas ett exempel på en färdig artikel. Varje sida i PDF-filen <strong>arsbok-exempel.pdf</strong> visas som ett heluppslag.</p>
+        <div class="article-reader" id="articleReader" data-pdf-reader>
+          <div class="reader-toolbar">
+            <p class="reader-status" id="articlePageStatus">Laddar...</p>
+            <div class="reader-controls" aria-label="Bläddra i artikelexempel">
+              <button class="reader-button" type="button" id="articlePrev" aria-label="Föregående uppslag" disabled>
+                <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+              </button>
+              <button class="reader-button" type="button" id="articleNext" aria-label="Nästa uppslag" disabled>
+                <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+              </button>
+              <button class="reader-button" type="button" id="articleFullscreen" aria-label="Visa i helskärm" disabled>
+                <i class="fa-solid fa-expand" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+          <div class="reader-stage" id="articleStage" aria-live="polite">
+            <p class="reader-message" id="articleMessage" hidden>Artikelexemplet kunde inte visas.</p>
+            <img id="articleSpread" src="artikeluppslag/uppslag-01.jpg" alt="Artikelexempel, uppslag 1 av 6">
+          </div>
+          <div class="reader-footer">
+            <input class="reader-progress" type="range" id="articleProgress" min="1" max="6" value="1" step="1" aria-label="Välj uppslag">
+            <a class="reader-link" href="arsbok-exempel.pdf" target="_blank" rel="noopener">
+              Öppna PDF i ny flik <i class="fa-solid fa-up-right-from-square" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const body = document.body;
+    const menuToggle = document.getElementById("menuToggle");
+    const themeToggle = document.getElementById("themeToggle");
+    const drawer = document.getElementById("drawer");
+    const scrim = document.getElementById("scrim");
+    const storedTheme = localStorage.getItem("kulturen-theme");
+    const articleReader = document.getElementById("articleReader");
+    const articleStage = document.getElementById("articleStage");
+    const articleSpread = document.getElementById("articleSpread");
+    const articleMessage = document.getElementById("articleMessage");
+    const articlePageStatus = document.getElementById("articlePageStatus");
+    const articlePrev = document.getElementById("articlePrev");
+    const articleNext = document.getElementById("articleNext");
+    const articleFullscreen = document.getElementById("articleFullscreen");
+    const articleProgress = document.getElementById("articleProgress");
+    const articleSpreads = [
+      "artikeluppslag/uppslag-01.jpg",
+      "artikeluppslag/uppslag-02.jpg",
+      "artikeluppslag/uppslag-03.jpg",
+      "artikeluppslag/uppslag-04.jpg",
+      "artikeluppslag/uppslag-05.jpg",
+      "artikeluppslag/uppslag-06.jpg"
+    ];
+    let articlePage = 1;
+    const articlePageCount = articleSpreads.length;
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    if (storedTheme === "dark" || (!storedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+      body.classList.add("dark");
+      themeToggle.setAttribute("aria-pressed", "true");
+    }
+
+    function setMenu(open) {
+      body.classList.toggle("menu-open", open);
+      menuToggle.setAttribute("aria-expanded", String(open));
+      menuToggle.setAttribute("aria-label", open ? "Stäng meny" : "Öppna meny");
+      drawer.setAttribute("aria-hidden", String(!open));
+      scrim.hidden = !open;
+    }
+
+    menuToggle.addEventListener("click", () => {
+      setMenu(!body.classList.contains("menu-open"));
+    });
+
+    scrim.addEventListener("click", () => setMenu(false));
+
+    drawer.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => setMenu(false));
+    });
+
+    themeToggle.addEventListener("click", () => {
+      const isDark = body.classList.toggle("dark");
+      themeToggle.setAttribute("aria-pressed", String(isDark));
+      localStorage.setItem("kulturen-theme", isDark ? "dark" : "light");
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && body.classList.contains("menu-open")) {
+        setMenu(false);
+      }
+
+      const readerIsActive = articleReader.contains(document.activeElement) || articleReader.matches(":hover") || document.fullscreenElement === articleReader;
+
+      if (!readerIsActive) {
+        return;
+      }
+
+      if (event.key === "ArrowLeft") {
+        showArticlePage(articlePage - 1, "prev");
+      }
+
+      if (event.key === "ArrowRight") {
+        showArticlePage(articlePage + 1, "next");
+      }
+    });
+
+    function setReaderMessage(message) {
+      articleMessage.textContent = message;
+      articleMessage.hidden = false;
+      articleSpread.hidden = true;
+    }
+
+    function updateArticleControls() {
+      articlePageStatus.textContent = `Uppslag ${articlePage} av ${articlePageCount}`;
+      articlePrev.disabled = articlePage <= 1;
+      articleNext.disabled = articlePage >= articlePageCount;
+      articleFullscreen.disabled = false;
+      articleProgress.disabled = false;
+      articleProgress.max = articlePageCount;
+      articleProgress.value = articlePage;
+    }
+
+    function showArticlePage(pageNumber, direction = "next") {
+      if (pageNumber < 1 || pageNumber > articlePageCount) {
+        return;
+      }
+
+      articlePage = pageNumber;
+      articleMessage.hidden = true;
+      articleSpread.hidden = false;
+      articleSpread.src = articleSpreads[articlePage - 1];
+      articleSpread.alt = `Artikelexempel, uppslag ${articlePage} av ${articlePageCount}`;
+      articleStage.classList.remove("flipping-next", "flipping-prev");
+      void articleStage.offsetWidth;
+      articleStage.classList.add(direction === "prev" ? "flipping-prev" : "flipping-next");
+      updateArticleControls();
+    }
+
+    articlePrev.addEventListener("click", () => showArticlePage(articlePage - 1, "prev"));
+    articleNext.addEventListener("click", () => showArticlePage(articlePage + 1, "next"));
+
+    articleProgress.addEventListener("input", () => {
+      const nextPage = Number(articleProgress.value);
+      showArticlePage(nextPage, nextPage < articlePage ? "prev" : "next");
+    });
+
+    articleFullscreen.addEventListener("click", () => {
+      if (!document.fullscreenElement && articleReader.requestFullscreen) {
+        articleReader.requestFullscreen();
+        articleFullscreen.setAttribute("aria-label", "Stäng helskärm");
+        articleFullscreen.innerHTML = '<i class="fa-solid fa-compress" aria-hidden="true"></i>';
+      } else if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    });
+
+    document.addEventListener("fullscreenchange", () => {
+      const isFullscreen = document.fullscreenElement === articleReader;
+      articleFullscreen.setAttribute("aria-label", isFullscreen ? "Stäng helskärm" : "Visa i helskärm");
+      articleFullscreen.innerHTML = isFullscreen
+        ? '<i class="fa-solid fa-compress" aria-hidden="true"></i>'
+        : '<i class="fa-solid fa-expand" aria-hidden="true"></i>';
+    });
+
+    articleStage.addEventListener("touchstart", (event) => {
+      const touch = event.changedTouches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+    }, { passive: true });
+
+    articleStage.addEventListener("touchend", (event) => {
+      const touch = event.changedTouches[0];
+      const deltaX = touch.clientX - touchStartX;
+      const deltaY = touch.clientY - touchStartY;
+
+      if (Math.abs(deltaX) < 48 || Math.abs(deltaX) < Math.abs(deltaY)) {
+        return;
+      }
+
+      showArticlePage(articlePage + (deltaX < 0 ? 1 : -1), deltaX < 0 ? "next" : "prev");
+    }, { passive: true });
+
+    articleSpread.addEventListener("error", () => {
+      setReaderMessage("Uppslagsbilden kunde inte laddas. Öppna PDF:en via länken nedan.");
+    });
+
+    articleSpreads.slice(1).forEach((src) => {
+      const image = new Image();
+      image.src = src;
+    });
+
+    updateArticleControls();
+  </script>
+</body>
+</html>
+
