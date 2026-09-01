@@ -1,0 +1,2966 @@
+
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Registrera dag</title>
+<style>
+/* ── 1. BAS & TYPOGRAFI ── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg: #f8f9fa;
+  --surface: #ffffff;
+  --surface2: #f1f3f5;
+  --text: #1a1a1a;
+  --muted: #6c757d;
+  --border: #e9ecef;
+  --border2: #dee2e6;
+  --accent: #7c4b2a;
+  --accent-dark: #5d3820;
+  --accent-light: #fdf1e8;
+  --success: #2b8a3e;
+  --danger: #c92a2a;
+  --radius: 16px;
+  --radius-md: 12px;
+  --radius-sm: 6px;
+  --shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scrollbar-gutter: stable;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 15px;
+  color: var(--text);
+  background: var(--bg);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+main {
+  width: min(1100px, 94vw);
+  margin: 0 auto;
+  padding: 40px 0 80px;
+  display: grid;
+  gap: 20px;
+}
+
+/* ── 2. HEADER-CARD (Överst på sidan) ── */
+.header-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 30px;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: flex-end;     /* Sätter rubrik och bubblor på samma snygga baslinje */
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: nowrap;         /* Garanterar att de stannar på samma radhöjd */
+}
+
+.header-left .kicker {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.header-left h1 {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin-bottom: 4px;
+}
+
+.header-left .dateline {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* ── 3. STATISTIK-RAD (I headern) ── */
+.stats-row {
+  display: flex;
+  gap: 12px;                  /* Luftigt och fint avstånd mellan bubblorna */
+  flex: 0 0 auto;             /* Låter raden ta precis den plats bubblorna kräver */
+  justify-content: flex-end;  /* Trycker bubblorna mot högerkanten */
+}
+
+.stat-box {
+  background: var(--surface2);
+  border-radius: var(--radius-md);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 115px;         /* Din önskade fasta bredd */
+  height: 85px;         /* En fast höjd som ger bra proportioner till 32px ikoner */
+  flex: 0 0 115px;      /* Förbjuder flexbox att stretcha eller trycka ihop bredden (0 0) */
+  flex-shrink: 0;       /* Extra livrem för att garantera att höjden inte kollapsar */
+}
+
+/* Vi behöver inte klassen .wide längre eftersom alla nu har en enhetlig, trygg bredd */
+.stat-box.wide {
+  flex: 0 0 100px;
+}
+
+.stat-box .venue-icon {
+  width: 32px;                /* Stor och skarp ikonstorlek */
+  height: 32px;
+  object-fit: contain;
+}
+
+.stat-num {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 16px;            /* Tydlig sifferstorlek */
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1;
+  white-space: nowrap; 
+}
+
+.stat-checkbox {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--muted);
+  border-radius: 4px;
+  background: var(--surface);
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+/* När rapporten finns aktiverar vi den här klassen via JavaScript */
+.stat-checkbox.checked {
+  background: var(--success);
+  border-color: var(--success);
+}
+
+/* Ritar ut en snygg, skarp bock inuti rutan */
+.stat-checkbox.checked::after {
+  content: '';
+  position: absolute;
+  left: 4.5px;
+  top: -1px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* ── 4. PANELER & ACTION GRID (Mitten på sidan) ── */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  box-shadow: var(--shadow);
+}
+
+.panel-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+
+.action-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.action-btn {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 22px 24px;         /* Justerat för att matcha förra filens luftighet */
+  display: flex;              /* AKTIVERAR FLEXBOX */
+  flex-direction: row;        /* Lägger ikon och text sida vid sida */
+  align-items: center;        /* Centrerar ikon och text perfekt vertikalt */
+  gap: 20px;                  /* Skapar exakt avstånd mellan ikon och text */
+  text-align: left;
+  cursor: pointer;
+  color: var(--text);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  height: 140px;
+}
+
+.icon-wrap {
+  flex: 0 0 54px;            /* Förhindrar flexbox från att någonsin krympa ikonen */
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;          /* Livsviktigt för att skalan på 1.5 inte ska klippas bort */
+}
+
+.action-btn:hover {
+  border-color: var(--accent);
+  background: var(--accent-light);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(124, 75, 42, 0.1);
+}
+
+.action-btn .btn-title {
+  font-size: 16px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.action-btn .btn-desc {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* ── 5. ENTRIES-LISTA (Nedre panelen) ── */
+.entries-list { display: grid; gap: 10px; }
+
+.entry-row {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  animation: slideIn .2s ease;
+}
+
+.entry-row:hover {
+  border-color: var(--accent);
+  background: var(--surface2);
+  transform: translateX(4px);
+}
+
+.entry-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 150px;
+  min-height: 32px;
+  justify-content: flex-start;
+}
+
+.badge-school  { background: #e7f5ff; color: #1971c2; }
+.badge-group   { background: #ebfbee; color: #2f9e44; }
+.badge-cafe    { background: #fff9db; color: #f08c00; }
+.badge-tickets { background: #fff0f6; color: #d6336c; }
+.badge-sales   { background: #f8f9fa; color: #495057; }
+.badge-daily   { background: #f3f0ff; color: #7048e8; }
+.badge-other   { background: #e6fcf5; color: #087f5b; }
+
+.entry-body { flex: 1; min-width: 0; }
+
+.entry-title { 
+  font-size: 15px; 
+  font-weight: 600; 
+  margin-bottom: 4px; 
+  white-space: nowrap;
+}
+
+.entry-title.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
+}
+
+.entry-meta  { font-size: 13px; color: var(--muted); }
+
+.entry-time {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  text-align: right;
+  line-height: 1.4;
+}
+
+.entry-time strong {
+  display: block;
+  font-size: 12px;
+  color: var(--text);
+  font-weight: 500;
+}
+
+/* ── 6. MODALER & OVERLAYS ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.4);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 100;
+  backdrop-filter: blur(4px);
+}
+
+.modal-overlay.open { display: flex; }
+
+.modal {
+  background: var(--surface);
+  border-radius: var(--radius);
+  width: min(700px, 96vw);
+  overflow-y: visible;
+  padding: 32px;
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+  animation: modalIn .18s ease;
+}
+
+.modal.narrow { width: min(400px, 96vw); }
+
+.modal.daily-viewings-modal {
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+}
+
+.group-count-warning-overlay { z-index: 300; }
+
+.group-count-warning-message {
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.55;
+  margin-bottom: 24px;
+}
+
+.modal-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.modal-top h2 {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.modal-close {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modal-close::before, .modal-close::after {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 2px;
+  background-color: var(--text);
+  border-radius: 2px;
+}
+.modal-close::before { transform: rotate(45deg); }
+.modal-close::after { transform: rotate(-45deg); }
+
+.modal-close:hover {
+  background-color: var(--danger);
+  border-color: var(--danger);
+  transform: rotate(90deg);
+}
+.modal-close:hover::before, .modal-close:hover::after {
+  background-color: #fff;
+}
+
+/* Specifika färger för ikonerna i knapparna */
+.action-btn[data-modal="school"] .fa-icon  { fill: #1971c2; } /* Blå */
+.action-btn[data-modal="group"] .fa-icon   { fill: #2f9e44; } /* Grön */
+.action-btn[data-modal="daily"] .fa-icon   { fill: #7048e8; } /* Lila */
+.action-btn[data-modal="tickets"] .fa-icon { fill: #d6336c; } /* Rosa */
+.action-btn[data-modal="sales"] .fa-icon   { fill: #495057; } /* Grå/Svart */
+.action-btn[data-modal="cafe"] .fa-icon    { fill: #f08c00; } /* Orange */
+
+/* Behåll hover-effekten men se till att den inte skriver över färgerna tråkigt */
+.action-btn:hover .fa-icon { 
+    transform: scale(1.1); 
+    filter: brightness(0.9); /* Gör färgen aningen mörkare vid hover */
+}
+
+/* ── 7. FORMULÄR, INPUTS & SELECTS ── */
+.field-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+  margin-top: 16px;
+  display: block;
+}
+
+.field-label:first-child { margin-top: 0; }
+
+select, input, textarea {
+  width: 100%;
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  font-family: inherit;
+  font-size: 15px;
+  transition: all 0.2s;
+}
+
+select:focus, input:focus, textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+textarea { min-height: 120px; resize: vertical; }
+
+#fReport { min-height: 145px; }
+
+input::placeholder, textarea::placeholder {
+  color: var(--muted);
+  opacity: 0.6;
+  font-style: italic;
+}
+
+/* Datum-input specifikt */
+.date-input-container {
+  position: relative;
+  width: 220px;
+  display: flex;
+  align-items: center;
+}
+
+.date-display-field {
+  width: 100% !important;
+  cursor: pointer;
+  background: #fff !important;
+  padding-right: 40px !important;
+}
+
+.date-icon {
+  position: absolute;
+  right: 12px;
+  width: 18px;
+  height: 18px;
+  fill: var(--muted);
+  pointer-events: auto;
+  cursor: pointer;
+  transition: fill 0.2s;
+}
+
+.date-input-container:hover .date-icon {
+  fill: var(--accent);
+}
+
+input[type="date"] {
+  width: 200px;
+  min-width: 150px; 
+}
+
+/* Custom-select komponenter */
+.custom-select-wrapper { position: relative; width: 100%; user-select: none; }
+
+.custom-select-trigger {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px; border: 1px solid var(--border2);
+  border-radius: var(--radius-sm); background: var(--surface);
+  cursor: pointer; font-size: 15px; color: var(--text);
+  transition: border-color 0.2s;
+}
+
+.custom-select-trigger:hover,
+.custom-select-wrapper.open .custom-select-trigger {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+.chevron {
+  width: 16px; height: 16px; fill: var(--muted);
+  transition: transform 0.2s; flex-shrink: 0;
+}
+
+.custom-select-wrapper.open .chevron { transform: rotate(180deg); }
+
+.custom-select-dropdown {
+  display: none; position: absolute; top: calc(100% + 4px); left: 0;
+  min-width: 500px;
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: var(--radius-sm); z-index: 200;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+.custom-select-wrapper.open .custom-select-dropdown { display: block; }
+
+.dropdown-cols { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-flow: column; grid-template-rows: repeat(9, auto); padding: 8px; gap: 2px; }
+.dropdown-cols-2 { display: grid; grid-template-columns: repeat(2, 1fr); grid-auto-flow: column; grid-template-rows: repeat(7, auto); padding: 8px; gap: 2px; }
+.dropdown-cols-2-r5 { 
+  display: grid; 
+  grid-template-columns: repeat(2, 1fr); 
+  grid-auto-flow: column; 
+  grid-template-rows: repeat(5, auto); /* Ändrat från repeat(4, auto) */
+  padding: 8px; 
+  gap: 2px; 
+}
+
+#groupTypeWrapper .custom-select-dropdown {
+  width: 100%;
+  min-width: 0;
+}
+
+#groupTypeDropdownCols .dropdown-option {
+  white-space: normal;
+  line-height: 1.35;
+  overflow: visible;
+}
+
+.group-option-danger { color: var(--danger); }
+.group-option-success { color: var(--success); }
+
+.group-info {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 17px;
+  height: 17px;
+  margin-left: 5px;
+  border: 1px solid var(--muted);
+  border-radius: 50%;
+  color: var(--muted);
+  background: var(--surface);
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1;
+  vertical-align: middle;
+  cursor: help;
+}
+
+.group-info-tooltip {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 7px);
+  z-index: 300;
+  width: max-content;
+  max-width: 260px;
+  padding: 7px 9px;
+  border-radius: 5px;
+  background: var(--text);
+  color: var(--surface);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.35;
+  text-align: left;
+  white-space: normal;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translate(-50%, 3px);
+  transition: opacity .15s, transform .15s, visibility .15s;
+}
+
+.group-info:hover .group-info-tooltip,
+.group-info:focus .group-info-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}
+
+.dropdown-option {
+  padding: 7px 10px; border-radius: 4px; cursor: pointer;
+  font-size: 14px; color: var(--text); transition: background 0.1s;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.dropdown-option:hover { background: var(--accent-light); color: var(--accent); }
+.dropdown-option.selected { background: var(--accent-light); color: var(--accent); font-weight: 600; }
+
+/* Belopps-wrapper */
+.amount-wrapper { position: relative; }
+
+.amount-prefix {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  font-family: 'Inter', sans-serif; 
+  font-weight: 500;
+  pointer-events: none;
+}
+
+.amount-wrapper input { 
+  padding-left: 36px; 
+  font-family: 'Inter', sans-serif;
+  font-variant-numeric: tabular-nums; 
+}
+
+/* ── 8. FORM-LAYOUT & KNAPPAR ── */
+.form-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.main-field { flex: 0 0 80%; }
+.side-field { flex: 1; }
+
+.form-row .field-label { margin-top: 0; }
+
+.group-type-field { margin-top: 16px; }
+
+.group-count-fields {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.group-count-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 110px;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.group-count-label {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.group-count-input { text-align: right; }
+.group-count-input::placeholder { font-style: normal; }
+
+.group-payment-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+}
+
+.group-payment-question {
+  flex: 1 1 360px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.group-payment-choice {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.group-payment-choice input {
+  width: auto;
+  cursor: pointer;
+}
+
+.group-choice-section {
+  margin-top: 16px;
+  padding: 14px 16px;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Trycker frågan till vänster och knapparna till höger */
+  gap: 16px;
+  flex-wrap: wrap; /* Säkerställer responsivitet på mindre skärmar */
+}
+
+.group-choice-question {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.35;
+  flex: 1; /* Låter texten ta så mycket plats som möjligt */
+  min-width: 200px;
+}
+
+.group-choice-buttons {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0; /* Förhindrar att knapparna trycks ihop för mycket */
+}
+
+.group-choice-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;        /* Sänkt från 42px för ett mer kompakt intryck */
+  padding: 6px 16px;       /* Justerad padding (från 10px 20px) för att spara vertikalt utrymme */
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
+  cursor: pointer;
+  transition: all .18s;
+  white-space: nowrap;     /* Förhindrar radbrytning inuti knappen */
+}
+
+.group-choice-button:hover {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+
+.group-choice-button input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.group-choice-button:has(input:checked) {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+.daily-viewings-section {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.daily-viewings-title {
+  margin-bottom: 12px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.daily-viewings-rows {
+  display: grid;
+  gap: 10px;
+}
+
+.daily-viewing-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 100px 36px;
+  align-items: center;
+  gap: 10px;
+}
+
+.daily-viewing-count { text-align: right; }
+.daily-viewing-count::placeholder { font-style: normal; }
+
+.daily-viewing-remove,
+.daily-viewing-add {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--border2);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  transition: all .2s;
+}
+
+.daily-viewing-remove:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+  background: #fff5f5;
+}
+
+.daily-viewing-add {
+  display: block;
+  margin-top: 10px;
+  color: var(--accent);
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.daily-viewing-add:hover {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+
+.form-row-triple {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  align-items: flex-end;
+}
+
+.col-45 { flex: 0 0 calc(45% - 8px); }
+.col-35 { flex: 0 0 calc(35% - 8px); }
+.col-20 { flex: 0 0 calc(20% - 8px); }
+
+.form-row-triple .field-group { min-width: 0; }
+.form-row-triple .field-label { margin-top: 0; }
+
+.form-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  padding: 10px 24px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s;
+}
+.btn-primary:hover { background: var(--accent-dark); }
+
+.btn-secondary {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  padding: 10px 20px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.btn-danger {
+  color: var(--danger);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  padding: 10px 20px;
+  margin-right: auto;
+  cursor: pointer;
+}
+.btn-danger:hover { background: #fff5f5; border-color: var(--danger); }
+
+/* ── 9. IKONER & ANIMATIONER ── */
+.fa-icon {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  display: block;
+  transition: transform .28s cubic-bezier(.34,1.56,.64,1);
+  will-change: transform;
+  
+  /* LÄGG TILL DESSA TVÅ RADER FÖR ULTRA-SKÄRPA: */
+  shape-rendering: geometricPrecision;
+  image-rendering: -webkit-optimize-contrast;
+}
+
+/* Trigga förstoringen på ikonen så fort man hovrar var som helst på knappen */
+.action-btn:hover .icon-wrap .fa-icon {
+  transform: scale(1.5);
+}
+
+.badge-icon {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  flex: 0 0 auto;
+  vertical-align: middle;
+  /* Säkerställ att den ärver badgens textfärg och inte blir var(--accent)-brun */
+  fill: currentColor; 
+}
+
+img.badge-icon {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  fill: initial;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(.97) translateY(6px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ── DATUMVÄLJARE I SIDHUVUDET ── */
+.header-date-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  cursor: pointer;
+}
+.header-date-button:hover { color: var(--accent); }
+.header-date-icon {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+#headerDatePicker {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ── 10. RESPONSIVITET ── */
+
+
+@media (max-width: 700px) {
+  .action-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 600px) {
+  .col-45, .col-35, .col-20 {
+    flex: 0 0 100% !important;
+    width: 100%;
+  }
+
+  .group-count-row {
+    grid-template-columns: minmax(0, 1fr) 90px;
+  }
+
+.group-choice-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+  .group-choice-button {
+    width: 100%;
+  }
+
+  .daily-viewing-row {
+    grid-template-columns: minmax(0, 1fr) 82px 36px;
+  }
+
+.dropdown-cols-2-r5 {
+    grid-template-columns: 1fr;
+    grid-auto-flow: row;
+    grid-template-rows: none;
+  }
+}
+
+
+/* ── ÖVRIG DATA: separat inmatningsknapp högst upp till höger ── */
+.other-data-action {
+  position: absolute;
+  right: 24px;
+  top: 24px;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.btn-other-data {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border: 1px solid var(--border2);
+  border-radius: 30px;
+  background: var(--surface);
+  color: var(--text);
+  padding: 11px 17px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: all .2s ease;
+  white-space: nowrap;
+  width: 150px;
+}
+
+.btn-other-data svg {
+  width: 18px;
+  height: 18px;
+  stroke: #087f5b;
+}
+
+.btn-other-data:hover {
+  border-color: #087f5b;
+  background: #e6fcf5;
+  transform: translateX(-2px);
+}
+
+.other-count-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.other-count-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 100px;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.other-count-label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.other-count-input {
+  text-align: right;
+}
+
+@media (max-width: 1380px) {
+  .other-data-action {
+    position: absolute;
+    right: 24px;
+    top: 24px;
+  }
+}
+
+@media (max-width: 600px) {
+  .other-data-action {
+    right: 12px;
+    top: 12px;
+  }
+  .other-count-fields {
+    grid-template-columns: 1fr;
+  }
+  .btn-other-data {
+    width: 150px;
+    justify-content: center;
+  }
+}
+
+
+/* ── FIREBASE AUTH: inloggning och användarstatus ── */
+.auth-login-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(20, 20, 20, .52);
+  backdrop-filter: blur(7px);
+}
+.auth-login-overlay.open { display: flex; }
+.auth-login-modal {
+  width: min(430px, 96vw);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 30px;
+  box-shadow: 0 25px 60px rgba(0,0,0,.25);
+}
+.auth-login-kicker {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 7px;
+}
+.auth-login-modal h2 {
+  font-size: 24px;
+  letter-spacing: -.02em;
+  margin-bottom: 6px;
+}
+.auth-login-intro {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 22px;
+}
+.auth-login-modal .field-label { margin-top: 14px; }
+.auth-login-modal .field-label:first-of-type { margin-top: 0; }
+.auth-login-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 22px;
+}
+.auth-login-button { min-width: 120px; }
+.auth-login-status {
+  min-height: 20px;
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--danger);
+}
+.auth-user-box {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 9px 7px 12px;
+  border: 1px solid var(--border2);
+  border-radius: 30px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  white-space: nowrap;
+}
+.auth-user-box.visible { display: flex; }
+.auth-user-email {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 12px;
+  color: var(--muted);
+}
+.auth-logout-button {
+  border: 0;
+  border-radius: 20px;
+  background: var(--surface2);
+  padding: 6px 10px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.auth-logout-button:hover { background: #fff5f5; color: var(--danger); }
+.other-data-action { display: flex; flex-direction: column; align-items: stretch; gap: 10px; }
+@media (max-width: 700px) {
+  .other-data-action { flex-wrap: nowrap; }
+}
+
+</style>
+</head>
+<body>
+
+
+  <div class="other-data-action">
+    <button type="button" class="btn-other-data" data-modal="other">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 5v14M5 12h14"></path>
+      </svg>
+      Övrig data
+    </button>
+    <button type="button" class="btn-other-data" id="authLogoutButton" style="display:none;">Logga ut</button>
+  </div>
+
+  <main>
+<!-- 1. Header & Statistik -->
+    <div class="header-card">
+<div class="header-left">
+  <div class="kicker">Registrera</div>
+  <h1>Dagsresultat</h1>
+  <div class="dateline">
+    <button type="button" class="header-date-button" onclick="openHeaderDatePicker()" aria-label="Välj dag">
+      <span id="dateline"></span>
+      <svg class="header-date-icon" viewBox="0 0 448 512" aria-hidden="true">
+        <path d="M128 0c17.7 0 32 14.3 32 32V64H288V32c0-17.7 14.3-32 32-32s32 14.3 32 32V64h48c26.5 0 48 21.5 48 48v48H0V112C0 85.5 21.5 64 48 64H96V32c0-17.7 14.3-32 32-32zM0 192H448V464c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V192z"/>
+      </svg>
+    </button>
+    <input type="date" id="headerDatePicker" aria-label="Välj dag" />
+  </div>
+</div>
+
+	  <div class="stats-row">
+        <div class="stat-box" id="statBox_school" title="Skolbesök">
+          <img src="skola.svg" alt="" class="venue-icon">
+          <div class="stat-num" id="statSchool">0</div>
+        </div>
+        <div class="stat-box" id="statBox_group" title="Grupper och evenemang">
+          <img src="grupp.svg" alt="" class="venue-icon">
+          <div class="stat-num" id="statGroup">0</div>
+        </div>
+        <div class="stat-box" id="statBox_tickets" title="Entréintäkter">
+          <img src="entre.svg" alt="" class="venue-icon">
+          <div class="stat-num" id="statTickets">0,00</div>
+        </div>
+        <div class="stat-box" id="statBox_sales" title="Butiksförsäljning">
+          <img src="butik.svg" alt="" class="venue-icon">
+          <div class="stat-num" id="statSales">0,00</div>
+        </div>
+        <div class="stat-box" id="statBox_cafe" title="Kaféförsäljning">
+          <img src="kafe.svg" alt="" class="venue-icon">
+          <div class="stat-num" id="statCafe">0,00</div>
+        </div>
+        <div class="stat-box" id="statBox_daily" title="Dagsrapport">
+          <img src="dagsrapport.svg" alt="" class="venue-icon">
+          <div class="stat-checkbox" id="statDaily"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Action Grid (Registrera händelse) -->
+<!-- 2. Action Grid (Registrera händelse) -->
+    <div class="panel">
+      <div class="panel-label">Registrera händelse</div>
+      <div class="action-grid">
+        
+        <button class="action-btn" data-modal="school">
+          <div class="icon-wrap">
+            <img src="skola.svg" alt="" class="fa-icon">
+          </div>
+          <div class="btn-text-group">
+            <span class="btn-title">Skolbesök</span>
+            <span class="btn-desc">Kommun, nivå, antal</span>
+          </div>
+        </button>
+
+        <button class="action-btn" data-modal="group">
+          <div class="icon-wrap">
+            <img src="grupp.svg" alt="" class="fa-icon">
+          </div>
+          <div class="btn-text-group">
+            <span class="btn-title">Grupper och evenemang</span>
+            <span class="btn-desc">Bröllop, kalas, konferens, faktura etc.</span>
+          </div>
+        </button>
+
+        <button class="action-btn" data-modal="tickets">
+          <div class="icon-wrap">
+            <img src="entre.svg" alt="" class="fa-icon">
+          </div>
+          <div class="btn-text-group">
+            <span class="btn-title">Entréintäkter</span>
+            <span class="btn-desc">Dagstotal kr</span>
+          </div>
+        </button>
+
+        <button class="action-btn" data-modal="sales">
+          <div class="icon-wrap">
+            <img src="butik.svg" alt="" class="fa-icon">
+          </div>
+          <div class="btn-text-group">
+            <span class="btn-title">Butiksförsäljning</span>
+            <span class="btn-desc">Dagstotal kr</span>
+          </div>
+        </button>
+
+        <button class="action-btn" data-modal="cafe">
+          <div class="icon-wrap">
+            <img src="kafe.svg" alt="" class="fa-icon">
+          </div>
+          <div class="btn-text-group">
+            <span class="btn-title">Kaféförsäljning</span>
+            <span class="btn-desc">Dagstotal kr</span>
+          </div>
+        </button>
+		
+        <button class="action-btn" data-modal="daily">
+          <div class="icon-wrap">
+            <img src="dagsrapport.svg" alt="" class="fa-icon">
+          </div>
+          <div class="btn-text-group">
+            <span class="btn-title">Dagsrapport</span>
+            <span class="btn-desc">Logga dagen</span>
+          </div>
+        </button>		
+
+      </div>
+    </div>
+
+    <!-- 3. Loggade händelser -->
+    <div class="panel">
+      <div class="panel-label">Loggade händelser</div>
+      <div class="entries-list" id="entriesList">
+        <div class="empty-state" id="emptyState" style="color:var(--muted);font-size:14px;">Inga händelser registrerade än.</div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 4. Modaler & Overlays -->
+  <!-- Inloggning: blockerar sidan tills Firebase Authentication har godkänt användaren -->
+  <div class="auth-login-overlay" id="authLoginOverlay" role="dialog" aria-modal="true" aria-labelledby="authLoginTitle">
+    <form class="auth-login-modal" id="authLoginForm" autocomplete="on">
+      <div class="auth-login-kicker">Kulturen i Lund</div>
+      <h2 id="authLoginTitle">Logga in</h2>
+      <p class="auth-login-intro">Logga in för att läsa och registrera receptionens dagsdata.</p>
+
+      <label class="field-label" for="authEmail">E-postadress</label>
+      <input type="email" id="authEmail" autocomplete="username" required />
+
+      <label class="field-label" for="authPassword">Lösenord</label>
+      <input type="password" id="authPassword" autocomplete="current-password" required />
+
+      <div class="auth-login-status" id="authLoginStatus" aria-live="polite"></div>
+      <div class="auth-login-actions">
+        <button class="btn-primary auth-login-button" id="authLoginButton" type="submit">Logga in</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Registreringsmodal -->
+  <div class="modal-overlay" id="overlay">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-top">
+        <h2 id="modalTitle">Registrering</h2>
+        <button class="modal-close" id="modalClose" aria-label="Stäng"></button>
+      </div>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- Raderingsmodal -->
+  <div class="modal-overlay" id="deleteOverlay">
+    <div class="modal" style="max-width: 400px; text-align: center;">
+      <div style="width: 56px; height: 56px; border-radius: 50%; background: #fff5f5; border: 1px solid #ffc9c9; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="3 6 5 6 21 6" />
+          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+          <path d="M10 11v6" />
+          <path d="M14 11v6" />
+          <path d="M9 6V4h6v2" />
+        </svg>
+      </div>
+      <h2 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Radera post?</h2>
+      <p style="color: var(--muted); font-size: 14px; margin-bottom: 28px;">Detta går inte att ångra.</p>
+      <div style="display: flex; gap: 10px; justify-content: center;">
+        <button class="btn-secondary" onclick="closeDeleteModal()">Avbryt</button>
+        <button class="btn-danger" style="background: var(--danger); color: #fff; border-radius: 30px; padding: 10px 24px; font-weight: 600; border: none; cursor: pointer; margin-right: 0;" onclick="confirmDelete()">Ja, radera</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Varning vid fel antal för fakturagrupper -->
+  <div class="modal-overlay group-count-warning-overlay" id="groupCountWarningOverlay">
+    <div class="modal" style="max-width: 480px;">
+      <div class="modal-top">
+        <h2>Kontrollera antal</h2>
+        <button class="modal-close" type="button" aria-label="Stäng" onclick="closeGroupCountWarning()"></button>
+      </div>
+      <p class="group-count-warning-message" id="groupCountWarningMessage"></p>
+      <div style="display: flex; justify-content: flex-end;">
+        <button class="btn-primary" type="button" onclick="closeGroupCountWarning()">Okej</button>
+      </div>
+    </div>
+  </div>
+
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore-compat.js"></script>
+<script>
+// Firebase-konfiguration för det separata projektet Kulturens dagsdata.
+const firebaseConfig = {
+  apiKey: "AIzaSyBxGc4jxkayGoOWDjeVwJqCJJm-536FUkI",
+  authDomain: "kulturen-dagsdata.firebaseapp.com",
+  projectId: "kulturen-dagsdata",
+  storageBucket: "kulturen-dagsdata.firebasestorage.app",
+  messagingSenderId: "306416395027",
+  appId: "1:306416395027:web:0211f420e2ec773d8970e6"
+};
+
+let db = null;
+let auth = null;
+const FIREBASE_CONFIGURED = Boolean(firebaseConfig.apiKey && firebaseConfig.projectId && firebaseConfig.appId);
+if (FIREBASE_CONFIGURED) {
+  firebase.initializeApp(firebaseConfig);
+  auth = firebase.auth();
+  db = firebase.firestore();
+}
+const FIREBASE_COLLECTION = "dailyData";
+const FIREBASE_START_DATE = "2026-09-01";
+const VENUE = "kulturenilund";
+
+const TYPE_LABELS = {
+  school: "skolbesök",
+  group: "grupper och evenemang",
+  tickets: "entréintäkt",
+  sales: "butiksförsäljning",
+  cafe: "kaféförsäljning",
+  daily: "dagsrapport",
+  other: "övrig data"
+};
+// --- DATAKONFIGURATION ---
+const BADGE_LABELS = {
+  school: "skolbesök",
+  group: "gruppbesök",
+  tickets: "entré",
+  sales: "butik",
+  cafe: "kafé",
+  daily: "dagsrapport",
+  other: "övrig data"
+};
+
+const COINS_BADGE_ICON = '<svg class="badge-icon" viewBox="0 0 64 64" aria-hidden="true"><ellipse cx="26" cy="18" rx="16" ry="8" fill="currentColor" opacity=".35"/><path fill="currentColor" d="M10 18c0 6.1 7.2 11 16 11s16-4.9 16-11v14c0 6.1-7.2 11-16 11S10 38.1 10 32V18zm22 23.5c2.3-1.3 4.1-2.9 5.3-4.8 1.7.4 3.6.6 5.7.6 5 0 9.2-1.3 12-3.4v10.7c0 5.2-5.8 9.4-13 9.4-5.1 0-9.6-2.1-11.7-5.2 2.9-1.8 4.6-4.3 4.6-7.3H32z"/><path fill="currentColor" d="M43 22c7.2 0 13 4.2 13 9.4s-5.8 9.4-13 9.4c-1.7 0-3.3-.2-4.8-.7V32c0-2.8-1.5-5.4-4.1-7.4 2.3-1.6 5.4-2.6 8.9-2.6z"/></svg>';
+
+const ICONS = {
+  school: '<img class="badge-icon" src="skola.svg" alt="">',
+  group: '<img class="badge-icon" src="grupp.svg" alt="">',
+  tickets: COINS_BADGE_ICON,
+  sales: COINS_BADGE_ICON,
+  cafe: COINS_BADGE_ICON,
+  daily: '<img class="badge-icon" src="dagsrapport.svg" alt="">',
+  other: '<svg class="badge-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M11 5h2v14h-2zM5 11h14v2H5z"/></svg>'
+};
+
+const PLACES = ["Bjuv","Bromölla","Burlöv","Båstad","Eslöv","Helsingborg","Hässleholm","Höganäs","Hörby","Höör","Klippan","Kristianstad","Kävlinge","Landskrona","Lomma","Lund","Malmö","Osby","Perstorp","Simrishamn","Sjöbo","Skurup","Staffanstorp","Svalöv","Svedala","Tomelilla","Trelleborg","Vellinge","Ystad","Åstorp","Ängelholm","Örkelljunga","Östra Göinge","Övrigt"];
+const BASE_LEVELS = ["Förskola","Förskoleklass","Åk 1","Åk 2","Åk 3","Åk 4","Åk 5","Åk 6","Åk 7","Åk 8","Åk 9","Gymnasium","Vuxenutbildning"];
+const EXTRA = { Lund:["Lunds universitet"], Helsingborg:["Campus Helsingborg"], Malmö:["Malmö universitet"], Kristianstad:["Högskolan Kristianstad"], Lomma:["SLU"], Övrigt:["Högskola, universitet"] };
+
+function groupInfo(text) {
+  return `<span class="group-info" tabindex="0" aria-label="${esc(text)}">i<span class="group-info-tooltip" role="tooltip">${esc(text)}</span></span>`;
+}
+
+const GROUP_TYPES = [
+{
+    value: "Barnkalas",
+    optionHtml: "Barnkalas",
+countFields: [
+      {
+        key: "freeAdults",
+        /* Injektion av info-i direkt på radtexten: */
+        label: `Vuxna med fri entré ${groupInfo("Max 5 vuxna personer har fri entré vid barnkalas, övriga betalar fullt pris.")}`,
+        categories: ["Fri vuxen"],
+        max: 5,
+        rangeMessage: 'Max 5 vuxna har fri entré vid barnkalas. Övriga betalar full pris och ska läggas in på "Vuxna som betalar entré".'
+      },
+      { key: "adults", label: "Vuxna som betalar full entré", categories: ["Vuxen"] },
+      { key: "children", label: "Barn", categories: ["Barn"] }
+    ],
+    eventPaymentQuestion: "Hur betalas barnkalaset?",
+    eventPaymentOptions: [
+      { value: "direct", label: "Direkt" },
+      { value: "invoice", label: "Faktura" }
+    ]
+  },
+  {
+    value: "Bröllop och vigsel",
+    optionHtml: "Bröllop och vigsel",
+    countFields: [
+      { key: "freeAdults", label: "Vuxna", categories: ["Fri vuxen"] },
+      { key: "children", label: "Barn", categories: ["Barn"] }
+    ],
+    /* Ny enhetlig knappsats */
+    eventPaymentQuestion: "Hur betalas evenemanget?",
+    eventPaymentOptions: [
+      { value: "direct", label: "Direkt" },
+      { value: "invoice", label: "Faktura" }
+    ]
+  },
+  {
+    value: "Dop och namngivning",
+    optionHtml: "Dop och namngivning",
+    countFields: [
+      { key: "freeAdults", label: "Vuxna", categories: ["Fri vuxen"] },
+      { key: "children", label: "Barn", categories: ["Barn"] }
+    ],
+    /* Ny enhetlig knappsats */
+    eventPaymentQuestion: "Hur betalas evenemanget?",
+    eventPaymentOptions: [
+      { value: "direct", label: "Direkt" },
+      { value: "invoice", label: "Faktura" }
+    ]
+  },
+{
+    value: "Konferens och möte",
+    optionHtml: "Konferens och möte",
+    countFields: [
+      { key: "freeAdults", label: "Antal deltagare", categories: ["Fri vuxen"] }
+    ]
+  },
+{
+    value: "Konfirmandgrupp",
+    optionHtml: "Konfirmandgrupp",
+    countFields: [
+      { key: "freeAdults", label: "Vuxna", categories: ["Fri vuxen"] },
+      { key: "children", label: "Barn", categories: ["Barn"] }
+    ],
+    viewingQuestion: `Finns bokad visning? ${groupInfo("Frågan gäller avgiftsbelagd visning, inte kostnadsfri programvisning.")}`,
+    viewingPaymentQuestion: "Hur betalas visningen?",
+    viewingPaymentOptions: [
+      { value: "direct", label: "Direkt" },
+      { value: "invoice", label: "Faktura" }
+    ]
+  },  
+  {
+    value: "Kostnadsfritt Kulturen-evenemang",
+    optionHtml: `Kostnadsfritt <strong>Kulturen-evenemang</strong>${groupInfo("T.ex. föreläsningar i Nordenstedtska seminariet.")}`,
+    countFields: [
+      { key: "freeAdults", label: "Vuxna", categories: ["Fri vuxen"] },
+      { key: "children", label: "Barn", categories: ["Barn"] }
+    ]
+  },
+  {
+    value: "Kostnadsfritt externt evenemang",
+    optionHtml: `Kostnadsfritt <strong>externt evenemang</strong>${groupInfo("T.ex. föreläsningar arrangerade av Gamla Lund.")}`,
+    countFields: [
+      { key: "freeAdults", label: "Vuxna", categories: ["Fri vuxen"] },
+      { key: "children", label: "Barn", categories: ["Barn"] }
+    ]
+  },
+{
+    value: "Lokalbokning med fri entré",
+    optionHtml: `Lokalbokning med fri entré${groupInfo("Till exempel bokning av verkstad.")}`,
+    countFields: [
+      { key: "freeAdults", label: "Vuxna", categories: ["Fri vuxen"] },
+      { key: "children", label: "Barn", categories: ["Barn"] }
+    ],
+    viewingQuestion: `Finns bokad visning? ${groupInfo("Frågan gäller avgiftsbelagd visning, inte kostnadsfri programvisning.")}`,
+    viewingPaymentQuestion: "Hur betalas visningen?",
+    viewingPaymentOptions: [
+      { value: "direct", label: "Direkt" },
+      { value: "invoice", label: "Faktura" }
+    ]
+  },  
+  {
+    value: "Grupp fullt pris: max 9 vuxna",
+    optionHtml: `Grupp fullt pris: <strong class="group-option-danger">max 9 vuxna</strong>${groupInfo("Antalet vuxna avgör om gruppen ska betala fullt pris eller ej. Medföljande barn påverkar inte gränsen.")}`,
+    countFields: [
+      {
+        key: "adults",
+        label: "Vuxna",
+        categories: ["Vuxen"],
+        required: true,
+        max: 9,
+        rangeMessage: 'Vid 10 eller fler vuxna är entrén rabatterad. Välj istället "Grupp rabatt: <strong class="group-option-success">10 eller fler vuxna</strong>".'
+      },
+      { key: "children", label: "Barn", categories: ["Barn"] }
+    ],
+    entrancePaymentQuestion: "Hur betalas entré?",
+    entrancePaymentOptions: [
+      { value: "direct", label: "Direkt" },
+      { value: "invoice", label: "Faktura" }
+    ],
+    viewingQuestion: `Finns bokad visning? ${groupInfo("Frågan gäller avgiftsbelagd visning, inte kostnadsfri programvisning.")}`,
+    viewingPaymentQuestion: "Hur betalas visningen?",
+    viewingPaymentOptions: [
+      { value: "direct", label: "Direkt" },
+      { value: "invoice", label: "Faktura" }
+    ]
+  },
+{
+    value: "Grupp rabatt: 10 eller fler vuxna",
+    optionHtml: `Grupp rabatt: <strong class="group-option-success">10 eller fler vuxna</strong>${groupInfo("Antalet vuxna avgör om gruppen ska betala fullt pris eller ej. Medföljande barn påverkar inte gränsen.")}`,
+    countFields: [
+      {
+        key: "discount",
+        label: "Vuxna",
+        categories: ["Rabatt", "varav mot faktura"],
+        min: 10,
+        rangeMessage: 'Vid färre än 10 vuxna betalar gruppen fullt pris. Välj istället "Grupp fullt pris: <strong class="group-option-danger">max 9 vuxna</strong>".'
+      },
+      /* Tillagt fält för barn */
+      { key: "children", label: "Barn", categories: ["Barn"] }
+    ],
+    entrancePaymentQuestion: "Hur betalas entré?",
+    entrancePaymentOptions: [
+      { value: "direct", label: "Direkt" },
+      { value: "invoice", label: "Faktura" }
+    ],
+    viewingQuestion: `Finns bokad visning? ${groupInfo("Frågan gäller avgiftsbelagd visning, inte kostnadsfri programvisning.")}`,
+    viewingPaymentQuestion: "Hur betalas visningen?",
+    viewingPaymentOptions: [
+      { value: "direct", label: "Direkt" },
+      { value: "invoice", label: "Faktura" }
+    ]
+  }
+
+];
+
+const OTHER_COUNT_FIELDS = [
+  { key: "adults", label: "Vuxen" },
+  { key: "pensioners", label: "Pensionär" },
+  { key: "students", label: "Student" },
+  { key: "freeAdults", label: "Fri vuxen" },
+  { key: "children", label: "Barn" },
+  { key: "members", label: "Medlem" }
+];
+const MONTHS_SHORT = ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"];
+
+let entries = [];
+let activeModal = null;
+let editingId = null;
+let groupCountWarningInput = null;
+let dailyViewingRowId = 0;
+let unsubscribeDay = null;
+let selectedDate = null;
+
+// --- HJÄLPFUNKTIONER ---
+function getDayName(dateStr) {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('sv-SE', { weekday: 'long' });
+}
+
+function updateDateDisplay(newDate) {
+  const displayField = document.getElementById('fDateDisplay');
+  if (displayField) {
+    displayField.value = `${newDate} ${getDayName(newDate)}`;
+  }
+}
+
+// Formaterar heltal till "# ###"
+function fmtInt(n) {
+  return Math.round(n).toLocaleString("sv-SE").replace(/\,/g, " ");
+}
+
+// Formaterar belopp till "# ###,##"
+function fmtMoney(n) {
+  return n.toLocaleString("sv-SE", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+}
+
+function swDate() {
+  const now = new Date();
+  const iso = new Intl.DateTimeFormat("sv-SE",{year:"numeric",month:"2-digit",day:"2-digit"}).format(now);
+  return { iso };
+}
+const TODAY = swDate();
+selectedDate = TODAY.iso < FIREBASE_START_DATE ? FIREBASE_START_DATE : TODAY.iso;
+
+function esc(v) { return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+function renderTimeInfo(e) {
+  const visitDate = e.date || e.ts?.split('T')[0] || "";
+  const createdTs = e.logTs || e._createdTs || "";
+  const logDate = createdTs ? createdTs.split('T')[0] : "";
+  const logTime = createdTs ? new Date(createdTs).toLocaleTimeString("sv-SE", {hour:"2-digit", minute:"2-digit"}) : "";
+  return `<strong>${visitDate}</strong><span>${createdTs ? `Loggat: ${logDate} ${logTime}` : ""}</span>`;
+}
+
+function updateStats() {
+  const getSum = (type) => entries.filter(e => e.type === type).reduce((s, e) => s + (e.count || 0), 0);
+  const getRev = (type) => entries.filter(e => e.type === type).reduce((s, e) => s + (e.amount || 0), 0);
+
+  // Antal besökare
+  document.getElementById("statSchool").textContent = fmtInt(getSum("school"));
+  document.getElementById("statGroup").textContent  = fmtInt(getSum("group"));
+  
+  // Separata intäkter
+  document.getElementById("statTickets").textContent = fmtMoney(getRev("tickets"));
+  document.getElementById("statSales").textContent   = fmtMoney(getRev("sales"));
+  document.getElementById("statCafe").textContent    = fmtMoney(getRev("cafe"));
+
+  // Kontrollera om dagsrapport är skriven
+  const hasDaily = entries.some(e => e.type === "daily");
+  const dailyBox = document.getElementById("statDaily");
+  if (dailyBox) {
+    dailyBox.classList.toggle("checked", hasDaily);
+  }
+}
+
+function renderEntries() {
+  const list = document.getElementById("entriesList");
+  const empty = document.getElementById("emptyState");
+  list.querySelectorAll(".entry-row").forEach(r=>r.remove());
+  if (!entries.length) { empty.style.display="block"; updateStats(); return; }
+  empty.style.display = "none";
+  const sorted = [...entries].sort((a,b) => new Date(b.logTs) - new Date(a.logTs));
+  sorted.forEach(e => {
+    const row = document.createElement("div");
+    row.className = "entry-row";
+    row.innerHTML = entryHtml(e);
+    row.onclick = () => openEditModal(e);
+    list.appendChild(row);
+  });
+  updateStats();
+}
+
+function entryHtml(e) {
+  const timeInfo = renderTimeInfo(e);
+  const icon = ICONS[e.type] || '';
+  const label = TYPE_LABELS[e.type] || e.type;
+  const badgeLabel = BADGE_LABELS[e.type] || label;
+
+  let content = "";
+
+  if (e.type === "school") {
+    const noteRaw = e.school || ""; 
+    const noteTruncated = noteRaw.length > 50 ? noteRaw.substring(0, 50) + "..." : noteRaw;
+    
+    // 1. Börja med den obligatoriska delen
+    let titleString = `${esc(e.place)} – ${esc(e.level)}`;
+    
+    // 2. Lägg bara till bindestreck och notering om det faktiskt finns en notering
+    if (noteTruncated) {
+      titleString += ` – ${esc(noteTruncated)}`;
+    }
+
+    content = `
+      <div class="entry-title">${titleString}</div>
+      <div class="entry-meta">${fmtInt(e.count)} pers</div>`;
+  } 
+	else if (e.type === "group") {
+		const paidBadge = e.paid ? ` · <span style="color:${e.paid === 'Ja' ? 'var(--success)' : 'var(--danger)'}; font-weight:600;">Betald: ${e.paid}</span>` : "";
+		content = `
+		  <div class="entry-title">${esc(e.groupType)}</div>
+		  <div class="entry-meta">${fmtInt(e.count)} pers${paidBadge}${e.note ? " · " + esc(e.note) : ""}</div>`;
+	  }
+	else if (["tickets", "sales", "cafe"].includes(e.type)) {
+		content = `
+	      <div class="entry-title">${fmtMoney(e.amount)} kr</div>
+		  <div class="entry-meta">${label}</div>`;
+	  } 
+  else if (e.type === "daily") {
+    content = `
+      <div class="entry-title truncate" style="font-weight:400;" title="${esc(e.report)}">${esc(e.report)}</div>
+      <div class="entry-meta">Dagsrapport</div>`;
+  }
+  else if (e.type === "other") {
+    const countsText = OTHER_COUNT_FIELDS
+      .map(field => ({ label: field.label, value: Number(e.counts?.[field.key] || 0) }))
+      .filter(item => item.value > 0)
+      .map(item => `${item.label}: ${fmtInt(item.value)}`)
+      .join(" · ");
+    content = `
+      <div class="entry-title">${esc(e.purpose || "Övrig data")}</div>
+      <div class="entry-meta">${fmtInt(e.count || 0)} pers${countsText ? " · " + esc(countsText) : ""}</div>`;
+  }
+  
+  return `<span class="entry-badge badge-${e.type}">${icon} ${badgeLabel}</span><div class="entry-body">${content}</div><div class="entry-time">${timeInfo}</div>`;
+}
+
+// --- FORMULÄR ---
+function buildDateField(val) {
+  const dateVal = val || selectedDate;
+  const displayVal = `${dateVal} ${getDayName(dateVal)}`;
+  
+  return `
+    <label class="field-label">Avser dag</label>
+    <div class="date-input-container">
+      <input type="text" id="fDateDisplay" value="${displayVal}" readonly 
+             onclick="document.getElementById('fDate').showPicker()" 
+             class="date-display-field">
+      
+      <!-- Kalenderikon -->
+      <svg class="date-icon" viewBox="0 0 448 512" onclick="document.getElementById('fDate').showPicker()">
+        <path d="M128 0c17.7 0 32 14.3 32 32V64H288V32c0-17.7 14.3-32 32-32s32 14.3 32 32V64h48c26.5 0 48 21.5 48 48v48H0V112C0 85.5 21.5 64 48 64H96V32c0-17.7 14.3-32 32-32zM0 192H448V464c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V192zM312 304a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/>
+      </svg>
+      
+      <input type="date" id="fDate" value="${dateVal}" min="${FIREBASE_START_DATE}" max="${TODAY.iso}" 
+             style="position: absolute; opacity: 0; pointer-events: none;"
+             onchange="updateDateDisplay(this.value)">
+    </div>
+  `;
+}
+
+function buildFormFooter(isEdit) {
+  return `<div class="form-footer"><span class="status-msg" id="formStatus"></span>${isEdit ? `<button class="btn-danger" onclick="deleteEntry()">Radera</button>` : ''}<button class="btn-secondary" onclick="closeModal()">Avbryt</button><button class="btn-primary" id="saveBtn">${isEdit ? 'Spara ändringar' : 'Spara'}</button></div>`;
+}
+
+function buildSchoolForm(e) {
+  const isEdit = !!e;
+  const place = e ? e.place : "Lund";
+  const levels = [...BASE_LEVELS, ...(EXTRA[place] || [])];
+  const selectedLevel = e ? e.level : levels[0];
+
+  return `
+    ${buildDateField(e ? e.ts.split('T')[0] : null)}
+    <div class="form-row-triple">
+      <div class="field-group col-45">
+        <label class="field-label">Ort / kommun</label>
+        <div class="custom-select-wrapper" id="placeSelectWrapper">
+          <div class="custom-select-trigger" id="placeSelectTrigger">
+            <span id="placeSelectLabel">${esc(place)}</span>
+            <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="custom-select-dropdown">
+            <div class="dropdown-cols" id="placeDropdownCols"></div>
+          </div>
+        </div>
+        <input type="hidden" id="fPlace" value="${esc(place)}" />
+      </div>
+      <div class="field-group col-35">
+        <label class="field-label">Skolnivå</label>
+        <div class="custom-select-wrapper" id="levelSelectWrapper">
+          <div class="custom-select-trigger" id="levelSelectTrigger">
+            <span id="levelSelectLabel">${esc(selectedLevel)}</span>
+            <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+          <div class="custom-select-dropdown">
+            <div class="dropdown-cols-2" id="levelDropdownCols"></div>
+          </div>
+        </div>
+        <input type="hidden" id="fLevel" value="${esc(selectedLevel)}" />
+      </div>
+      <div class="field-group col-20">
+        <label class="field-label">Antal</label>
+        <input type="number" id="fCount" inputmode="numeric" value="${e ? e.count : ''}" />
+      </div>
+    </div>
+    <label class="field-label">Valfri notering</label>
+    <input type="text" id="fSchool" placeholder="Skolans namn / Institution..." value="${e ? esc(e.school) : ''}" />
+    ${buildFormFooter(isEdit)}`;
+}
+
+function buildGroupForm(e) {
+  const isEdit = !!e;
+  const selectedType = e ? e.groupType : "";
+
+  return `
+    ${buildDateField(e ? e.ts.split('T')[0] : null)}
+    <div class="field-group group-type-field">
+      <label class="field-label">Typ av grupp</label>
+      <div class="custom-select-wrapper" id="groupTypeWrapper">
+        <div class="custom-select-trigger" id="groupTypeTrigger">
+          <span id="groupTypeLabel">Välj typ…</span>
+          <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="custom-select-dropdown">
+          <div class="dropdown-cols-2-r5" id="groupTypeDropdownCols"></div>
+        </div>
+      </div>
+      <input type="hidden" id="fGroupType" value="${esc(selectedType)}" />
+    </div>
+
+    <div id="groupCountFields" class="group-count-fields"></div>
+    <div id="paymentStatusRow"></div>
+
+    <label class="field-label">Valfri notering</label>
+    <input type="text" id="fNote" value="${e ? esc(e.note) : ''}" />
+    ${buildFormFooter(isEdit)}`;
+}
+
+function buildAmountForm(e, label) {
+  const isEdit = !!e;
+  const currentAmount = e ? e.amount : "";
+  return `
+    ${buildDateField(e ? e.ts.split('T')[0] : null)}
+    <label class="field-label">Totalbelopp</label>
+    <div class="amount-wrapper">
+      <span class="amount-prefix">kr</span>
+      <input type="number" id="fTotalAmount" inputmode="decimal" placeholder="Ange dagssumma" value="${currentAmount}" style="width: 220px;" />
+    </div>
+    ${buildFormFooter(isEdit)}`;
+}
+
+function buildOtherDataForm(e) {
+  const isEdit = !!e;
+  const savedCounts = e?.counts || {};
+  return `
+    ${buildDateField(e ? e.date || e.ts?.split('T')[0] : selectedDate)}
+
+    <label class="field-label">Vad avser besöken? <span style="color:var(--danger)">*</span></label>
+    <input type="text" id="fOtherPurpose" placeholder="T.ex. Teckningskurs eller Julstök dag 1" value="${e ? esc(e.purpose || "") : ""}" />
+
+    <label class="field-label">Antal besökare</label>
+    <div class="other-count-fields">
+      ${OTHER_COUNT_FIELDS.map(field => `
+        <div class="other-count-row">
+          <label class="other-count-label" for="fOtherCount_${field.key}">${field.label}</label>
+          <input type="number" class="other-count-input" id="fOtherCount_${field.key}"
+                 data-other-count-key="${field.key}" min="0" step="1" inputmode="numeric"
+                 placeholder="0" value="${savedCounts[field.key] ?? ""}" />
+        </div>`).join("")}
+    </div>
+
+    ${buildFormFooter(isEdit)}`;
+}
+
+function buildDailyForm(e) {
+  const isEdit = !!e;
+  dailyViewingRowId = 0;
+  const viewings = e?.viewings?.length ? e.viewings : [{}];
+
+  return `
+    ${buildDateField(e ? e.ts.split('T')[0] : null)}
+    <label class="field-label">Rapport</label>
+    <textarea id="fReport"
+              placeholder="Beskriv dagen – vad hände, vad fungerade bra och mindre bra, och finns det något annat som organisationen bör känna till?&#10;&#10;Hade vi programvisningar idag? Skriv gärna något även om dessa, men vänligen lista dem separat under &quot;Dagens programvisningar och antal personer&quot;."
+              spellcheck="false">${e ? esc(e.report) : ""}</textarea>
+
+    <section class="daily-viewings-section">
+      <h3 class="daily-viewings-title">Dagens programvisningar och antal personer</h3>
+      <div class="daily-viewings-rows" id="dailyViewingsRows">
+        ${viewings.map(buildDailyViewingRow).join("")}
+      </div>
+      <button class="daily-viewing-add" type="button" onclick="addDailyViewingRow()" aria-label="Lägg till ytterligare visning" title="Lägg till ytterligare visning">+</button>
+    </section>
+
+    ${buildFormFooter(isEdit)}`;
+}
+
+function buildDailyViewingRow(viewing = {}) {
+  const rowId = `dailyViewing_${dailyViewingRowId++}`;
+  return `
+    <div class="daily-viewing-row" data-viewing-row>
+      <input type="text" id="${rowId}_name" class="daily-viewing-name"
+             placeholder="T.ex. visningens namn och vem som höll i den"
+             value="${esc(viewing.name || "")}" />
+      <input type="number" id="${rowId}_count" class="daily-viewing-count"
+             min="1" step="1" inputmode="numeric" placeholder="Antal"
+             aria-label="Antal deltagare" value="${viewing.participants || ""}" />
+      <button class="daily-viewing-remove" type="button" onclick="removeDailyViewingRow(this)"
+              aria-label="Ta bort visning" title="Ta bort visning">×</button>
+    </div>`;
+}
+
+function addDailyViewingRow() {
+  const container = document.getElementById("dailyViewingsRows");
+  container.insertAdjacentHTML("beforeend", buildDailyViewingRow());
+  container.lastElementChild.querySelector(".daily-viewing-name").focus();
+}
+
+function removeDailyViewingRow(button) {
+  button.closest("[data-viewing-row]").remove();
+}
+
+// --- LOGIK ---
+function openModal(key, entry = null) {
+  activeModal = key;
+  if (!entry && ["cafe", "tickets", "sales", "daily"].includes(key)) {
+      entry = entries.find(e => e.type === key && (e.date || e.ts?.split('T')[0]) === selectedDate);
+  }
+  editingId = entry ? entry.id : null;
+  const builders = { school:buildSchoolForm, group:buildGroupForm, tickets:()=>buildAmountForm(entry,"Entré"), sales:()=>buildAmountForm(entry,"Butik"), cafe:()=>buildAmountForm(entry,"Kafé"), daily:buildDailyForm, other:buildOtherDataForm };
+  const label = TYPE_LABELS[key] || key;
+  document.getElementById("modalTitle").textContent = key === "group"
+    ? "Registrera grupp eller evenemang"
+    : key === "other"
+      ? (entry ? "Redigera övrig data" : "Registrera övrig data")
+      : (entry ? "Redigera " : "Registrera ") + label;
+  document.getElementById("modalBody").innerHTML = builders[key](entry);
+  document.getElementById("overlay").classList.add("open");
+  const modalEl = document.querySelector(".modal");
+  if (["tickets", "sales", "cafe"].includes(key)) {
+    modalEl.classList.add("narrow");
+  } else {
+    modalEl.classList.remove("narrow");
+  }
+  modalEl.classList.toggle("daily-viewings-modal", key === "daily");
+if (activeModal === "school") {
+  initPlaceSelect();
+}
+if (activeModal === "group") {
+  initGroupTypeSelect();
+}
+  document.getElementById("saveBtn").addEventListener("click", saveEntry);
+}
+
+function initPlaceSelect() {
+  const wrapper = document.getElementById("placeSelectWrapper");
+  const trigger = document.getElementById("placeSelectTrigger");
+  const labelEl = document.getElementById("placeSelectLabel");
+  const hidden  = document.getElementById("fPlace");
+  const cols    = document.getElementById("placeDropdownCols");
+
+  PLACES.forEach(p => {
+    const opt = document.createElement("div");
+    opt.className = "dropdown-option" + (p === hidden.value ? " selected" : "");
+    opt.textContent = p;
+    opt.addEventListener("click", () => {
+      hidden.value = p;
+      labelEl.textContent = p;
+      wrapper.querySelectorAll(".dropdown-option").forEach(o => o.classList.remove("selected"));
+      opt.classList.add("selected");
+      wrapper.classList.remove("open");
+      const levels = [...BASE_LEVELS, ...(EXTRA[p] || [])];
+      initLevelSelect(levels, null);
+    });
+    cols.appendChild(opt);
+  });
+
+  trigger.addEventListener("click", e => {
+    e.stopPropagation();
+    document.querySelectorAll(".custom-select-wrapper.open")
+      .forEach(w => { if (w !== wrapper) w.classList.remove("open"); });
+    wrapper.classList.toggle("open");
+  });
+
+  wrapper.querySelector(".custom-select-dropdown")
+    .addEventListener("click", e => e.stopPropagation());
+
+  const currentPlace = hidden.value;
+  const levels = [...BASE_LEVELS, ...(EXTRA[currentPlace] || [])];
+  const currentLevel = document.getElementById("fLevel").value || levels[0];
+  initLevelSelect(levels, currentLevel);
+}
+
+function initLevelSelect(levels, selectedLevel) {
+  const wrapper = document.getElementById("levelSelectWrapper");
+  const hidden  = document.getElementById("fLevel");
+  const cols    = document.getElementById("levelDropdownCols");
+
+  // Klona trigger innan vi gör något annat — rensar gamla lyssnare
+  const oldTrigger = document.getElementById("levelSelectTrigger");
+  const newTrigger = oldTrigger.cloneNode(true);
+  oldTrigger.parentNode.replaceChild(newTrigger, oldTrigger);
+
+  // Hämta labelEl från den nya triggern
+  const labelEl = newTrigger.querySelector("#levelSelectLabel");
+
+  cols.innerHTML = "";
+  hidden.value = selectedLevel || "";
+  labelEl.textContent = selectedLevel || "Välj nivå…";
+
+  levels.forEach(l => {
+    const opt = document.createElement("div");
+    opt.className = "dropdown-option" + (l === selectedLevel ? " selected" : "");
+    opt.textContent = l;
+    opt.addEventListener("click", () => {
+      hidden.value = l;
+      labelEl.textContent = l;
+      wrapper.querySelectorAll(".dropdown-option").forEach(o => o.classList.remove("selected"));
+      opt.classList.add("selected");
+      wrapper.classList.remove("open");
+    });
+    cols.appendChild(opt);
+  });
+
+  newTrigger.addEventListener("click", ev => {
+    ev.stopPropagation();
+    document.querySelectorAll(".custom-select-wrapper.open")
+      .forEach(w => { if (w !== wrapper) w.classList.remove("open"); });
+    wrapper.classList.toggle("open");
+  });
+
+  wrapper.querySelector(".custom-select-dropdown")
+    .addEventListener("click", ev => ev.stopPropagation());
+}
+
+function initGroupTypeSelect() {
+  const wrapper = document.getElementById("groupTypeWrapper");
+  const hidden  = document.getElementById("fGroupType");
+  const cols    = document.getElementById("groupTypeDropdownCols");
+
+  const oldTrigger = document.getElementById("groupTypeTrigger");
+  const newTrigger = oldTrigger.cloneNode(true);
+  oldTrigger.parentNode.replaceChild(newTrigger, oldTrigger);
+  const labelEl = newTrigger.querySelector("#groupTypeLabel");
+
+  const selectedType = hidden.value;
+  cols.innerHTML = "";
+
+  const setGroupTypeLabel = (groupType) => {
+    labelEl.innerHTML = groupType.optionHtml;
+    const info = labelEl.querySelector(".group-info");
+    if (info) {
+      info.addEventListener("click", event => event.stopPropagation());
+      info.addEventListener("keydown", event => event.stopPropagation());
+    }
+  };
+
+  GROUP_TYPES.forEach(groupType => {
+    const opt = document.createElement("div");
+    opt.className = "dropdown-option" + (groupType.value === selectedType ? " selected" : "");
+    opt.dataset.value = groupType.value;
+    opt.innerHTML = groupType.optionHtml;
+    const info = opt.querySelector(".group-info");
+    if (info) {
+      info.addEventListener("click", event => event.stopPropagation());
+      info.addEventListener("keydown", event => event.stopPropagation());
+    }
+    opt.addEventListener("click", () => {
+      hidden.value = groupType.value;
+      setGroupTypeLabel(groupType);
+      wrapper.querySelectorAll(".dropdown-option").forEach(o => o.classList.remove("selected"));
+      opt.classList.add("selected");
+      wrapper.classList.remove("open");
+      renderGroupDependentFields(groupType);
+    });
+    cols.appendChild(opt);
+  });
+
+  newTrigger.addEventListener("click", ev => {
+    ev.stopPropagation();
+    document.querySelectorAll(".custom-select-wrapper.open")
+      .forEach(w => { if (w !== wrapper) w.classList.remove("open"); });
+    wrapper.classList.toggle("open");
+  });
+
+  wrapper.querySelector(".custom-select-dropdown")
+    .addEventListener("click", ev => ev.stopPropagation());
+
+  if (selectedType) {
+    const selectedConfig = GROUP_TYPES.find(groupType => groupType.value === selectedType);
+    if (selectedConfig) {
+      setGroupTypeLabel(selectedConfig);
+      renderGroupDependentFields(selectedConfig);
+    }
+  }
+}
+
+function renderGroupDependentFields(groupType) {
+  const countContainer = document.getElementById("groupCountFields");
+  const paymentContainer = document.getElementById("paymentStatusRow");
+  const currentEntry = entries.find(entry => entry.id === editingId && entry.groupType === groupType.value);
+  const savedCounts = currentEntry?.counts || {};
+
+  countContainer.innerHTML = groupType.countFields.map((field, index) => {
+    const legacyValue = !currentEntry?.counts && groupType.countFields.length === 1 && index === 0
+      ? (currentEntry?.count || "")
+      : "";
+    const value = savedCounts[field.key] ?? legacyValue;
+    const minAttribute = field.min !== undefined ? field.min : 0;
+    const maxAttribute = field.max !== undefined ? ` max="${field.max}"` : "";
+
+    return `
+      <div class="group-count-row">
+        <label class="group-count-label" for="fGroupCount_${field.key}">${field.label}</label>
+        <input class="group-count-input" type="number" id="fGroupCount_${field.key}"
+               data-count-key="${field.key}" min="${minAttribute}"${maxAttribute} step="1" inputmode="numeric"
+               placeholder="Antal" value="${value}" />
+      </div>`;
+  }).join("");
+
+  countContainer.querySelectorAll(".group-count-input").forEach(input => {
+    const field = groupType.countFields.find(item => item.key === input.dataset.countKey);
+    input.addEventListener("change", () => {
+      const message = getGroupCountRangeMessage(input, field);
+      if (message) {
+        markGroupCountInvalid(input);
+        openGroupCountWarning(message, input);
+      } else {
+        input.style.borderColor = "";
+        input.style.boxShadow = "";
+      }
+    });
+  });
+
+paymentContainer.innerHTML = "";
+
+  /* LÄGG TILL DETTA BLOCK: */
+  if (groupType.eventPaymentQuestion) {
+    paymentContainer.insertAdjacentHTML("beforeend", buildGroupChoiceSection({
+      id: "eventPaymentRow",
+      questionHtml: groupType.eventPaymentQuestion,
+      name: "fEventPayment",
+      options: groupType.eventPaymentOptions,
+      selectedValue: currentEntry?.eventPayment || ""
+    }));
+  }
+
+  if (groupType.paymentQuestion) {
+    const isPaid = currentEntry?.paid || "";
+    paymentContainer.insertAdjacentHTML("beforeend", `
+      <div class="group-payment-row">
+        <span class="group-payment-question">${groupType.paymentQuestion}</span>
+        <label class="group-payment-choice">
+          <input type="radio" name="fPaid" value="Ja" ${isPaid === "Ja" ? "checked" : ""}> Ja
+        </label>
+        <label class="group-payment-choice">
+          <input type="radio" name="fPaid" value="Nej" ${isPaid === "Nej" ? "checked" : ""}> Nej
+        </label>
+      </div>`);
+  }
+  
+  if (groupType.entrancePaymentQuestion) {
+	paymentContainer.insertAdjacentHTML("beforeend", buildGroupChoiceSection({
+		id: "entrancePaymentRow",
+		questionHtml: groupType.entrancePaymentQuestion,
+		name: "fEntrancePayment",
+		options: groupType.entrancePaymentOptions,
+		selectedValue: currentEntry?.entrancePayment || ""
+	}));
+	}
+
+  if (groupType.viewingQuestion) {
+    paymentContainer.insertAdjacentHTML("beforeend", buildGroupChoiceSection({
+      id: "bookedViewingRow",
+      questionHtml: groupType.viewingQuestion,
+      name: "fBookedViewing",
+      options: [
+        { value: "Ja", label: "Ja" },
+        { value: "Nej", label: "Nej" }
+      ],
+      selectedValue: currentEntry?.bookedViewing || ""
+    }));
+    paymentContainer.insertAdjacentHTML("beforeend", `<div id="viewingPaymentRow"></div>`);
+    document.querySelectorAll('input[name="fBookedViewing"]').forEach(input => {
+      input.addEventListener("change", () => renderViewingPaymentChoice(groupType, currentEntry));
+    });
+    renderViewingPaymentChoice(groupType, currentEntry);
+  }
+}
+
+function buildGroupChoiceSection({ id, questionHtml, name, options, selectedValue }) {
+  return `
+    <div class="group-choice-section" id="${id}">
+      <span class="group-choice-question">${questionHtml}</span>
+      <div class="group-choice-buttons">
+        ${options.map(option => `
+          <label class="group-choice-button">
+            <input type="radio" name="${name}" value="${esc(option.value)}" ${selectedValue === option.value ? "checked" : ""}>
+            <span>${esc(option.label)}</span>
+          </label>
+        `).join("")}
+      </div>
+    </div>`;
+}
+
+function renderViewingPaymentChoice(groupType, currentEntry) {
+  const container = document.getElementById("viewingPaymentRow");
+  if (!container) return;
+
+  const bookedViewing = document.querySelector('input[name="fBookedViewing"]:checked')?.value || "";
+  if (bookedViewing !== "Ja") {
+    container.innerHTML = "";
+    return;
+  }
+
+  container.innerHTML = buildGroupChoiceSection({
+    id: "viewingPaymentChoiceRow",
+    questionHtml: groupType.viewingPaymentQuestion,
+    name: "fViewingPayment",
+    options: groupType.viewingPaymentOptions,
+    selectedValue: currentEntry?.viewingPayment || ""
+  });
+}
+
+function getGroupCountRangeMessage(input, field) {
+  const rawValue = input.value.trim();
+  if (!rawValue || !field?.rangeMessage) return "";
+
+  const value = Number(rawValue);
+  if (!Number.isFinite(value)) return "";
+  if (field.max !== undefined && value > field.max) return field.rangeMessage;
+  if (field.min !== undefined && value < field.min) return field.rangeMessage;
+  return "";
+}
+
+function markGroupCountInvalid(input) {
+  input.style.borderColor = "var(--danger)";
+  input.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
+}
+
+function markGroupChoiceInvalid(id) {
+  const element = document.getElementById(id);
+  if (!element) return;
+  element.style.borderColor = "var(--danger)";
+  element.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
+}
+
+function openGroupCountWarning(messageHtml, input) {
+  groupCountWarningInput = input;
+  document.getElementById("groupCountWarningMessage").innerHTML = messageHtml;
+  document.getElementById("groupCountWarningOverlay").classList.add("open");
+}
+
+function closeGroupCountWarning() {
+  document.getElementById("groupCountWarningOverlay").classList.remove("open");
+  const input = groupCountWarningInput;
+  groupCountWarningInput = null;
+  if (input) input.focus();
+}
+
+function openEditModal(entry) { openModal(entry.type, entry); }
+function closeModal() { document.getElementById("overlay").classList.remove("open"); activeModal = null; editingId = null; }
+function deleteEntry() {
+  document.getElementById("deleteOverlay").classList.add("open");
+}
+function closeDeleteModal() {
+  document.getElementById("deleteOverlay").classList.remove("open");
+}
+async function confirmDelete() {
+  if (!editingId) return;
+  if (!db) {
+    alert("Firebase är ännu inte konfigurerat för Kulturens dagsdata.");
+    return;
+  }
+  if (!auth?.currentUser) {
+    closeDeleteModal();
+    closeModal();
+    showLoginModal();
+    return;
+  }
+  const deleteButton = document.querySelector('#deleteOverlay .btn-danger');
+  if (deleteButton) {
+    deleteButton.disabled = true;
+    deleteButton.textContent = "Raderar…";
+  }
+  try {
+    await db.collection(FIREBASE_COLLECTION).doc(String(editingId)).delete();
+    closeDeleteModal();
+    closeModal();
+  } catch (error) {
+    console.error("Kunde inte radera Firebase-posten:", error);
+    alert("Posten kunde inte raderas. Kontrollera nätverk eller Firebase-behörighet.");
+  } finally {
+    if (deleteButton) {
+      deleteButton.disabled = false;
+      deleteButton.textContent = "Ja, radera";
+    }
+  }
+}
+
+function monthShortForDate(dateStr) {
+  const monthIndex = Number(dateStr.slice(5, 7)) - 1;
+  return MONTHS_SHORT[monthIndex].toLowerCase();
+}
+
+function makeRecordTimestamp(dateStr, existingTimestamp = null) {
+  if (existingTimestamp) {
+    const d = new Date(existingTimestamp);
+    if (!Number.isNaN(d.getTime())) {
+      const localDate = new Intl.DateTimeFormat("sv-SE", {year:"numeric", month:"2-digit", day:"2-digit"}).format(d);
+      if (localDate === dateStr) return existingTimestamp;
+    }
+  }
+  const now = new Date();
+  const hh = String(now.getHours()).padStart(2, "0");
+  const mm = String(now.getMinutes()).padStart(2, "0");
+  const ss = String(now.getSeconds()).padStart(2, "0");
+  return new Date(`${dateStr}T${hh}:${mm}:${ss}`).toISOString();
+}
+
+function canonicalTypeForUiType(type) {
+  return ({ school:"school", group:"group", tickets:"tickets", sales:"shop", cafe:"cafe", daily:"dailyReport", other:"other" })[type] || type;
+}
+
+function uiTypeForCanonicalType(type) {
+  return ({ school:"school", group:"group", tickets:"tickets", shop:"sales", cafe:"cafe", dailyReport:"daily", other:"other" })[type] || type;
+}
+
+function buildFirebaseRecord(entry, dateStr, docId) {
+  const nowIso = new Date().toISOString();
+  const canonicalType = canonicalTypeForUiType(entry.type);
+  const record = {
+    id: String(docId),
+    type: canonicalType,
+    category: canonicalType === "group" ? entry.groupType : ({
+      school: "Skolbesök",
+      tickets: "Entréintäkter",
+      shop: "Butiksförsäljning",
+      cafe: "Kaféförsäljning",
+      dailyReport: "Dagsrapport",
+      other: "Övrig data"
+    })[canonicalType],
+    date: dateStr,
+    timestamp: makeRecordTimestamp(dateStr, entry._timestamp),
+    year: Number(dateStr.slice(0, 4)),
+    month: Number(dateStr.slice(5, 7)),
+    monthShort: monthShortForDate(dateStr),
+    venue: VENUE,
+    metadata: {
+      createdTs: entry._createdTs || nowIso,
+      updatedTs: nowIso,
+      schemaVersion: 1
+    }
+  };
+
+  if (canonicalType === "school") {
+    record.details = {
+      municipality: entry.place,
+      level: entry.level
+    };
+    record.metrics = { totalCount: entry.count };
+    if (entry.school) record.note = entry.school;
+  }
+
+  if (canonicalType === "group") {
+    const counts = {};
+    Object.entries(entry.counts || {}).forEach(([key, value]) => {
+      const n = Number(value || 0);
+      if (!n) return;
+      const canonicalKey = key === "discount" ? "discountAdults" : key;
+      counts[canonicalKey] = n;
+    });
+    record.metrics = { totalCount: entry.count };
+    if (Object.keys(counts).length) record.metrics.counts = counts;
+
+    const payments = {};
+    if (entry.eventPayment) payments.eventPayment = entry.eventPayment;
+    if (entry.entrancePayment) payments.entrancePayment = entry.entrancePayment;
+    if (entry.bookedViewing === "Ja" || entry.bookedViewing === "Nej") {
+      payments.bookedViewing = entry.bookedViewing === "Ja";
+    }
+    if (entry.viewingPayment) payments.viewingPayment = entry.viewingPayment;
+
+    const paymentMethods = [entry.eventPayment, entry.entrancePayment, entry.viewingPayment].filter(Boolean);
+    if (paymentMethods.length) {
+      payments.isPaid = paymentMethods.every(method => method === "direct");
+      payments.flags = {
+        paymentCategory: Boolean(entry.eventPayment || entry.entrancePayment),
+        entranceInvoice: entry.eventPayment === "invoice" || entry.entrancePayment === "invoice",
+        viewingInvoice: entry.viewingPayment === "invoice"
+      };
+    }
+    if (Object.keys(payments).length) record.payments = payments;
+    if (entry.note) record.note = entry.note;
+  }
+
+  if (["tickets", "shop", "cafe"].includes(canonicalType)) {
+    record.metrics = {
+      amount: Number(entry.amount),
+      currency: "SEK"
+    };
+  }
+
+  if (canonicalType === "dailyReport") {
+    record.details = {
+      report: entry.report,
+      viewings: entry.viewings || []
+    };
+  }
+
+  if (canonicalType === "other") {
+    const counts = {};
+    Object.entries(entry.counts || {}).forEach(([key, value]) => {
+      const n = Number(value || 0);
+      if (n > 0) counts[key] = n;
+    });
+    record.details = { purpose: entry.purpose };
+    record.metrics = {
+      totalCount: Number(entry.count || 0),
+      counts
+    };
+  }
+
+  return record;
+}
+
+function firebaseRecordToEntry(doc) {
+  const record = doc.data();
+  const uiType = uiTypeForCanonicalType(record.type);
+  const date = record.date || "";
+  const entry = {
+    id: doc.id,
+    type: uiType,
+    date,
+    ts: `${date}T12:00:00`,
+    logTs: record.metadata?.createdTs || record.timestamp || "",
+    _timestamp: record.timestamp || null,
+    _createdTs: record.metadata?.createdTs || null
+  };
+
+  if (uiType === "school") {
+    entry.place = record.details?.municipality || "Lund";
+    entry.level = record.details?.level || "";
+    entry.count = Number(record.metrics?.totalCount || 0);
+    entry.school = record.note || "";
+  }
+
+  if (uiType === "group") {
+    entry.groupType = record.category || "";
+    entry.count = Number(record.metrics?.totalCount || 0);
+    entry.counts = {};
+    Object.entries(record.metrics?.counts || {}).forEach(([key, value]) => {
+      const uiKey = key === "discountAdults" ? "discount" : key;
+      entry.counts[uiKey] = Number(value || 0);
+    });
+    entry.note = record.note || "";
+    entry.eventPayment = record.payments?.eventPayment || "";
+    entry.entrancePayment = record.payments?.entrancePayment || "";
+    entry.viewingPayment = record.payments?.viewingPayment || "";
+    if (typeof record.payments?.bookedViewing === "boolean") {
+      entry.bookedViewing = record.payments.bookedViewing ? "Ja" : "Nej";
+    }
+    if (typeof record.payments?.isPaid === "boolean") {
+      entry.paid = record.payments.isPaid ? "Ja" : "Nej";
+    }
+  }
+
+  if (["tickets", "sales", "cafe"].includes(uiType)) {
+    entry.amount = Number(record.metrics?.amount || 0);
+  }
+
+  if (uiType === "daily") {
+    entry.report = record.details?.report || "";
+    entry.viewings = Array.isArray(record.details?.viewings) ? record.details.viewings : [];
+  }
+
+  if (uiType === "other") {
+    entry.purpose = record.details?.purpose || "";
+    entry.count = Number(record.metrics?.totalCount || 0);
+    entry.counts = {};
+    Object.entries(record.metrics?.counts || {}).forEach(([key, value]) => {
+      entry.counts[key] = Number(value || 0);
+    });
+  }
+
+  return entry;
+}
+
+function updateHeaderDate(dateStr) {
+  const label = document.getElementById("dateline");
+  const picker = document.getElementById("headerDatePicker");
+  if (label) label.textContent = `${dateStr} ${getDayName(dateStr)}`;
+  if (picker) picker.value = dateStr;
+}
+
+function openHeaderDatePicker() {
+  const picker = document.getElementById("headerDatePicker");
+  if (!picker) return;
+  if (typeof picker.showPicker === "function") picker.showPicker();
+  else picker.focus();
+}
+
+function subscribeToDate(dateStr) {
+  if (dateStr < FIREBASE_START_DATE) dateStr = FIREBASE_START_DATE;
+  if (dateStr > TODAY.iso) dateStr = TODAY.iso;
+
+  selectedDate = dateStr;
+  updateHeaderDate(dateStr);
+  if (unsubscribeDay) unsubscribeDay();
+
+  const empty = document.getElementById("emptyState");
+  if (!db) {
+    entries = [];
+    renderEntries();
+    if (empty) {
+      empty.style.display = "block";
+      empty.textContent = "Firebase för Kulturens dagsdata är ännu inte konfigurerat.";
+    }
+    return;
+  }
+  if (!auth?.currentUser) {
+    entries = [];
+    renderEntries();
+    if (empty) {
+      empty.style.display = "block";
+      empty.textContent = "Logga in för att hämta dagsdata.";
+    }
+    return;
+  }
+  if (empty) {
+    empty.style.display = "block";
+    empty.textContent = "Hämtar dagens registreringar…";
+  }
+
+  unsubscribeDay = db.collection(FIREBASE_COLLECTION)
+    .where("date", "==", dateStr)
+    .where("venue", "==", VENUE)
+    .onSnapshot(snapshot => {
+      entries = snapshot.docs.map(firebaseRecordToEntry);
+      if (empty) empty.textContent = "Inga händelser registrerade än.";
+      renderEntries();
+    }, error => {
+      console.error("Kunde inte hämta Firebase-data:", error);
+      entries = [];
+      renderEntries();
+      if (empty) {
+        empty.style.display = "block";
+        empty.textContent = "Kunde inte hämta data från Firebase.";
+      }
+    });
+}
+
+function setStatus(msg, cls) { const el = document.getElementById("formStatus"); if (el) { el.textContent = msg; el.className = "status-msg " + (cls||""); } }
+
+async function saveEntry() {
+  if (!db) {
+    setStatus("Firebase är ännu inte konfigurerat för Kulturens dagsdata.", "error");
+    return;
+  }
+  if (!auth?.currentUser) {
+    closeModal();
+    showLoginModal();
+    return;
+  }
+  const selectedEntryDate = document.getElementById("fDate").value || selectedDate;
+  const now = new Date();
+  const existingDayEntry = (["cafe", "tickets", "sales", "daily"].includes(activeModal))
+    ? entries.find(e => e.type === activeModal && (e.date || e.ts?.split('T')[0]) === selectedEntryDate)
+    : null;
+
+  const sourceEntry = editingId ? entries.find(e => e.id === editingId) : existingDayEntry;
+  const id = sourceEntry?.id || null;
+  let entry = {
+    id,
+    type: activeModal,
+    _timestamp: sourceEntry?._timestamp || null,
+    _createdTs: sourceEntry?._createdTs || null
+  };
+
+  const resetStyle = (el) => {
+    if (el) {
+      el.style.borderColor = "";
+      el.style.boxShadow = "";
+    }
+  };
+  document.querySelectorAll('input, textarea, .custom-select-trigger, .group-choice-section').forEach(resetStyle);
+  setStatus("", "");
+
+  if (activeModal === "school") {
+    entry.place = document.getElementById("fPlace").value;
+    entry.school = document.getElementById("fSchool").value.trim();
+    entry.level = document.getElementById("fLevel").value;
+    entry.count = parseInt(document.getElementById("fCount").value) || 0;
+
+    const levelTrigger = document.getElementById("levelSelectWrapper").querySelector(".custom-select-trigger");
+    const countInput = document.getElementById("fCount");
+
+    if (!entry.level && !entry.count) {
+      levelTrigger.style.borderColor = "var(--danger)";
+      levelTrigger.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
+      countInput.style.borderColor = "var(--danger)";
+      countInput.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
+      setStatus("Välj skolnivå och ange antal elever.", "error");
+      return;
+    }
+    if (!entry.level) {
+      levelTrigger.style.borderColor = "var(--danger)";
+      levelTrigger.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
+      setStatus("Välj en skolnivå.", "error");
+      return;
+    }
+    if (!entry.count) {
+      countInput.style.borderColor = "var(--danger)";
+      countInput.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
+      setStatus("Ange antal elever.", "error");
+      return;
+    }
+
+  } else if (activeModal === "group") {
+    entry.groupType = document.getElementById("fGroupType").value;
+    const groupTrigger = document.getElementById("groupTypeWrapper").querySelector(".custom-select-trigger");
+
+    if (!entry.groupType) {
+      groupTrigger.style.borderColor = "var(--danger)";
+      groupTrigger.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
+      setStatus("Välj typ av grupp.", "error");
+      return;
+    }
+
+    const groupType = GROUP_TYPES.find(type => type.value === entry.groupType);
+    const countInputs = [...document.querySelectorAll(".group-count-input")];
+    const hasInvalidCount = countInputs.some(input => {
+      const value = Number(input.value || 0);
+      return !Number.isInteger(value) || value < 0;
+    });
+
+    if (hasInvalidCount) {
+      countInputs.forEach(input => {
+        const value = Number(input.value || 0);
+        if (!Number.isInteger(value) || value < 0) {
+          input.style.borderColor = "var(--danger)";
+          input.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
+        }
+      });
+      setStatus("Antal måste anges med heltal, noll eller större.", "error");
+      return;
+    }
+
+    const rangeError = countInputs.map(input => {
+      const field = groupType.countFields.find(item => item.key === input.dataset.countKey);
+      return { input, message: getGroupCountRangeMessage(input, field) };
+    }).find(result => result.message);
+
+    if (rangeError) {
+      markGroupCountInvalid(rangeError.input);
+      openGroupCountWarning(rangeError.message, rangeError.input);
+      return;
+    }
+
+    const missingRequiredCount = countInputs.map(input => {
+      const field = groupType.countFields.find(item => item.key === input.dataset.countKey);
+      return { input, field, value: Number(input.value || 0) };
+    }).find(result => result.field?.required && result.value <= 0);
+
+    if (missingRequiredCount) {
+      missingRequiredCount.input.style.borderColor = "var(--danger)";
+      missingRequiredCount.input.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
+      setStatus(`Ange ${missingRequiredCount.field.label.toLowerCase()}.`, "error");
+      return;
+    }
+
+    entry.counts = Object.fromEntries(countInputs.map(input => [
+      input.dataset.countKey,
+      Number(input.value || 0)
+    ]));
+    entry.count = Object.values(entry.counts).reduce((sum, count) => sum + count, 0);
+
+    if (entry.count === 0) {
+      countInputs.forEach(input => {
+        input.style.borderColor = "var(--danger)";
+        input.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
+      });
+      setStatus("Ange antal personer i minst en kategori.", "error");
+      return;
+    }
+
+    if (groupType?.eventPaymentQuestion) {
+      const eventPaymentRadio = document.querySelector('input[name="fEventPayment"]:checked');
+      if (!eventPaymentRadio) {
+        markGroupChoiceInvalid("eventPaymentRow");
+        setStatus("Ange hur evenemanget betalas.", "error");
+        return;
+      }
+      entry.eventPayment = eventPaymentRadio.value;
+    }
+
+    if (groupType?.entrancePaymentQuestion) {
+      const entrancePaymentRadio = document.querySelector('input[name="fEntrancePayment"]:checked');
+      if (!entrancePaymentRadio) {
+        markGroupChoiceInvalid("entrancePaymentRow");
+        setStatus("Ange hur entréavgiften betalas.", "error");
+        return;
+      }
+      entry.entrancePayment = entrancePaymentRadio.value;
+    }
+
+    if (groupType?.viewingQuestion) {
+      const bookedViewingRadio = document.querySelector('input[name="fBookedViewing"]:checked');
+      if (!bookedViewingRadio) {
+        markGroupChoiceInvalid("bookedViewingRow");
+        setStatus("Ange om gruppen har bokat en visning.", "error");
+        return;
+      }
+      entry.bookedViewing = bookedViewingRadio.value;
+
+      if (entry.bookedViewing === "Ja") {
+        const viewingPaymentRadio = document.querySelector('input[name="fViewingPayment"]:checked');
+        if (!viewingPaymentRadio) {
+          markGroupChoiceInvalid("viewingPaymentChoiceRow");
+          setStatus("Ange hur visningen betalas.", "error");
+          return;
+        }
+        entry.viewingPayment = viewingPaymentRadio.value;
+      }
+    }
+
+    entry.note = document.getElementById("fNote").value.trim();
+
+  } else if (activeModal === "other") {
+    const purposeInput = document.getElementById("fOtherPurpose");
+    entry.purpose = purposeInput.value.trim();
+    if (!entry.purpose) {
+      purposeInput.style.borderColor = "var(--danger)";
+      purposeInput.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
+      setStatus("Ange vad besöken avser.", "error");
+      return;
+    }
+
+    const countInputs = [...document.querySelectorAll(".other-count-input")];
+    let invalid = false;
+    entry.counts = {};
+    countInputs.forEach(input => {
+      const raw = input.value.trim();
+      const value = raw === "" ? 0 : Number(raw);
+      if (!Number.isInteger(value) || value < 0) {
+        input.style.borderColor = "var(--danger)";
+        input.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
+        invalid = true;
+      } else {
+        entry.counts[input.dataset.otherCountKey] = value;
+      }
+    });
+    if (invalid) {
+      setStatus("Antal måste anges med heltal, noll eller större.", "error");
+      return;
+    }
+    entry.count = Object.values(entry.counts).reduce((sum, value) => sum + value, 0);
+    if (entry.count === 0) {
+      countInputs.forEach(input => {
+        input.style.borderColor = "var(--danger)";
+        input.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
+      });
+      setStatus("Ange antal besökare i minst en kategori.", "error");
+      return;
+    }
+
+  } else if (["cafe", "tickets", "sales"].includes(activeModal)) {
+    const amountInput = document.getElementById("fTotalAmount");
+    const totalVal = parseFloat(amountInput.value);
+    if (isNaN(totalVal) || totalVal <= 0) {
+      amountInput.style.borderColor = "var(--danger)";
+      amountInput.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
+      setStatus("Ange ett giltigt belopp.", "error");
+      return;
+    }
+    entry.amount = totalVal;
+
+  } else if (activeModal === "daily") {
+    const reportInput = document.getElementById("fReport");
+    entry.report = reportInput.value.trim();
+    if (!entry.report) {
+      reportInput.style.borderColor = "var(--danger)";
+      reportInput.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
+      setStatus("Rapporten kan inte vara tom.", "error");
+      return;
+    }
+
+    const viewingRows = [...document.querySelectorAll("[data-viewing-row]")];
+    const viewings = [];
+    let hasInvalidViewing = false;
+    viewingRows.forEach(row => {
+      const nameInput = row.querySelector(".daily-viewing-name");
+      const countInput = row.querySelector(".daily-viewing-count");
+      const name = nameInput.value.trim();
+      const rawCount = countInput.value.trim();
+      if (!name && !rawCount) return;
+      const participants = Number(rawCount);
+      if (!name) {
+        nameInput.style.borderColor = "var(--danger)";
+        nameInput.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
+        hasInvalidViewing = true;
+      }
+      if (!rawCount || !Number.isInteger(participants) || participants < 1) {
+        countInput.style.borderColor = "var(--danger)";
+        countInput.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
+        hasInvalidViewing = true;
+      }
+      if (name && rawCount && Number.isInteger(participants) && participants >= 1) {
+        viewings.push({ name, participants });
+      }
+    });
+    if (hasInvalidViewing) {
+      setStatus("Fyll i både visning och ett giltigt antal deltagare.", "error");
+      return;
+    }
+    entry.viewings = viewings;
+  }
+
+  const saveButton = document.getElementById("saveBtn");
+  if (saveButton) {
+    saveButton.disabled = true;
+    saveButton.textContent = "Sparar…";
+  }
+
+  try {
+    const docRef = id
+      ? db.collection(FIREBASE_COLLECTION).doc(String(id))
+      : db.collection(FIREBASE_COLLECTION).doc();
+    const record = buildFirebaseRecord(entry, selectedEntryDate, docRef.id);
+    await docRef.set(record);
+    closeModal();
+    if (selectedEntryDate !== selectedDate) subscribeToDate(selectedEntryDate);
+  } catch (error) {
+    console.error("Kunde inte spara Firebase-posten:", error);
+    setStatus("Kunde inte spara. Kontrollera nätverk eller Firebase-behörighet.", "error");
+    if (saveButton) {
+      saveButton.disabled = false;
+      saveButton.textContent = editingId ? "Spara ändringar" : "Spara";
+    }
+  }
+}
+
+
+function showLoginModal(message = "") {
+  const overlay = document.getElementById("authLoginOverlay");
+  const status = document.getElementById("authLoginStatus");
+  if (status) status.textContent = message;
+  if (overlay) overlay.classList.add("open");
+  setTimeout(() => document.getElementById("authEmail")?.focus(), 0);
+}
+
+function hideLoginModal() {
+  document.getElementById("authLoginOverlay")?.classList.remove("open");
+  const status = document.getElementById("authLoginStatus");
+  if (status) status.textContent = "";
+  const password = document.getElementById("authPassword");
+  if (password) password.value = "";
+}
+
+function setSignedInUser(user) {
+  const logoutButton = document.getElementById("authLogoutButton");
+  if (logoutButton) logoutButton.style.display = user ? "flex" : "none";
+}
+
+function friendlyAuthError(error) {
+  const code = error?.code || "";
+  if (["auth/invalid-credential", "auth/wrong-password", "auth/user-not-found", "auth/invalid-email"].includes(code)) {
+    return "Fel e-postadress eller lösenord.";
+  }
+  if (code === "auth/too-many-requests") return "För många inloggningsförsök. Försök igen senare.";
+  if (code === "auth/network-request-failed") return "Nätverksfel. Kontrollera anslutningen och försök igen.";
+  return "Inloggningen misslyckades.";
+}
+
+async function loginWithEmailPassword(event) {
+  event.preventDefault();
+  if (!auth) return;
+  const email = document.getElementById("authEmail").value.trim();
+  const password = document.getElementById("authPassword").value;
+  const button = document.getElementById("authLoginButton");
+  const status = document.getElementById("authLoginStatus");
+  if (status) status.textContent = "";
+  button.disabled = true;
+  button.textContent = "Loggar in…";
+  try {
+    await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+    await auth.signInWithEmailAndPassword(email, password);
+  } catch (error) {
+    console.error("Firebase-inloggning misslyckades:", error);
+    if (status) status.textContent = friendlyAuthError(error);
+  } finally {
+    button.disabled = false;
+    button.textContent = "Logga in";
+  }
+}
+
+async function logoutFirebaseUser() {
+  if (!auth) return;
+  try {
+    await auth.signOut();
+  } catch (error) {
+    console.error("Kunde inte logga ut:", error);
+  }
+}
+
+document.querySelectorAll(".action-btn[data-modal], .btn-other-data[data-modal]").forEach(btn => {
+  btn.addEventListener("click", () => openModal(btn.dataset.modal));
+});
+document.getElementById("modalClose").addEventListener("click", closeModal);
+document.getElementById("overlay").addEventListener("click", e => { if (e.target.id === "overlay") closeModal(); });
+document.addEventListener("click", () => {
+  document.querySelectorAll(".custom-select-wrapper.open")
+    .forEach(w => w.classList.remove("open"));
+});
+document.getElementById("deleteOverlay").addEventListener("click", e => {
+  if (e.target.id === "deleteOverlay") closeDeleteModal();
+});
+document.getElementById("groupCountWarningOverlay").addEventListener("click", e => {
+  if (e.target.id === "groupCountWarningOverlay") closeGroupCountWarning();
+});
+
+const headerDatePicker = document.getElementById("headerDatePicker");
+headerDatePicker.min = FIREBASE_START_DATE;
+headerDatePicker.max = TODAY.iso;
+headerDatePicker.value = selectedDate;
+headerDatePicker.addEventListener("change", event => subscribeToDate(event.target.value));
+
+document.getElementById("authLoginForm").addEventListener("submit", loginWithEmailPassword);
+document.getElementById("authLogoutButton").addEventListener("click", logoutFirebaseUser);
+
+if (auth) {
+  auth.onAuthStateChanged(user => {
+    setSignedInUser(user);
+    if (user) {
+      hideLoginModal();
+      subscribeToDate(selectedDate);
+    } else {
+      if (unsubscribeDay) {
+        unsubscribeDay();
+        unsubscribeDay = null;
+      }
+      entries = [];
+      renderEntries();
+      showLoginModal();
+    }
+  });
+} else {
+  showLoginModal("Firebase Authentication är inte konfigurerat.");
+}
+</script>
+</body>
+</html>
