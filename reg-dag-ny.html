@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="sv">
 <head>
@@ -120,6 +119,10 @@ main {
   object-fit: contain;
 }
 
+#statBox_daily .venue-icon {
+  transform: translateY(3px) scale(0.85);
+}
+
 .stat-num {
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 16px;            /* Tydlig sifferstorlek */
@@ -174,6 +177,53 @@ main {
   text-transform: uppercase;
   color: var(--muted);
   margin-bottom: 20px;
+}
+
+.entries-panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.entries-panel-heading .panel-label { margin-bottom: 0; }
+
+.entry-sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.entry-sort-label {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.entry-sort-button {
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  background: var(--surface);
+  color: var(--muted);
+  padding: 7px 12px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.entry-sort-button:hover,
+.entry-sort-button.active {
+  border-color: var(--accent);
+  background: var(--surface2);
+  color: var(--accent-dark);
+}
+
+@media (max-width: 600px) {
+  .entries-panel-heading { align-items: flex-start; flex-direction: column; }
+  .entry-sort-controls { flex-wrap: wrap; }
 }
 
 .action-grid {
@@ -265,12 +315,13 @@ main {
   justify-content: flex-start;
 }
 
-.badge-school  { background: #e7f5ff; color: #1971c2; }
-.badge-group   { background: #ebfbee; color: #2f9e44; }
-.badge-cafe    { background: #fff9db; color: #f08c00; }
-.badge-tickets { background: #fff0f6; color: #d6336c; }
-.badge-sales   { background: #f8f9fa; color: #495057; }
-.badge-daily   { background: #f3f0ff; color: #7048e8; }
+.entry-badge:not(.badge-other) {
+  width: 130px;
+  margin-right: 20px;
+  background: #e9ecef;
+  color: #111;
+}
+
 .badge-other   { background: #e6fcf5; color: #087f5b; }
 
 .entry-body { flex: 1; min-width: 0; }
@@ -293,10 +344,17 @@ main {
 
 .entry-time {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--muted);
   text-align: right;
   line-height: 1.4;
+  align-self: flex-start;
+  padding-top: 1px;
+}
+
+.entry-time span {
+  display: block;
+  white-space: nowrap;
 }
 
 .entry-time strong {
@@ -331,7 +389,8 @@ main {
   animation: modalIn .18s ease;
 }
 
-.modal.narrow { width: min(400px, 96vw); }
+.modal.narrow { width: min(440px, 96vw); }
+.modal.narrow .btn-primary { white-space: nowrap; }
 
 .modal.daily-viewings-modal {
   max-height: calc(100vh - 32px);
@@ -986,7 +1045,7 @@ img.badge-icon {
 
 /* ── ÖVRIG DATA: separat inmatningsknapp högst upp till höger ── */
 .other-data-action {
-  position: absolute;
+  position: fixed;
   right: 24px;
   top: 24px;
   z-index: 20;
@@ -1057,7 +1116,7 @@ img.badge-icon {
 
 @media (max-width: 1380px) {
   .other-data-action {
-    position: absolute;
+    position: fixed;
     right: 24px;
     top: 24px;
   }
@@ -1202,27 +1261,27 @@ img.badge-icon {
 
 	  <div class="stats-row">
         <div class="stat-box" id="statBox_school" title="Skolbesök">
-          <img src="skola.svg" alt="" class="venue-icon">
+          <img src="school.svg" alt="" class="venue-icon">
           <div class="stat-num" id="statSchool">0</div>
         </div>
         <div class="stat-box" id="statBox_group" title="Grupper och evenemang">
-          <img src="grupp.svg" alt="" class="venue-icon">
+          <img src="users-round.svg" alt="" class="venue-icon">
           <div class="stat-num" id="statGroup">0</div>
         </div>
         <div class="stat-box" id="statBox_tickets" title="Entréintäkter">
-          <img src="entre.svg" alt="" class="venue-icon">
+          <img src="square-arrow-right-enter.svg" alt="" class="venue-icon">
           <div class="stat-num" id="statTickets">0,00</div>
         </div>
         <div class="stat-box" id="statBox_sales" title="Butiksförsäljning">
-          <img src="butik.svg" alt="" class="venue-icon">
+          <img src="shopping-cart.svg" alt="" class="venue-icon">
           <div class="stat-num" id="statSales">0,00</div>
         </div>
         <div class="stat-box" id="statBox_cafe" title="Kaféförsäljning">
-          <img src="kafe.svg" alt="" class="venue-icon">
+          <img src="coffee.svg" alt="" class="venue-icon">
           <div class="stat-num" id="statCafe">0,00</div>
         </div>
         <div class="stat-box" id="statBox_daily" title="Dagsrapport">
-          <img src="dagsrapport.svg" alt="" class="venue-icon">
+          <img src="square-pen.svg" alt="" class="venue-icon">
           <div class="stat-checkbox" id="statDaily"></div>
         </div>
       </div>
@@ -1236,7 +1295,7 @@ img.badge-icon {
         
         <button class="action-btn" data-modal="school">
           <div class="icon-wrap">
-            <img src="skola.svg" alt="" class="fa-icon">
+            <img src="school.svg" alt="" class="fa-icon">
           </div>
           <div class="btn-text-group">
             <span class="btn-title">Skolbesök</span>
@@ -1246,7 +1305,7 @@ img.badge-icon {
 
         <button class="action-btn" data-modal="group">
           <div class="icon-wrap">
-            <img src="grupp.svg" alt="" class="fa-icon">
+            <img src="users-round.svg" alt="" class="fa-icon">
           </div>
           <div class="btn-text-group">
             <span class="btn-title">Grupper och evenemang</span>
@@ -1256,7 +1315,7 @@ img.badge-icon {
 
         <button class="action-btn" data-modal="tickets">
           <div class="icon-wrap">
-            <img src="entre.svg" alt="" class="fa-icon">
+            <img src="square-arrow-right-enter.svg" alt="" class="fa-icon">
           </div>
           <div class="btn-text-group">
             <span class="btn-title">Entréintäkter</span>
@@ -1266,7 +1325,7 @@ img.badge-icon {
 
         <button class="action-btn" data-modal="sales">
           <div class="icon-wrap">
-            <img src="butik.svg" alt="" class="fa-icon">
+            <img src="shopping-cart.svg" alt="" class="fa-icon">
           </div>
           <div class="btn-text-group">
             <span class="btn-title">Butiksförsäljning</span>
@@ -1276,7 +1335,7 @@ img.badge-icon {
 
         <button class="action-btn" data-modal="cafe">
           <div class="icon-wrap">
-            <img src="kafe.svg" alt="" class="fa-icon">
+            <img src="coffee.svg" alt="" class="fa-icon">
           </div>
           <div class="btn-text-group">
             <span class="btn-title">Kaféförsäljning</span>
@@ -1286,7 +1345,7 @@ img.badge-icon {
 		
         <button class="action-btn" data-modal="daily">
           <div class="icon-wrap">
-            <img src="dagsrapport.svg" alt="" class="fa-icon">
+            <img src="square-pen (1).svg" alt="" class="fa-icon">
           </div>
           <div class="btn-text-group">
             <span class="btn-title">Dagsrapport</span>
@@ -1299,7 +1358,14 @@ img.badge-icon {
 
     <!-- 3. Loggade händelser -->
     <div class="panel">
-      <div class="panel-label">Loggade händelser</div>
+      <div class="entries-panel-heading">
+        <div class="panel-label">Loggade händelser</div>
+        <div class="entry-sort-controls" aria-label="Sortera loggade händelser">
+          <span class="entry-sort-label">Sortera:</span>
+          <button type="button" class="entry-sort-button" data-entry-sort="type">Typ</button>
+          <button type="button" class="entry-sort-button active" data-entry-sort="time">Registreringstid ↑</button>
+        </div>
+      </div>
       <div class="entries-list" id="entriesList">
         <div class="empty-state" id="emptyState" style="color:var(--muted);font-size:14px;">Inga händelser registrerade än.</div>
       </div>
@@ -1410,8 +1476,8 @@ const TYPE_LABELS = {
 };
 // --- DATAKONFIGURATION ---
 const BADGE_LABELS = {
-  school: "skolbesök",
-  group: "gruppbesök",
+  school: "skola",
+  group: "grupp",
   tickets: "entré",
   sales: "butik",
   cafe: "kafé",
@@ -1422,12 +1488,12 @@ const BADGE_LABELS = {
 const COINS_BADGE_ICON = '<svg class="badge-icon" viewBox="0 0 64 64" aria-hidden="true"><ellipse cx="26" cy="18" rx="16" ry="8" fill="currentColor" opacity=".35"/><path fill="currentColor" d="M10 18c0 6.1 7.2 11 16 11s16-4.9 16-11v14c0 6.1-7.2 11-16 11S10 38.1 10 32V18zm22 23.5c2.3-1.3 4.1-2.9 5.3-4.8 1.7.4 3.6.6 5.7.6 5 0 9.2-1.3 12-3.4v10.7c0 5.2-5.8 9.4-13 9.4-5.1 0-9.6-2.1-11.7-5.2 2.9-1.8 4.6-4.3 4.6-7.3H32z"/><path fill="currentColor" d="M43 22c7.2 0 13 4.2 13 9.4s-5.8 9.4-13 9.4c-1.7 0-3.3-.2-4.8-.7V32c0-2.8-1.5-5.4-4.1-7.4 2.3-1.6 5.4-2.6 8.9-2.6z"/></svg>';
 
 const ICONS = {
-  school: '<img class="badge-icon" src="skola.svg" alt="">',
-  group: '<img class="badge-icon" src="grupp.svg" alt="">',
-  tickets: COINS_BADGE_ICON,
-  sales: COINS_BADGE_ICON,
-  cafe: COINS_BADGE_ICON,
-  daily: '<img class="badge-icon" src="dagsrapport.svg" alt="">',
+  school: '<img class="badge-icon" src="school.svg" alt="">',
+  group: '<img class="badge-icon" src="users-round.svg" alt="">',
+  tickets: '<img class="badge-icon" src="square-arrow-right-enter.svg" alt="">',
+  sales: '<img class="badge-icon" src="shopping-cart.svg" alt="">',
+  cafe: '<img class="badge-icon" src="coffee.svg" alt="">',
+  daily: '<img class="badge-icon" src="square-pen (1).svg" alt="">',
   other: '<svg class="badge-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M11 5h2v14h-2zM5 11h14v2H5z"/></svg>'
 };
 
@@ -1612,6 +1678,8 @@ let groupCountWarningInput = null;
 let dailyViewingRowId = 0;
 let unsubscribeDay = null;
 let selectedDate = null;
+let entrySortKey = "time";
+let entrySortDirection = "asc";
 
 // --- HJÄLPFUNKTIONER ---
 function getDayName(dateStr) {
@@ -1650,11 +1718,16 @@ selectedDate = TODAY.iso < FIREBASE_START_DATE ? FIREBASE_START_DATE : TODAY.iso
 function esc(v) { return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
 
 function renderTimeInfo(e) {
-  const visitDate = e.date || e.ts?.split('T')[0] || "";
   const createdTs = e.logTs || e._createdTs || "";
   const logDate = createdTs ? createdTs.split('T')[0] : "";
   const logTime = createdTs ? new Date(createdTs).toLocaleTimeString("sv-SE", {hour:"2-digit", minute:"2-digit"}) : "";
-  return `<strong>${visitDate}</strong><span>${createdTs ? `Loggat: ${logDate} ${logTime}` : ""}</span>`;
+  const updatedTs = e._updatedTs || "";
+  const updatedDate = updatedTs ? updatedTs.split('T')[0] : "";
+  const isRevised = createdTs && updatedTs && updatedDate !== logDate;
+  const revisedDate = isRevised ? updatedDate : "";
+  const revisedTime = isRevised ? new Date(updatedTs).toLocaleTimeString("sv-SE", {hour:"2-digit", minute:"2-digit"}) : "";
+  if (!createdTs) return "";
+  return `<span>Registrerad ${logDate} kl. ${logTime}</span>${isRevised ? `<span>Reviderad ${revisedDate} kl. ${revisedTime}</span>` : ""}`;
 }
 
 function updateStats() {
@@ -1684,7 +1757,23 @@ function renderEntries() {
   list.querySelectorAll(".entry-row").forEach(r=>r.remove());
   if (!entries.length) { empty.style.display="block"; updateStats(); return; }
   empty.style.display = "none";
-  const sorted = [...entries].sort((a,b) => new Date(b.logTs) - new Date(a.logTs));
+  const sorted = [...entries].sort((a, b) => {
+    if (entrySortKey === "type") {
+      const aLabel = TYPE_LABELS[a.type] || a.type || "";
+      const bLabel = TYPE_LABELS[b.type] || b.type || "";
+      const typeComparison = aLabel.localeCompare(bLabel, "sv-SE");
+      if (typeComparison !== 0) {
+        return entrySortDirection === "asc" ? typeComparison : -typeComparison;
+      }
+      const aTypeTime = new Date(a.logTs || a._createdTs || 0).getTime() || 0;
+      const bTypeTime = new Date(b.logTs || b._createdTs || 0).getTime() || 0;
+      return aTypeTime - bTypeTime;
+    }
+    const aTime = new Date(a.logTs || a._createdTs || 0).getTime() || 0;
+    const bTime = new Date(b.logTs || b._createdTs || 0).getTime() || 0;
+    const comparison = aTime - bTime;
+    return entrySortDirection === "asc" ? comparison : -comparison;
+  });
   sorted.forEach(e => {
     const row = document.createElement("div");
     row.className = "entry-row";
@@ -1694,6 +1783,30 @@ function renderEntries() {
   });
   updateStats();
 }
+
+function updateEntrySortButtons() {
+  document.querySelectorAll("[data-entry-sort]").forEach(button => {
+    const isActive = button.dataset.entrySort === entrySortKey;
+    button.classList.toggle("active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+    const label = button.dataset.entrySort === "type" ? "Typ" : "Registreringstid";
+    button.textContent = isActive ? `${label} ${entrySortDirection === "asc" ? "↑" : "↓"}` : label;
+  });
+}
+
+document.querySelectorAll("[data-entry-sort]").forEach(button => {
+  button.addEventListener("click", () => {
+    const requestedKey = button.dataset.entrySort;
+    if (entrySortKey === requestedKey) {
+      entrySortDirection = entrySortDirection === "asc" ? "desc" : "asc";
+    } else {
+      entrySortKey = requestedKey;
+      entrySortDirection = "asc";
+    }
+    updateEntrySortButtons();
+    renderEntries();
+  });
+});
 
 function entryHtml(e) {
   const timeInfo = renderTimeInfo(e);
@@ -2449,7 +2562,8 @@ function firebaseRecordToEntry(doc) {
     ts: `${date}T12:00:00`,
     logTs: record.metadata?.createdTs || record.timestamp || "",
     _timestamp: record.timestamp || null,
-    _createdTs: record.metadata?.createdTs || null
+    _createdTs: record.metadata?.createdTs || null,
+    _updatedTs: record.metadata?.updatedTs || null
   };
 
   if (uiType === "school") {
