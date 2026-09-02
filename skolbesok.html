@@ -2033,13 +2033,14 @@ function parseCSV(text) {
                 manadNamn = manadNamn.charAt(0).toUpperCase() + manadNamn.slice(1).toLowerCase();
             }
 
-            return {
-                år: parseInt(row.år),
-                månad: manadNamn,
-                kommun: kommunNamn,
-                skolnivå: normaliseSchoolLevel(row.skolnivå),
-                antal: Number(row.antal) || 0
-            };
+			return {
+				år: parseInt(row.år),
+				månad: manadNamn,
+				kommun: kommunNamn,
+				skolnivå: normaliseSchoolLevel(row.skolnivå),
+				skolkategori: row.skolkategori || "",
+				antal: Number(row.antal) || 0
+			};
         });
 }
 
@@ -2080,17 +2081,52 @@ function closeAllSelects() {
 function isRowIncludedByFF(row) {
     if (currentFF === "All data") return true;
 
+    if (currentFF === "Skola barn") {
+        return row.skolkategori === "skola-barn";
+    }
+
+    if (currentFF === "Skola vuxen") {
+        return row.skolkategori === "skola-vuxen";
+    }
+
     const groups = {
-        "Lågstadiet": ["Förskoleklass", "Årskurs 1", "Årskurs 2", "Årskurs 3"],
-        "Mellanstadiet": ["Årskurs 4", "Årskurs 5", "Årskurs 6"],
-        "Högstadiet": ["Årskurs 7", "Årskurs 8", "Årskurs 9"],
-        "Grundskola": ["Förskoleklass", "Årskurs 1", "Årskurs 2", "Årskurs 3", "Årskurs 4", "Årskurs 5", "Årskurs 6", "Årskurs 7", "Årskurs 8", "Årskurs 9"],
-        "Skola barn": ["Förskola", "Förskoleklass", "Årskurs 1", "Årskurs 2", "Årskurs 3", "Årskurs 4", "Årskurs 5", "Årskurs 6", "Årskurs 7", "Årskurs 8", "Årskurs 9", "Gymnasium"],
-        "Skola vuxen": ["Vuxenutbildning", "Högskola, universitet"]
+        "Lågstadiet": [
+            "Förskoleklass",
+            "Årskurs 1",
+            "Årskurs 2",
+            "Årskurs 3"
+        ],
+        "Mellanstadiet": [
+            "Årskurs 4",
+            "Årskurs 5",
+            "Årskurs 6"
+        ],
+        "Högstadiet": [
+            "Årskurs 7",
+            "Årskurs 8",
+            "Årskurs 9"
+        ],
+        "Grundskola": [
+            "Förskoleklass",
+            "Årskurs 1",
+            "Årskurs 2",
+            "Årskurs 3",
+            "Årskurs 4",
+            "Årskurs 5",
+            "Årskurs 6",
+            "Årskurs 7",
+            "Årskurs 8",
+            "Årskurs 9"
+        ],
+
+        "Högskola, universitet": [
+            "Högskola",
+            "Högskola, universitet",
+            "Lunds universitet"
+        ]
     };
 
     const selectedLevels = groups[currentFF] || [currentFF];
-
     return selectedLevels.includes(row.skolnivå);
 }
 
@@ -3306,7 +3342,10 @@ async function loadCSVData() {
         }
         const text = await response.text();
 
-        visitRows = parseCSV(text);
+        visitRows = parseCSV(text).filter(row => {
+			return row.år > 2018 ||
+			(row.år === 2018 && monthMap[row.månad] >= 10);
+		});		
 
         availableYears = [...new Set(visitRows.map(r => r.år))].sort((a, b) => b - a);
         currentTableYear = availableYears[0] || new Date().getFullYear();
