@@ -1,1863 +1,2051 @@
-år;månad;kommun;skolnivå;antal
-2018;Nov;Kävlinge;Förskola;20
-2018;Nov;Lund;Förskola;129
-2018;Nov;Malmö;Förskola;1
-2018;Nov;Svedala;Förskola;16
-2018;Dec;Kävlinge;Förskola;30
-2018;Dec;Lomma;Förskola;47
-2018;Dec;Lund;Förskola;132
-2018;Dec;Staffanstorp;Förskola;1
-2019;Jan;Eslöv;Förskola;1
-2019;Jan;Lund;Förskola;121
-2019;Jan;Malmö;Förskola;1
-2019;Jan;Svedala;Förskola;2
-2019;Feb;Burlöv;Förskola;22
-2019;Feb;Helsingborg;Förskola;10
-2019;Feb;Lomma;Förskola;14
-2019;Feb;Lund;Förskola;305
-2019;Feb;Staffanstorp;Förskola;1
-2019;Mar;Lund;Förskola;271
-2019;Apr;Lund;Förskola;296
-2019;Apr;Malmö;Förskola;26
-2019;Apr;Svedala;Förskola;14
-2019;Maj;Burlöv;Förskola;26
-2019;Maj;Eslöv;Förskola;20
-2019;Maj;Hässleholm;Förskola;14
-2019;Maj;Kristianstad;Förskola;9
-2019;Maj;Kävlinge;Förskola;70
-2019;Maj;Lomma;Förskola;29
-2019;Maj;Lund;Förskola;327
-2019;Maj;Malmö;Förskola;58
-2019;Maj;Sjöbo;Förskola;5
-2019;Maj;Skurup;Förskola;15
-2019;Maj;Trelleborg;Förskola;35
-2019;Jun;Höör;Förskola;11
-2019;Jun;Lund;Förskola;224
-2019;Jun;Malmö;Förskola;42
-2019;Jun;Svedala;Förskola;9
-2019;Jul;Lomma;Förskola;10
-2019;Jul;Lund;Förskola;155
-2019;Jul;Malmö;Förskola;22
-2019;Aug;Lund;Förskola;32
-2019;Aug;Malmö;Förskola;31
-2019;Aug;Staffanstorp;Förskola;10
-2019;Sep;Lund;Förskola;73
-2019;Sep;Malmö;Förskola;44
-2019;Okt;Lomma;Förskola;17
-2019;Okt;Lund;Förskola;202
-2019;Okt;Sjöbo;Förskola;36
-2019;Nov;Lund;Förskola;133
-2019;Nov;Sjöbo;Förskola;58
-2019;Dec;Lomma;Förskola;26
-2019;Dec;Lund;Förskola;148
-2020;Jan;Lund;Förskola;120
-2020;Jan;Malmö;Förskola;15
-2020;Feb;Landskrona;Förskola;15
-2020;Feb;Lund;Förskola;330
-2020;Feb;Malmö;Förskola;18
-2020;Mar;Lund;Förskola;225
-2020;Apr;Lund;Förskola;113
-2020;Maj;Lund;Förskola;176
-2020;Maj;Malmö;Förskola;23
-2020;Jun;Lund;Förskola;165
-2020;Jul;Lund;Förskola;63
-2020;Aug;Lund;Förskola;16
-2020;Sep;Lund;Förskola;143
-2020;Okt;Lund;Förskola;175
-2020;Okt;Malmö;Förskola;10
-2020;Nov;Lund;Förskola;123
-2020;Nov;Malmö;Förskola;26
-2020;Dec;Lund;Förskola;47
-2021;Jan;Lund;Förskola;36
-2021;Feb;Lund;Förskola;59
-2021;Mar;Lund;Förskola;41
-2021;Apr;Lund;Förskola;139
-2021;Maj;Lund;Förskola;111
-2021;Maj;Svedala;Förskola;15
-2021;Jun;Lund;Förskola;137
-2021;Jul;Lund;Förskola;52
-2021;Aug;Lund;Förskola;8
-2021;Sep;Lund;Förskola;181
-2021;Sep;Vellinge;Förskola;24
-2021;Okt;Lund;Förskola;75
-2021;Nov;Lund;Förskola;34
-2021;Dec;Lund;Förskola;148
-2022;Jan;Lund;Förskola;9
-2022;Feb;Kristianstad;Förskola;8
-2022;Feb;Lund;Förskola;95
-2022;Feb;Sjöbo;Förskola;1
-2022;Mar;Lund;Förskola;278
-2022;Apr;Kävlinge;Förskola;19
-2022;Apr;Lomma;Förskola;19
-2022;Apr;Lund;Förskola;314
-2022;Apr;Malmö;Förskola;50
-2022;Maj;Hässleholm;Förskola;19
-2022;Maj;Kävlinge;Förskola;26
-2022;Maj;Lund;Förskola;186
-2022;Maj;Malmö;Förskola;63
-2022;Maj;Skurup;Förskola;25
-2022;Jun;Eslöv;Förskola;10
-2022;Jun;Hässleholm;Förskola;11
-2022;Jun;Lund;Förskola;163
-2022;Jun;Malmö;Förskola;66
-2022;Jun;Trelleborg;Förskola;25
-2022;Jul;Lund;Förskola;53
-2022;Jul;Malmö;Förskola;27
-2022;Aug;Lund;Förskola;8
-2022;Aug;Malmö;Förskola;10
-2022;Sep;Lund;Förskola;36
-2022;Okt;Lund;Förskola;46
-2022;Nov;Lund;Förskola;50
-2022;Nov;Malmö;Förskola;66
-2022;Dec;Kävlinge;Förskola;22
-2022;Dec;Lund;Förskola;133
-2022;Dec;Staffanstorp;Förskola;12
-2022;Dec;Svedala;Förskola;64
-2023;Jan;Lund;Förskola;37
-2023;Feb;Burlöv;Förskola;29
-2023;Feb;Lund;Förskola;105
-2023;Feb;Malmö;Förskola;29
-2023;Mar;Burlöv;Förskola;26
-2023;Mar;Kävlinge;Förskola;24
-2023;Mar;Lund;Förskola;1
-2023;Apr;Lund;Förskola;1
-2023;Maj;Lund;Förskola;59
-2023;Maj;Malmö;Förskola;36
-2023;Jun;Hässleholm;Förskola;15
-2023;Jun;Lund;Förskola;36
-2023;Jun;Malmö;Förskola;19
-2023;Jul;Lund;Förskola;57
-2023;Aug;Lomma;Förskola;1
-2023;Aug;Lund;Förskola;70
-2023;Aug;Malmö;Förskola;23
-2023;Sep;Lund;Förskola;86
-2023;Okt;Lund;Förskola;30
-2023;Nov;Lund;Förskola;56
-2023;Dec;Lund;Förskola;31
-2023;Dec;Malmö;Förskola;63
-2024;Jan;Lund;Förskola;10
-2024;Feb;Kristianstad;Förskola;16
-2024;Feb;Lund;Förskola;53
-2024;Feb;Malmö;Förskola;26
-2024;Mar;Lund;Förskola;34
-2024;Mar;Malmö;Förskola;39
-2024;Apr;Lund;Förskola;163
-2024;Apr;Malmö;Förskola;19
-2024;Maj;Hässleholm;Förskola;14
-2024;Maj;Kävlinge;Förskola;40
-2024;Maj;Lomma;Förskola;25
-2024;Maj;Lund;Förskola;209
-2024;Maj;Staffanstorp;Förskola;15
-2024;Maj;Svedala;Förskola;8
-2024;Maj;Trelleborg;Förskola;26
-2024;Jun;Lund;Förskola;26
-2024;Jun;Malmö;Förskola;45
-2024;Jun;Staffanstorp;Förskola;63
-2024;Jul;Burlöv;Förskola;16
-2024;Jul;Lund;Förskola;87
-2024;Aug;Lund;Förskola;115
-2024;Sep;Lund;Förskola;129
-2024;Sep;Staffanstorp;Förskola;23
-2024;Okt;Lund;Förskola;94
-2024;Okt;Osby;Förskola;19
-2024;Nov;Kävlinge;Förskola;24
-2024;Nov;Lund;Förskola;52
-2024;Nov;Malmö;Förskola;40
-2024;Dec;Lund;Förskola;60
-2025;Jan;Lund;Förskola;76
-2025;Feb;Lund;Förskola;27
-2025;Feb;Malmö;Förskola;23
-2025;Mar;Höör;Förskola;22
-2025;Mar;Lund;Förskola;82
-2025;Mar;Malmö;Förskola;63
-2025;Mar;Svedala;Förskola;55
-2025;Apr;Lund;Förskola;124
-2025;Apr;Malmö;Förskola;13
-2025;Apr;Staffanstorp;Förskola;18
-2025;Maj;Eslöv;Förskola;14
-2025;Maj;Hässleholm;Förskola;17
-2025;Maj;Kävlinge;Förskola;25
-2025;Maj;Lund;Förskola;123
-2025;Maj;Malmö;Förskola;83
-2025;Maj;Staffanstorp;Förskola;17
-2025;Maj;Svedala;Förskola;17
-2025;Jun;Lund;Förskola;89
-2025;Jun;Malmö;Förskola;8
-2025;Jun;Trelleborg;Förskola;30
-2025;Jul;Lund;Förskola;44
-2025;Aug;Lund;Förskola;73
-2025;Aug;Malmö;Förskola;20
-2025;Sep;Lund;Förskola;57
-2025;Sep;Malmö;Förskola;39
-2025;Okt;Lund;Förskola;33
-2025;Okt;Malmö;Förskola;41
-2025;Nov;Helsingborg;Förskola;22
-2025;Nov;Lomma;Förskola;18
-2025;Nov;Lund;Förskola;72
-2025;Dec;Lund;Förskola;30
-2025;Dec;Malmö;Förskola;20
-2026;Jan;Lund;Förskola;1
-2026;Feb;Lund;Förskola;81
-2026;Mar;Burlöv;Förskola;25
-2026;Mar;Lund;Förskola;205
-2026;Mar;Staffanstorp;Förskola;36
-2026;Apr;Helsingborg;Förskola;22
-2026;Apr;Kävlinge;Förskola;20
-2026;Apr;Lund;Förskola;164
-2026;Apr;Malmö;Förskola;45
-2026;Apr;Staffanstorp;Förskola;20
-2018;Nov;Hörby;Förskoleklass;15
-2018;Nov;Lund;Förskoleklass;54
-2018;Nov;Malmö;Förskoleklass;18
-2018;Dec;Kävlinge;Förskoleklass;23
-2018;Dec;Lund;Förskoleklass;181
-2019;Jan;Eslöv;Förskoleklass;1
-2019;Jan;Malmö;Förskoleklass;4
-2019;Feb;Höör;Förskoleklass;3
-2019;Feb;Kävlinge;Förskoleklass;40
-2019;Mar;Lund;Förskoleklass;123
-2019;Apr;Eslöv;Förskoleklass;20
-2019;Apr;Kävlinge;Förskoleklass;26
-2019;Apr;Staffanstorp;Förskoleklass;74
-2019;Maj;Eslöv;Förskoleklass;74
-2019;Maj;Lund;Förskoleklass;118
-2019;Maj;Malmö;Förskoleklass;45
-2019;Jun;Helsingborg;Förskoleklass;26
-2019;Jun;Lund;Förskoleklass;15
-2019;Jun;Malmö;Förskoleklass;29
-2019;Jul;Hörby;Förskoleklass;1
-2019;Jul;Lund;Förskoleklass;23
-2019;Jul;Malmö;Förskoleklass;44
-2019;Sep;Lund;Förskoleklass;47
-2019;Sep;Malmö;Förskoleklass;28
-2019;Okt;Lund;Förskoleklass;31
-2019;Nov;Lund;Förskoleklass;61
-2019;Nov;Staffanstorp;Förskoleklass;28
-2019;Dec;Kävlinge;Förskoleklass;24
-2019;Dec;Lund;Förskoleklass;89
-2019;Dec;Malmö;Förskoleklass;16
-2020;Jan;Lund;Förskoleklass;1
-2020;Feb;Lund;Förskoleklass;34
-2020;Feb;Trelleborg;Förskoleklass;4
-2020;Mar;Lund;Förskoleklass;31
-2020;Apr;Lund;Förskoleklass;25
-2020;Maj;Lund;Förskoleklass;57
-2020;Jul;Lund;Förskoleklass;9
-2020;Aug;Lund;Förskoleklass;13
-2020;Dec;Lund;Förskoleklass;22
-2021;Apr;Lund;Förskoleklass;25
-2021;Jun;Lund;Förskoleklass;58
-2021;Jul;Lund;Förskoleklass;4
-2021;Aug;Lund;Förskoleklass;1
-2021;Okt;Lund;Förskoleklass;48
-2021;Nov;Lund;Förskoleklass;62
-2021;Nov;Staffanstorp;Förskoleklass;34
-2021;Dec;Burlöv;Förskoleklass;17
-2021;Dec;Kävlinge;Förskoleklass;24
-2021;Dec;Lund;Förskoleklass;68
-2022;Jan;Lund;Förskoleklass;24
-2022;Feb;Lund;Förskoleklass;42
-2022;Feb;Staffanstorp;Förskoleklass;22
-2022;Mar;Lund;Förskoleklass;123
-2022;Apr;Lund;Förskoleklass;6
-2022;Maj;Lund;Förskoleklass;79
-2022;Jun;Lund;Förskoleklass;38
-2022;Jul;Lund;Förskoleklass;5
-2022;Okt;Lund;Förskoleklass;1
-2022;Nov;Malmö;Förskoleklass;52
-2022;Dec;Lund;Förskoleklass;15
-2023;Jan;Lund;Förskoleklass;25
-2023;Feb;Eslöv;Förskoleklass;39
-2023;Feb;Kristianstad;Förskoleklass;3
-2023;Feb;Lund;Förskoleklass;8
-2023;Mar;Lund;Förskoleklass;19
-2023;Maj;Lund;Förskoleklass;48
-2023;Jun;Lund;Förskoleklass;17
-2023;Jul;Lund;Förskoleklass;16
-2023;Aug;Lund;Förskoleklass;41
-2023;Sep;Helsingborg;Förskoleklass;28
-2023;Sep;Lund;Förskoleklass;11
-2023;Okt;Lund;Förskoleklass;44
-2023;Nov;Lund;Förskoleklass;64
-2023;Dec;Lund;Förskoleklass;31
-2024;Feb;Lund;Förskoleklass;25
-2024;Mar;Kävlinge;Förskoleklass;38
-2024;Mar;Malmö;Förskoleklass;23
-2024;Apr;Lund;Förskoleklass;68
-2024;Maj;Lund;Förskoleklass;139
-2024;Jun;Lund;Förskoleklass;50
-2024;Sep;Kävlinge;Förskoleklass;46
-2024;Sep;Lund;Förskoleklass;29
-2024;Okt;Lund;Förskoleklass;46
-2024;Nov;Bjuv;Förskoleklass;1
-2024;Nov;Kävlinge;Förskoleklass;24
-2024;Nov;Lund;Förskoleklass;9
-2024;Dec;Kävlinge;Förskoleklass;26
-2024;Dec;Lund;Förskoleklass;63
-2025;Mar;Lund;Förskoleklass;27
-2025;Apr;Burlöv;Förskoleklass;24
-2025;Apr;Lund;Förskoleklass;9
-2025;Maj;Bjuv;Förskoleklass;15
-2025;Maj;Höör;Förskoleklass;17
-2025;Maj;Lund;Förskoleklass;58
-2025;Maj;Malmö;Förskoleklass;57
-2025;Jul;Lund;Förskoleklass;36
-2025;Aug;Lund;Förskoleklass;21
-2025;Okt;Lund;Förskoleklass;30
-2025;Nov;Lund;Förskoleklass;58
-2025;Nov;Malmö;Förskoleklass;10
-2025;Dec;Lund;Förskoleklass;78
-2026;Feb;Lund;Förskoleklass;29
-2026;Mar;Lund;Förskoleklass;20
-2026;Apr;Malmö;Förskoleklass;22
-2018;Nov;Kävlinge;Årskurs 1;28
-2018;Nov;Lund;Årskurs 1;54
-2018;Dec;Lund;Årskurs 1;120
-2018;Dec;Staffanstorp;Årskurs 1;29
-2019;Jan;Lund;Årskurs 1;25
-2019;Feb;Eslöv;Årskurs 1;1
-2019;Feb;Lund;Årskurs 1;48
-2019;Mar;Kävlinge;Årskurs 1;28
-2019;Mar;Lund;Årskurs 1;136
-2019;Apr;Lund;Årskurs 1;50
-2019;Apr;Staffanstorp;Årskurs 1;78
-2019;Maj;Lund;Årskurs 1;54
-2019;Maj;Staffanstorp;Årskurs 1;50
-2019;Jun;Höör;Årskurs 1;22
-2019;Jun;Kävlinge;Årskurs 1;28
-2019;Jun;Lund;Årskurs 1;1
-2019;Jun;Staffanstorp;Årskurs 1;49
-2019;Jul;Lund;Årskurs 1;54
-2019;Aug;Lund;Årskurs 1;5
-2019;Sep;Lund;Årskurs 1;35
-2019;Okt;Lund;Årskurs 1;163
-2019;Nov;Lund;Årskurs 1;27
-2019;Nov;Staffanstorp;Årskurs 1;28
-2019;Dec;Lund;Årskurs 1;93
-2020;Jan;Lund;Årskurs 1;1
-2020;Feb;Lund;Årskurs 1;34
-2020;Mar;Lund;Årskurs 1;33
-2020;Apr;Lund;Årskurs 1;10
-2020;Jul;Lund;Årskurs 1;6
-2020;Aug;Lund;Årskurs 1;9
-2020;Sep;Staffanstorp;Årskurs 1;36
-2020;Okt;Kävlinge;Årskurs 1;25
-2020;Okt;Lund;Årskurs 1;10
-2021;Maj;Malmö;Årskurs 1;16
-2021;Maj;Staffanstorp;Årskurs 1;55
-2021;Jul;Lund;Årskurs 1;5
-2021;Aug;Lund;Årskurs 1;4
-2021;Okt;Lund;Årskurs 1;1
-2021;Nov;Lund;Årskurs 1;22
-2021;Dec;Burlöv;Årskurs 1;21
-2021;Dec;Kävlinge;Årskurs 1;22
-2021;Dec;Lund;Årskurs 1;360
-2022;Feb;Kristianstad;Årskurs 1;2
-2022;Feb;Lund;Årskurs 1;15
-2022;Mar;Kävlinge;Årskurs 1;27
-2022;Mar;Lund;Årskurs 1;101
-2022;Apr;Lund;Årskurs 1;61
-2022;Maj;Lund;Årskurs 1;8
-2022;Jun;Lund;Årskurs 1;129
-2022;Sep;Lund;Årskurs 1;1
-2022;Sep;Malmö;Årskurs 1;29
-2022;Okt;Lund;Årskurs 1;8
-2022;Nov;Lund;Årskurs 1;1
-2022;Dec;Lund;Årskurs 1;39
-2022;Dec;Svedala;Årskurs 1;20
-2023;Jan;Lund;Årskurs 1;1
-2023;Feb;Lund;Årskurs 1;50
-2023;Feb;Staffanstorp;Årskurs 1;16
-2023;Mar;Lund;Årskurs 1;54
-2023;Maj;Lund;Årskurs 1;48
-2023;Jun;Lund;Årskurs 1;37
-2023;Jun;Staffanstorp;Årskurs 1;58
-2023;Sep;Lund;Årskurs 1;10
-2023;Okt;Lund;Årskurs 1;28
-2023;Nov;Lund;Årskurs 1;13
-2023;Nov;Malmö;Årskurs 1;75
-2023;Dec;Höör;Årskurs 1;14
-2024;Feb;Lund;Årskurs 1;51
-2024;Mar;Lund;Årskurs 1;86
-2024;Mar;Staffanstorp;Årskurs 1;24
-2024;Apr;Lund;Årskurs 1;215
-2024;Maj;Lomma;Årskurs 1;49
-2024;Maj;Lund;Årskurs 1;190
-2024;Jun;Kävlinge;Årskurs 1;32
-2024;Jun;Lund;Årskurs 1;17
-2024;Jul;Lund;Årskurs 1;21
-2024;Sep;Lund;Årskurs 1;36
-2024;Okt;Lund;Årskurs 1;56
-2024;Nov;Kävlinge;Årskurs 1;26
-2024;Nov;Lund;Årskurs 1;49
-2024;Dec;Kävlinge;Årskurs 1;27
-2024;Dec;Lund;Årskurs 1;114
-2025;Jan;Lund;Årskurs 1;22
-2025;Apr;Lund;Årskurs 1;21
-2025;Apr;Trelleborg;Årskurs 1;19
-2025;Maj;Eslöv;Årskurs 1;56
-2025;Maj;Kävlinge;Årskurs 1;21
-2025;Maj;Lund;Årskurs 1;212
-2025;Maj;Staffanstorp;Årskurs 1;59
-2025;Jun;Lund;Årskurs 1;60
-2025;Jul;Bjuv;Årskurs 1;18
-2025;Jul;Lund;Årskurs 1;9
-2025;Dec;Lund;Årskurs 1;48
-2026;Feb;Kävlinge;Årskurs 1;29
-2026;Feb;Lund;Årskurs 1;49
-2026;Feb;Malmö;Årskurs 1;23
-2026;Apr;Lund;Årskurs 1;90
-2018;Nov;Hörby;Årskurs 2;16
-2018;Nov;Kävlinge;Årskurs 2;26
-2018;Dec;Lund;Årskurs 2;82
-2019;Jan;Lund;Årskurs 2;21
-2019;Jan;Malmö;Årskurs 2;48
-2019;Feb;Lund;Årskurs 2;1
-2019;Mar;Eslöv;Årskurs 2;33
-2019;Mar;Lund;Årskurs 2;18
-2019;Mar;Malmö;Årskurs 2;6
-2019;Apr;Lund;Årskurs 2;14
-2019;Maj;Lomma;Årskurs 2;1
-2019;Maj;Lund;Årskurs 2;69
-2019;Maj;Malmö;Årskurs 2;61
-2019;Maj;Övrigt;Årskurs 2;2
-2019;Jun;Helsingborg;Årskurs 2;85
-2019;Jun;Höör;Årskurs 2;20
-2019;Jun;Lund;Årskurs 2;38
-2019;Jul;Lund;Årskurs 2;52
-2019;Jul;Malmö;Årskurs 2;22
-2019;Jul;Staffanstorp;Årskurs 2;28
-2019;Aug;Lund;Årskurs 2;39
-2019;Sep;Lund;Årskurs 2;47
-2019;Okt;Kävlinge;Årskurs 2;20
-2019;Okt;Lund;Årskurs 2;17
-2019;Dec;Lomma;Årskurs 2;27
-2019;Dec;Lund;Årskurs 2;62
-2019;Dec;Staffanstorp;Årskurs 2;22
-2019;Dec;Svalöv;Årskurs 2;35
-2019;Dec;Övrigt;Årskurs 2;46
-2020;Feb;Lund;Årskurs 2;56
-2020;Maj;Lund;Årskurs 2;24
-2020;Jul;Lund;Årskurs 2;4
-2020;Okt;Lund;Årskurs 2;50
-2021;Mar;Lund;Årskurs 2;53
-2021;Apr;Lund;Årskurs 2;29
-2021;Maj;Lund;Årskurs 2;41
-2021;Jul;Lund;Årskurs 2;17
-2021;Aug;Lund;Årskurs 2;14
-2021;Sep;Lund;Årskurs 2;38
-2021;Sep;Malmö;Årskurs 2;63
-2021;Okt;Eslöv;Årskurs 2;26
-2021;Okt;Kävlinge;Årskurs 2;25
-2021;Okt;Lund;Årskurs 2;48
-2021;Nov;Lund;Årskurs 2;3
-2021;Nov;Staffanstorp;Årskurs 2;15
-2021;Dec;Burlöv;Årskurs 2;23
-2021;Dec;Hörby;Årskurs 2;89
-2021;Dec;Kävlinge;Årskurs 2;24
-2021;Dec;Lund;Årskurs 2;1
-2022;Jan;Lund;Årskurs 2;16
-2022;Feb;Kristianstad;Årskurs 2;2
-2022;Feb;Lund;Årskurs 2;71
-2022;Mar;Lund;Årskurs 2;82
-2022;Maj;Lund;Årskurs 2;12
-2022;Jun;Hörby;Årskurs 2;104
-2022;Jun;Kävlinge;Årskurs 2;55
-2022;Jun;Lund;Årskurs 2;103
-2022;Jun;Malmö;Årskurs 2;10
-2022;Jul;Lund;Årskurs 2;24
-2022;Aug;Lund;Årskurs 2;17
-2022;Sep;Lund;Årskurs 2;67
-2022;Sep;Malmö;Årskurs 2;23
-2022;Nov;Lund;Årskurs 2;108
-2022;Dec;Kävlinge;Årskurs 2;68
-2022;Dec;Malmö;Årskurs 2;28
-2023;Feb;Lund;Årskurs 2;50
-2023;Feb;Staffanstorp;Årskurs 2;82
-2023;Feb;Trelleborg;Årskurs 2;8
-2023;Mar;Lund;Årskurs 2;36
-2023;Maj;Lund;Årskurs 2;54
-2023;Maj;Staffanstorp;Årskurs 2;14
-2023;Jul;Lund;Årskurs 2;38
-2023;Sep;Lund;Årskurs 2;91
-2023;Okt;Bjuv;Årskurs 2;13
-2023;Okt;Lund;Årskurs 2;1
-2023;Nov;Lund;Årskurs 2;8
-2023;Dec;Höör;Årskurs 2;25
-2023;Dec;Malmö;Årskurs 2;42
-2024;Feb;Lund;Årskurs 2;24
-2024;Mar;Lund;Årskurs 2;129
-2024;Apr;Lund;Årskurs 2;79
-2024;Maj;Lund;Årskurs 2;86
-2024;Jun;Lund;Årskurs 2;27
-2024;Jun;Staffanstorp;Årskurs 2;85
-2024;Jul;Lund;Årskurs 2;32
-2024;Sep;Kävlinge;Årskurs 2;22
-2024;Sep;Lund;Årskurs 2;45
-2024;Okt;Lund;Årskurs 2;93
-2024;Nov;Lund;Årskurs 2;105
-2024;Nov;Malmö;Årskurs 2;10
-2024;Dec;Eslöv;Årskurs 2;35
-2024;Dec;Kävlinge;Årskurs 2;26
-2024;Dec;Lund;Årskurs 2;118
-2025;Jan;Lund;Årskurs 2;42
-2025;Feb;Lund;Årskurs 2;28
-2025;Mar;Lund;Årskurs 2;28
-2025;Mar;Staffanstorp;Årskurs 2;86
-2025;Maj;Lund;Årskurs 2;5
-2025;Maj;Malmö;Årskurs 2;27
-2025;Jun;Lund;Årskurs 2;32
-2025;Jul;Lund;Årskurs 2;2
-2025;Aug;Lund;Årskurs 2;13
-2025;Okt;Lund;Årskurs 2;43
-2025;Nov;Malmö;Årskurs 2;18
-2025;Dec;Eslöv;Årskurs 2;32
-2025;Dec;Lomma;Årskurs 2;52
-2025;Dec;Lund;Årskurs 2;171
-2026;Feb;Lund;Årskurs 2;68
-2026;Mar;Lund;Årskurs 2;65
-2026;Mar;Staffanstorp;Årskurs 2;28
-2026;Apr;Lund;Årskurs 2;19
-2018;Nov;Hörby;Årskurs 3;26
-2018;Nov;Lomma;Årskurs 3;10
-2018;Nov;Lund;Årskurs 3;27
-2018;Dec;Lund;Årskurs 3;85
-2019;Feb;Lund;Årskurs 3;16
-2019;Mar;Lund;Årskurs 3;8
-2019;Apr;Höör;Årskurs 3;9
-2019;Apr;Lund;Årskurs 3;79
-2019;Apr;Malmö;Årskurs 3;28
-2019;Maj;Båstad;Årskurs 3;50
-2019;Maj;Eslöv;Årskurs 3;27
-2019;Maj;Kristianstad;Årskurs 3;77
-2019;Maj;Lund;Årskurs 3;47
-2019;Jun;Helsingborg;Årskurs 3;20
-2019;Jun;Kristianstad;Årskurs 3;50
-2019;Jun;Lund;Årskurs 3;21
-2019;Jun;Malmö;Årskurs 3;18
-2019;Jul;Lund;Årskurs 3;2
-2019;Aug;Lomma;Årskurs 3;29
-2019;Aug;Lund;Årskurs 3;11
-2019;Aug;Malmö;Årskurs 3;4
-2019;Sep;Lund;Årskurs 3;95
-2019;Okt;Lomma;Årskurs 3;40
-2019;Okt;Lund;Årskurs 3;15
-2019;Okt;Staffanstorp;Årskurs 3;11
-2019;Nov;Lund;Årskurs 3;25
-2019;Dec;Kävlinge;Årskurs 3;2
-2019;Dec;Staffanstorp;Årskurs 3;43
-2020;Feb;Lund;Årskurs 3;1
-2020;Feb;Svalöv;Årskurs 3;4
-2020;Maj;Kristianstad;Årskurs 3;58
-2020;Maj;Lund;Årskurs 3;38
-2020;Jun;Kristianstad;Årskurs 3;78
-2020;Jun;Lund;Årskurs 3;2
-2020;Jul;Lund;Årskurs 3;34
-2020;Sep;Lund;Årskurs 3;445
-2020;Okt;Lund;Årskurs 3;55
-2020;Okt;Malmö;Årskurs 3;2
-2020;Nov;Lund;Årskurs 3;7
-2021;Feb;Lund;Årskurs 3;7
-2021;Maj;Lund;Årskurs 3;42
-2021;Maj;Malmö;Årskurs 3;90
-2021;Maj;Staffanstorp;Årskurs 3;10
-2021;Jun;Lund;Årskurs 3;58
-2021;Jul;Eslöv;Årskurs 3;27
-2021;Jul;Lund;Årskurs 3;21
-2021;Sep;Lund;Årskurs 3;3
-2021;Okt;Kävlinge;Årskurs 3;59
-2021;Okt;Lund;Årskurs 3;424
-2021;Nov;Lund;Årskurs 3;82
-2021;Nov;Malmö;Årskurs 3;29
-2021;Dec;Lund;Årskurs 3;114
-2022;Feb;Kristianstad;Årskurs 3;2
-2022;Feb;Lund;Årskurs 3;1
-2022;Mar;Lund;Årskurs 3;107
-2022;Apr;Staffanstorp;Årskurs 3;79
-2022;Maj;Lund;Årskurs 3;78
-2022;Jun;Lund;Årskurs 3;24
-2022;Jun;Malmö;Årskurs 3;40
-2022;Aug;Hörby;Årskurs 3;16
-2022;Aug;Lund;Årskurs 3;18
-2022;Sep;Lund;Årskurs 3;84
-2022;Okt;Lund;Årskurs 3;351
-2022;Nov;Lund;Årskurs 3;24
-2022;Dec;Lund;Årskurs 3;28
-2023;Jan;Lund;Årskurs 3;1
-2023;Feb;Kävlinge;Årskurs 3;2
-2023;Feb;Lund;Årskurs 3;120
-2023;Feb;Staffanstorp;Årskurs 3;3
-2023;Mar;Lund;Årskurs 3;358
-2023;Apr;Lund;Årskurs 3;87
-2023;Maj;Kristianstad;Årskurs 3;29
-2023;Maj;Lund;Årskurs 3;20
-2023;Maj;Malmö;Årskurs 3;47
-2023;Maj;Staffanstorp;Årskurs 3;122
-2023;Maj;Östra Göinge;Årskurs 3;29
-2023;Jul;Helsingborg;Årskurs 3;13
-2023;Jul;Lund;Årskurs 3;8
-2023;Sep;Lund;Årskurs 3;97
-2023;Okt;Lund;Årskurs 3;377
-2023;Nov;Lund;Årskurs 3;29
-2023;Dec;Höör;Årskurs 3;23
-2024;Feb;Lund;Årskurs 3;196
-2024;Mar;Lund;Årskurs 3;252
-2024;Mar;Malmö;Årskurs 3;19
-2024;Apr;Lund;Årskurs 3;188
-2024;Maj;Kristianstad;Årskurs 3;115
-2024;Maj;Lomma;Årskurs 3;42
-2024;Maj;Lund;Årskurs 3;33
-2024;Maj;Staffanstorp;Årskurs 3;51
-2024;Maj;Svalöv;Årskurs 3;44
-2024;Maj;Örkelljunga;Årskurs 3;39
-2024;Jun;Höganäs;Årskurs 3;63
-2024;Jun;Lund;Årskurs 3;46
-2024;Jun;Trelleborg;Årskurs 3;62
-2024;Sep;Lund;Årskurs 3;194
-2024;Okt;Lund;Årskurs 3;298
-2024;Nov;Lund;Årskurs 3;2
-2024;Dec;Höör;Årskurs 3;172
-2024;Dec;Lund;Årskurs 3;85
-2025;Feb;Lund;Årskurs 3;77
-2025;Mar;Lund;Årskurs 3;266
-2025;Apr;Lund;Årskurs 3;93
-2025;Maj;Eslöv;Årskurs 3;49
-2025;Maj;Hässleholm;Årskurs 3;25
-2025;Maj;Höganäs;Årskurs 3;56
-2025;Maj;Höör;Årskurs 3;38
-2025;Maj;Kristianstad;Årskurs 3;81
-2025;Maj;Lomma;Årskurs 3;24
-2025;Maj;Lund;Årskurs 3;55
-2025;Maj;Malmö;Årskurs 3;4
-2025;Jun;Lund;Årskurs 3;27
-2025;Jun;Staffanstorp;Årskurs 3;69
-2025;Jul;Lund;Årskurs 3;2
-2025;Jul;Staffanstorp;Årskurs 3;29
-2025;Sep;Lund;Årskurs 3;169
-2025;Okt;Kävlinge;Årskurs 3;19
-2025;Okt;Lund;Årskurs 3;501
-2025;Nov;Lund;Årskurs 3;12
-2025;Nov;Malmö;Årskurs 3;28
-2025;Dec;Lund;Årskurs 3;7
-2026;Feb;Lund;Årskurs 3;11
-2026;Mar;Lund;Årskurs 3;525
-2026;Mar;Malmö;Årskurs 3;120
-2026;Apr;Kävlinge;Årskurs 3;9
-2026;Apr;Lund;Årskurs 3;31
-2018;Nov;Kävlinge;Årskurs 4;26
-2018;Nov;Lund;Årskurs 4;36
-2018;Nov;Malmö;Årskurs 4;46
-2018;Dec;Lund;Årskurs 4;37
-2018;Dec;Malmö;Årskurs 4;7
-2019;Feb;Höör;Årskurs 4;79
-2019;Mar;Båstad;Årskurs 4;34
-2019;Mar;Lund;Årskurs 4;24
-2019;Apr;Lomma;Årskurs 4;27
-2019;Apr;Lund;Årskurs 4;10
-2019;Maj;Höör;Årskurs 4;42
-2019;Maj;Lund;Årskurs 4;38
-2019;Maj;Malmö;Årskurs 4;51
-2019;Maj;Simrishamn;Årskurs 4;9
-2019;Maj;Staffanstorp;Årskurs 4;40
-2019;Jun;Höör;Årskurs 4;18
-2019;Jun;Lund;Årskurs 4;125
-2019;Jun;Malmö;Årskurs 4;14
-2019;Aug;Lund;Årskurs 4;62
-2019;Sep;Tomelilla;Årskurs 4;29
-2019;Okt;Eslöv;Årskurs 4;10
-2019;Okt;Lomma;Årskurs 4;1
-2019;Okt;Malmö;Årskurs 4;19
-2019;Nov;Landskrona;Årskurs 4;22
-2020;Maj;Staffanstorp;Årskurs 4;1
-2020;Jun;Lund;Årskurs 4;15
-2020;Jul;Lund;Årskurs 4;2
-2020;Okt;Lund;Årskurs 4;59
-2021;Feb;Lund;Årskurs 4;26
-2021;Apr;Lund;Årskurs 4;28
-2021;Jun;Lund;Årskurs 4;1
-2021;Jul;Lomma;Årskurs 4;1
-2021;Jul;Lund;Årskurs 4;5
-2021;Aug;Lund;Årskurs 4;4
-2021;Okt;Lund;Årskurs 4;3
-2021;Dec;Lund;Årskurs 4;106
-2021;Dec;Malmö;Årskurs 4;26
-2022;Mar;Lund;Årskurs 4;41
-2022;Apr;Lund;Årskurs 4;94
-2022;Apr;Ängelholm;Årskurs 4;24
-2022;Maj;Båstad;Årskurs 4;24
-2022;Maj;Höör;Årskurs 4;13
-2022;Maj;Kristianstad;Årskurs 4;42
-2022;Maj;Lund;Årskurs 4;2
-2022;Maj;Malmö;Årskurs 4;35
-2022;Jun;Lund;Årskurs 4;83
-2022;Jun;Malmö;Årskurs 4;5
-2022;Sep;Kristianstad;Årskurs 4;59
-2023;Jan;Lomma;Årskurs 4;24
-2023;Feb;Lomma;Årskurs 4;27
-2023;Mar;Eslöv;Årskurs 4;10
-2023;Apr;Malmö;Årskurs 4;26
-2023;Maj;Lund;Årskurs 4;138
-2023;Jun;Lund;Årskurs 4;1
-2023;Aug;Bjuv;Årskurs 4;1
-2023;Sep;Lund;Årskurs 4;11
-2023;Okt;Lund;Årskurs 4;3
-2023;Dec;Höör;Årskurs 4;23
-2023;Dec;Lund;Årskurs 4;45
-2024;Feb;Lund;Årskurs 4;88
-2024;Mar;Lund;Årskurs 4;26
-2024;Apr;Lund;Årskurs 4;5
-2024;Maj;Lund;Årskurs 4;2
-2024;Jun;Lund;Årskurs 4;48
-2024;Okt;Lund;Årskurs 4;3
-2024;Nov;Lund;Årskurs 4;67
-2025;Feb;Lund;Årskurs 4;27
-2025;Feb;Malmö;Årskurs 4;11
-2025;Apr;Malmö;Årskurs 4;27
-2025;Apr;Ängelholm;Årskurs 4;16
-2025;Maj;Lund;Årskurs 4;24
-2025;Maj;Malmö;Årskurs 4;81
-2025;Maj;Övrigt;Årskurs 4;44
-2025;Jul;Lund;Årskurs 4;5
-2025;Jul;Staffanstorp;Årskurs 4;17
-2025;Sep;Lund;Årskurs 4;33
-2025;Okt;Lund;Årskurs 4;3
-2025;Dec;Lund;Årskurs 4;5
-2026;Mar;Lund;Årskurs 4;25
-2026;Mar;Malmö;Årskurs 4;13
-2026;Apr;Hörby;Årskurs 4;17
-2026;Apr;Lomma;Årskurs 4;26
-2026;Apr;Lund;Årskurs 4;49
-2018;Nov;Lund;Årskurs 5;8
-2018;Dec;Lund;Årskurs 5;55
-2018;Dec;Malmö;Årskurs 5;24
-2018;Dec;Övrigt;Årskurs 5;5
-2019;Jan;Höör;Årskurs 5;1
-2019;Feb;Lund;Årskurs 5;31
-2019;Mar;Lund;Årskurs 5;73
-2019;Mar;Malmö;Årskurs 5;24
-2019;Apr;Lund;Årskurs 5;11
-2019;Maj;Burlöv;Årskurs 5;42
-2019;Maj;Lomma;Årskurs 5;2
-2019;Maj;Lund;Årskurs 5;125
-2019;Maj;Staffanstorp;Årskurs 5;28
-2019;Aug;Lomma;Årskurs 5;9
-2019;Aug;Lund;Årskurs 5;46
-2019;Aug;Malmö;Årskurs 5;1
-2019;Sep;Lund;Årskurs 5;161
-2019;Sep;Svalöv;Årskurs 5;21
-2019;Okt;Kävlinge;Årskurs 5;28
-2019;Okt;Lund;Årskurs 5;11
-2019;Dec;Lund;Årskurs 5;30
-2020;Jan;Lund;Årskurs 5;39
-2020;Feb;Lund;Årskurs 5;3
-2020;Mar;Lund;Årskurs 5;18
-2020;Apr;Lund;Årskurs 5;2
-2020;Maj;Lund;Årskurs 5;65
-2020;Maj;Staffanstorp;Årskurs 5;42
-2020;Jun;Lund;Årskurs 5;48
-2020;Jul;Helsingborg;Årskurs 5;4
-2020;Jul;Lund;Årskurs 5;1
-2020;Aug;Lund;Årskurs 5;60
-2020;Sep;Lund;Årskurs 5;6
-2021;Feb;Lund;Årskurs 5;31
-2021;Mar;Lund;Årskurs 5;6
-2021;Jun;Malmö;Årskurs 5;10
-2021;Jun;Staffanstorp;Årskurs 5;55
-2021;Aug;Övrigt;Årskurs 5;54
-2021;Sep;Lund;Årskurs 5;81
-2021;Nov;Lund;Årskurs 5;17
-2021;Dec;Lund;Årskurs 5;72
-2022;Mar;Lund;Årskurs 5;53
-2022;Mar;Simrishamn;Årskurs 5;19
-2022;Maj;Landskrona;Årskurs 5;12
-2022;Maj;Lund;Årskurs 5;58
-2022;Maj;Malmö;Årskurs 5;28
-2022;Jun;Eslöv;Årskurs 5;28
-2022;Jun;Lund;Årskurs 5;62
-2022;Jun;Sjöbo;Årskurs 5;24
-2022;Aug;Lund;Årskurs 5;13
-2022;Sep;Lund;Årskurs 5;38
-2022;Sep;Malmö;Årskurs 5;26
-2022;Nov;Lund;Årskurs 5;162
-2023;Feb;Lund;Årskurs 5;18
-2023;Maj;Lund;Årskurs 5;55
-2023;Jun;Malmö;Årskurs 5;12
-2023;Sep;Lund;Årskurs 5;10
-2023;Dec;Höör;Årskurs 5;23
-2023;Dec;Lund;Årskurs 5;8
-2024;Mar;Lund;Årskurs 5;1
-2024;Apr;Lund;Årskurs 5;1
-2024;Jul;Lund;Årskurs 5;2
-2024;Sep;Staffanstorp;Årskurs 5;85
-2024;Nov;Malmö;Årskurs 5;59
-2024;Dec;Lund;Årskurs 5;33
-2025;Jan;Lund;Årskurs 5;29
-2025;Feb;Lund;Årskurs 5;24
-2025;Maj;Lund;Årskurs 5;30
-2025;Maj;Vellinge;Årskurs 5;12
-2025;Maj;Övrigt;Årskurs 5;70
-2025;Jun;Lund;Årskurs 5;73
-2025;Jun;Staffanstorp;Årskurs 5;3
-2025;Jul;Lund;Årskurs 5;2
-2025;Aug;Lund;Årskurs 5;6
-2025;Sep;Lund;Årskurs 5;43
-2025;Okt;Helsingborg;Årskurs 5;24
-2025;Okt;Lund;Årskurs 5;108
-2025;Nov;Lund;Årskurs 5;10
-2025;Nov;Malmö;Årskurs 5;8
-2025;Dec;Eslöv;Årskurs 5;24
-2025;Dec;Lund;Årskurs 5;4
-2026;Jan;Eslöv;Årskurs 5;25
-2026;Jan;Lund;Årskurs 5;97
-2026;Feb;Lund;Årskurs 5;16
-2026;Feb;Malmö;Årskurs 5;74
-2026;Apr;Lund;Årskurs 5;30
-2018;Nov;Lomma;Årskurs 6;13
-2018;Nov;Lund;Årskurs 6;6
-2018;Nov;Malmö;Årskurs 6;7
-2018;Dec;Lund;Årskurs 6;8
-2018;Dec;Malmö;Årskurs 6;63
-2018;Dec;Skurup;Årskurs 6;30
-2019;Jan;Lund;Årskurs 6;40
-2019;Jan;Ystad;Årskurs 6;44
-2019;Feb;Lund;Årskurs 6;5
-2019;Mar;Lund;Årskurs 6;11
-2019;Apr;Lund;Årskurs 6;6
-2019;Maj;Eslöv;Årskurs 6;6
-2019;Maj;Helsingborg;Årskurs 6;15
-2019;Maj;Lomma;Årskurs 6;84
-2019;Maj;Malmö;Årskurs 6;49
-2019;Maj;Staffanstorp;Årskurs 6;16
-2019;Aug;Lund;Årskurs 6;13
-2019;Dec;Lund;Årskurs 6;25
-2020;Feb;Lund;Årskurs 6;15
-2020;Mar;Lund;Årskurs 6;20
-2020;Jun;Lund;Årskurs 6;2
-2020;Jul;Lund;Årskurs 6;4
-2020;Sep;Malmö;Årskurs 6;26
-2020;Dec;Lund;Årskurs 6;35
-2021;Mar;Lund;Årskurs 6;6
-2021;Maj;Lund;Årskurs 6;144
-2021;Jun;Lund;Årskurs 6;63
-2021;Sep;Lund;Årskurs 6;23
-2021;Nov;Lund;Årskurs 6;59
-2022;Jan;Lund;Årskurs 6;1
-2022;Feb;Lund;Årskurs 6;1
-2022;Maj;Lund;Årskurs 6;42
-2022;Jun;Lund;Årskurs 6;38
-2022;Aug;Lund;Årskurs 6;20
-2022;Dec;Malmö;Årskurs 6;12
-2022;Dec;Svalöv;Årskurs 6;24
-2023;Apr;Klippan;Årskurs 6;10
-2023;Apr;Lund;Årskurs 6;18
-2023;Maj;Hässleholm;Årskurs 6;44
-2023;Maj;Höör;Årskurs 6;6
-2023;Maj;Lund;Årskurs 6;2
-2023;Jun;Lund;Årskurs 6;68
-2023;Sep;Lund;Årskurs 6;10
-2023;Sep;Malmö;Årskurs 6;55
-2023;Nov;Lund;Årskurs 6;37
-2023;Dec;Höör;Årskurs 6;23
-2024;Feb;Lomma;Årskurs 6;23
-2024;Apr;Lund;Årskurs 6;4
-2024;Sep;Lund;Årskurs 6;33
-2024;Okt;Burlöv;Årskurs 6;39
-2024;Nov;Kävlinge;Årskurs 6;22
-2024;Nov;Lomma;Årskurs 6;13
-2024;Dec;Eslöv;Årskurs 6;13
-2025;Apr;Lomma;Årskurs 6;15
-2025;Apr;Malmö;Årskurs 6;51
-2025;Apr;Simrishamn;Årskurs 6;17
-2025;Maj;Kävlinge;Årskurs 6;18
-2025;Jul;Lund;Årskurs 6;2
-2025;Jul;Malmö;Årskurs 6;4
-2025;Sep;Lund;Årskurs 6;32
-2025;Okt;Lomma;Årskurs 6;5
-2026;Mar;Eslöv;Årskurs 6;60
-2026;Apr;Lund;Årskurs 6;98
-2018;Dec;Lund;Årskurs 7;1
-2019;Feb;Lund;Årskurs 7;2
-2019;Mar;Malmö;Årskurs 7;7
-2019;Apr;Eslöv;Årskurs 7;19
-2019;Apr;Malmö;Årskurs 7;12
-2019;Maj;Eslöv;Årskurs 7;3
-2019;Maj;Lund;Årskurs 7;223
-2019;Jun;Lomma;Årskurs 7;15
-2019;Jun;Lund;Årskurs 7;1
-2019;Jun;Övrigt;Årskurs 7;1
-2019;Aug;Lund;Årskurs 7;36
-2019;Sep;Lomma;Årskurs 7;185
-2019;Sep;Lund;Årskurs 7;27
-2019;Okt;Lomma;Årskurs 7;185
-2019;Okt;Lund;Årskurs 7;97
-2019;Dec;Staffanstorp;Årskurs 7;17
-2020;Jan;Lomma;Årskurs 7;21
-2020;Maj;Lund;Årskurs 7;1
-2020;Jun;Lund;Årskurs 7;5
-2020;Jul;Malmö;Årskurs 7;2
-2020;Aug;Malmö;Årskurs 7;3
-2020;Okt;Lund;Årskurs 7;16
-2020;Dec;Lund;Årskurs 7;12
-2021;Mar;Lund;Årskurs 7;27
-2021;Apr;Malmö;Årskurs 7;31
-2021;Maj;Lund;Årskurs 7;7
-2021;Jun;Lund;Årskurs 7;9
-2021;Jun;Staffanstorp;Årskurs 7;29
-2021;Sep;Lund;Årskurs 7;9
-2021;Nov;Lund;Årskurs 7;26
-2021;Dec;Lund;Årskurs 7;23
-2022;Apr;Lund;Årskurs 7;69
-2022;Maj;Malmö;Årskurs 7;4
-2022;Jun;Kävlinge;Årskurs 7;32
-2022;Jun;Övrigt;Årskurs 7;25
-2022;Aug;Lund;Årskurs 7;1
-2023;Apr;Lund;Årskurs 7;67
-2023;Maj;Höganäs;Årskurs 7;66
-2023;Maj;Höör;Årskurs 7;25
-2023;Maj;Lund;Årskurs 7;67
-2023;Jun;Landskrona;Årskurs 7;17
-2023;Jun;Lund;Årskurs 7;67
-2023;Jun;Trelleborg;Årskurs 7;29
-2023;Jul;Lund;Årskurs 7;1
-2023;Sep;Lund;Årskurs 7;11
-2023;Okt;Lund;Årskurs 7;18
-2024;Mar;Lund;Årskurs 7;8
-2024;Mar;Trelleborg;Årskurs 7;18
-2024;Apr;Lund;Årskurs 7;60
-2024;Maj;Klippan;Årskurs 7;11
-2024;Maj;Lund;Årskurs 7;4
-2024;Jun;Lund;Årskurs 7;28
-2024;Aug;Lund;Årskurs 7;25
-2024;Sep;Malmö;Årskurs 7;11
-2024;Okt;Lund;Årskurs 7;144
-2024;Nov;Lund;Årskurs 7;2
-2024;Nov;Staffanstorp;Årskurs 7;20
-2024;Dec;Bjuv;Årskurs 7;9
-2024;Dec;Lund;Årskurs 7;27
-2025;Jan;Lund;Årskurs 7;10
-2025;Mar;Höör;Årskurs 7;48
-2025;Mar;Lund;Årskurs 7;26
-2025;Maj;Eslöv;Årskurs 7;35
-2025;Maj;Staffanstorp;Årskurs 7;27
-2025;Maj;Övrigt;Årskurs 7;69
-2025;Jun;Lund;Årskurs 7;74
-2025;Aug;Kävlinge;Årskurs 7;30
-2025;Okt;Helsingborg;Årskurs 7;52
-2025;Dec;Kävlinge;Årskurs 7;50
-2026;Feb;Lomma;Årskurs 7;30
-2018;Nov;Lund;Årskurs 8;63
-2018;Dec;Lund;Årskurs 8;34
-2018;Dec;Malmö;Årskurs 8;33
-2019;Jan;Malmö;Årskurs 8;22
-2019;Feb;Eslöv;Årskurs 8;16
-2019;Feb;Malmö;Årskurs 8;30
-2019;Feb;Övrigt;Årskurs 8;50
-2019;Mar;Klippan;Årskurs 8;4
-2019;Mar;Lomma;Årskurs 8;32
-2019;Apr;Hörby;Årskurs 8;23
-2019;Apr;Kävlinge;Årskurs 8;18
-2019;Apr;Lund;Årskurs 8;8
-2019;Apr;Malmö;Årskurs 8;27
-2019;Apr;Övrigt;Årskurs 8;49
-2019;Maj;Eslöv;Årskurs 8;3
-2019;Maj;Hörby;Årskurs 8;11
-2019;Maj;Övrigt;Årskurs 8;23
-2019;Jun;Eslöv;Årskurs 8;22
-2019;Jun;Lund;Årskurs 8;1
-2019;Jun;Malmö;Årskurs 8;8
-2019;Jul;Hörby;Årskurs 8;24
-2019;Aug;Lund;Årskurs 8;118
-2019;Sep;Lund;Årskurs 8;72
-2019;Nov;Lomma;Årskurs 8;26
-2019;Nov;Malmö;Årskurs 8;17
-2019;Nov;Övrigt;Årskurs 8;24
-2020;Jan;Lund;Årskurs 8;1
-2020;Jun;Tomelilla;Årskurs 8;11
-2020;Jun;Trelleborg;Årskurs 8;10
-2020;Jul;Malmö;Årskurs 8;3
-2020;Aug;Lund;Årskurs 8;17
-2020;Sep;Lund;Årskurs 8;189
-2020;Okt;Lomma;Årskurs 8;8
-2020;Okt;Lund;Årskurs 8;2
-2020;Nov;Hässleholm;Årskurs 8;3
-2021;Mar;Lund;Årskurs 8;10
-2021;Maj;Hörby;Årskurs 8;5
-2021;Maj;Lund;Årskurs 8;2
-2021;Aug;Kävlinge;Årskurs 8;59
-2021;Aug;Lund;Årskurs 8;4
-2021;Okt;Lund;Årskurs 8;42
-2021;Nov;Lund;Årskurs 8;34
-2021;Dec;Lund;Årskurs 8;3
-2022;Mar;Lund;Årskurs 8;48
-2022;Mar;Övrigt;Årskurs 8;54
-2022;Apr;Lomma;Årskurs 8;180
-2022;Apr;Lund;Årskurs 8;44
-2022;Maj;Hässleholm;Årskurs 8;31
-2022;Maj;Lomma;Årskurs 8;215
-2022;Maj;Lund;Årskurs 8;52
-2022;Jun;Lund;Årskurs 8;39
-2022;Jun;Malmö;Årskurs 8;34
-2022;Jun;Trelleborg;Årskurs 8;11
-2022;Aug;Lund;Årskurs 8;12
-2022;Sep;Malmö;Årskurs 8;23
-2022;Okt;Malmö;Årskurs 8;74
-2023;Feb;Trelleborg;Årskurs 8;12
-2023;Mar;Lund;Årskurs 8;15
-2023;Apr;Lund;Årskurs 8;13
-2023;Apr;Malmö;Årskurs 8;7
-2023;Apr;Simrishamn;Årskurs 8;20
-2023;Maj;Eslöv;Årskurs 8;55
-2023;Maj;Kävlinge;Årskurs 8;10
-2023;Maj;Staffanstorp;Årskurs 8;3
-2023;Jun;Landskrona;Årskurs 8;64
-2023;Jun;Staffanstorp;Årskurs 8;131
-2023;Dec;Trelleborg;Årskurs 8;29
-2024;Feb;Lomma;Årskurs 8;19
-2024;Mar;Skurup;Årskurs 8;18
-2024;Maj;Lund;Årskurs 8;8
-2024;Jun;Lund;Årskurs 8;43
-2024;Jun;Vellinge;Årskurs 8;71
-2024;Aug;Lund;Årskurs 8;39
-2024;Sep;Övrigt;Årskurs 8;29
-2024;Okt;Lund;Årskurs 8;28
-2024;Okt;Malmö;Årskurs 8;46
-2024;Okt;Åstorp;Årskurs 8;10
-2024;Nov;Lund;Årskurs 8;2
-2024;Nov;Malmö;Årskurs 8;12
-2024;Nov;Staffanstorp;Årskurs 8;20
-2024;Dec;Simrishamn;Årskurs 8;22
-2025;Feb;Lund;Årskurs 8;29
-2025;Mar;Lomma;Årskurs 8;23
-2025;Mar;Lund;Årskurs 8;47
-2025;Apr;Övrigt;Årskurs 8;57
-2025;Maj;Lund;Årskurs 8;38
-2025;Maj;Malmö;Årskurs 8;10
-2025;Jun;Kävlinge;Årskurs 8;10
-2025;Jun;Lund;Årskurs 8;6
-2025;Jun;Malmö;Årskurs 8;37
-2025;Sep;Lund;Årskurs 8;151
-2025;Okt;Malmö;Årskurs 8;47
-2025;Okt;Simrishamn;Årskurs 8;12
-2025;Dec;Bjuv;Årskurs 8;8
-2025;Dec;Svalöv;Årskurs 8;92
-2026;Feb;Kristianstad;Årskurs 8;15
-2026;Mar;Kävlinge;Årskurs 8;23
-2026;Mar;Malmö;Årskurs 8;8
-2026;Apr;Vellinge;Årskurs 8;12
-2019;Jan;Hässleholm;Årskurs 9;26
-2019;Feb;Lund;Årskurs 9;1
-2019;Mar;Klippan;Årskurs 9;4
-2019;Mar;Lund;Årskurs 9;26
-2019;Apr;Lund;Årskurs 9;25
-2019;Maj;Lund;Årskurs 9;44
-2019;Jun;Malmö;Årskurs 9;67
-2019;Jun;Övrigt;Årskurs 9;8
-2019;Aug;Lund;Årskurs 9;50
-2019;Aug;Simrishamn;Årskurs 9;24
-2019;Sep;Lund;Årskurs 9;79
-2019;Okt;Lund;Årskurs 9;117
-2019;Okt;Malmö;Årskurs 9;20
-2019;Nov;Hässleholm;Årskurs 9;27
-2019;Nov;Övrigt;Årskurs 9;24
-2020;Feb;Helsingborg;Årskurs 9;13
-2020;Feb;Lund;Årskurs 9;1
-2020;Jul;Malmö;Årskurs 9;3
-2020;Aug;Lund;Årskurs 9;94
-2020;Aug;Malmö;Årskurs 9;110
-2020;Nov;Lomma;Årskurs 9;1
-2020;Nov;Lund;Årskurs 9;20
-2021;Mar;Burlöv;Årskurs 9;1
-2021;Maj;Lund;Årskurs 9;2
-2021;Aug;Lund;Årskurs 9;17
-2021;Aug;Malmö;Årskurs 9;4
-2021;Dec;Lund;Årskurs 9;2
-2022;Feb;Lund;Årskurs 9;23
-2022;Mar;Lund;Årskurs 9;34
-2022;Jun;Örkelljunga;Årskurs 9;19
-2022;Aug;Lund;Årskurs 9;58
-2022;Okt;Vellinge;Årskurs 9;41
-2023;Jan;Lund;Årskurs 9;22
-2023;Feb;Lund;Årskurs 9;123
-2023;Mar;Lund;Årskurs 9;37
-2023;Maj;Lund;Årskurs 9;43
-2023;Jun;Lund;Årskurs 9;25
-2023;Jun;Trelleborg;Årskurs 9;100
-2023;Aug;Lund;Årskurs 9;52
-2023;Okt;Lund;Årskurs 9;27
-2023;Dec;Lund;Årskurs 9;12
-2024;Jan;Lomma;Årskurs 9;96
-2024;Jan;Lund;Årskurs 9;26
-2024;Feb;Lomma;Årskurs 9;255
-2024;Feb;Lund;Årskurs 9;83
-2024;Mar;Lomma;Årskurs 9;98
-2024;Maj;Kävlinge;Årskurs 9;6
-2024;Maj;Landskrona;Årskurs 9;60
-2024;Maj;Staffanstorp;Årskurs 9;19
-2024;Jun;Lund;Årskurs 9;23
-2024;Jun;Skurup;Årskurs 9;2
-2024;Jun;Trelleborg;Årskurs 9;44
-2024;Aug;Lund;Årskurs 9;39
-2024;Aug;Simrishamn;Årskurs 9;25
-2024;Sep;Kävlinge;Årskurs 9;152
-2024;Nov;Lund;Årskurs 9;1
-2025;Jan;Lomma;Årskurs 9;87
-2025;Jan;Lund;Årskurs 9;58
-2025;Feb;Lomma;Årskurs 9;307
-2025;Mar;Lomma;Årskurs 9;20
-2025;Mar;Staffanstorp;Årskurs 9;44
-2025;Apr;Lund;Årskurs 9;86
-2025;Apr;Staffanstorp;Årskurs 9;25
-2025;Maj;Lund;Årskurs 9;20
-2025;Maj;Staffanstorp;Årskurs 9;21
-2025;Jun;Lund;Årskurs 9;42
-2025;Jun;Trelleborg;Årskurs 9;86
-2025;Jun;Övrigt;Årskurs 9;22
-2025;Aug;Kävlinge;Årskurs 9;30
-2025;Aug;Lund;Årskurs 9;9
-2025;Sep;Staffanstorp;Årskurs 9;69
-2025;Okt;Kävlinge;Årskurs 9;10
-2025;Okt;Malmö;Årskurs 9;30
-2025;Okt;Staffanstorp;Årskurs 9;44
-2025;Nov;Lund;Årskurs 9;23
-2026;Feb;Lomma;Årskurs 9;451
-2026;Feb;Lund;Årskurs 9;45
-2026;Mar;Landskrona;Årskurs 9;28
-2026;Apr;Lomma;Årskurs 9;24
-2026;Apr;Lund;Årskurs 9;83
-2026;Apr;Vellinge;Årskurs 9;12
-2026;Apr;Övrigt;Årskurs 9;14
-2018;Nov;Lund;Gymnasium;256
-2018;Nov;Vellinge;Gymnasium;24
-2018;Nov;Övrigt;Gymnasium;6
-2018;Dec;Eslöv;Gymnasium;68
-2018;Dec;Helsingborg;Gymnasium;24
-2018;Dec;Lund;Gymnasium;210
-2018;Dec;Malmö;Gymnasium;66
-2019;Jan;Lund;Gymnasium;159
-2019;Jan;Övrigt;Gymnasium;12
-2019;Feb;Helsingborg;Gymnasium;12
-2019;Feb;Klippan;Gymnasium;27
-2019;Feb;Lund;Gymnasium;157
-2019;Mar;Lund;Gymnasium;156
-2019;Mar;Malmö;Gymnasium;49
-2019;Apr;Hörby;Gymnasium;13
-2019;Apr;Lund;Gymnasium;272
-2019;Apr;Malmö;Gymnasium;16
-2019;Apr;Simrishamn;Gymnasium;40
-2019;Apr;Svalöv;Gymnasium;12
-2019;Apr;Tomelilla;Gymnasium;9
-2019;Maj;Kristianstad;Gymnasium;16
-2019;Maj;Lund;Gymnasium;214
-2019;Maj;Malmö;Gymnasium;17
-2019;Maj;Svalöv;Gymnasium;5
-2019;Jun;Båstad;Gymnasium;40
-2019;Jun;Kristianstad;Gymnasium;16
-2019;Jun;Lund;Gymnasium;1
-2019;Jun;Malmö;Gymnasium;11
-2019;Jul;Lund;Gymnasium;2
-2019;Aug;Lund;Gymnasium;145
-2019;Sep;Lund;Gymnasium;255
-2019;Sep;Malmö;Gymnasium;16
-2019;Sep;Svedala;Gymnasium;8
-2019;Sep;Ängelholm;Gymnasium;20
-2019;Sep;Övrigt;Gymnasium;62
-2019;Okt;Lund;Gymnasium;270
-2019;Okt;Malmö;Gymnasium;17
-2019;Okt;Sjöbo;Gymnasium;14
-2019;Okt;Svalöv;Gymnasium;7
-2019;Nov;Lund;Gymnasium;94
-2019;Nov;Ystad;Gymnasium;43
-2019;Nov;Övrigt;Gymnasium;25
-2019;Dec;Burlöv;Gymnasium;30
-2019;Dec;Lund;Gymnasium;215
-2019;Dec;Trelleborg;Gymnasium;32
-2020;Jan;Lund;Gymnasium;22
-2020;Feb;Lund;Gymnasium;111
-2020;Mar;Lund;Gymnasium;34
-2020;Apr;Malmö;Gymnasium;1
-2020;Maj;Lund;Gymnasium;85
-2020;Jun;Övrigt;Gymnasium;4
-2020;Aug;Lund;Gymnasium;58
-2020;Sep;Lund;Gymnasium;352
-2020;Sep;Svedala;Gymnasium;17
-2020;Okt;Burlöv;Gymnasium;10
-2020;Okt;Lund;Gymnasium;218
-2020;Okt;Svalöv;Gymnasium;19
-2020;Nov;Lund;Gymnasium;45
-2021;Feb;Lund;Gymnasium;1
-2021;Apr;Lund;Gymnasium;47
-2021;Maj;Lund;Gymnasium;38
-2021;Jun;Lund;Gymnasium;96
-2021;Jun;Malmö;Gymnasium;11
-2021;Jun;Övrigt;Gymnasium;25
-2021;Jul;Lund;Gymnasium;1
-2021;Aug;Lund;Gymnasium;174
-2021;Sep;Lund;Gymnasium;381
-2021;Sep;Övrigt;Gymnasium;18
-2021;Okt;Lund;Gymnasium;243
-2021;Okt;Malmö;Gymnasium;14
-2021;Okt;Svalöv;Gymnasium;25
-2021;Okt;Svedala;Gymnasium;9
-2021;Okt;Övrigt;Gymnasium;20
-2021;Nov;Lund;Gymnasium;242
-2021;Nov;Malmö;Gymnasium;19
-2021;Dec;Burlöv;Gymnasium;21
-2021;Dec;Lund;Gymnasium;170
-2022;Jan;Lund;Gymnasium;16
-2022;Feb;Svedala;Gymnasium;14
-2022;Mar;Båstad;Gymnasium;24
-2022;Mar;Lund;Gymnasium;119
-2022;Mar;Malmö;Gymnasium;29
-2022;Mar;Svedala;Gymnasium;21
-2022;Apr;Lund;Gymnasium;27
-2022;Apr;Malmö;Gymnasium;5
-2022;Apr;Övrigt;Gymnasium;80
-2022;Maj;Lund;Gymnasium;208
-2022;Maj;Malmö;Gymnasium;27
-2022;Maj;Trelleborg;Gymnasium;25
-2022;Maj;Övrigt;Gymnasium;11
-2022;Jun;Eslöv;Gymnasium;19
-2022;Jun;Lund;Gymnasium;12
-2022;Jun;Trelleborg;Gymnasium;60
-2022;Jun;Vellinge;Gymnasium;9
-2022;Aug;Helsingborg;Gymnasium;11
-2022;Aug;Lund;Gymnasium;96
-2022;Aug;Vellinge;Gymnasium;23
-2022;Sep;Lund;Gymnasium;316
-2022;Sep;Övrigt;Gymnasium;42
-2022;Okt;Lund;Gymnasium;128
-2022;Okt;Malmö;Gymnasium;49
-2022;Nov;Lund;Gymnasium;218
-2022;Dec;Lund;Gymnasium;34
-2023;Jan;Lund;Gymnasium;87
-2023;Feb;Helsingborg;Gymnasium;1
-2023;Feb;Lund;Gymnasium;41
-2023;Mar;Helsingborg;Gymnasium;9
-2023;Mar;Klippan;Gymnasium;28
-2023;Mar;Lund;Gymnasium;183
-2023;Mar;Malmö;Gymnasium;57
-2023;Apr;Lund;Gymnasium;41
-2023;Apr;Svedala;Gymnasium;8
-2023;Maj;Lund;Gymnasium;243
-2023;Maj;Svedala;Gymnasium;13
-2023;Jun;Eslöv;Gymnasium;27
-2023;Jun;Kristianstad;Gymnasium;16
-2023;Jun;Lund;Gymnasium;81
-2023;Jun;Trelleborg;Gymnasium;35
-2023;Aug;Lund;Gymnasium;113
-2023;Aug;Vellinge;Gymnasium;46
-2023;Sep;Eslöv;Gymnasium;28
-2023;Sep;Lund;Gymnasium;300
-2023;Sep;Malmö;Gymnasium;27
-2023;Sep;Övrigt;Gymnasium;29
-2023;Okt;Lund;Gymnasium;127
-2023;Okt;Malmö;Gymnasium;173
-2023;Okt;Svalöv;Gymnasium;10
-2023;Nov;Båstad;Gymnasium;23
-2023;Nov;Helsingborg;Gymnasium;45
-2023;Nov;Lund;Gymnasium;57
-2023;Dec;Eslöv;Gymnasium;23
-2023;Dec;Kristianstad;Gymnasium;37
-2023;Dec;Landskrona;Gymnasium;50
-2023;Dec;Lund;Gymnasium;195
-2023;Dec;Malmö;Gymnasium;34
-2023;Dec;Övrigt;Gymnasium;8
-2024;Jan;Lomma;Gymnasium;28
-2024;Jan;Lund;Gymnasium;152
-2024;Jan;Malmö;Gymnasium;8
-2024;Feb;Lund;Gymnasium;59
-2024;Feb;Svalöv;Gymnasium;19
-2024;Feb;Övrigt;Gymnasium;18
-2024;Mar;Lund;Gymnasium;83
-2024;Mar;Malmö;Gymnasium;27
-2024;Mar;Tomelilla;Gymnasium;13
-2024;Apr;Eslöv;Gymnasium;12
-2024;Apr;Helsingborg;Gymnasium;14
-2024;Apr;Klippan;Gymnasium;40
-2024;Apr;Kristianstad;Gymnasium;26
-2024;Apr;Lund;Gymnasium;156
-2024;Maj;Helsingborg;Gymnasium;2
-2024;Maj;Lund;Gymnasium;179
-2024;Maj;Svedala;Gymnasium;18
-2024;Maj;Trelleborg;Gymnasium;11
-2024;Maj;Övrigt;Gymnasium;23
-2024;Jun;Eslöv;Gymnasium;39
-2024;Jun;Lund;Gymnasium;41
-2024;Jun;Svedala;Gymnasium;16
-2024;Aug;Klippan;Gymnasium;39
-2024;Aug;Lund;Gymnasium;44
-2024;Sep;Båstad;Gymnasium;18
-2024;Sep;Hässleholm;Gymnasium;18
-2024;Sep;Lund;Gymnasium;266
-2024;Sep;Övrigt;Gymnasium;167
-2024;Okt;Lund;Gymnasium;257
-2024;Okt;Malmö;Gymnasium;79
-2024;Okt;Ystad;Gymnasium;28
-2024;Okt;Övrigt;Gymnasium;14
-2024;Nov;Lund;Gymnasium;145
-2024;Dec;Burlöv;Gymnasium;12
-2024;Dec;Lund;Gymnasium;176
-2024;Dec;Malmö;Gymnasium;18
-2025;Jan;Lund;Gymnasium;76
-2025;Jan;Malmö;Gymnasium;30
-2025;Feb;Lund;Gymnasium;61
-2025;Feb;Malmö;Gymnasium;15
-2025;Feb;Simrishamn;Gymnasium;17
-2025;Feb;Övrigt;Gymnasium;20
-2025;Mar;Landskrona;Gymnasium;49
-2025;Mar;Lund;Gymnasium;82
-2025;Mar;Malmö;Gymnasium;19
-2025;Apr;Lund;Gymnasium;88
-2025;Apr;Malmö;Gymnasium;24
-2025;Apr;Simrishamn;Gymnasium;14
-2025;Apr;Övrigt;Gymnasium;125
-2025;Maj;Eslöv;Gymnasium;24
-2025;Maj;Kristianstad;Gymnasium;60
-2025;Maj;Lund;Gymnasium;239
-2025;Maj;Malmö;Gymnasium;94
-2025;Maj;Svedala;Gymnasium;18
-2025;Maj;Trelleborg;Gymnasium;15
-2025;Maj;Övrigt;Gymnasium;86
-2025;Jun;Eslöv;Gymnasium;41
-2025;Jun;Lund;Gymnasium;76
-2025;Jun;Malmö;Gymnasium;13
-2025;Jun;Övrigt;Gymnasium;44
-2025;Aug;Lund;Gymnasium;192
-2025;Aug;Malmö;Gymnasium;33
-2025;Sep;Lund;Gymnasium;256
-2025;Sep;Malmö;Gymnasium;29
-2025;Sep;Ystad;Gymnasium;35
-2025;Sep;Övrigt;Gymnasium;65
-2025;Okt;Lund;Gymnasium;244
-2025;Nov;Båstad;Gymnasium;17
-2025;Nov;Eslöv;Gymnasium;25
-2025;Nov;Helsingborg;Gymnasium;82
-2025;Nov;Lund;Gymnasium;311
-2025;Nov;Malmö;Gymnasium;32
-2025;Nov;Ystad;Gymnasium;33
-2025;Nov;Övrigt;Gymnasium;22
-2025;Dec;Båstad;Gymnasium;16
-2025;Dec;Kristianstad;Gymnasium;6
-2025;Dec;Lund;Gymnasium;147
-2025;Dec;Malmö;Gymnasium;111
-2025;Dec;Övrigt;Gymnasium;16
-2026;Jan;Lund;Gymnasium;79
-2026;Jan;Malmö;Gymnasium;29
-2026;Jan;Övrigt;Gymnasium;19
-2026;Feb;Båstad;Gymnasium;17
-2026;Feb;Eslöv;Gymnasium;3
-2026;Feb;Helsingborg;Gymnasium;11
-2026;Feb;Lund;Gymnasium;68
-2026;Feb;Malmö;Gymnasium;23
-2026;Feb;Övrigt;Gymnasium;36
-2026;Mar;Lund;Gymnasium;110
-2026;Mar;Malmö;Gymnasium;70
-2026;Mar;Övrigt;Gymnasium;24
-2026;Apr;Båstad;Gymnasium;14
-2026;Apr;Lund;Gymnasium;147
-2026;Apr;Övrigt;Gymnasium;10
-2018;Nov;Lund;Högskola, universitet;91
-2018;Dec;Lund;Högskola, universitet;117
-2018;Dec;Ängelholm;Högskola, universitet;27
-2019;Jan;Lund;Högskola, universitet;15
-2019;Jan;Malmö;Högskola, universitet;43
-2019;Feb;Helsingborg;Högskola, universitet;16
-2019;Feb;Lund;Högskola, universitet;81
-2019;Feb;Malmö;Högskola, universitet;10
-2019;Mar;Lund;Högskola, universitet;78
-2019;Mar;Övrigt;Högskola, universitet;15
-2019;Apr;Lomma;Högskola, universitet;64
-2019;Apr;Lund;Högskola, universitet;50
-2019;Maj;Lund;Högskola, universitet;127
-2019;Maj;Malmö;Högskola, universitet;21
-2019;Jun;Lund;Högskola, universitet;1
-2019;Jun;Övrigt;Högskola, universitet;11
-2019;Aug;Lund;Högskola, universitet;60
-2019;Sep;Lund;Högskola, universitet;80
-2019;Okt;Lund;Högskola, universitet;175
-2019;Okt;Övrigt;Högskola, universitet;3
-2019;Nov;Lund;Högskola, universitet;31
-2019;Nov;Övrigt;Högskola, universitet;1
-2019;Dec;Lund;Högskola, universitet;43
-2020;Jan;Lund;Högskola, universitet;37
-2020;Feb;Lund;Högskola, universitet;154
-2020;Mar;Lund;Högskola, universitet;46
-2020;Apr;Lund;Högskola, universitet;11
-2020;Jun;Trelleborg;Högskola, universitet;3
-2020;Aug;Lund;Högskola, universitet;277
-2020;Aug;Vellinge;Högskola, universitet;15
-2020;Sep;Lund;Högskola, universitet;36
-2020;Sep;Övrigt;Högskola, universitet;30
-2020;Dec;Lund;Högskola, universitet;17
-2021;Feb;Lund;Högskola, universitet;3
-2021;Mar;Kristianstad;Högskola, universitet;11
-2021;Mar;Lund;Högskola, universitet;53
-2021;Apr;Lund;Högskola, universitet;9
-2021;Maj;Lund;Högskola, universitet;48
-2021;Jun;Lund;Högskola, universitet;1
-2021;Jul;Lund;Högskola, universitet;1
-2021;Aug;Lund;Högskola, universitet;65
-2021;Aug;Malmö;Högskola, universitet;8
-2021;Sep;Lund;Högskola, universitet;13
-2021;Okt;Lund;Högskola, universitet;1
-2021;Nov;Lund;Högskola, universitet;20
-2021;Nov;Malmö;Högskola, universitet;18
-2021;Dec;Lund;Högskola, universitet;28
-2022;Jan;Lund;Högskola, universitet;36
-2022;Jan;Övrigt;Högskola, universitet;27
-2022;Feb;Lund;Högskola, universitet;80
-2022;Mar;Lund;Högskola, universitet;9
-2022;Apr;Bromölla;Högskola, universitet;13
-2022;Apr;Lomma;Högskola, universitet;4
-2022;Apr;Lund;Högskola, universitet;25
-2022;Maj;Lund;Högskola, universitet;36
-2022;Maj;Malmö;Högskola, universitet;40
-2022;Jun;Lund;Högskola, universitet;38
-2022;Aug;Lund;Högskola, universitet;5
-2022;Sep;Lund;Högskola, universitet;156
-2022;Okt;Lund;Högskola, universitet;18
-2022;Nov;Lund;Högskola, universitet;64
-2022;Dec;Lund;Högskola, universitet;18
-2023;Jan;Lund;Högskola, universitet;74
-2023;Jan;Malmö;Högskola, universitet;40
-2023;Feb;Lund;Högskola, universitet;30
-2023;Mar;Lund;Högskola, universitet;35
-2023;Mar;Övrigt;Högskola, universitet;12
-2023;Apr;Lund;Högskola, universitet;48
-2023;Maj;Lund;Högskola, universitet;68
-2023;Maj;Malmö;Högskola, universitet;30
-2023;Maj;Övrigt;Högskola, universitet;53
-2023;Jun;Burlöv;Högskola, universitet;2
-2023;Jul;Malmö;Högskola, universitet;1
-2023;Aug;Lund;Högskola, universitet;30
-2023;Sep;Lund;Högskola, universitet;139
-2023;Sep;Malmö;Högskola, universitet;8
-2023;Okt;Lund;Högskola, universitet;79
-2023;Nov;Lund;Högskola, universitet;45
-2023;Nov;Malmö;Högskola, universitet;13
-2023;Dec;Lund;Högskola, universitet;41
-2024;Jan;Lomma;Högskola, universitet;15
-2024;Jan;Lund;Högskola, universitet;49
-2024;Jan;Malmö;Högskola, universitet;25
-2024;Feb;Lund;Högskola, universitet;36
-2024;Feb;Övrigt;Högskola, universitet;10
-2024;Mar;Lund;Högskola, universitet;9
-2024;Mar;Övrigt;Högskola, universitet;1
-2024;Apr;Burlöv;Högskola, universitet;40
-2024;Apr;Lund;Högskola, universitet;51
-2024;Apr;Malmö;Högskola, universitet;10
-2024;Maj;Burlöv;Högskola, universitet;8
-2024;Maj;Lund;Högskola, universitet;161
-2024;Maj;Övrigt;Högskola, universitet;41
-2024;Aug;Vellinge;Högskola, universitet;20
-2024;Sep;Lund;Högskola, universitet;118
-2024;Sep;Övrigt;Högskola, universitet;88
-2024;Okt;Kristianstad;Högskola, universitet;37
-2024;Okt;Lund;Högskola, universitet;51
-2024;Okt;Vellinge;Högskola, universitet;18
-2024;Nov;Kristianstad;Högskola, universitet;40
-2024;Nov;Lund;Högskola, universitet;111
-2024;Nov;Malmö;Högskola, universitet;5
-2024;Nov;Övrigt;Högskola, universitet;10
-2024;Dec;Lund;Högskola, universitet;70
-2025;Jan;Lund;Högskola, universitet;66
-2025;Jan;Malmö;Högskola, universitet;31
-2025;Feb;Lund;Högskola, universitet;31
-2025;Feb;Övrigt;Högskola, universitet;12
-2025;Mar;Lund;Högskola, universitet;41
-2025;Mar;Övrigt;Högskola, universitet;20
-2025;Apr;Lund;Högskola, universitet;356
-2025;Apr;Malmö;Högskola, universitet;27
-2025;Maj;Lund;Högskola, universitet;60
-2025;Jun;Lund;Högskola, universitet;26
-2025;Jul;Övrigt;Högskola, universitet;20
-2025;Sep;Lund;Högskola, universitet;119
-2025;Okt;Kristianstad;Högskola, universitet;36
-2025;Okt;Lund;Högskola, universitet;37
-2025;Nov;Lund;Högskola, universitet;82
-2025;Nov;Övrigt;Högskola, universitet;74
-2025;Dec;Lund;Högskola, universitet;61
-2026;Jan;Lund;Högskola, universitet;41
-2026;Jan;Malmö;Högskola, universitet;45
-2026;Feb;Lund;Högskola, universitet;17
-2026;Feb;Övrigt;Högskola, universitet;72
-2026;Mar;Lomma;Högskola, universitet;50
-2026;Mar;Lund;Högskola, universitet;20
-2026;Mar;Malmö;Högskola, universitet;6
-2026;Apr;Lund;Högskola, universitet;19
-2026;Apr;Malmö;Högskola, universitet;35
-2026;Apr;Övrigt;Högskola, universitet;18
-2018;Nov;Hörby;Vuxenutbildning;20
-2018;Nov;Lund;Vuxenutbildning;282
-2018;Nov;Sjöbo;Vuxenutbildning;4
-2018;Nov;Svedala;Vuxenutbildning;16
-2018;Nov;Tomelilla;Vuxenutbildning;4
-2018;Nov;Övrigt;Vuxenutbildning;1
-2018;Dec;Eslöv;Vuxenutbildning;55
-2018;Dec;Kristianstad;Vuxenutbildning;31
-2018;Dec;Landskrona;Vuxenutbildning;15
-2018;Dec;Lund;Vuxenutbildning;69
-2018;Dec;Malmö;Vuxenutbildning;57
-2018;Dec;Simrishamn;Vuxenutbildning;54
-2018;Dec;Ystad;Vuxenutbildning;20
-2019;Jan;Kristianstad;Vuxenutbildning;9
-2019;Jan;Lund;Vuxenutbildning;19
-2019;Jan;Malmö;Vuxenutbildning;11
-2019;Feb;Burlöv;Vuxenutbildning;15
-2019;Feb;Helsingborg;Vuxenutbildning;17
-2019;Feb;Hässleholm;Vuxenutbildning;6
-2019;Feb;Lund;Vuxenutbildning;181
-2019;Feb;Malmö;Vuxenutbildning;41
-2019;Feb;Ängelholm;Vuxenutbildning;9
-2019;Mar;Eslöv;Vuxenutbildning;18
-2019;Mar;Kristianstad;Vuxenutbildning;1
-2019;Mar;Lund;Vuxenutbildning;263
-2019;Mar;Malmö;Vuxenutbildning;37
-2019;Mar;Ängelholm;Vuxenutbildning;15
-2019;Mar;Övrigt;Vuxenutbildning;61
-2019;Apr;Hörby;Vuxenutbildning;24
-2019;Apr;Kristianstad;Vuxenutbildning;15
-2019;Apr;Lund;Vuxenutbildning;137
-2019;Apr;Malmö;Vuxenutbildning;36
-2019;Apr;Sjöbo;Vuxenutbildning;49
-2019;Maj;Kristianstad;Vuxenutbildning;10
-2019;Maj;Lund;Vuxenutbildning;56
-2019;Maj;Malmö;Vuxenutbildning;27
-2019;Maj;Svedala;Vuxenutbildning;12
-2019;Maj;Ängelholm;Vuxenutbildning;6
-2019;Jun;Burlöv;Vuxenutbildning;30
-2019;Jun;Hörby;Vuxenutbildning;20
-2019;Jun;Lund;Vuxenutbildning;53
-2019;Jun;Malmö;Vuxenutbildning;71
-2019;Jul;Burlöv;Vuxenutbildning;11
-2019;Jul;Lund;Vuxenutbildning;116
-2019;Jul;Malmö;Vuxenutbildning;52
-2019;Jul;Vellinge;Vuxenutbildning;7
-2019;Aug;Eslöv;Vuxenutbildning;23
-2019;Aug;Lund;Vuxenutbildning;16
-2019;Aug;Malmö;Vuxenutbildning;30
-2019;Aug;Vellinge;Vuxenutbildning;10
-2019;Aug;Övrigt;Vuxenutbildning;29
-2019;Sep;Kristianstad;Vuxenutbildning;5
-2019;Sep;Lund;Vuxenutbildning;238
-2019;Sep;Malmö;Vuxenutbildning;7
-2019;Sep;Skurup;Vuxenutbildning;26
-2019;Okt;Kristianstad;Vuxenutbildning;10
-2019;Okt;Lund;Vuxenutbildning;246
-2019;Okt;Malmö;Vuxenutbildning;9
-2019;Nov;Lund;Vuxenutbildning;201
-2019;Nov;Staffanstorp;Vuxenutbildning;31
-2019;Nov;Östra Göinge;Vuxenutbildning;12
-2019;Dec;Eslöv;Vuxenutbildning;4
-2019;Dec;Lund;Vuxenutbildning;147
-2019;Dec;Malmö;Vuxenutbildning;19
-2019;Dec;Staffanstorp;Vuxenutbildning;10
-2020;Jan;Lund;Vuxenutbildning;22
-2020;Jan;Vellinge;Vuxenutbildning;10
-2020;Jan;Övrigt;Vuxenutbildning;28
-2020;Feb;Lund;Vuxenutbildning;190
-2020;Feb;Svedala;Vuxenutbildning;19
-2020;Mar;Båstad;Vuxenutbildning;30
-2020;Mar;Lund;Vuxenutbildning;305
-2020;Apr;Lund;Vuxenutbildning;13
-2020;Maj;Lund;Vuxenutbildning;22
-2020;Maj;Malmö;Vuxenutbildning;7
-2020;Jun;Lund;Vuxenutbildning;27
-2020;Jun;Övrigt;Vuxenutbildning;3
-2020;Jul;Lund;Vuxenutbildning;5
-2020;Aug;Lund;Vuxenutbildning;109
-2020;Sep;Lund;Vuxenutbildning;286
-2020;Sep;Övrigt;Vuxenutbildning;12
-2020;Okt;Lund;Vuxenutbildning;384
-2020;Okt;Svedala;Vuxenutbildning;12
-2020;Nov;Lund;Vuxenutbildning;54
-2020;Dec;Lund;Vuxenutbildning;18
-2021;Jan;Lund;Vuxenutbildning;3
-2021;Apr;Lomma;Vuxenutbildning;1
-2021;Apr;Lund;Vuxenutbildning;34
-2021;Maj;Lund;Vuxenutbildning;25
-2021;Maj;Malmö;Vuxenutbildning;15
-2021;Maj;Svalöv;Vuxenutbildning;15
-2021;Jun;Lund;Vuxenutbildning;18
-2021;Jun;Svedala;Vuxenutbildning;10
-2021;Jul;Lund;Vuxenutbildning;19
-2021;Aug;Burlöv;Vuxenutbildning;13
-2021;Aug;Eslöv;Vuxenutbildning;2
-2021;Aug;Lund;Vuxenutbildning;23
-2021;Sep;Båstad;Vuxenutbildning;15
-2021;Sep;Eslöv;Vuxenutbildning;69
-2021;Sep;Lund;Vuxenutbildning;147
-2021;Sep;Malmö;Vuxenutbildning;20
-2021;Sep;Svalöv;Vuxenutbildning;20
-2021;Sep;Ängelholm;Vuxenutbildning;9
-2021;Sep;Övrigt;Vuxenutbildning;6
-2021;Okt;Lund;Vuxenutbildning;221
-2021;Okt;Malmö;Vuxenutbildning;17
-2021;Okt;Skurup;Vuxenutbildning;14
-2021;Okt;Övrigt;Vuxenutbildning;50
-2021;Nov;Lund;Vuxenutbildning;221
-2021;Nov;Malmö;Vuxenutbildning;11
-2021;Nov;Svalöv;Vuxenutbildning;10
-2021;Nov;Övrigt;Vuxenutbildning;26
-2021;Dec;Kristianstad;Vuxenutbildning;14
-2021;Dec;Lund;Vuxenutbildning;177
-2021;Dec;Malmö;Vuxenutbildning;22
-2021;Dec;Tomelilla;Vuxenutbildning;35
-2021;Dec;Övrigt;Vuxenutbildning;25
-2022;Jan;Lund;Vuxenutbildning;7
-2022;Feb;Lund;Vuxenutbildning;151
-2022;Feb;Tomelilla;Vuxenutbildning;9
-2022;Mar;Lund;Vuxenutbildning;44
-2022;Mar;Vellinge;Vuxenutbildning;40
-2022;Mar;Övrigt;Vuxenutbildning;22
-2022;Apr;Burlöv;Vuxenutbildning;10
-2022;Apr;Lomma;Vuxenutbildning;1
-2022;Apr;Lund;Vuxenutbildning;299
-2022;Apr;Övrigt;Vuxenutbildning;9
-2022;Maj;Burlöv;Vuxenutbildning;32
-2022;Maj;Lund;Vuxenutbildning;103
-2022;Maj;Sjöbo;Vuxenutbildning;36
-2022;Maj;Övrigt;Vuxenutbildning;9
-2022;Jun;Burlöv;Vuxenutbildning;9
-2022;Jun;Helsingborg;Vuxenutbildning;14
-2022;Jun;Lund;Vuxenutbildning;64
-2022;Jun;Malmö;Vuxenutbildning;51
-2022;Jul;Lund;Vuxenutbildning;15
-2022;Jul;Malmö;Vuxenutbildning;33
-2022;Aug;Lund;Vuxenutbildning;51
-2022;Aug;Skurup;Vuxenutbildning;11
-2022;Sep;Bromölla;Vuxenutbildning;1
-2022;Sep;Burlöv;Vuxenutbildning;43
-2022;Sep;Lund;Vuxenutbildning;121
-2022;Okt;Eslöv;Vuxenutbildning;11
-2022;Okt;Lund;Vuxenutbildning;222
-2022;Okt;Malmö;Vuxenutbildning;76
-2022;Okt;Tomelilla;Vuxenutbildning;36
-2022;Nov;Båstad;Vuxenutbildning;8
-2022;Nov;Lund;Vuxenutbildning;158
-2022;Nov;Malmö;Vuxenutbildning;38
-2022;Dec;Lund;Vuxenutbildning;134
-2022;Dec;Malmö;Vuxenutbildning;14
-2023;Jan;Lund;Vuxenutbildning;53
-2023;Jan;Vellinge;Vuxenutbildning;12
-2023;Feb;Kristianstad;Vuxenutbildning;17
-2023;Feb;Lund;Vuxenutbildning;90
-2023;Mar;Lund;Vuxenutbildning;170
-2023;Mar;Vellinge;Vuxenutbildning;5
-2023;Apr;Lund;Vuxenutbildning;216
-2023;Apr;Skurup;Vuxenutbildning;7
-2023;Maj;Kristianstad;Vuxenutbildning;18
-2023;Maj;Lund;Vuxenutbildning;90
-2023;Jun;Hässleholm;Vuxenutbildning;23
-2023;Jun;Malmö;Vuxenutbildning;21
-2023;Jun;Sjöbo;Vuxenutbildning;28
-2023;Jun;Skurup;Vuxenutbildning;13
-2023;Jul;Lund;Vuxenutbildning;28
-2023;Jul;Malmö;Vuxenutbildning;50
-2023;Jul;Vellinge;Vuxenutbildning;9
-2023;Aug;Lund;Vuxenutbildning;37
-2023;Aug;Malmö;Vuxenutbildning;12
-2023;Sep;Eslöv;Vuxenutbildning;3
-2023;Sep;Lund;Vuxenutbildning;104
-2023;Sep;Malmö;Vuxenutbildning;52
-2023;Sep;Övrigt;Vuxenutbildning;32
-2023;Okt;Lund;Vuxenutbildning;155
-2023;Nov;Eslöv;Vuxenutbildning;6
-2023;Nov;Lund;Vuxenutbildning;117
-2023;Nov;Malmö;Vuxenutbildning;12
-2023;Nov;Trelleborg;Vuxenutbildning;13
-2023;Dec;Eslöv;Vuxenutbildning;22
-2023;Dec;Kristianstad;Vuxenutbildning;8
-2023;Dec;Lund;Vuxenutbildning;55
-2023;Dec;Svalöv;Vuxenutbildning;15
-2023;Dec;Vellinge;Vuxenutbildning;20
-2024;Jan;Lund;Vuxenutbildning;71
-2024;Jan;Övrigt;Vuxenutbildning;14
-2024;Feb;Burlöv;Vuxenutbildning;19
-2024;Feb;Kristianstad;Vuxenutbildning;3
-2024;Feb;Lund;Vuxenutbildning;161
-2024;Feb;Övrigt;Vuxenutbildning;14
-2024;Mar;Lund;Vuxenutbildning;153
-2024;Mar;Malmö;Vuxenutbildning;39
-2024;Apr;Lund;Vuxenutbildning;162
-2024;Apr;Malmö;Vuxenutbildning;37
-2024;Maj;Landskrona;Vuxenutbildning;17
-2024;Maj;Lund;Vuxenutbildning;64
-2024;Maj;Sjöbo;Vuxenutbildning;21
-2024;Maj;Svalöv;Vuxenutbildning;13
-2024;Maj;Svedala;Vuxenutbildning;18
-2024;Jun;Hörby;Vuxenutbildning;14
-2024;Jun;Kristianstad;Vuxenutbildning;10
-2024;Jun;Lomma;Vuxenutbildning;40
-2024;Jun;Lund;Vuxenutbildning;68
-2024;Jun;Vellinge;Vuxenutbildning;10
-2024;Jul;Lund;Vuxenutbildning;5
-2024;Jul;Malmö;Vuxenutbildning;51
-2024;Aug;Lund;Vuxenutbildning;39
-2024;Aug;Malmö;Vuxenutbildning;25
-2024;Aug;Staffanstorp;Vuxenutbildning;3
-2024;Aug;Ängelholm;Vuxenutbildning;3
-2024;Sep;Eslöv;Vuxenutbildning;10
-2024;Sep;Lund;Vuxenutbildning;138
-2024;Okt;Burlöv;Vuxenutbildning;76
-2024;Okt;Kristianstad;Vuxenutbildning;30
-2024;Okt;Lund;Vuxenutbildning;166
-2024;Okt;Svalöv;Vuxenutbildning;14
-2024;Nov;Eslöv;Vuxenutbildning;12
-2024;Nov;Lund;Vuxenutbildning;163
-2024;Nov;Övrigt;Vuxenutbildning;8
-2024;Dec;Kristianstad;Vuxenutbildning;26
-2024;Dec;Lund;Vuxenutbildning;31
-2024;Dec;Staffanstorp;Vuxenutbildning;18
-2025;Jan;Burlöv;Vuxenutbildning;15
-2025;Jan;Lund;Vuxenutbildning;6
-2025;Jan;Malmö;Vuxenutbildning;53
-2025;Jan;Övrigt;Vuxenutbildning;15
-2025;Feb;Höör;Vuxenutbildning;13
-2025;Feb;Lund;Vuxenutbildning;96
-2025;Feb;Malmö;Vuxenutbildning;26
-2025;Mar;Lund;Vuxenutbildning;152
-2025;Apr;Eslöv;Vuxenutbildning;11
-2025;Apr;Kristianstad;Vuxenutbildning;28
-2025;Apr;Lund;Vuxenutbildning;121
-2025;Apr;Malmö;Vuxenutbildning;19
-2025;Maj;Eslöv;Vuxenutbildning;13
-2025;Maj;Lund;Vuxenutbildning;40
-2025;Maj;Vellinge;Vuxenutbildning;62
-2025;Maj;Ängelholm;Vuxenutbildning;22
-2025;Maj;Övrigt;Vuxenutbildning;15
-2025;Jun;Lomma;Vuxenutbildning;55
-2025;Jun;Malmö;Vuxenutbildning;33
-2025;Jul;Lund;Vuxenutbildning;85
-2025;Jul;Malmö;Vuxenutbildning;35
-2025;Aug;Lund;Vuxenutbildning;42
-2025;Aug;Malmö;Vuxenutbildning;7
-2025;Sep;Lund;Vuxenutbildning;155
-2025;Sep;Malmö;Vuxenutbildning;40
-2025;Sep;Ängelholm;Vuxenutbildning;32
-2025;Sep;Övrigt;Vuxenutbildning;33
-2025;Okt;Burlöv;Vuxenutbildning;12
-2025;Okt;Kristianstad;Vuxenutbildning;27
-2025;Okt;Kävlinge;Vuxenutbildning;20
-2025;Okt;Lund;Vuxenutbildning;116
-2025;Okt;Malmö;Vuxenutbildning;7
-2025;Okt;Övrigt;Vuxenutbildning;30
-2025;Nov;Lund;Vuxenutbildning;127
-2025;Nov;Malmö;Vuxenutbildning;20
-2025;Nov;Skurup;Vuxenutbildning;28
-2025;Nov;Svalöv;Vuxenutbildning;5
-2025;Nov;Tomelilla;Vuxenutbildning;11
-2025;Nov;Övrigt;Vuxenutbildning;10
-2025;Dec;Burlöv;Vuxenutbildning;6
-2025;Dec;Kävlinge;Vuxenutbildning;80
-2025;Dec;Lund;Vuxenutbildning;28
-2025;Dec;Malmö;Vuxenutbildning;5
-2025;Dec;Skurup;Vuxenutbildning;26
-2025;Dec;Svalöv;Vuxenutbildning;11
-2026;Jan;Svalöv;Vuxenutbildning;9
-2026;Feb;Lomma;Vuxenutbildning;6
-2026;Feb;Lund;Vuxenutbildning;138
-2026;Mar;Lund;Vuxenutbildning;210
-2026;Mar;Svedala;Vuxenutbildning;8
-2026;Apr;Lund;Vuxenutbildning;161
-2026;Apr;Malmö;Vuxenutbildning;8
-2026;Apr;Östra Göinge;Vuxenutbildning;29
-2026;Maj;Lund;Förskola;202
-2026;Maj;Lund;Förskoleklass;91
-2026;Maj;Lund;Årskurs 1;47
-2026;Maj;Lund;Årskurs 2;51
-2026;Maj;Lund;Årskurs 3;5
-2026;Maj;Lund;Årskurs 4;54
-2026;Maj;Lund;Årskurs 5;56
-2026;Maj;Lund;Årskurs 6;10
-2026;Maj;Lund;Årskurs 7;13
-2026;Maj;Lund;Årskurs 8;103
-2026;Maj;Lund;Gymnasium;160
-2026;Maj;Lund;Högskola, universitet;164
-2026;Maj;Lund;Vuxenutbildning;15
-2026;Maj;Burlöv;Förskola;18
-2026;Maj;Burlöv;Gymnasium;43
-2026;Maj;Eslöv;Förskola;15
-2026;Maj;Eslöv;Årskurs 2;24
-2026;Maj;Eslöv;Årskurs 3;27
-2026;Maj;Eslöv;Gymnasium;30
-2026;Maj;Helsingborg;Vuxenutbildning;29
-2026;Maj;Hässleholm;Förskola;19
-2026;Maj;Hässleholm;Årskurs 3;372
-2026;Maj;Höganäs;Årskurs 9;46
-2026;Maj;Höör;Förskola;18
-2026;Maj;Klippan;Gymnasium;29
-2026;Maj;Kristianstad;Årskurs 3;46
-2026;Maj;Kristianstad;Gymnasium;36
-2026;Maj;Kristianstad;Högskola, universitet;6
-2026;Maj;Kävlinge;Förskola;26
-2026;Maj;Kävlinge;Årskurs 7;27
-2026;Maj;Lomma;Årskurs 6;11
-2026;Maj;Malmö;Förskola;28
-2026;Maj;Malmö;Årskurs 4;98
-2026;Maj;Malmö;Gymnasium;128
-2026;Maj;Malmö;Högskola, universitet;15
-2026;Maj;Trelleborg;Förskola;32
-2026;Maj;Trelleborg;Gymnasium;22
-2026;Maj;Ängelholm;Gymnasium;39
-2026;Maj;Övrigt;Årskurs 6;9
-2026;Maj;Övrigt;Gymnasium;65
-2026;Maj;Övrigt;Högskola, universitet;10
-2026;Jun;Burlöv;Åk 2;87
-2026;Jun;Eslöv;Åk 3;26
-2026;Jun;Helsingborg;Vuxenutbildning;10
-2026;Jun;Helsingborg;Åk 4;15
-2026;Jun;Hässleholm;Åk 5;74
-2026;Jun;Hörby;Åk 5;20
-2026;Jun;Kristianstad;Gymnasium;9
-2026;Jun;Lomma;Åk 8;20
-2026;Jun;Lund;Förskola;242
-2026;Jun;Lund;Förskoleklass;22
-2026;Jun;Lund;Gymnasium;86
-2026;Jun;Lund;Högskola, universitet;39
-2026;Jun;Lund;Vuxenutbildning;74
-2026;Jun;Lund;Åk 1;66
-2026;Jun;Lund;Åk 2;51
-2026;Jun;Lund;Åk 3;27
-2026;Jun;Lund;Åk 4;42
-2026;Jun;Lund;Åk 5;45
-2026;Jun;Lund;Åk 9;28
-2026;Jun;Malmö;Förskola;46
-2026;Jun;Malmö;Gymnasium;18
-2026;Jun;Malmö;Vuxenutbildning;23
-2026;Jun;Malmö;Åk 5;57
-2026;Jun;Malmö;Åk 9;23
-2026;Jun;Staffanstorp;Åk 1;30
-2026;Jun;Staffanstorp;Åk 2;79
-2026;Jun;Staffanstorp;Åk 3;83
-2026;Jun;Svedala;Vuxenutbildning;60
-2026;Jun;Trelleborg;Åk 9;64
-2026;Jun;Vellinge;Gymnasium;18
-2026;Jun;Vellinge;Vuxenutbildning;11
-2026;Jun;Vellinge;Åk 1;18
-2026;Jun;Vellinge;Åk 3;18
-2026;Jun;Vellinge;Åk 5;21
-2026;Jun;Ängelholm;Vuxenutbildning;19
-2026;Jun;Övrigt;Vuxenutbildning;27
-2026;Jun;Övrigt;Åk 8;21
-2026;Jun;Övrigt;Åk 9;53
-2026;Jul;Eslöv;Vuxenutbildning;12
-2026;Jul;Helsingborg;Vuxenutbildning;8
-2026;Jul;Lund;Förskola;50
-2026;Jul;Lund;Åk 3;32
-2026;Jul;Malmö;Vuxenutbildning;94
-2026;Jul;Övrigt;Åk 5;14
-2026;Aug;Landskrona;Vuxenutbildning;12
-2026;Aug;Lund;Förskola;2
-2026;Aug;Lund;Gymnasium;86
-2026;Aug;Lund;Lunds universitet;267
-2026;Aug;Lund;Vuxenutbildning;28
-2026;Aug;Lund;Åk 1;58
-2026;Aug;Lund;Åk 2;46
-2026;Aug;Lund;Åk 3;9
-2026;Aug;Lund;Åk 9;26
-2026;Aug;Malmö;Vuxenutbildning;6
-2026;Aug;Malmö;Åk 5;27
-2026;Aug;Sjöbo;Vuxenutbildning;18
-2026;Aug;Övrigt;Högskola, universitet;48
-2026;Aug;Övrigt;Vuxenutbildning;6
+år;månad;kommun;skolnivå;skolkategori;antal
+2011;Jan;;;skola-barn;550
+2011;Jan;;;skola-vuxen;324
+2011;Feb;;;skola-barn;605
+2011;Feb;;;skola-vuxen;255
+2011;Mar;;;skola-barn;1273
+2011;Mar;;;skola-vuxen;166
+2011;Apr;;;skola-barn;1486
+2011;Apr;;;skola-vuxen;117
+2011;Maj;;;skola-barn;1603
+2011;Maj;;;skola-vuxen;501
+2011;Jun;;;skola-barn;1156
+2011;Jun;;;skola-vuxen;143
+2011;Jul;;;skola-barn;201
+2011;Jul;;;skola-vuxen;29
+2011;Aug;;;skola-barn;568
+2011;Aug;;;skola-vuxen;263
+2011;Sep;;;skola-barn;855
+2011;Sep;;;skola-vuxen;487
+2011;Okt;;;skola-barn;1094
+2011;Okt;;;skola-vuxen;81
+2011;Nov;;;skola-barn;905
+2011;Nov;;;skola-vuxen;139
+2011;Dec;;;skola-barn;1299
+2011;Dec;;;skola-vuxen;292
+2012;Jan;;;skola-barn;541
+2012;Jan;;;skola-vuxen;63
+2012;Feb;;;skola-barn;657
+2012;Feb;;;skola-vuxen;49
+2012;Mar;;;skola-barn;993
+2012;Mar;;;skola-vuxen;179
+2012;Apr;;;skola-barn;1193
+2012;Apr;;;skola-vuxen;61
+2012;Maj;;;skola-barn;3091
+2012;Maj;;;skola-vuxen;152
+2012;Jun;;;skola-barn;1553
+2012;Jun;;;skola-vuxen;106
+2012;Jul;;;skola-barn;394
+2012;Jul;;;skola-vuxen;32
+2012;Aug;;;skola-barn;458
+2012;Aug;;;skola-vuxen;19
+2012;Sep;;;skola-barn;953
+2012;Sep;;;skola-vuxen;145
+2012;Okt;;;skola-barn;1194
+2012;Okt;;;skola-vuxen;289
+2012;Nov;;;skola-barn;1823
+2012;Nov;;;skola-vuxen;111
+2012;Dec;;;skola-barn;1652
+2012;Dec;;;skola-vuxen;163
+2013;Jan;;;skola-barn;291
+2013;Jan;;;skola-vuxen;59
+2013;Feb;;;skola-barn;580
+2013;Feb;;;skola-vuxen;90
+2013;Mar;;;skola-barn;1201
+2013;Mar;;;skola-vuxen;70
+2013;Apr;;;skola-barn;1711
+2013;Apr;;;skola-vuxen;261
+2013;Maj;;;skola-barn;2119
+2013;Maj;;;skola-vuxen;196
+2013;Jun;;;skola-barn;1209
+2013;Jun;;;skola-vuxen;84
+2013;Jul;;;skola-barn;327
+2013;Jul;;;skola-vuxen;84
+2013;Aug;;;skola-barn;551
+2013;Aug;;;skola-vuxen;209
+2013;Sep;;;skola-barn;949
+2013;Sep;;;skola-vuxen;234
+2013;Okt;;;skola-barn;930
+2013;Okt;;;skola-vuxen;268
+2013;Nov;;;skola-barn;891
+2013;Nov;;;skola-vuxen;230
+2013;Dec;;;skola-barn;1553
+2013;Dec;;;skola-vuxen;130
+2014;Jan;;;skola-barn;480
+2014;Jan;;;skola-vuxen;153
+2014;Feb;;;skola-barn;750
+2014;Feb;;;skola-vuxen;207
+2014;Mar;;;skola-barn;1209
+2014;Mar;;;skola-vuxen;93
+2014;Apr;;;skola-barn;1220
+2014;Apr;;;skola-vuxen;116
+2014;Maj;;;skola-barn;2201
+2014;Maj;;;skola-vuxen;154
+2014;Jun;;;skola-barn;1087
+2014;Jun;;;skola-vuxen;135
+2014;Jul;;;skola-barn;322
+2014;Jul;;;skola-vuxen;37
+2014;Aug;;;skola-barn;810
+2014;Aug;;;skola-vuxen;88
+2014;Sep;;;skola-barn;940
+2014;Sep;;;skola-vuxen;193
+2014;Okt;;;skola-barn;973
+2014;Okt;;;skola-vuxen;105
+2014;Nov;;;skola-barn;1289
+2014;Nov;;;skola-vuxen;180
+2014;Dec;;;skola-barn;1910
+2014;Dec;;;skola-vuxen;217
+2015;Jan;;;skola-barn;608
+2015;Jan;;;skola-vuxen;67
+2015;Feb;;;skola-barn;663
+2015;Feb;;;skola-vuxen;138
+2015;Mar;;;skola-barn;1294
+2015;Mar;;;skola-vuxen;167
+2015;Apr;;;skola-barn;1503
+2015;Apr;;;skola-vuxen;218
+2015;Maj;;;skola-barn;2276
+2015;Maj;;;skola-vuxen;267
+2015;Jun;;;skola-barn;2246
+2015;Jun;;;skola-vuxen;50
+2015;Jul;;;skola-barn;315
+2015;Jul;;;skola-vuxen;64
+2015;Aug;;;skola-barn;833
+2015;Aug;;;skola-vuxen;142
+2015;Sep;;;skola-barn;1324
+2015;Sep;;;skola-vuxen;192
+2015;Okt;;;skola-barn;805
+2015;Okt;;;skola-vuxen;285
+2015;Nov;;;skola-barn;1067
+2015;Nov;;;skola-vuxen;222
+2015;Dec;;;skola-barn;1533
+2015;Dec;;;skola-vuxen;90
+2016;Jan;;;skola-barn;594
+2016;Jan;;;skola-vuxen;78
+2016;Feb;;;skola-barn;598
+2016;Feb;;;skola-vuxen;213
+2016;Mar;;;skola-barn;886
+2016;Mar;;;skola-vuxen;217
+2016;Apr;;;skola-barn;1205
+2016;Apr;;;skola-vuxen;346
+2016;Maj;;;skola-barn;3288
+2016;Maj;;;skola-vuxen;156
+2016;Jun;;;skola-barn;2249
+2016;Jun;;;skola-vuxen;43
+2016;Jul;;;skola-barn;386
+2016;Jul;;;skola-vuxen;78
+2016;Aug;;;skola-barn;758
+2016;Aug;;;skola-vuxen;254
+2016;Sep;;;skola-barn;1000
+2016;Sep;;;skola-vuxen;280
+2016;Okt;;;skola-barn;1018
+2016;Okt;;;skola-vuxen;460
+2016;Nov;;;skola-barn;1100
+2016;Nov;;;skola-vuxen;303
+2016;Dec;;;skola-barn;1376
+2016;Dec;;;skola-vuxen;62
+2017;Jan;;;skola-barn;393
+2017;Jan;;;skola-vuxen;93
+2017;Feb;;;skola-barn;358
+2017;Feb;;;skola-vuxen;189
+2017;Mar;;;skola-barn;1493
+2017;Mar;;;skola-vuxen;387
+2017;Apr;;;skola-barn;910
+2017;Apr;;;skola-vuxen;214
+2017;Maj;;;skola-barn;2642
+2017;Maj;;;skola-vuxen;220
+2017;Jun;;;skola-barn;1869
+2017;Jun;;;skola-vuxen;283
+2017;Jul;;;skola-barn;321
+2017;Jul;;;skola-vuxen;311
+2017;Aug;;;skola-barn;946
+2017;Aug;;;skola-vuxen;222
+2017;Sep;;;skola-barn;848
+2017;Sep;;;skola-vuxen;336
+2017;Okt;;;skola-barn;905
+2017;Okt;;;skola-vuxen;484
+2017;Nov;;;skola-barn;531
+2017;Nov;;;skola-vuxen;692
+2017;Dec;;;skola-barn;1523
+2017;Dec;;;skola-vuxen;294
+2018;Jan;;;skola-barn;358
+2018;Jan;;;skola-vuxen;116
+2018;Feb;;;skola-barn;373
+2018;Feb;;;skola-vuxen;253
+2018;Mar;;;skola-barn;936
+2018;Mar;;;skola-vuxen;369
+2018;Apr;;;skola-barn;878
+2018;Apr;;;skola-vuxen;296
+2018;Maj;;;skola-barn;2035
+2018;Maj;;;skola-vuxen;291
+2018;Jun;;;skola-barn;1544
+2018;Jun;;;skola-vuxen;127
+2018;Jul;;;skola-barn;336
+2018;Jul;;;skola-vuxen;221
+2018;Aug;;;skola-barn;375
+2018;Aug;;;skola-vuxen;342
+2018;Sep;;;skola-barn;1020
+2018;Sep;;;skola-vuxen;267
+2018;Okt;;;skola-barn;868
+2018;Okt;;;skola-vuxen;500
+2018;Nov;Kävlinge;Förskola;skola-barn;20
+2018;Nov;Lund;Förskola;skola-barn;129
+2018;Nov;Malmö;Förskola;skola-barn;1
+2018;Nov;Svedala;Förskola;skola-barn;16
+2018;Nov;Hörby;Förskoleklass;skola-barn;15
+2018;Nov;Lund;Förskoleklass;skola-barn;54
+2018;Nov;Malmö;Förskoleklass;skola-barn;18
+2018;Nov;Lund;Gymnasium;skola-barn;256
+2018;Nov;Vellinge;Gymnasium;skola-barn;24
+2018;Nov;Övrigt;Gymnasium;skola-barn;6
+2018;Nov;Kävlinge;Årskurs 1;skola-barn;28
+2018;Nov;Lund;Årskurs 1;skola-barn;54
+2018;Nov;Hörby;Årskurs 2;skola-barn;16
+2018;Nov;Kävlinge;Årskurs 2;skola-barn;26
+2018;Nov;Hörby;Årskurs 3;skola-barn;26
+2018;Nov;Lomma;Årskurs 3;skola-barn;10
+2018;Nov;Lund;Årskurs 3;skola-barn;27
+2018;Nov;Kävlinge;Årskurs 4;skola-barn;26
+2018;Nov;Lund;Årskurs 4;skola-barn;36
+2018;Nov;Malmö;Årskurs 4;skola-barn;46
+2018;Nov;Lund;Årskurs 5;skola-barn;8
+2018;Nov;Lomma;Årskurs 6;skola-barn;13
+2018;Nov;Lund;Årskurs 6;skola-barn;6
+2018;Nov;Malmö;Årskurs 6;skola-barn;7
+2018;Nov;Lund;Årskurs 8;skola-barn;63
+2018;Nov;Lund;Högskola;skola-vuxen;
+2018;Nov;Hörby;Vuxenutbildning;skola-vuxen;20
+2018;Nov;Lund;Vuxenutbildning;skola-vuxen;282
+2018;Nov;Sjöbo;Vuxenutbildning;skola-vuxen;4
+2018;Nov;Svedala;Vuxenutbildning;skola-vuxen;16
+2018;Nov;Tomelilla;Vuxenutbildning;skola-vuxen;4
+2018;Nov;Övrigt;Vuxenutbildning;skola-vuxen;1
+2018;Dec;Kävlinge;Förskola;skola-barn;30
+2018;Dec;Lomma;Förskola;skola-barn;47
+2018;Dec;Lund;Förskola;skola-barn;132
+2018;Dec;Staffanstorp;Förskola;skola-barn;1
+2018;Dec;Kävlinge;Förskoleklass;skola-barn;23
+2018;Dec;Lund;Förskoleklass;skola-barn;181
+2018;Dec;Eslöv;Gymnasium;skola-barn;68
+2018;Dec;Helsingborg;Gymnasium;skola-barn;24
+2018;Dec;Lund;Gymnasium;skola-barn;210
+2018;Dec;Malmö;Gymnasium;skola-barn;66
+2018;Dec;Lund;Årskurs 1;skola-barn;120
+2018;Dec;Staffanstorp;Årskurs 1;skola-barn;29
+2018;Dec;Lund;Årskurs 2;skola-barn;82
+2018;Dec;Lund;Årskurs 3;skola-barn;85
+2018;Dec;Lund;Årskurs 4;skola-barn;37
+2018;Dec;Malmö;Årskurs 4;skola-barn;7
+2018;Dec;Lund;Årskurs 5;skola-barn;55
+2018;Dec;Malmö;Årskurs 5;skola-barn;24
+2018;Dec;Övrigt;Årskurs 5;skola-barn;5
+2018;Dec;Lund;Årskurs 6;skola-barn;8
+2018;Dec;Malmö;Årskurs 6;skola-barn;63
+2018;Dec;Skurup;Årskurs 6;skola-barn;30
+2018;Dec;Lund;Årskurs 7;skola-barn;1
+2018;Dec;Lund;Årskurs 8;skola-barn;34
+2018;Dec;Malmö;Årskurs 8;skola-barn;33
+2018;Dec;Lund;Högskola;skola-vuxen;
+2018;Dec;Ängelholm;Högskola;skola-vuxen;
+2018;Dec;Eslöv;Vuxenutbildning;skola-vuxen;55
+2018;Dec;Kristianstad;Vuxenutbildning;skola-vuxen;31
+2018;Dec;Landskrona;Vuxenutbildning;skola-vuxen;15
+2018;Dec;Lund;Vuxenutbildning;skola-vuxen;69
+2018;Dec;Malmö;Vuxenutbildning;skola-vuxen;57
+2018;Dec;Simrishamn;Vuxenutbildning;skola-vuxen;54
+2018;Dec;Ystad;Vuxenutbildning;skola-vuxen;20
+2019;Jan;Eslöv;Förskola;skola-barn;1
+2019;Jan;Lund;Förskola;skola-barn;121
+2019;Jan;Malmö;Förskola;skola-barn;1
+2019;Jan;Svedala;Förskola;skola-barn;2
+2019;Jan;Eslöv;Förskoleklass;skola-barn;1
+2019;Jan;Malmö;Förskoleklass;skola-barn;4
+2019;Jan;Lund;Gymnasium;skola-barn;159
+2019;Jan;Övrigt;Gymnasium;skola-barn;12
+2019;Jan;Lund;Årskurs 1;skola-barn;25
+2019;Jan;Lund;Årskurs 2;skola-barn;21
+2019;Jan;Malmö;Årskurs 2;skola-barn;48
+2019;Jan;Höör;Årskurs 5;skola-barn;1
+2019;Jan;Lund;Årskurs 6;skola-barn;40
+2019;Jan;Ystad;Årskurs 6;skola-barn;44
+2019;Jan;Malmö;Årskurs 8;skola-barn;22
+2019;Jan;Hässleholm;Årskurs 9;skola-barn;26
+2019;Jan;Lund;Högskola;skola-vuxen;
+2019;Jan;Malmö;Högskola;skola-vuxen;
+2019;Jan;Kristianstad;Vuxenutbildning;skola-vuxen;9
+2019;Jan;Lund;Vuxenutbildning;skola-vuxen;19
+2019;Jan;Malmö;Vuxenutbildning;skola-vuxen;11
+2019;Feb;Burlöv;Förskola;skola-barn;22
+2019;Feb;Helsingborg;Förskola;skola-barn;10
+2019;Feb;Lomma;Förskola;skola-barn;14
+2019;Feb;Lund;Förskola;skola-barn;305
+2019;Feb;Staffanstorp;Förskola;skola-barn;1
+2019;Feb;Höör;Förskoleklass;skola-barn;3
+2019;Feb;Kävlinge;Förskoleklass;skola-barn;40
+2019;Feb;Helsingborg;Gymnasium;skola-barn;12
+2019;Feb;Klippan;Gymnasium;skola-barn;27
+2019;Feb;Lund;Gymnasium;skola-barn;157
+2019;Feb;Eslöv;Årskurs 1;skola-barn;1
+2019;Feb;Lund;Årskurs 1;skola-barn;48
+2019;Feb;Lund;Årskurs 2;skola-barn;1
+2019;Feb;Lund;Årskurs 3;skola-barn;16
+2019;Feb;Höör;Årskurs 4;skola-barn;79
+2019;Feb;Lund;Årskurs 5;skola-barn;31
+2019;Feb;Lund;Årskurs 6;skola-barn;5
+2019;Feb;Lund;Årskurs 7;skola-barn;2
+2019;Feb;Eslöv;Årskurs 8;skola-barn;16
+2019;Feb;Malmö;Årskurs 8;skola-barn;30
+2019;Feb;Övrigt;Årskurs 8;skola-barn;50
+2019;Feb;Lund;Årskurs 9;skola-barn;1
+2019;Feb;Helsingborg;Högskola;skola-vuxen;
+2019;Feb;Lund;Högskola;skola-vuxen;
+2019;Feb;Malmö;Högskola;skola-vuxen;
+2019;Feb;Burlöv;Vuxenutbildning;skola-vuxen;15
+2019;Feb;Helsingborg;Vuxenutbildning;skola-vuxen;17
+2019;Feb;Hässleholm;Vuxenutbildning;skola-vuxen;6
+2019;Feb;Lund;Vuxenutbildning;skola-vuxen;181
+2019;Feb;Malmö;Vuxenutbildning;skola-vuxen;41
+2019;Feb;Ängelholm;Vuxenutbildning;skola-vuxen;9
+2019;Mar;Lund;Förskola;skola-barn;271
+2019;Mar;Lund;Förskoleklass;skola-barn;123
+2019;Mar;Lund;Gymnasium;skola-barn;156
+2019;Mar;Malmö;Gymnasium;skola-barn;49
+2019;Mar;Kävlinge;Årskurs 1;skola-barn;28
+2019;Mar;Lund;Årskurs 1;skola-barn;136
+2019;Mar;Eslöv;Årskurs 2;skola-barn;33
+2019;Mar;Lund;Årskurs 2;skola-barn;18
+2019;Mar;Malmö;Årskurs 2;skola-barn;6
+2019;Mar;Lund;Årskurs 3;skola-barn;8
+2019;Mar;Båstad;Årskurs 4;skola-barn;34
+2019;Mar;Lund;Årskurs 4;skola-barn;24
+2019;Mar;Lund;Årskurs 5;skola-barn;73
+2019;Mar;Malmö;Årskurs 5;skola-barn;24
+2019;Mar;Lund;Årskurs 6;skola-barn;11
+2019;Mar;Malmö;Årskurs 7;skola-barn;7
+2019;Mar;Klippan;Årskurs 8;skola-barn;4
+2019;Mar;Lomma;Årskurs 8;skola-barn;32
+2019;Mar;Klippan;Årskurs 9;skola-barn;4
+2019;Mar;Lund;Årskurs 9;skola-barn;26
+2019;Mar;Lund;Högskola;skola-vuxen;
+2019;Mar;Övrigt;Högskola;skola-vuxen;
+2019;Mar;Eslöv;Vuxenutbildning;skola-vuxen;18
+2019;Mar;Kristianstad;Vuxenutbildning;skola-vuxen;1
+2019;Mar;Lund;Vuxenutbildning;skola-vuxen;263
+2019;Mar;Malmö;Vuxenutbildning;skola-vuxen;37
+2019;Mar;Ängelholm;Vuxenutbildning;skola-vuxen;15
+2019;Mar;Övrigt;Vuxenutbildning;skola-vuxen;61
+2019;Apr;Lund;Förskola;skola-barn;296
+2019;Apr;Malmö;Förskola;skola-barn;26
+2019;Apr;Svedala;Förskola;skola-barn;14
+2019;Apr;Eslöv;Förskoleklass;skola-barn;20
+2019;Apr;Kävlinge;Förskoleklass;skola-barn;26
+2019;Apr;Staffanstorp;Förskoleklass;skola-barn;74
+2019;Apr;Hörby;Gymnasium;skola-barn;13
+2019;Apr;Lund;Gymnasium;skola-barn;272
+2019;Apr;Malmö;Gymnasium;skola-barn;16
+2019;Apr;Simrishamn;Gymnasium;skola-barn;40
+2019;Apr;Svalöv;Gymnasium;skola-barn;12
+2019;Apr;Tomelilla;Gymnasium;skola-barn;9
+2019;Apr;Lund;Årskurs 1;skola-barn;50
+2019;Apr;Staffanstorp;Årskurs 1;skola-barn;78
+2019;Apr;Lund;Årskurs 2;skola-barn;14
+2019;Apr;Höör;Årskurs 3;skola-barn;9
+2019;Apr;Lund;Årskurs 3;skola-barn;79
+2019;Apr;Malmö;Årskurs 3;skola-barn;28
+2019;Apr;Lomma;Årskurs 4;skola-barn;27
+2019;Apr;Lund;Årskurs 4;skola-barn;10
+2019;Apr;Lund;Årskurs 5;skola-barn;11
+2019;Apr;Lund;Årskurs 6;skola-barn;6
+2019;Apr;Eslöv;Årskurs 7;skola-barn;19
+2019;Apr;Malmö;Årskurs 7;skola-barn;12
+2019;Apr;Hörby;Årskurs 8;skola-barn;23
+2019;Apr;Kävlinge;Årskurs 8;skola-barn;18
+2019;Apr;Lund;Årskurs 8;skola-barn;8
+2019;Apr;Malmö;Årskurs 8;skola-barn;27
+2019;Apr;Övrigt;Årskurs 8;skola-barn;49
+2019;Apr;Lund;Årskurs 9;skola-barn;25
+2019;Apr;Lomma;Högskola;skola-vuxen;
+2019;Apr;Lund;Högskola;skola-vuxen;
+2019;Apr;Hörby;Vuxenutbildning;skola-vuxen;24
+2019;Apr;Kristianstad;Vuxenutbildning;skola-vuxen;15
+2019;Apr;Lund;Vuxenutbildning;skola-vuxen;137
+2019;Apr;Malmö;Vuxenutbildning;skola-vuxen;36
+2019;Apr;Sjöbo;Vuxenutbildning;skola-vuxen;49
+2019;Maj;Burlöv;Förskola;skola-barn;26
+2019;Maj;Eslöv;Förskola;skola-barn;20
+2019;Maj;Hässleholm;Förskola;skola-barn;14
+2019;Maj;Kristianstad;Förskola;skola-barn;9
+2019;Maj;Kävlinge;Förskola;skola-barn;70
+2019;Maj;Lomma;Förskola;skola-barn;29
+2019;Maj;Lund;Förskola;skola-barn;327
+2019;Maj;Malmö;Förskola;skola-barn;58
+2019;Maj;Sjöbo;Förskola;skola-barn;5
+2019;Maj;Skurup;Förskola;skola-barn;15
+2019;Maj;Trelleborg;Förskola;skola-barn;35
+2019;Maj;Eslöv;Förskoleklass;skola-barn;74
+2019;Maj;Lund;Förskoleklass;skola-barn;118
+2019;Maj;Malmö;Förskoleklass;skola-barn;45
+2019;Maj;Kristianstad;Gymnasium;skola-barn;16
+2019;Maj;Lund;Gymnasium;skola-barn;214
+2019;Maj;Malmö;Gymnasium;skola-barn;17
+2019;Maj;Svalöv;Gymnasium;skola-barn;5
+2019;Maj;Lund;Årskurs 1;skola-barn;54
+2019;Maj;Staffanstorp;Årskurs 1;skola-barn;50
+2019;Maj;Lomma;Årskurs 2;skola-barn;1
+2019;Maj;Lund;Årskurs 2;skola-barn;69
+2019;Maj;Malmö;Årskurs 2;skola-barn;61
+2019;Maj;Övrigt;Årskurs 2;skola-barn;2
+2019;Maj;Båstad;Årskurs 3;skola-barn;50
+2019;Maj;Eslöv;Årskurs 3;skola-barn;27
+2019;Maj;Kristianstad;Årskurs 3;skola-barn;77
+2019;Maj;Lund;Årskurs 3;skola-barn;47
+2019;Maj;Höör;Årskurs 4;skola-barn;42
+2019;Maj;Lund;Årskurs 4;skola-barn;38
+2019;Maj;Malmö;Årskurs 4;skola-barn;51
+2019;Maj;Simrishamn;Årskurs 4;skola-barn;9
+2019;Maj;Staffanstorp;Årskurs 4;skola-barn;40
+2019;Maj;Burlöv;Årskurs 5;skola-barn;42
+2019;Maj;Lomma;Årskurs 5;skola-barn;2
+2019;Maj;Lund;Årskurs 5;skola-barn;125
+2019;Maj;Staffanstorp;Årskurs 5;skola-barn;28
+2019;Maj;Eslöv;Årskurs 6;skola-barn;6
+2019;Maj;Helsingborg;Årskurs 6;skola-barn;15
+2019;Maj;Lomma;Årskurs 6;skola-barn;84
+2019;Maj;Malmö;Årskurs 6;skola-barn;49
+2019;Maj;Staffanstorp;Årskurs 6;skola-barn;16
+2019;Maj;Eslöv;Årskurs 7;skola-barn;3
+2019;Maj;Lund;Årskurs 7;skola-barn;223
+2019;Maj;Eslöv;Årskurs 8;skola-barn;3
+2019;Maj;Hörby;Årskurs 8;skola-barn;11
+2019;Maj;Övrigt;Årskurs 8;skola-barn;23
+2019;Maj;Lund;Årskurs 9;skola-barn;44
+2019;Maj;Lund;Högskola;skola-vuxen;
+2019;Maj;Malmö;Högskola;skola-vuxen;
+2019;Maj;Kristianstad;Vuxenutbildning;skola-vuxen;10
+2019;Maj;Lund;Vuxenutbildning;skola-vuxen;56
+2019;Maj;Malmö;Vuxenutbildning;skola-vuxen;27
+2019;Maj;Svedala;Vuxenutbildning;skola-vuxen;12
+2019;Maj;Ängelholm;Vuxenutbildning;skola-vuxen;6
+2019;Jun;Höör;Förskola;skola-barn;11
+2019;Jun;Lund;Förskola;skola-barn;224
+2019;Jun;Malmö;Förskola;skola-barn;42
+2019;Jun;Svedala;Förskola;skola-barn;9
+2019;Jun;Helsingborg;Förskoleklass;skola-barn;26
+2019;Jun;Lund;Förskoleklass;skola-barn;15
+2019;Jun;Malmö;Förskoleklass;skola-barn;29
+2019;Jun;Båstad;Gymnasium;skola-barn;40
+2019;Jun;Kristianstad;Gymnasium;skola-barn;16
+2019;Jun;Lund;Gymnasium;skola-barn;1
+2019;Jun;Malmö;Gymnasium;skola-barn;11
+2019;Jun;Höör;Årskurs 1;skola-barn;22
+2019;Jun;Kävlinge;Årskurs 1;skola-barn;28
+2019;Jun;Lund;Årskurs 1;skola-barn;1
+2019;Jun;Staffanstorp;Årskurs 1;skola-barn;49
+2019;Jun;Helsingborg;Årskurs 2;skola-barn;85
+2019;Jun;Höör;Årskurs 2;skola-barn;20
+2019;Jun;Lund;Årskurs 2;skola-barn;38
+2019;Jun;Helsingborg;Årskurs 3;skola-barn;20
+2019;Jun;Kristianstad;Årskurs 3;skola-barn;50
+2019;Jun;Lund;Årskurs 3;skola-barn;21
+2019;Jun;Malmö;Årskurs 3;skola-barn;18
+2019;Jun;Höör;Årskurs 4;skola-barn;18
+2019;Jun;Lund;Årskurs 4;skola-barn;125
+2019;Jun;Malmö;Årskurs 4;skola-barn;14
+2019;Jun;Lomma;Årskurs 7;skola-barn;15
+2019;Jun;Lund;Årskurs 7;skola-barn;1
+2019;Jun;Övrigt;Årskurs 7;skola-barn;1
+2019;Jun;Eslöv;Årskurs 8;skola-barn;22
+2019;Jun;Lund;Årskurs 8;skola-barn;1
+2019;Jun;Malmö;Årskurs 8;skola-barn;8
+2019;Jun;Malmö;Årskurs 9;skola-barn;67
+2019;Jun;Övrigt;Årskurs 9;skola-barn;8
+2019;Jun;Lund;Högskola;skola-vuxen;
+2019;Jun;Övrigt;Högskola;skola-vuxen;
+2019;Jun;Burlöv;Vuxenutbildning;skola-vuxen;30
+2019;Jun;Hörby;Vuxenutbildning;skola-vuxen;20
+2019;Jun;Lund;Vuxenutbildning;skola-vuxen;53
+2019;Jun;Malmö;Vuxenutbildning;skola-vuxen;71
+2019;Jul;Lomma;Förskola;skola-barn;10
+2019;Jul;Lund;Förskola;skola-barn;155
+2019;Jul;Malmö;Förskola;skola-barn;22
+2019;Jul;Hörby;Förskoleklass;skola-barn;1
+2019;Jul;Lund;Förskoleklass;skola-barn;23
+2019;Jul;Malmö;Förskoleklass;skola-barn;44
+2019;Jul;Lund;Gymnasium;skola-barn;2
+2019;Jul;Lund;Årskurs 1;skola-barn;54
+2019;Jul;Lund;Årskurs 2;skola-barn;52
+2019;Jul;Malmö;Årskurs 2;skola-barn;22
+2019;Jul;Staffanstorp;Årskurs 2;skola-barn;28
+2019;Jul;Lund;Årskurs 3;skola-barn;2
+2019;Jul;Hörby;Årskurs 8;skola-barn;24
+2019;Jul;Burlöv;Vuxenutbildning;skola-vuxen;11
+2019;Jul;Lund;Vuxenutbildning;skola-vuxen;116
+2019;Jul;Malmö;Vuxenutbildning;skola-vuxen;52
+2019;Jul;Vellinge;Vuxenutbildning;skola-vuxen;7
+2019;Aug;Lund;Förskola;skola-barn;32
+2019;Aug;Malmö;Förskola;skola-barn;31
+2019;Aug;Staffanstorp;Förskola;skola-barn;10
+2019;Aug;Lund;Gymnasium;skola-barn;145
+2019;Aug;Lund;Årskurs 1;skola-barn;5
+2019;Aug;Lund;Årskurs 2;skola-barn;39
+2019;Aug;Lomma;Årskurs 3;skola-barn;29
+2019;Aug;Lund;Årskurs 3;skola-barn;11
+2019;Aug;Malmö;Årskurs 3;skola-barn;4
+2019;Aug;Lund;Årskurs 4;skola-barn;62
+2019;Aug;Lomma;Årskurs 5;skola-barn;9
+2019;Aug;Lund;Årskurs 5;skola-barn;46
+2019;Aug;Malmö;Årskurs 5;skola-barn;1
+2019;Aug;Lund;Årskurs 6;skola-barn;13
+2019;Aug;Lund;Årskurs 7;skola-barn;36
+2019;Aug;Lund;Årskurs 8;skola-barn;118
+2019;Aug;Lund;Årskurs 9;skola-barn;50
+2019;Aug;Simrishamn;Årskurs 9;skola-barn;24
+2019;Aug;Lund;Högskola;skola-vuxen;
+2019;Aug;Eslöv;Vuxenutbildning;skola-vuxen;23
+2019;Aug;Lund;Vuxenutbildning;skola-vuxen;16
+2019;Aug;Malmö;Vuxenutbildning;skola-vuxen;30
+2019;Aug;Vellinge;Vuxenutbildning;skola-vuxen;10
+2019;Aug;Övrigt;Vuxenutbildning;skola-vuxen;29
+2019;Sep;Lund;Förskola;skola-barn;73
+2019;Sep;Malmö;Förskola;skola-barn;44
+2019;Sep;Lund;Förskoleklass;skola-barn;47
+2019;Sep;Malmö;Förskoleklass;skola-barn;28
+2019;Sep;Lund;Gymnasium;skola-barn;255
+2019;Sep;Malmö;Gymnasium;skola-barn;16
+2019;Sep;Svedala;Gymnasium;skola-barn;8
+2019;Sep;Ängelholm;Gymnasium;skola-barn;20
+2019;Sep;Övrigt;Gymnasium;skola-barn;62
+2019;Sep;Lund;Årskurs 1;skola-barn;35
+2019;Sep;Lund;Årskurs 2;skola-barn;47
+2019;Sep;Lund;Årskurs 3;skola-barn;95
+2019;Sep;Tomelilla;Årskurs 4;skola-barn;29
+2019;Sep;Lund;Årskurs 5;skola-barn;161
+2019;Sep;Svalöv;Årskurs 5;skola-barn;21
+2019;Sep;Lomma;Årskurs 7;skola-barn;185
+2019;Sep;Lund;Årskurs 7;skola-barn;27
+2019;Sep;Lund;Årskurs 8;skola-barn;72
+2019;Sep;Lund;Årskurs 9;skola-barn;79
+2019;Sep;Lund;Högskola;skola-vuxen;
+2019;Sep;Kristianstad;Vuxenutbildning;skola-vuxen;5
+2019;Sep;Lund;Vuxenutbildning;skola-vuxen;238
+2019;Sep;Malmö;Vuxenutbildning;skola-vuxen;7
+2019;Sep;Skurup;Vuxenutbildning;skola-vuxen;26
+2019;Okt;Lomma;Förskola;skola-barn;17
+2019;Okt;Lund;Förskola;skola-barn;202
+2019;Okt;Sjöbo;Förskola;skola-barn;36
+2019;Okt;Lund;Förskoleklass;skola-barn;31
+2019;Okt;Lund;Gymnasium;skola-barn;270
+2019;Okt;Malmö;Gymnasium;skola-barn;17
+2019;Okt;Sjöbo;Gymnasium;skola-barn;14
+2019;Okt;Svalöv;Gymnasium;skola-barn;7
+2019;Okt;Lund;Årskurs 1;skola-barn;163
+2019;Okt;Kävlinge;Årskurs 2;skola-barn;20
+2019;Okt;Lund;Årskurs 2;skola-barn;17
+2019;Okt;Lomma;Årskurs 3;skola-barn;40
+2019;Okt;Lund;Årskurs 3;skola-barn;15
+2019;Okt;Staffanstorp;Årskurs 3;skola-barn;11
+2019;Okt;Eslöv;Årskurs 4;skola-barn;10
+2019;Okt;Lomma;Årskurs 4;skola-barn;1
+2019;Okt;Malmö;Årskurs 4;skola-barn;19
+2019;Okt;Kävlinge;Årskurs 5;skola-barn;28
+2019;Okt;Lund;Årskurs 5;skola-barn;11
+2019;Okt;Lomma;Årskurs 7;skola-barn;185
+2019;Okt;Lund;Årskurs 7;skola-barn;97
+2019;Okt;Lund;Årskurs 9;skola-barn;117
+2019;Okt;Malmö;Årskurs 9;skola-barn;20
+2019;Okt;Lund;Högskola;skola-vuxen;
+2019;Okt;Övrigt;Högskola;skola-vuxen;
+2019;Okt;Kristianstad;Vuxenutbildning;skola-vuxen;10
+2019;Okt;Lund;Vuxenutbildning;skola-vuxen;246
+2019;Okt;Malmö;Vuxenutbildning;skola-vuxen;9
+2019;Nov;Lund;Förskola;skola-barn;133
+2019;Nov;Sjöbo;Förskola;skola-barn;58
+2019;Nov;Lund;Förskoleklass;skola-barn;61
+2019;Nov;Staffanstorp;Förskoleklass;skola-barn;28
+2019;Nov;Lund;Gymnasium;skola-barn;94
+2019;Nov;Ystad;Gymnasium;skola-barn;43
+2019;Nov;Övrigt;Gymnasium;skola-barn;25
+2019;Nov;Lund;Årskurs 1;skola-barn;27
+2019;Nov;Staffanstorp;Årskurs 1;skola-barn;28
+2019;Nov;Lund;Årskurs 3;skola-barn;25
+2019;Nov;Landskrona;Årskurs 4;skola-barn;22
+2019;Nov;Lomma;Årskurs 8;skola-barn;26
+2019;Nov;Malmö;Årskurs 8;skola-barn;17
+2019;Nov;Övrigt;Årskurs 8;skola-barn;24
+2019;Nov;Hässleholm;Årskurs 9;skola-barn;27
+2019;Nov;Övrigt;Årskurs 9;skola-barn;24
+2019;Nov;Lund;Högskola;skola-vuxen;
+2019;Nov;Övrigt;Högskola;skola-vuxen;
+2019;Nov;Lund;Vuxenutbildning;skola-vuxen;201
+2019;Nov;Staffanstorp;Vuxenutbildning;skola-vuxen;31
+2019;Nov;Östra Göinge;Vuxenutbildning;skola-vuxen;12
+2019;Dec;Lomma;Förskola;skola-barn;26
+2019;Dec;Lund;Förskola;skola-barn;148
+2019;Dec;Kävlinge;Förskoleklass;skola-barn;24
+2019;Dec;Lund;Förskoleklass;skola-barn;89
+2019;Dec;Malmö;Förskoleklass;skola-barn;16
+2019;Dec;Burlöv;Gymnasium;skola-barn;30
+2019;Dec;Lund;Gymnasium;skola-barn;215
+2019;Dec;Trelleborg;Gymnasium;skola-barn;32
+2019;Dec;Lund;Årskurs 1;skola-barn;93
+2019;Dec;Lomma;Årskurs 2;skola-barn;27
+2019;Dec;Lund;Årskurs 2;skola-barn;62
+2019;Dec;Staffanstorp;Årskurs 2;skola-barn;22
+2019;Dec;Svalöv;Årskurs 2;skola-barn;35
+2019;Dec;Övrigt;Årskurs 2;skola-barn;46
+2019;Dec;Kävlinge;Årskurs 3;skola-barn;2
+2019;Dec;Staffanstorp;Årskurs 3;skola-barn;43
+2019;Dec;Lund;Årskurs 5;skola-barn;30
+2019;Dec;Lund;Årskurs 6;skola-barn;25
+2019;Dec;Staffanstorp;Årskurs 7;skola-barn;17
+2019;Dec;Lund;Högskola;skola-vuxen;
+2019;Dec;Eslöv;Vuxenutbildning;skola-vuxen;4
+2019;Dec;Lund;Vuxenutbildning;skola-vuxen;147
+2019;Dec;Malmö;Vuxenutbildning;skola-vuxen;19
+2019;Dec;Staffanstorp;Vuxenutbildning;skola-vuxen;10
+2020;Jan;Lund;Förskola;skola-barn;120
+2020;Jan;Malmö;Förskola;skola-barn;15
+2020;Jan;Lund;Förskoleklass;skola-barn;1
+2020;Jan;Lund;Gymnasium;skola-barn;22
+2020;Jan;Lund;Årskurs 1;skola-barn;1
+2020;Jan;Lund;Årskurs 5;skola-barn;39
+2020;Jan;Lomma;Årskurs 7;skola-barn;21
+2020;Jan;Lund;Årskurs 8;skola-barn;1
+2020;Jan;Lund;Högskola;skola-vuxen;
+2020;Jan;Lund;Vuxenutbildning;skola-vuxen;22
+2020;Jan;Vellinge;Vuxenutbildning;skola-vuxen;10
+2020;Jan;Övrigt;Vuxenutbildning;skola-vuxen;28
+2020;Feb;Landskrona;Förskola;skola-barn;15
+2020;Feb;Lund;Förskola;skola-barn;330
+2020;Feb;Malmö;Förskola;skola-barn;18
+2020;Feb;Lund;Förskoleklass;skola-barn;34
+2020;Feb;Trelleborg;Förskoleklass;skola-barn;4
+2020;Feb;Lund;Gymnasium;skola-barn;111
+2020;Feb;Lund;Årskurs 1;skola-barn;34
+2020;Feb;Lund;Årskurs 2;skola-barn;56
+2020;Feb;Lund;Årskurs 3;skola-barn;1
+2020;Feb;Svalöv;Årskurs 3;skola-barn;4
+2020;Feb;Lund;Årskurs 5;skola-barn;3
+2020;Feb;Lund;Årskurs 6;skola-barn;15
+2020;Feb;Helsingborg;Årskurs 9;skola-barn;13
+2020;Feb;Lund;Årskurs 9;skola-barn;1
+2020;Feb;Lund;Högskola;skola-vuxen;
+2020;Feb;Lund;Vuxenutbildning;skola-vuxen;190
+2020;Feb;Svedala;Vuxenutbildning;skola-vuxen;19
+2020;Mar;Lund;Förskola;skola-barn;225
+2020;Mar;Lund;Förskoleklass;skola-barn;31
+2020;Mar;Lund;Gymnasium;skola-barn;34
+2020;Mar;Lund;Årskurs 1;skola-barn;33
+2020;Mar;Lund;Årskurs 5;skola-barn;18
+2020;Mar;Lund;Årskurs 6;skola-barn;20
+2020;Mar;Lund;Högskola;skola-vuxen;
+2020;Mar;Båstad;Vuxenutbildning;skola-vuxen;30
+2020;Mar;Lund;Vuxenutbildning;skola-vuxen;305
+2020;Apr;Lund;Förskola;skola-barn;113
+2020;Apr;Lund;Förskoleklass;skola-barn;25
+2020;Apr;Malmö;Gymnasium;skola-barn;1
+2020;Apr;Lund;Årskurs 1;skola-barn;10
+2020;Apr;Lund;Årskurs 5;skola-barn;2
+2020;Apr;Lund;Högskola;skola-vuxen;
+2020;Apr;Lund;Vuxenutbildning;skola-vuxen;13
+2020;Maj;Lund;Förskola;skola-barn;176
+2020;Maj;Malmö;Förskola;skola-barn;23
+2020;Maj;Lund;Förskoleklass;skola-barn;57
+2020;Maj;Lund;Gymnasium;skola-barn;85
+2020;Maj;Lund;Årskurs 2;skola-barn;24
+2020;Maj;Kristianstad;Årskurs 3;skola-barn;58
+2020;Maj;Lund;Årskurs 3;skola-barn;38
+2020;Maj;Staffanstorp;Årskurs 4;skola-barn;1
+2020;Maj;Lund;Årskurs 5;skola-barn;65
+2020;Maj;Staffanstorp;Årskurs 5;skola-barn;42
+2020;Maj;Lund;Årskurs 7;skola-barn;1
+2020;Maj;Lund;Vuxenutbildning;skola-vuxen;22
+2020;Maj;Malmö;Vuxenutbildning;skola-vuxen;7
+2020;Jun;Lund;Förskola;skola-barn;165
+2020;Jun;Övrigt;Gymnasium;skola-barn;4
+2020;Jun;Kristianstad;Årskurs 3;skola-barn;78
+2020;Jun;Lund;Årskurs 3;skola-barn;2
+2020;Jun;Lund;Årskurs 4;skola-barn;15
+2020;Jun;Lund;Årskurs 5;skola-barn;48
+2020;Jun;Lund;Årskurs 6;skola-barn;2
+2020;Jun;Lund;Årskurs 7;skola-barn;5
+2020;Jun;Tomelilla;Årskurs 8;skola-barn;11
+2020;Jun;Trelleborg;Årskurs 8;skola-barn;10
+2020;Jun;Trelleborg;Högskola;skola-vuxen;
+2020;Jun;Lund;Vuxenutbildning;skola-vuxen;27
+2020;Jun;Övrigt;Vuxenutbildning;skola-vuxen;3
+2020;Jul;Lund;Förskola;skola-barn;63
+2020;Jul;Lund;Förskoleklass;skola-barn;9
+2020;Jul;Lund;Årskurs 1;skola-barn;6
+2020;Jul;Lund;Årskurs 2;skola-barn;4
+2020;Jul;Lund;Årskurs 3;skola-barn;34
+2020;Jul;Lund;Årskurs 4;skola-barn;2
+2020;Jul;Helsingborg;Årskurs 5;skola-barn;4
+2020;Jul;Lund;Årskurs 5;skola-barn;1
+2020;Jul;Lund;Årskurs 6;skola-barn;4
+2020;Jul;Malmö;Årskurs 7;skola-barn;2
+2020;Jul;Malmö;Årskurs 8;skola-barn;3
+2020;Jul;Malmö;Årskurs 9;skola-barn;3
+2020;Jul;Lund;Vuxenutbildning;skola-vuxen;5
+2020;Aug;Lund;Förskola;skola-barn;16
+2020;Aug;Lund;Förskoleklass;skola-barn;13
+2020;Aug;Lund;Gymnasium;skola-barn;58
+2020;Aug;Lund;Årskurs 1;skola-barn;9
+2020;Aug;Lund;Årskurs 5;skola-barn;60
+2020;Aug;Malmö;Årskurs 7;skola-barn;3
+2020;Aug;Lund;Årskurs 8;skola-barn;17
+2020;Aug;Lund;Årskurs 9;skola-barn;94
+2020;Aug;Malmö;Årskurs 9;skola-barn;110
+2020;Aug;Lund;Högskola;skola-vuxen;
+2020;Aug;Vellinge;Högskola;skola-vuxen;
+2020;Aug;Lund;Vuxenutbildning;skola-vuxen;109
+2020;Sep;Lund;Förskola;skola-barn;143
+2020;Sep;Lund;Gymnasium;skola-barn;352
+2020;Sep;Svedala;Gymnasium;skola-barn;17
+2020;Sep;Staffanstorp;Årskurs 1;skola-barn;36
+2020;Sep;Lund;Årskurs 3;skola-barn;445
+2020;Sep;Lund;Årskurs 5;skola-barn;6
+2020;Sep;Malmö;Årskurs 6;skola-barn;26
+2020;Sep;Lund;Årskurs 8;skola-barn;189
+2020;Sep;Lund;Högskola;skola-vuxen;
+2020;Sep;Övrigt;Högskola;skola-vuxen;
+2020;Sep;Lund;Vuxenutbildning;skola-vuxen;286
+2020;Sep;Övrigt;Vuxenutbildning;skola-vuxen;12
+2020;Okt;Lund;Förskola;skola-barn;175
+2020;Okt;Malmö;Förskola;skola-barn;10
+2020;Okt;Burlöv;Gymnasium;skola-barn;10
+2020;Okt;Lund;Gymnasium;skola-barn;218
+2020;Okt;Svalöv;Gymnasium;skola-barn;19
+2020;Okt;Kävlinge;Årskurs 1;skola-barn;25
+2020;Okt;Lund;Årskurs 1;skola-barn;10
+2020;Okt;Lund;Årskurs 2;skola-barn;50
+2020;Okt;Lund;Årskurs 3;skola-barn;55
+2020;Okt;Malmö;Årskurs 3;skola-barn;2
+2020;Okt;Lund;Årskurs 4;skola-barn;59
+2020;Okt;Lund;Årskurs 7;skola-barn;16
+2020;Okt;Lomma;Årskurs 8;skola-barn;8
+2020;Okt;Lund;Årskurs 8;skola-barn;2
+2020;Okt;Lund;Vuxenutbildning;skola-vuxen;384
+2020;Okt;Svedala;Vuxenutbildning;skola-vuxen;12
+2020;Nov;Lund;Förskola;skola-barn;123
+2020;Nov;Malmö;Förskola;skola-barn;26
+2020;Nov;Lund;Gymnasium;skola-barn;45
+2020;Nov;Lund;Årskurs 3;skola-barn;7
+2020;Nov;Hässleholm;Årskurs 8;skola-barn;3
+2020;Nov;Lomma;Årskurs 9;skola-barn;1
+2020;Nov;Lund;Årskurs 9;skola-barn;20
+2020;Nov;Lund;Vuxenutbildning;skola-vuxen;54
+2020;Dec;Lund;Förskola;skola-barn;47
+2020;Dec;Lund;Förskoleklass;skola-barn;22
+2020;Dec;Lund;Årskurs 6;skola-barn;35
+2020;Dec;Lund;Årskurs 7;skola-barn;12
+2020;Dec;Lund;Högskola;skola-vuxen;
+2020;Dec;Lund;Vuxenutbildning;skola-vuxen;18
+2021;Jan;Lund;Förskola;skola-barn;36
+2021;Jan;Lund;Vuxenutbildning;skola-vuxen;3
+2021;Feb;Lund;Förskola;skola-barn;59
+2021;Feb;Lund;Gymnasium;skola-barn;1
+2021;Feb;Lund;Årskurs 3;skola-barn;7
+2021;Feb;Lund;Årskurs 4;skola-barn;26
+2021;Feb;Lund;Årskurs 5;skola-barn;31
+2021;Feb;Lund;Högskola;skola-vuxen;
+2021;Mar;Lund;Förskola;skola-barn;41
+2021;Mar;Lund;Årskurs 2;skola-barn;53
+2021;Mar;Lund;Årskurs 5;skola-barn;6
+2021;Mar;Lund;Årskurs 6;skola-barn;6
+2021;Mar;Lund;Årskurs 7;skola-barn;27
+2021;Mar;Lund;Årskurs 8;skola-barn;10
+2021;Mar;Burlöv;Årskurs 9;skola-barn;1
+2021;Mar;Kristianstad;Högskola;skola-vuxen;
+2021;Mar;Lund;Högskola;skola-vuxen;
+2021;Apr;Lund;Förskola;skola-barn;139
+2021;Apr;Lund;Förskoleklass;skola-barn;25
+2021;Apr;Lund;Gymnasium;skola-barn;47
+2021;Apr;Lund;Årskurs 2;skola-barn;29
+2021;Apr;Lund;Årskurs 4;skola-barn;28
+2021;Apr;Malmö;Årskurs 7;skola-barn;31
+2021;Apr;Lund;Högskola;skola-vuxen;
+2021;Apr;Lomma;Vuxenutbildning;skola-vuxen;1
+2021;Apr;Lund;Vuxenutbildning;skola-vuxen;34
+2021;Maj;Lund;Förskola;skola-barn;111
+2021;Maj;Svedala;Förskola;skola-barn;15
+2021;Maj;Lund;Gymnasium;skola-barn;38
+2021;Maj;Malmö;Årskurs 1;skola-barn;16
+2021;Maj;Staffanstorp;Årskurs 1;skola-barn;55
+2021;Maj;Lund;Årskurs 2;skola-barn;41
+2021;Maj;Lund;Årskurs 3;skola-barn;42
+2021;Maj;Malmö;Årskurs 3;skola-barn;90
+2021;Maj;Staffanstorp;Årskurs 3;skola-barn;10
+2021;Maj;Lund;Årskurs 6;skola-barn;144
+2021;Maj;Lund;Årskurs 7;skola-barn;7
+2021;Maj;Hörby;Årskurs 8;skola-barn;5
+2021;Maj;Lund;Årskurs 8;skola-barn;2
+2021;Maj;Lund;Årskurs 9;skola-barn;2
+2021;Maj;Lund;Högskola;skola-vuxen;
+2021;Maj;Lund;Vuxenutbildning;skola-vuxen;25
+2021;Maj;Malmö;Vuxenutbildning;skola-vuxen;15
+2021;Maj;Svalöv;Vuxenutbildning;skola-vuxen;15
+2021;Jun;Lund;Förskola;skola-barn;137
+2021;Jun;Lund;Förskoleklass;skola-barn;58
+2021;Jun;Lund;Gymnasium;skola-barn;96
+2021;Jun;Malmö;Gymnasium;skola-barn;11
+2021;Jun;Övrigt;Gymnasium;skola-barn;25
+2021;Jun;Lund;Årskurs 3;skola-barn;58
+2021;Jun;Lund;Årskurs 4;skola-barn;1
+2021;Jun;Malmö;Årskurs 5;skola-barn;10
+2021;Jun;Staffanstorp;Årskurs 5;skola-barn;55
+2021;Jun;Lund;Årskurs 6;skola-barn;63
+2021;Jun;Lund;Årskurs 7;skola-barn;9
+2021;Jun;Staffanstorp;Årskurs 7;skola-barn;29
+2021;Jun;Lund;Högskola;skola-vuxen;
+2021;Jun;Lund;Vuxenutbildning;skola-vuxen;18
+2021;Jun;Svedala;Vuxenutbildning;skola-vuxen;10
+2021;Jul;Lund;Förskola;skola-barn;52
+2021;Jul;Lund;Förskoleklass;skola-barn;4
+2021;Jul;Lund;Gymnasium;skola-barn;1
+2021;Jul;Lund;Årskurs 1;skola-barn;5
+2021;Jul;Lund;Årskurs 2;skola-barn;17
+2021;Jul;Eslöv;Årskurs 3;skola-barn;27
+2021;Jul;Lund;Årskurs 3;skola-barn;21
+2021;Jul;Lomma;Årskurs 4;skola-barn;1
+2021;Jul;Lund;Årskurs 4;skola-barn;5
+2021;Jul;Lund;Högskola;skola-vuxen;
+2021;Jul;Lund;Vuxenutbildning;skola-vuxen;19
+2021;Aug;Lund;Förskola;skola-barn;8
+2021;Aug;Lund;Förskoleklass;skola-barn;1
+2021;Aug;Lund;Gymnasium;skola-barn;174
+2021;Aug;Lund;Årskurs 1;skola-barn;4
+2021;Aug;Lund;Årskurs 2;skola-barn;14
+2021;Aug;Lund;Årskurs 4;skola-barn;4
+2021;Aug;Övrigt;Årskurs 5;skola-barn;54
+2021;Aug;Kävlinge;Årskurs 8;skola-barn;59
+2021;Aug;Lund;Årskurs 8;skola-barn;4
+2021;Aug;Lund;Årskurs 9;skola-barn;17
+2021;Aug;Malmö;Årskurs 9;skola-barn;4
+2021;Aug;Lund;Högskola;skola-vuxen;
+2021;Aug;Malmö;Högskola;skola-vuxen;
+2021;Aug;Burlöv;Vuxenutbildning;skola-vuxen;13
+2021;Aug;Eslöv;Vuxenutbildning;skola-vuxen;2
+2021;Aug;Lund;Vuxenutbildning;skola-vuxen;23
+2021;Sep;Lund;Förskola;skola-barn;181
+2021;Sep;Vellinge;Förskola;skola-barn;24
+2021;Sep;Lund;Gymnasium;skola-barn;381
+2021;Sep;Övrigt;Gymnasium;skola-barn;18
+2021;Sep;Lund;Årskurs 2;skola-barn;38
+2021;Sep;Malmö;Årskurs 2;skola-barn;63
+2021;Sep;Lund;Årskurs 3;skola-barn;3
+2021;Sep;Lund;Årskurs 5;skola-barn;81
+2021;Sep;Lund;Årskurs 6;skola-barn;23
+2021;Sep;Lund;Årskurs 7;skola-barn;9
+2021;Sep;Lund;Högskola;skola-vuxen;
+2021;Sep;Båstad;Vuxenutbildning;skola-vuxen;15
+2021;Sep;Eslöv;Vuxenutbildning;skola-vuxen;69
+2021;Sep;Lund;Vuxenutbildning;skola-vuxen;147
+2021;Sep;Malmö;Vuxenutbildning;skola-vuxen;20
+2021;Sep;Svalöv;Vuxenutbildning;skola-vuxen;20
+2021;Sep;Ängelholm;Vuxenutbildning;skola-vuxen;9
+2021;Sep;Övrigt;Vuxenutbildning;skola-vuxen;6
+2021;Okt;Lund;Förskola;skola-barn;75
+2021;Okt;Lund;Förskoleklass;skola-barn;48
+2021;Okt;Lund;Gymnasium;skola-barn;243
+2021;Okt;Malmö;Gymnasium;skola-barn;14
+2021;Okt;Svalöv;Gymnasium;skola-barn;25
+2021;Okt;Svedala;Gymnasium;skola-barn;9
+2021;Okt;Övrigt;Gymnasium;skola-barn;20
+2021;Okt;Lund;Årskurs 1;skola-barn;1
+2021;Okt;Eslöv;Årskurs 2;skola-barn;26
+2021;Okt;Kävlinge;Årskurs 2;skola-barn;25
+2021;Okt;Lund;Årskurs 2;skola-barn;48
+2021;Okt;Kävlinge;Årskurs 3;skola-barn;59
+2021;Okt;Lund;Årskurs 3;skola-barn;424
+2021;Okt;Lund;Årskurs 4;skola-barn;3
+2021;Okt;Lund;Årskurs 8;skola-barn;42
+2021;Okt;Lund;Högskola;skola-vuxen;
+2021;Okt;Lund;Vuxenutbildning;skola-vuxen;221
+2021;Okt;Malmö;Vuxenutbildning;skola-vuxen;17
+2021;Okt;Skurup;Vuxenutbildning;skola-vuxen;14
+2021;Okt;Övrigt;Vuxenutbildning;skola-vuxen;50
+2021;Nov;Lund;Förskola;skola-barn;34
+2021;Nov;Lund;Förskoleklass;skola-barn;62
+2021;Nov;Staffanstorp;Förskoleklass;skola-barn;34
+2021;Nov;Lund;Gymnasium;skola-barn;242
+2021;Nov;Malmö;Gymnasium;skola-barn;19
+2021;Nov;Lund;Årskurs 1;skola-barn;22
+2021;Nov;Lund;Årskurs 2;skola-barn;3
+2021;Nov;Staffanstorp;Årskurs 2;skola-barn;15
+2021;Nov;Lund;Årskurs 3;skola-barn;82
+2021;Nov;Malmö;Årskurs 3;skola-barn;29
+2021;Nov;Lund;Årskurs 5;skola-barn;17
+2021;Nov;Lund;Årskurs 6;skola-barn;59
+2021;Nov;Lund;Årskurs 7;skola-barn;26
+2021;Nov;Lund;Årskurs 8;skola-barn;34
+2021;Nov;Lund;Högskola;skola-vuxen;
+2021;Nov;Malmö;Högskola;skola-vuxen;
+2021;Nov;Lund;Vuxenutbildning;skola-vuxen;221
+2021;Nov;Malmö;Vuxenutbildning;skola-vuxen;11
+2021;Nov;Svalöv;Vuxenutbildning;skola-vuxen;10
+2021;Nov;Övrigt;Vuxenutbildning;skola-vuxen;26
+2021;Dec;Lund;Förskola;skola-barn;148
+2021;Dec;Burlöv;Förskoleklass;skola-barn;17
+2021;Dec;Kävlinge;Förskoleklass;skola-barn;24
+2021;Dec;Lund;Förskoleklass;skola-barn;68
+2021;Dec;Burlöv;Gymnasium;skola-barn;21
+2021;Dec;Lund;Gymnasium;skola-barn;170
+2021;Dec;Burlöv;Årskurs 1;skola-barn;21
+2021;Dec;Kävlinge;Årskurs 1;skola-barn;22
+2021;Dec;Lund;Årskurs 1;skola-barn;360
+2021;Dec;Burlöv;Årskurs 2;skola-barn;23
+2021;Dec;Hörby;Årskurs 2;skola-barn;89
+2021;Dec;Kävlinge;Årskurs 2;skola-barn;24
+2021;Dec;Lund;Årskurs 2;skola-barn;1
+2021;Dec;Lund;Årskurs 3;skola-barn;114
+2021;Dec;Lund;Årskurs 4;skola-barn;106
+2021;Dec;Malmö;Årskurs 4;skola-barn;26
+2021;Dec;Lund;Årskurs 5;skola-barn;72
+2021;Dec;Lund;Årskurs 7;skola-barn;23
+2021;Dec;Lund;Årskurs 8;skola-barn;3
+2021;Dec;Lund;Årskurs 9;skola-barn;2
+2021;Dec;Lund;Högskola;skola-vuxen;
+2021;Dec;Kristianstad;Vuxenutbildning;skola-vuxen;14
+2021;Dec;Lund;Vuxenutbildning;skola-vuxen;177
+2021;Dec;Malmö;Vuxenutbildning;skola-vuxen;22
+2021;Dec;Tomelilla;Vuxenutbildning;skola-vuxen;35
+2021;Dec;Övrigt;Vuxenutbildning;skola-vuxen;25
+2022;Jan;Lund;Förskola;skola-barn;9
+2022;Jan;Lund;Förskoleklass;skola-barn;24
+2022;Jan;Lund;Gymnasium;skola-barn;16
+2022;Jan;Lund;Årskurs 2;skola-barn;16
+2022;Jan;Lund;Årskurs 6;skola-barn;1
+2022;Jan;Lund;Högskola;skola-vuxen;
+2022;Jan;Övrigt;Högskola;skola-vuxen;
+2022;Jan;Lund;Vuxenutbildning;skola-vuxen;7
+2022;Feb;Kristianstad;Förskola;skola-barn;8
+2022;Feb;Lund;Förskola;skola-barn;95
+2022;Feb;Sjöbo;Förskola;skola-barn;1
+2022;Feb;Lund;Förskoleklass;skola-barn;42
+2022;Feb;Staffanstorp;Förskoleklass;skola-barn;22
+2022;Feb;Svedala;Gymnasium;skola-barn;14
+2022;Feb;Kristianstad;Årskurs 1;skola-barn;2
+2022;Feb;Lund;Årskurs 1;skola-barn;15
+2022;Feb;Kristianstad;Årskurs 2;skola-barn;2
+2022;Feb;Lund;Årskurs 2;skola-barn;71
+2022;Feb;Kristianstad;Årskurs 3;skola-barn;2
+2022;Feb;Lund;Årskurs 3;skola-barn;1
+2022;Feb;Lund;Årskurs 6;skola-barn;1
+2022;Feb;Lund;Årskurs 9;skola-barn;23
+2022;Feb;Lund;Högskola;skola-vuxen;
+2022;Feb;Lund;Vuxenutbildning;skola-vuxen;151
+2022;Feb;Tomelilla;Vuxenutbildning;skola-vuxen;9
+2022;Mar;Lund;Förskola;skola-barn;278
+2022;Mar;Lund;Förskoleklass;skola-barn;123
+2022;Mar;Båstad;Gymnasium;skola-barn;24
+2022;Mar;Lund;Gymnasium;skola-barn;119
+2022;Mar;Malmö;Gymnasium;skola-barn;29
+2022;Mar;Svedala;Gymnasium;skola-barn;21
+2022;Mar;Kävlinge;Årskurs 1;skola-barn;27
+2022;Mar;Lund;Årskurs 1;skola-barn;101
+2022;Mar;Lund;Årskurs 2;skola-barn;82
+2022;Mar;Lund;Årskurs 3;skola-barn;107
+2022;Mar;Lund;Årskurs 4;skola-barn;41
+2022;Mar;Lund;Årskurs 5;skola-barn;53
+2022;Mar;Simrishamn;Årskurs 5;skola-barn;19
+2022;Mar;Lund;Årskurs 8;skola-barn;48
+2022;Mar;Övrigt;Årskurs 8;skola-barn;54
+2022;Mar;Lund;Årskurs 9;skola-barn;34
+2022;Mar;Lund;Högskola;skola-vuxen;
+2022;Mar;Lund;Vuxenutbildning;skola-vuxen;44
+2022;Mar;Vellinge;Vuxenutbildning;skola-vuxen;40
+2022;Mar;Övrigt;Vuxenutbildning;skola-vuxen;22
+2022;Apr;Kävlinge;Förskola;skola-barn;19
+2022;Apr;Lomma;Förskola;skola-barn;19
+2022;Apr;Lund;Förskola;skola-barn;314
+2022;Apr;Malmö;Förskola;skola-barn;50
+2022;Apr;Lund;Förskoleklass;skola-barn;6
+2022;Apr;Lund;Gymnasium;skola-barn;27
+2022;Apr;Malmö;Gymnasium;skola-barn;5
+2022;Apr;Övrigt;Gymnasium;skola-barn;80
+2022;Apr;Lund;Årskurs 1;skola-barn;61
+2022;Apr;Staffanstorp;Årskurs 3;skola-barn;79
+2022;Apr;Lund;Årskurs 4;skola-barn;94
+2022;Apr;Ängelholm;Årskurs 4;skola-barn;24
+2022;Apr;Lund;Årskurs 7;skola-barn;69
+2022;Apr;Lomma;Årskurs 8;skola-barn;180
+2022;Apr;Lund;Årskurs 8;skola-barn;44
+2022;Apr;Bromölla;Högskola;skola-vuxen;
+2022;Apr;Lomma;Högskola;skola-vuxen;
+2022;Apr;Lund;Högskola;skola-vuxen;
+2022;Apr;Burlöv;Vuxenutbildning;skola-vuxen;10
+2022;Apr;Lomma;Vuxenutbildning;skola-vuxen;1
+2022;Apr;Lund;Vuxenutbildning;skola-vuxen;299
+2022;Apr;Övrigt;Vuxenutbildning;skola-vuxen;9
+2022;Maj;Hässleholm;Förskola;skola-barn;19
+2022;Maj;Kävlinge;Förskola;skola-barn;26
+2022;Maj;Lund;Förskola;skola-barn;186
+2022;Maj;Malmö;Förskola;skola-barn;63
+2022;Maj;Skurup;Förskola;skola-barn;25
+2022;Maj;Lund;Förskoleklass;skola-barn;79
+2022;Maj;Lund;Gymnasium;skola-barn;208
+2022;Maj;Malmö;Gymnasium;skola-barn;27
+2022;Maj;Trelleborg;Gymnasium;skola-barn;25
+2022;Maj;Övrigt;Gymnasium;skola-barn;11
+2022;Maj;Lund;Årskurs 1;skola-barn;8
+2022;Maj;Lund;Årskurs 2;skola-barn;12
+2022;Maj;Lund;Årskurs 3;skola-barn;78
+2022;Maj;Båstad;Årskurs 4;skola-barn;24
+2022;Maj;Höör;Årskurs 4;skola-barn;13
+2022;Maj;Kristianstad;Årskurs 4;skola-barn;42
+2022;Maj;Lund;Årskurs 4;skola-barn;2
+2022;Maj;Malmö;Årskurs 4;skola-barn;35
+2022;Maj;Landskrona;Årskurs 5;skola-barn;12
+2022;Maj;Lund;Årskurs 5;skola-barn;58
+2022;Maj;Malmö;Årskurs 5;skola-barn;28
+2022;Maj;Lund;Årskurs 6;skola-barn;42
+2022;Maj;Malmö;Årskurs 7;skola-barn;4
+2022;Maj;Hässleholm;Årskurs 8;skola-barn;31
+2022;Maj;Lomma;Årskurs 8;skola-barn;215
+2022;Maj;Lund;Årskurs 8;skola-barn;52
+2022;Maj;Lund;Högskola;skola-vuxen;
+2022;Maj;Malmö;Högskola;skola-vuxen;
+2022;Maj;Burlöv;Vuxenutbildning;skola-vuxen;32
+2022;Maj;Lund;Vuxenutbildning;skola-vuxen;103
+2022;Maj;Sjöbo;Vuxenutbildning;skola-vuxen;36
+2022;Maj;Övrigt;Vuxenutbildning;skola-vuxen;9
+2022;Jun;Eslöv;Förskola;skola-barn;10
+2022;Jun;Hässleholm;Förskola;skola-barn;11
+2022;Jun;Lund;Förskola;skola-barn;163
+2022;Jun;Malmö;Förskola;skola-barn;66
+2022;Jun;Trelleborg;Förskola;skola-barn;25
+2022;Jun;Lund;Förskoleklass;skola-barn;38
+2022;Jun;Eslöv;Gymnasium;skola-barn;19
+2022;Jun;Lund;Gymnasium;skola-barn;12
+2022;Jun;Trelleborg;Gymnasium;skola-barn;60
+2022;Jun;Vellinge;Gymnasium;skola-barn;9
+2022;Jun;Lund;Årskurs 1;skola-barn;129
+2022;Jun;Hörby;Årskurs 2;skola-barn;104
+2022;Jun;Kävlinge;Årskurs 2;skola-barn;55
+2022;Jun;Lund;Årskurs 2;skola-barn;103
+2022;Jun;Malmö;Årskurs 2;skola-barn;10
+2022;Jun;Lund;Årskurs 3;skola-barn;24
+2022;Jun;Malmö;Årskurs 3;skola-barn;40
+2022;Jun;Lund;Årskurs 4;skola-barn;83
+2022;Jun;Malmö;Årskurs 4;skola-barn;5
+2022;Jun;Eslöv;Årskurs 5;skola-barn;28
+2022;Jun;Lund;Årskurs 5;skola-barn;62
+2022;Jun;Sjöbo;Årskurs 5;skola-barn;24
+2022;Jun;Lund;Årskurs 6;skola-barn;38
+2022;Jun;Kävlinge;Årskurs 7;skola-barn;32
+2022;Jun;Övrigt;Årskurs 7;skola-barn;25
+2022;Jun;Lund;Årskurs 8;skola-barn;39
+2022;Jun;Malmö;Årskurs 8;skola-barn;34
+2022;Jun;Trelleborg;Årskurs 8;skola-barn;11
+2022;Jun;Örkelljunga;Årskurs 9;skola-barn;19
+2022;Jun;Lund;Högskola;skola-vuxen;
+2022;Jun;Burlöv;Vuxenutbildning;skola-vuxen;9
+2022;Jun;Helsingborg;Vuxenutbildning;skola-vuxen;14
+2022;Jun;Lund;Vuxenutbildning;skola-vuxen;64
+2022;Jun;Malmö;Vuxenutbildning;skola-vuxen;51
+2022;Jul;Lund;Förskola;skola-barn;53
+2022;Jul;Malmö;Förskola;skola-barn;27
+2022;Jul;Lund;Förskoleklass;skola-barn;5
+2022;Jul;Lund;Årskurs 2;skola-barn;24
+2022;Jul;Lund;Vuxenutbildning;skola-vuxen;15
+2022;Jul;Malmö;Vuxenutbildning;skola-vuxen;33
+2022;Aug;Lund;Förskola;skola-barn;8
+2022;Aug;Malmö;Förskola;skola-barn;10
+2022;Aug;Helsingborg;Gymnasium;skola-barn;11
+2022;Aug;Lund;Gymnasium;skola-barn;96
+2022;Aug;Vellinge;Gymnasium;skola-barn;23
+2022;Aug;Lund;Årskurs 2;skola-barn;17
+2022;Aug;Hörby;Årskurs 3;skola-barn;16
+2022;Aug;Lund;Årskurs 3;skola-barn;18
+2022;Aug;Lund;Årskurs 5;skola-barn;13
+2022;Aug;Lund;Årskurs 6;skola-barn;20
+2022;Aug;Lund;Årskurs 7;skola-barn;1
+2022;Aug;Lund;Årskurs 8;skola-barn;12
+2022;Aug;Lund;Årskurs 9;skola-barn;58
+2022;Aug;Lund;Högskola;skola-vuxen;
+2022;Aug;Lund;Vuxenutbildning;skola-vuxen;51
+2022;Aug;Skurup;Vuxenutbildning;skola-vuxen;11
+2022;Sep;Lund;Förskola;skola-barn;36
+2022;Sep;Lund;Gymnasium;skola-barn;316
+2022;Sep;Övrigt;Gymnasium;skola-barn;42
+2022;Sep;Lund;Årskurs 1;skola-barn;1
+2022;Sep;Malmö;Årskurs 1;skola-barn;29
+2022;Sep;Lund;Årskurs 2;skola-barn;67
+2022;Sep;Malmö;Årskurs 2;skola-barn;23
+2022;Sep;Lund;Årskurs 3;skola-barn;84
+2022;Sep;Kristianstad;Årskurs 4;skola-barn;59
+2022;Sep;Lund;Årskurs 5;skola-barn;38
+2022;Sep;Malmö;Årskurs 5;skola-barn;26
+2022;Sep;Malmö;Årskurs 8;skola-barn;23
+2022;Sep;Lund;Högskola;skola-vuxen;
+2022;Sep;Bromölla;Vuxenutbildning;skola-vuxen;1
+2022;Sep;Burlöv;Vuxenutbildning;skola-vuxen;43
+2022;Sep;Lund;Vuxenutbildning;skola-vuxen;121
+2022;Okt;Lund;Förskola;skola-barn;46
+2022;Okt;Lund;Förskoleklass;skola-barn;1
+2022;Okt;Lund;Gymnasium;skola-barn;128
+2022;Okt;Malmö;Gymnasium;skola-barn;49
+2022;Okt;Lund;Årskurs 1;skola-barn;8
+2022;Okt;Lund;Årskurs 3;skola-barn;351
+2022;Okt;Malmö;Årskurs 8;skola-barn;74
+2022;Okt;Vellinge;Årskurs 9;skola-barn;41
+2022;Okt;Lund;Högskola;skola-vuxen;
+2022;Okt;Eslöv;Vuxenutbildning;skola-vuxen;11
+2022;Okt;Lund;Vuxenutbildning;skola-vuxen;222
+2022;Okt;Malmö;Vuxenutbildning;skola-vuxen;76
+2022;Okt;Tomelilla;Vuxenutbildning;skola-vuxen;36
+2022;Nov;Lund;Förskola;skola-barn;50
+2022;Nov;Malmö;Förskola;skola-barn;66
+2022;Nov;Malmö;Förskoleklass;skola-barn;52
+2022;Nov;Lund;Gymnasium;skola-barn;218
+2022;Nov;Lund;Årskurs 1;skola-barn;1
+2022;Nov;Lund;Årskurs 2;skola-barn;108
+2022;Nov;Lund;Årskurs 3;skola-barn;24
+2022;Nov;Lund;Årskurs 5;skola-barn;162
+2022;Nov;Lund;Högskola;skola-vuxen;
+2022;Nov;Båstad;Vuxenutbildning;skola-vuxen;8
+2022;Nov;Lund;Vuxenutbildning;skola-vuxen;158
+2022;Nov;Malmö;Vuxenutbildning;skola-vuxen;38
+2022;Dec;Kävlinge;Förskola;skola-barn;22
+2022;Dec;Lund;Förskola;skola-barn;133
+2022;Dec;Staffanstorp;Förskola;skola-barn;12
+2022;Dec;Svedala;Förskola;skola-barn;64
+2022;Dec;Lund;Förskoleklass;skola-barn;15
+2022;Dec;Lund;Gymnasium;skola-barn;34
+2022;Dec;Lund;Årskurs 1;skola-barn;39
+2022;Dec;Svedala;Årskurs 1;skola-barn;20
+2022;Dec;Kävlinge;Årskurs 2;skola-barn;68
+2022;Dec;Malmö;Årskurs 2;skola-barn;28
+2022;Dec;Lund;Årskurs 3;skola-barn;28
+2022;Dec;Malmö;Årskurs 6;skola-barn;12
+2022;Dec;Svalöv;Årskurs 6;skola-barn;24
+2022;Dec;Lund;Högskola;skola-vuxen;
+2022;Dec;Lund;Vuxenutbildning;skola-vuxen;134
+2022;Dec;Malmö;Vuxenutbildning;skola-vuxen;14
+2023;Jan;Lund;Förskola;skola-barn;37
+2023;Jan;Lund;Förskoleklass;skola-barn;25
+2023;Jan;Lund;Gymnasium;skola-barn;87
+2023;Jan;Lund;Årskurs 1;skola-barn;1
+2023;Jan;Lund;Årskurs 3;skola-barn;1
+2023;Jan;Lomma;Årskurs 4;skola-barn;24
+2023;Jan;Lund;Årskurs 9;skola-barn;22
+2023;Jan;Lund;Högskola;skola-vuxen;
+2023;Jan;Malmö;Högskola;skola-vuxen;
+2023;Jan;Lund;Vuxenutbildning;skola-vuxen;53
+2023;Jan;Vellinge;Vuxenutbildning;skola-vuxen;12
+2023;Feb;Burlöv;Förskola;skola-barn;29
+2023;Feb;Lund;Förskola;skola-barn;105
+2023;Feb;Malmö;Förskola;skola-barn;29
+2023;Feb;Eslöv;Förskoleklass;skola-barn;39
+2023;Feb;Kristianstad;Förskoleklass;skola-barn;3
+2023;Feb;Lund;Förskoleklass;skola-barn;8
+2023;Feb;Helsingborg;Gymnasium;skola-barn;1
+2023;Feb;Lund;Gymnasium;skola-barn;41
+2023;Feb;Lund;Årskurs 1;skola-barn;50
+2023;Feb;Staffanstorp;Årskurs 1;skola-barn;16
+2023;Feb;Lund;Årskurs 2;skola-barn;50
+2023;Feb;Staffanstorp;Årskurs 2;skola-barn;82
+2023;Feb;Trelleborg;Årskurs 2;skola-barn;8
+2023;Feb;Kävlinge;Årskurs 3;skola-barn;2
+2023;Feb;Lund;Årskurs 3;skola-barn;120
+2023;Feb;Staffanstorp;Årskurs 3;skola-barn;3
+2023;Feb;Lomma;Årskurs 4;skola-barn;27
+2023;Feb;Lund;Årskurs 5;skola-barn;18
+2023;Feb;Trelleborg;Årskurs 8;skola-barn;12
+2023;Feb;Lund;Årskurs 9;skola-barn;123
+2023;Feb;Lund;Högskola;skola-vuxen;
+2023;Feb;Kristianstad;Vuxenutbildning;skola-vuxen;17
+2023;Feb;Lund;Vuxenutbildning;skola-vuxen;90
+2023;Mar;Burlöv;Förskola;skola-barn;26
+2023;Mar;Kävlinge;Förskola;skola-barn;24
+2023;Mar;Lund;Förskola;skola-barn;1
+2023;Mar;Lund;Förskoleklass;skola-barn;19
+2023;Mar;Helsingborg;Gymnasium;skola-barn;9
+2023;Mar;Klippan;Gymnasium;skola-barn;28
+2023;Mar;Lund;Gymnasium;skola-barn;183
+2023;Mar;Malmö;Gymnasium;skola-barn;57
+2023;Mar;Lund;Årskurs 1;skola-barn;54
+2023;Mar;Lund;Årskurs 2;skola-barn;36
+2023;Mar;Lund;Årskurs 3;skola-barn;358
+2023;Mar;Eslöv;Årskurs 4;skola-barn;10
+2023;Mar;Lund;Årskurs 8;skola-barn;15
+2023;Mar;Lund;Årskurs 9;skola-barn;37
+2023;Mar;Lund;Högskola;skola-vuxen;
+2023;Mar;Övrigt;Högskola;skola-vuxen;
+2023;Mar;Lund;Vuxenutbildning;skola-vuxen;170
+2023;Mar;Vellinge;Vuxenutbildning;skola-vuxen;5
+2023;Apr;Lund;Förskola;skola-barn;1
+2023;Apr;Lund;Gymnasium;skola-barn;41
+2023;Apr;Svedala;Gymnasium;skola-barn;8
+2023;Apr;Lund;Årskurs 3;skola-barn;87
+2023;Apr;Malmö;Årskurs 4;skola-barn;26
+2023;Apr;Klippan;Årskurs 6;skola-barn;10
+2023;Apr;Lund;Årskurs 6;skola-barn;18
+2023;Apr;Lund;Årskurs 7;skola-barn;67
+2023;Apr;Lund;Årskurs 8;skola-barn;13
+2023;Apr;Malmö;Årskurs 8;skola-barn;7
+2023;Apr;Simrishamn;Årskurs 8;skola-barn;20
+2023;Apr;Lund;Högskola;skola-vuxen;
+2023;Apr;Lund;Vuxenutbildning;skola-vuxen;216
+2023;Apr;Skurup;Vuxenutbildning;skola-vuxen;7
+2023;Maj;Lund;Förskola;skola-barn;59
+2023;Maj;Malmö;Förskola;skola-barn;36
+2023;Maj;Lund;Förskoleklass;skola-barn;48
+2023;Maj;Lund;Gymnasium;skola-barn;243
+2023;Maj;Svedala;Gymnasium;skola-barn;13
+2023;Maj;Lund;Årskurs 1;skola-barn;48
+2023;Maj;Lund;Årskurs 2;skola-barn;54
+2023;Maj;Staffanstorp;Årskurs 2;skola-barn;14
+2023;Maj;Kristianstad;Årskurs 3;skola-barn;29
+2023;Maj;Lund;Årskurs 3;skola-barn;20
+2023;Maj;Malmö;Årskurs 3;skola-barn;47
+2023;Maj;Staffanstorp;Årskurs 3;skola-barn;122
+2023;Maj;Östra Göinge;Årskurs 3;skola-barn;29
+2023;Maj;Lund;Årskurs 4;skola-barn;138
+2023;Maj;Lund;Årskurs 5;skola-barn;55
+2023;Maj;Hässleholm;Årskurs 6;skola-barn;44
+2023;Maj;Höör;Årskurs 6;skola-barn;6
+2023;Maj;Lund;Årskurs 6;skola-barn;2
+2023;Maj;Höganäs;Årskurs 7;skola-barn;66
+2023;Maj;Höör;Årskurs 7;skola-barn;25
+2023;Maj;Lund;Årskurs 7;skola-barn;67
+2023;Maj;Eslöv;Årskurs 8;skola-barn;55
+2023;Maj;Kävlinge;Årskurs 8;skola-barn;10
+2023;Maj;Staffanstorp;Årskurs 8;skola-barn;3
+2023;Maj;Lund;Årskurs 9;skola-barn;43
+2023;Maj;Lund;Högskola;skola-vuxen;
+2023;Maj;Malmö;Högskola;skola-vuxen;
+2023;Maj;Övrigt;Högskola;skola-vuxen;
+2023;Maj;Kristianstad;Vuxenutbildning;skola-vuxen;18
+2023;Maj;Lund;Vuxenutbildning;skola-vuxen;90
+2023;Jun;Hässleholm;Förskola;skola-barn;15
+2023;Jun;Lund;Förskola;skola-barn;36
+2023;Jun;Malmö;Förskola;skola-barn;19
+2023;Jun;Lund;Förskoleklass;skola-barn;17
+2023;Jun;Eslöv;Gymnasium;skola-barn;27
+2023;Jun;Kristianstad;Gymnasium;skola-barn;16
+2023;Jun;Lund;Gymnasium;skola-barn;81
+2023;Jun;Trelleborg;Gymnasium;skola-barn;35
+2023;Jun;Lund;Årskurs 1;skola-barn;37
+2023;Jun;Staffanstorp;Årskurs 1;skola-barn;58
+2023;Jun;Lund;Årskurs 4;skola-barn;1
+2023;Jun;Malmö;Årskurs 5;skola-barn;12
+2023;Jun;Lund;Årskurs 6;skola-barn;68
+2023;Jun;Landskrona;Årskurs 7;skola-barn;17
+2023;Jun;Lund;Årskurs 7;skola-barn;67
+2023;Jun;Trelleborg;Årskurs 7;skola-barn;29
+2023;Jun;Landskrona;Årskurs 8;skola-barn;64
+2023;Jun;Staffanstorp;Årskurs 8;skola-barn;131
+2023;Jun;Lund;Årskurs 9;skola-barn;25
+2023;Jun;Trelleborg;Årskurs 9;skola-barn;100
+2023;Jun;Burlöv;Högskola;skola-vuxen;
+2023;Jun;Hässleholm;Vuxenutbildning;skola-vuxen;23
+2023;Jun;Malmö;Vuxenutbildning;skola-vuxen;21
+2023;Jun;Sjöbo;Vuxenutbildning;skola-vuxen;28
+2023;Jun;Skurup;Vuxenutbildning;skola-vuxen;13
+2023;Jul;Lund;Förskola;skola-barn;57
+2023;Jul;Lund;Förskoleklass;skola-barn;16
+2023;Jul;Lund;Årskurs 2;skola-barn;38
+2023;Jul;Helsingborg;Årskurs 3;skola-barn;13
+2023;Jul;Lund;Årskurs 3;skola-barn;8
+2023;Jul;Lund;Årskurs 7;skola-barn;1
+2023;Jul;Malmö;Högskola;skola-vuxen;
+2023;Jul;Lund;Vuxenutbildning;skola-vuxen;28
+2023;Jul;Malmö;Vuxenutbildning;skola-vuxen;50
+2023;Jul;Vellinge;Vuxenutbildning;skola-vuxen;9
+2023;Aug;Lomma;Förskola;skola-barn;1
+2023;Aug;Lund;Förskola;skola-barn;70
+2023;Aug;Malmö;Förskola;skola-barn;23
+2023;Aug;Lund;Förskoleklass;skola-barn;41
+2023;Aug;Lund;Gymnasium;skola-barn;113
+2023;Aug;Vellinge;Gymnasium;skola-barn;46
+2023;Aug;Bjuv;Årskurs 4;skola-barn;1
+2023;Aug;Lund;Årskurs 9;skola-barn;52
+2023;Aug;Lund;Högskola;skola-vuxen;
+2023;Aug;Lund;Vuxenutbildning;skola-vuxen;37
+2023;Aug;Malmö;Vuxenutbildning;skola-vuxen;12
+2023;Sep;Lund;Förskola;skola-barn;86
+2023;Sep;Helsingborg;Förskoleklass;skola-barn;28
+2023;Sep;Lund;Förskoleklass;skola-barn;11
+2023;Sep;Eslöv;Gymnasium;skola-barn;28
+2023;Sep;Lund;Gymnasium;skola-barn;300
+2023;Sep;Malmö;Gymnasium;skola-barn;27
+2023;Sep;Övrigt;Gymnasium;skola-barn;29
+2023;Sep;Lund;Årskurs 1;skola-barn;10
+2023;Sep;Lund;Årskurs 2;skola-barn;91
+2023;Sep;Lund;Årskurs 3;skola-barn;97
+2023;Sep;Lund;Årskurs 4;skola-barn;11
+2023;Sep;Lund;Årskurs 5;skola-barn;10
+2023;Sep;Lund;Årskurs 6;skola-barn;10
+2023;Sep;Malmö;Årskurs 6;skola-barn;55
+2023;Sep;Lund;Årskurs 7;skola-barn;11
+2023;Sep;Lund;Högskola;skola-vuxen;
+2023;Sep;Malmö;Högskola;skola-vuxen;
+2023;Sep;Eslöv;Vuxenutbildning;skola-vuxen;3
+2023;Sep;Lund;Vuxenutbildning;skola-vuxen;104
+2023;Sep;Malmö;Vuxenutbildning;skola-vuxen;52
+2023;Sep;Övrigt;Vuxenutbildning;skola-vuxen;32
+2023;Okt;Lund;Förskola;skola-barn;30
+2023;Okt;Lund;Förskoleklass;skola-barn;44
+2023;Okt;Lund;Gymnasium;skola-barn;127
+2023;Okt;Malmö;Gymnasium;skola-barn;173
+2023;Okt;Svalöv;Gymnasium;skola-barn;10
+2023;Okt;Lund;Årskurs 1;skola-barn;28
+2023;Okt;Bjuv;Årskurs 2;skola-barn;13
+2023;Okt;Lund;Årskurs 2;skola-barn;1
+2023;Okt;Lund;Årskurs 3;skola-barn;377
+2023;Okt;Lund;Årskurs 4;skola-barn;3
+2023;Okt;Lund;Årskurs 7;skola-barn;18
+2023;Okt;Lund;Årskurs 9;skola-barn;27
+2023;Okt;Lund;Högskola;skola-vuxen;
+2023;Okt;Lund;Vuxenutbildning;skola-vuxen;155
+2023;Nov;Lund;Förskola;skola-barn;56
+2023;Nov;Lund;Förskoleklass;skola-barn;64
+2023;Nov;Båstad;Gymnasium;skola-barn;23
+2023;Nov;Helsingborg;Gymnasium;skola-barn;45
+2023;Nov;Lund;Gymnasium;skola-barn;57
+2023;Nov;Lund;Årskurs 1;skola-barn;13
+2023;Nov;Malmö;Årskurs 1;skola-barn;75
+2023;Nov;Lund;Årskurs 2;skola-barn;8
+2023;Nov;Lund;Årskurs 3;skola-barn;29
+2023;Nov;Lund;Årskurs 6;skola-barn;37
+2023;Nov;Lund;Högskola;skola-vuxen;
+2023;Nov;Malmö;Högskola;skola-vuxen;
+2023;Nov;Eslöv;Vuxenutbildning;skola-vuxen;6
+2023;Nov;Lund;Vuxenutbildning;skola-vuxen;117
+2023;Nov;Malmö;Vuxenutbildning;skola-vuxen;12
+2023;Nov;Trelleborg;Vuxenutbildning;skola-vuxen;13
+2023;Dec;Lund;Förskola;skola-barn;31
+2023;Dec;Malmö;Förskola;skola-barn;63
+2023;Dec;Lund;Förskoleklass;skola-barn;31
+2023;Dec;Eslöv;Gymnasium;skola-barn;23
+2023;Dec;Kristianstad;Gymnasium;skola-barn;37
+2023;Dec;Landskrona;Gymnasium;skola-barn;50
+2023;Dec;Lund;Gymnasium;skola-barn;195
+2023;Dec;Malmö;Gymnasium;skola-barn;34
+2023;Dec;Övrigt;Gymnasium;skola-barn;8
+2023;Dec;Höör;Årskurs 1;skola-barn;14
+2023;Dec;Höör;Årskurs 2;skola-barn;25
+2023;Dec;Malmö;Årskurs 2;skola-barn;42
+2023;Dec;Höör;Årskurs 3;skola-barn;23
+2023;Dec;Höör;Årskurs 4;skola-barn;23
+2023;Dec;Lund;Årskurs 4;skola-barn;45
+2023;Dec;Höör;Årskurs 5;skola-barn;23
+2023;Dec;Lund;Årskurs 5;skola-barn;8
+2023;Dec;Höör;Årskurs 6;skola-barn;23
+2023;Dec;Trelleborg;Årskurs 8;skola-barn;29
+2023;Dec;Lund;Årskurs 9;skola-barn;12
+2023;Dec;Lund;Högskola;skola-vuxen;
+2023;Dec;Eslöv;Vuxenutbildning;skola-vuxen;22
+2023;Dec;Kristianstad;Vuxenutbildning;skola-vuxen;8
+2023;Dec;Lund;Vuxenutbildning;skola-vuxen;55
+2023;Dec;Svalöv;Vuxenutbildning;skola-vuxen;15
+2023;Dec;Vellinge;Vuxenutbildning;skola-vuxen;20
+2024;Jan;Lund;Förskola;skola-barn;10
+2024;Jan;Lomma;Gymnasium;skola-barn;28
+2024;Jan;Lund;Gymnasium;skola-barn;152
+2024;Jan;Malmö;Gymnasium;skola-barn;8
+2024;Jan;Lomma;Årskurs 9;skola-barn;96
+2024;Jan;Lund;Årskurs 9;skola-barn;26
+2024;Jan;Lomma;Högskola;skola-vuxen;
+2024;Jan;Lund;Högskola;skola-vuxen;
+2024;Jan;Malmö;Högskola;skola-vuxen;
+2024;Jan;Lund;Vuxenutbildning;skola-vuxen;71
+2024;Jan;Övrigt;Vuxenutbildning;skola-vuxen;14
+2024;Feb;Kristianstad;Förskola;skola-barn;16
+2024;Feb;Lund;Förskola;skola-barn;53
+2024;Feb;Malmö;Förskola;skola-barn;26
+2024;Feb;Lund;Förskoleklass;skola-barn;25
+2024;Feb;Lund;Gymnasium;skola-barn;59
+2024;Feb;Svalöv;Gymnasium;skola-barn;19
+2024;Feb;Övrigt;Gymnasium;skola-barn;18
+2024;Feb;Lund;Årskurs 1;skola-barn;51
+2024;Feb;Lund;Årskurs 2;skola-barn;24
+2024;Feb;Lund;Årskurs 3;skola-barn;196
+2024;Feb;Lund;Årskurs 4;skola-barn;88
+2024;Feb;Lomma;Årskurs 6;skola-barn;23
+2024;Feb;Lomma;Årskurs 8;skola-barn;19
+2024;Feb;Lomma;Årskurs 9;skola-barn;255
+2024;Feb;Lund;Årskurs 9;skola-barn;83
+2024;Feb;Lund;Högskola;skola-vuxen;
+2024;Feb;Övrigt;Högskola;skola-vuxen;
+2024;Feb;Burlöv;Vuxenutbildning;skola-vuxen;19
+2024;Feb;Kristianstad;Vuxenutbildning;skola-vuxen;3
+2024;Feb;Lund;Vuxenutbildning;skola-vuxen;161
+2024;Feb;Övrigt;Vuxenutbildning;skola-vuxen;14
+2024;Mar;Lund;Förskola;skola-barn;34
+2024;Mar;Malmö;Förskola;skola-barn;39
+2024;Mar;Kävlinge;Förskoleklass;skola-barn;38
+2024;Mar;Malmö;Förskoleklass;skola-barn;23
+2024;Mar;Lund;Gymnasium;skola-barn;83
+2024;Mar;Malmö;Gymnasium;skola-barn;27
+2024;Mar;Tomelilla;Gymnasium;skola-barn;13
+2024;Mar;Lund;Årskurs 1;skola-barn;86
+2024;Mar;Staffanstorp;Årskurs 1;skola-barn;24
+2024;Mar;Lund;Årskurs 2;skola-barn;129
+2024;Mar;Lund;Årskurs 3;skola-barn;252
+2024;Mar;Malmö;Årskurs 3;skola-barn;19
+2024;Mar;Lund;Årskurs 4;skola-barn;26
+2024;Mar;Lund;Årskurs 5;skola-barn;1
+2024;Mar;Lund;Årskurs 7;skola-barn;8
+2024;Mar;Trelleborg;Årskurs 7;skola-barn;18
+2024;Mar;Skurup;Årskurs 8;skola-barn;18
+2024;Mar;Lomma;Årskurs 9;skola-barn;98
+2024;Mar;Lund;Högskola;skola-vuxen;
+2024;Mar;Övrigt;Högskola;skola-vuxen;
+2024;Mar;Lund;Vuxenutbildning;skola-vuxen;153
+2024;Mar;Malmö;Vuxenutbildning;skola-vuxen;39
+2024;Apr;Lund;Förskola;skola-barn;163
+2024;Apr;Malmö;Förskola;skola-barn;19
+2024;Apr;Lund;Förskoleklass;skola-barn;68
+2024;Apr;Eslöv;Gymnasium;skola-barn;12
+2024;Apr;Helsingborg;Gymnasium;skola-barn;14
+2024;Apr;Klippan;Gymnasium;skola-barn;40
+2024;Apr;Kristianstad;Gymnasium;skola-barn;26
+2024;Apr;Lund;Gymnasium;skola-barn;156
+2024;Apr;Lund;Årskurs 1;skola-barn;215
+2024;Apr;Lund;Årskurs 2;skola-barn;79
+2024;Apr;Lund;Årskurs 3;skola-barn;188
+2024;Apr;Lund;Årskurs 4;skola-barn;5
+2024;Apr;Lund;Årskurs 5;skola-barn;1
+2024;Apr;Lund;Årskurs 6;skola-barn;4
+2024;Apr;Lund;Årskurs 7;skola-barn;60
+2024;Apr;Burlöv;Högskola;skola-vuxen;
+2024;Apr;Lund;Högskola;skola-vuxen;
+2024;Apr;Malmö;Högskola;skola-vuxen;
+2024;Apr;Lund;Vuxenutbildning;skola-vuxen;162
+2024;Apr;Malmö;Vuxenutbildning;skola-vuxen;37
+2024;Maj;Hässleholm;Förskola;skola-barn;14
+2024;Maj;Kävlinge;Förskola;skola-barn;40
+2024;Maj;Lomma;Förskola;skola-barn;25
+2024;Maj;Lund;Förskola;skola-barn;209
+2024;Maj;Staffanstorp;Förskola;skola-barn;15
+2024;Maj;Svedala;Förskola;skola-barn;8
+2024;Maj;Trelleborg;Förskola;skola-barn;26
+2024;Maj;Lund;Förskoleklass;skola-barn;139
+2024;Maj;Helsingborg;Gymnasium;skola-barn;2
+2024;Maj;Lund;Gymnasium;skola-barn;179
+2024;Maj;Svedala;Gymnasium;skola-barn;18
+2024;Maj;Trelleborg;Gymnasium;skola-barn;11
+2024;Maj;Övrigt;Gymnasium;skola-barn;23
+2024;Maj;Lomma;Årskurs 1;skola-barn;49
+2024;Maj;Lund;Årskurs 1;skola-barn;190
+2024;Maj;Lund;Årskurs 2;skola-barn;86
+2024;Maj;Kristianstad;Årskurs 3;skola-barn;115
+2024;Maj;Lomma;Årskurs 3;skola-barn;42
+2024;Maj;Lund;Årskurs 3;skola-barn;33
+2024;Maj;Staffanstorp;Årskurs 3;skola-barn;51
+2024;Maj;Svalöv;Årskurs 3;skola-barn;44
+2024;Maj;Örkelljunga;Årskurs 3;skola-barn;39
+2024;Maj;Lund;Årskurs 4;skola-barn;2
+2024;Maj;Klippan;Årskurs 7;skola-barn;11
+2024;Maj;Lund;Årskurs 7;skola-barn;4
+2024;Maj;Lund;Årskurs 8;skola-barn;8
+2024;Maj;Kävlinge;Årskurs 9;skola-barn;6
+2024;Maj;Landskrona;Årskurs 9;skola-barn;60
+2024;Maj;Staffanstorp;Årskurs 9;skola-barn;19
+2024;Maj;Burlöv;Högskola;skola-vuxen;
+2024;Maj;Lund;Högskola;skola-vuxen;
+2024;Maj;Övrigt;Högskola;skola-vuxen;
+2024;Maj;Landskrona;Vuxenutbildning;skola-vuxen;17
+2024;Maj;Lund;Vuxenutbildning;skola-vuxen;64
+2024;Maj;Sjöbo;Vuxenutbildning;skola-vuxen;21
+2024;Maj;Svalöv;Vuxenutbildning;skola-vuxen;13
+2024;Maj;Svedala;Vuxenutbildning;skola-vuxen;18
+2024;Jun;Lund;Förskola;skola-barn;26
+2024;Jun;Malmö;Förskola;skola-barn;45
+2024;Jun;Staffanstorp;Förskola;skola-barn;63
+2024;Jun;Lund;Förskoleklass;skola-barn;50
+2024;Jun;Eslöv;Gymnasium;skola-barn;39
+2024;Jun;Lund;Gymnasium;skola-barn;41
+2024;Jun;Svedala;Gymnasium;skola-barn;16
+2024;Jun;Kävlinge;Årskurs 1;skola-barn;32
+2024;Jun;Lund;Årskurs 1;skola-barn;17
+2024;Jun;Lund;Årskurs 2;skola-barn;27
+2024;Jun;Staffanstorp;Årskurs 2;skola-barn;85
+2024;Jun;Höganäs;Årskurs 3;skola-barn;63
+2024;Jun;Lund;Årskurs 3;skola-barn;46
+2024;Jun;Trelleborg;Årskurs 3;skola-barn;62
+2024;Jun;Lund;Årskurs 4;skola-barn;48
+2024;Jun;Lund;Årskurs 7;skola-barn;28
+2024;Jun;Lund;Årskurs 8;skola-barn;43
+2024;Jun;Vellinge;Årskurs 8;skola-barn;71
+2024;Jun;Lund;Årskurs 9;skola-barn;23
+2024;Jun;Skurup;Årskurs 9;skola-barn;2
+2024;Jun;Trelleborg;Årskurs 9;skola-barn;44
+2024;Jun;Hörby;Vuxenutbildning;skola-vuxen;14
+2024;Jun;Kristianstad;Vuxenutbildning;skola-vuxen;10
+2024;Jun;Lomma;Vuxenutbildning;skola-vuxen;40
+2024;Jun;Lund;Vuxenutbildning;skola-vuxen;68
+2024;Jun;Vellinge;Vuxenutbildning;skola-vuxen;10
+2024;Jul;Burlöv;Förskola;skola-barn;16
+2024;Jul;Lund;Förskola;skola-barn;87
+2024;Jul;Lund;Årskurs 1;skola-barn;21
+2024;Jul;Lund;Årskurs 2;skola-barn;32
+2024;Jul;Lund;Årskurs 5;skola-barn;2
+2024;Jul;Lund;Vuxenutbildning;skola-vuxen;5
+2024;Jul;Malmö;Vuxenutbildning;skola-vuxen;51
+2024;Aug;Lund;Förskola;skola-barn;115
+2024;Aug;Klippan;Gymnasium;skola-barn;39
+2024;Aug;Lund;Gymnasium;skola-barn;44
+2024;Aug;Lund;Årskurs 7;skola-barn;25
+2024;Aug;Lund;Årskurs 8;skola-barn;39
+2024;Aug;Lund;Årskurs 9;skola-barn;39
+2024;Aug;Simrishamn;Årskurs 9;skola-barn;25
+2024;Aug;Vellinge;Högskola;skola-vuxen;
+2024;Aug;Lund;Vuxenutbildning;skola-vuxen;39
+2024;Aug;Malmö;Vuxenutbildning;skola-vuxen;25
+2024;Aug;Staffanstorp;Vuxenutbildning;skola-vuxen;3
+2024;Aug;Ängelholm;Vuxenutbildning;skola-vuxen;3
+2024;Sep;Lund;Förskola;skola-barn;129
+2024;Sep;Staffanstorp;Förskola;skola-barn;23
+2024;Sep;Kävlinge;Förskoleklass;skola-barn;46
+2024;Sep;Lund;Förskoleklass;skola-barn;29
+2024;Sep;Båstad;Gymnasium;skola-barn;18
+2024;Sep;Hässleholm;Gymnasium;skola-barn;18
+2024;Sep;Lund;Gymnasium;skola-barn;266
+2024;Sep;Övrigt;Gymnasium;skola-barn;167
+2024;Sep;Lund;Årskurs 1;skola-barn;36
+2024;Sep;Kävlinge;Årskurs 2;skola-barn;22
+2024;Sep;Lund;Årskurs 2;skola-barn;45
+2024;Sep;Lund;Årskurs 3;skola-barn;194
+2024;Sep;Staffanstorp;Årskurs 5;skola-barn;85
+2024;Sep;Lund;Årskurs 6;skola-barn;33
+2024;Sep;Malmö;Årskurs 7;skola-barn;11
+2024;Sep;Övrigt;Årskurs 8;skola-barn;29
+2024;Sep;Kävlinge;Årskurs 9;skola-barn;152
+2024;Sep;Lund;Högskola;skola-vuxen;
+2024;Sep;Övrigt;Högskola;skola-vuxen;
+2024;Sep;Eslöv;Vuxenutbildning;skola-vuxen;10
+2024;Sep;Lund;Vuxenutbildning;skola-vuxen;138
+2024;Okt;Lund;Förskola;skola-barn;94
+2024;Okt;Osby;Förskola;skola-barn;19
+2024;Okt;Lund;Förskoleklass;skola-barn;46
+2024;Okt;Lund;Gymnasium;skola-barn;257
+2024;Okt;Malmö;Gymnasium;skola-barn;79
+2024;Okt;Ystad;Gymnasium;skola-barn;28
+2024;Okt;Övrigt;Gymnasium;skola-barn;14
+2024;Okt;Lund;Årskurs 1;skola-barn;56
+2024;Okt;Lund;Årskurs 2;skola-barn;93
+2024;Okt;Lund;Årskurs 3;skola-barn;298
+2024;Okt;Lund;Årskurs 4;skola-barn;3
+2024;Okt;Burlöv;Årskurs 6;skola-barn;39
+2024;Okt;Lund;Årskurs 7;skola-barn;144
+2024;Okt;Lund;Årskurs 8;skola-barn;28
+2024;Okt;Malmö;Årskurs 8;skola-barn;46
+2024;Okt;Åstorp;Årskurs 8;skola-barn;10
+2024;Okt;Kristianstad;Högskola;skola-vuxen;
+2024;Okt;Lund;Högskola;skola-vuxen;
+2024;Okt;Vellinge;Högskola;skola-vuxen;
+2024;Okt;Burlöv;Vuxenutbildning;skola-vuxen;76
+2024;Okt;Kristianstad;Vuxenutbildning;skola-vuxen;30
+2024;Okt;Lund;Vuxenutbildning;skola-vuxen;166
+2024;Okt;Svalöv;Vuxenutbildning;skola-vuxen;14
+2024;Nov;Kävlinge;Förskola;skola-barn;24
+2024;Nov;Lund;Förskola;skola-barn;52
+2024;Nov;Malmö;Förskola;skola-barn;40
+2024;Nov;Bjuv;Förskoleklass;skola-barn;1
+2024;Nov;Kävlinge;Förskoleklass;skola-barn;24
+2024;Nov;Lund;Förskoleklass;skola-barn;9
+2024;Nov;Lund;Gymnasium;skola-barn;145
+2024;Nov;Kävlinge;Årskurs 1;skola-barn;26
+2024;Nov;Lund;Årskurs 1;skola-barn;49
+2024;Nov;Lund;Årskurs 2;skola-barn;105
+2024;Nov;Malmö;Årskurs 2;skola-barn;10
+2024;Nov;Lund;Årskurs 3;skola-barn;2
+2024;Nov;Lund;Årskurs 4;skola-barn;67
+2024;Nov;Malmö;Årskurs 5;skola-barn;59
+2024;Nov;Kävlinge;Årskurs 6;skola-barn;22
+2024;Nov;Lomma;Årskurs 6;skola-barn;13
+2024;Nov;Lund;Årskurs 7;skola-barn;2
+2024;Nov;Staffanstorp;Årskurs 7;skola-barn;20
+2024;Nov;Lund;Årskurs 8;skola-barn;2
+2024;Nov;Malmö;Årskurs 8;skola-barn;12
+2024;Nov;Staffanstorp;Årskurs 8;skola-barn;20
+2024;Nov;Lund;Årskurs 9;skola-barn;1
+2024;Nov;Kristianstad;Högskola;skola-vuxen;
+2024;Nov;Lund;Högskola;skola-vuxen;
+2024;Nov;Malmö;Högskola;skola-vuxen;
+2024;Nov;Övrigt;Högskola;skola-vuxen;
+2024;Nov;Eslöv;Vuxenutbildning;skola-vuxen;12
+2024;Nov;Lund;Vuxenutbildning;skola-vuxen;163
+2024;Nov;Övrigt;Vuxenutbildning;skola-vuxen;8
+2024;Dec;Lund;Förskola;skola-barn;60
+2024;Dec;Kävlinge;Förskoleklass;skola-barn;26
+2024;Dec;Lund;Förskoleklass;skola-barn;63
+2024;Dec;Burlöv;Gymnasium;skola-barn;12
+2024;Dec;Lund;Gymnasium;skola-barn;176
+2024;Dec;Malmö;Gymnasium;skola-barn;18
+2024;Dec;Kävlinge;Årskurs 1;skola-barn;27
+2024;Dec;Lund;Årskurs 1;skola-barn;114
+2024;Dec;Eslöv;Årskurs 2;skola-barn;35
+2024;Dec;Kävlinge;Årskurs 2;skola-barn;26
+2024;Dec;Lund;Årskurs 2;skola-barn;118
+2024;Dec;Höör;Årskurs 3;skola-barn;172
+2024;Dec;Lund;Årskurs 3;skola-barn;85
+2024;Dec;Lund;Årskurs 5;skola-barn;33
+2024;Dec;Eslöv;Årskurs 6;skola-barn;13
+2024;Dec;Bjuv;Årskurs 7;skola-barn;9
+2024;Dec;Lund;Årskurs 7;skola-barn;27
+2024;Dec;Simrishamn;Årskurs 8;skola-barn;22
+2024;Dec;Lund;Högskola;skola-vuxen;
+2024;Dec;Kristianstad;Vuxenutbildning;skola-vuxen;26
+2024;Dec;Lund;Vuxenutbildning;skola-vuxen;31
+2024;Dec;Staffanstorp;Vuxenutbildning;skola-vuxen;18
+2025;Jan;Lund;Förskola;skola-barn;76
+2025;Jan;Lund;Gymnasium;skola-barn;76
+2025;Jan;Malmö;Gymnasium;skola-barn;30
+2025;Jan;Lund;Årskurs 1;skola-barn;22
+2025;Jan;Lund;Årskurs 2;skola-barn;42
+2025;Jan;Lund;Årskurs 5;skola-barn;29
+2025;Jan;Lund;Årskurs 7;skola-barn;10
+2025;Jan;Lomma;Årskurs 9;skola-barn;87
+2025;Jan;Lund;Årskurs 9;skola-barn;58
+2025;Jan;Lund;Högskola;skola-vuxen;
+2025;Jan;Malmö;Högskola;skola-vuxen;
+2025;Jan;Burlöv;Vuxenutbildning;skola-vuxen;15
+2025;Jan;Lund;Vuxenutbildning;skola-vuxen;6
+2025;Jan;Malmö;Vuxenutbildning;skola-vuxen;53
+2025;Jan;Övrigt;Vuxenutbildning;skola-vuxen;15
+2025;Feb;Lund;Förskola;skola-barn;27
+2025;Feb;Malmö;Förskola;skola-barn;23
+2025;Feb;Lund;Gymnasium;skola-barn;61
+2025;Feb;Malmö;Gymnasium;skola-barn;15
+2025;Feb;Simrishamn;Gymnasium;skola-barn;17
+2025;Feb;Övrigt;Gymnasium;skola-barn;20
+2025;Feb;Lund;Årskurs 2;skola-barn;28
+2025;Feb;Lund;Årskurs 3;skola-barn;77
+2025;Feb;Lund;Årskurs 4;skola-barn;27
+2025;Feb;Malmö;Årskurs 4;skola-barn;11
+2025;Feb;Lund;Årskurs 5;skola-barn;24
+2025;Feb;Lund;Årskurs 8;skola-barn;29
+2025;Feb;Lomma;Årskurs 9;skola-barn;307
+2025;Feb;Lund;Högskola;skola-vuxen;
+2025;Feb;Övrigt;Högskola;skola-vuxen;
+2025;Feb;Höör;Vuxenutbildning;skola-vuxen;13
+2025;Feb;Lund;Vuxenutbildning;skola-vuxen;96
+2025;Feb;Malmö;Vuxenutbildning;skola-vuxen;26
+2025;Mar;Höör;Förskola;skola-barn;22
+2025;Mar;Lund;Förskola;skola-barn;82
+2025;Mar;Malmö;Förskola;skola-barn;63
+2025;Mar;Svedala;Förskola;skola-barn;55
+2025;Mar;Lund;Förskoleklass;skola-barn;27
+2025;Mar;Landskrona;Gymnasium;skola-barn;49
+2025;Mar;Lund;Gymnasium;skola-barn;82
+2025;Mar;Malmö;Gymnasium;skola-barn;19
+2025;Mar;Lund;Årskurs 2;skola-barn;28
+2025;Mar;Staffanstorp;Årskurs 2;skola-barn;86
+2025;Mar;Lund;Årskurs 3;skola-barn;266
+2025;Mar;Höör;Årskurs 7;skola-barn;48
+2025;Mar;Lund;Årskurs 7;skola-barn;26
+2025;Mar;Lomma;Årskurs 8;skola-barn;23
+2025;Mar;Lund;Årskurs 8;skola-barn;47
+2025;Mar;Lomma;Årskurs 9;skola-barn;20
+2025;Mar;Staffanstorp;Årskurs 9;skola-barn;44
+2025;Mar;Lund;Högskola;skola-vuxen;
+2025;Mar;Övrigt;Högskola;skola-vuxen;
+2025;Mar;Lund;Vuxenutbildning;skola-vuxen;152
+2025;Apr;Lund;Förskola;skola-barn;124
+2025;Apr;Malmö;Förskola;skola-barn;13
+2025;Apr;Staffanstorp;Förskola;skola-barn;18
+2025;Apr;Burlöv;Förskoleklass;skola-barn;24
+2025;Apr;Lund;Förskoleklass;skola-barn;9
+2025;Apr;Lund;Gymnasium;skola-barn;88
+2025;Apr;Malmö;Gymnasium;skola-barn;24
+2025;Apr;Simrishamn;Gymnasium;skola-barn;14
+2025;Apr;Övrigt;Gymnasium;skola-barn;125
+2025;Apr;Lund;Årskurs 1;skola-barn;21
+2025;Apr;Trelleborg;Årskurs 1;skola-barn;19
+2025;Apr;Lund;Årskurs 3;skola-barn;93
+2025;Apr;Malmö;Årskurs 4;skola-barn;27
+2025;Apr;Ängelholm;Årskurs 4;skola-barn;16
+2025;Apr;Lomma;Årskurs 6;skola-barn;15
+2025;Apr;Malmö;Årskurs 6;skola-barn;51
+2025;Apr;Simrishamn;Årskurs 6;skola-barn;17
+2025;Apr;Övrigt;Årskurs 8;skola-barn;57
+2025;Apr;Lund;Årskurs 9;skola-barn;86
+2025;Apr;Staffanstorp;Årskurs 9;skola-barn;25
+2025;Apr;Lund;Högskola;skola-vuxen;
+2025;Apr;Malmö;Högskola;skola-vuxen;
+2025;Apr;Eslöv;Vuxenutbildning;skola-vuxen;11
+2025;Apr;Kristianstad;Vuxenutbildning;skola-vuxen;28
+2025;Apr;Lund;Vuxenutbildning;skola-vuxen;121
+2025;Apr;Malmö;Vuxenutbildning;skola-vuxen;19
+2025;Maj;Eslöv;Förskola;skola-barn;14
+2025;Maj;Hässleholm;Förskola;skola-barn;17
+2025;Maj;Kävlinge;Förskola;skola-barn;25
+2025;Maj;Lund;Förskola;skola-barn;123
+2025;Maj;Malmö;Förskola;skola-barn;83
+2025;Maj;Staffanstorp;Förskola;skola-barn;17
+2025;Maj;Svedala;Förskola;skola-barn;17
+2025;Maj;Bjuv;Förskoleklass;skola-barn;15
+2025;Maj;Höör;Förskoleklass;skola-barn;17
+2025;Maj;Lund;Förskoleklass;skola-barn;58
+2025;Maj;Malmö;Förskoleklass;skola-barn;57
+2025;Maj;Eslöv;Gymnasium;skola-barn;24
+2025;Maj;Kristianstad;Gymnasium;skola-barn;60
+2025;Maj;Lund;Gymnasium;skola-barn;239
+2025;Maj;Malmö;Gymnasium;skola-barn;94
+2025;Maj;Svedala;Gymnasium;skola-barn;18
+2025;Maj;Trelleborg;Gymnasium;skola-barn;15
+2025;Maj;Övrigt;Gymnasium;skola-barn;86
+2025;Maj;Eslöv;Årskurs 1;skola-barn;56
+2025;Maj;Kävlinge;Årskurs 1;skola-barn;21
+2025;Maj;Lund;Årskurs 1;skola-barn;212
+2025;Maj;Staffanstorp;Årskurs 1;skola-barn;59
+2025;Maj;Lund;Årskurs 2;skola-barn;5
+2025;Maj;Malmö;Årskurs 2;skola-barn;27
+2025;Maj;Eslöv;Årskurs 3;skola-barn;49
+2025;Maj;Hässleholm;Årskurs 3;skola-barn;25
+2025;Maj;Höganäs;Årskurs 3;skola-barn;56
+2025;Maj;Höör;Årskurs 3;skola-barn;38
+2025;Maj;Kristianstad;Årskurs 3;skola-barn;81
+2025;Maj;Lomma;Årskurs 3;skola-barn;24
+2025;Maj;Lund;Årskurs 3;skola-barn;55
+2025;Maj;Malmö;Årskurs 3;skola-barn;4
+2025;Maj;Lund;Årskurs 4;skola-barn;24
+2025;Maj;Malmö;Årskurs 4;skola-barn;81
+2025;Maj;Övrigt;Årskurs 4;skola-barn;44
+2025;Maj;Lund;Årskurs 5;skola-barn;30
+2025;Maj;Vellinge;Årskurs 5;skola-barn;12
+2025;Maj;Övrigt;Årskurs 5;skola-barn;70
+2025;Maj;Kävlinge;Årskurs 6;skola-barn;18
+2025;Maj;Eslöv;Årskurs 7;skola-barn;35
+2025;Maj;Staffanstorp;Årskurs 7;skola-barn;27
+2025;Maj;Övrigt;Årskurs 7;skola-barn;69
+2025;Maj;Lund;Årskurs 8;skola-barn;38
+2025;Maj;Malmö;Årskurs 8;skola-barn;10
+2025;Maj;Lund;Årskurs 9;skola-barn;20
+2025;Maj;Staffanstorp;Årskurs 9;skola-barn;21
+2025;Maj;Lund;Högskola;skola-vuxen;
+2025;Maj;Eslöv;Vuxenutbildning;skola-vuxen;13
+2025;Maj;Lund;Vuxenutbildning;skola-vuxen;40
+2025;Maj;Vellinge;Vuxenutbildning;skola-vuxen;62
+2025;Maj;Ängelholm;Vuxenutbildning;skola-vuxen;22
+2025;Maj;Övrigt;Vuxenutbildning;skola-vuxen;15
+2025;Jun;Lund;Förskola;skola-barn;89
+2025;Jun;Malmö;Förskola;skola-barn;8
+2025;Jun;Trelleborg;Förskola;skola-barn;30
+2025;Jun;Eslöv;Gymnasium;skola-barn;41
+2025;Jun;Lund;Gymnasium;skola-barn;76
+2025;Jun;Malmö;Gymnasium;skola-barn;13
+2025;Jun;Övrigt;Gymnasium;skola-barn;44
+2025;Jun;Lund;Årskurs 1;skola-barn;60
+2025;Jun;Lund;Årskurs 2;skola-barn;32
+2025;Jun;Lund;Årskurs 3;skola-barn;27
+2025;Jun;Staffanstorp;Årskurs 3;skola-barn;69
+2025;Jun;Lund;Årskurs 5;skola-barn;73
+2025;Jun;Staffanstorp;Årskurs 5;skola-barn;3
+2025;Jun;Lund;Årskurs 7;skola-barn;74
+2025;Jun;Kävlinge;Årskurs 8;skola-barn;10
+2025;Jun;Lund;Årskurs 8;skola-barn;6
+2025;Jun;Malmö;Årskurs 8;skola-barn;37
+2025;Jun;Lund;Årskurs 9;skola-barn;42
+2025;Jun;Trelleborg;Årskurs 9;skola-barn;86
+2025;Jun;Övrigt;Årskurs 9;skola-barn;22
+2025;Jun;Lund;Högskola;skola-vuxen;
+2025;Jun;Lomma;Vuxenutbildning;skola-vuxen;55
+2025;Jun;Malmö;Vuxenutbildning;skola-vuxen;33
+2025;Jul;Lund;Förskola;skola-barn;44
+2025;Jul;Lund;Förskoleklass;skola-barn;36
+2025;Jul;Bjuv;Årskurs 1;skola-barn;18
+2025;Jul;Lund;Årskurs 1;skola-barn;9
+2025;Jul;Lund;Årskurs 2;skola-barn;2
+2025;Jul;Lund;Årskurs 3;skola-barn;2
+2025;Jul;Staffanstorp;Årskurs 3;skola-barn;29
+2025;Jul;Lund;Årskurs 4;skola-barn;5
+2025;Jul;Staffanstorp;Årskurs 4;skola-barn;17
+2025;Jul;Lund;Årskurs 5;skola-barn;2
+2025;Jul;Lund;Årskurs 6;skola-barn;2
+2025;Jul;Malmö;Årskurs 6;skola-barn;4
+2025;Jul;Övrigt;Högskola;skola-vuxen;
+2025;Jul;Lund;Vuxenutbildning;skola-vuxen;85
+2025;Jul;Malmö;Vuxenutbildning;skola-vuxen;35
+2025;Aug;Lund;Förskola;skola-barn;73
+2025;Aug;Malmö;Förskola;skola-barn;20
+2025;Aug;Lund;Förskoleklass;skola-barn;21
+2025;Aug;Lund;Gymnasium;skola-barn;192
+2025;Aug;Malmö;Gymnasium;skola-barn;33
+2025;Aug;Lund;Årskurs 2;skola-barn;13
+2025;Aug;Lund;Årskurs 5;skola-barn;6
+2025;Aug;Kävlinge;Årskurs 7;skola-barn;30
+2025;Aug;Kävlinge;Årskurs 9;skola-barn;30
+2025;Aug;Lund;Årskurs 9;skola-barn;9
+2025;Aug;Lund;Vuxenutbildning;skola-vuxen;42
+2025;Aug;Malmö;Vuxenutbildning;skola-vuxen;7
+2025;Sep;Lund;Förskola;skola-barn;57
+2025;Sep;Malmö;Förskola;skola-barn;39
+2025;Sep;Lund;Gymnasium;skola-barn;256
+2025;Sep;Malmö;Gymnasium;skola-barn;29
+2025;Sep;Ystad;Gymnasium;skola-barn;35
+2025;Sep;Övrigt;Gymnasium;skola-barn;65
+2025;Sep;Lund;Årskurs 3;skola-barn;169
+2025;Sep;Lund;Årskurs 4;skola-barn;33
+2025;Sep;Lund;Årskurs 5;skola-barn;43
+2025;Sep;Lund;Årskurs 6;skola-barn;32
+2025;Sep;Lund;Årskurs 8;skola-barn;151
+2025;Sep;Staffanstorp;Årskurs 9;skola-barn;69
+2025;Sep;Lund;Högskola;skola-vuxen;
+2025;Sep;Lund;Vuxenutbildning;skola-vuxen;155
+2025;Sep;Malmö;Vuxenutbildning;skola-vuxen;40
+2025;Sep;Ängelholm;Vuxenutbildning;skola-vuxen;32
+2025;Sep;Övrigt;Vuxenutbildning;skola-vuxen;33
+2025;Okt;Lund;Förskola;skola-barn;33
+2025;Okt;Malmö;Förskola;skola-barn;41
+2025;Okt;Lund;Förskoleklass;skola-barn;30
+2025;Okt;Lund;Gymnasium;skola-barn;244
+2025;Okt;Lund;Årskurs 2;skola-barn;43
+2025;Okt;Kävlinge;Årskurs 3;skola-barn;19
+2025;Okt;Lund;Årskurs 3;skola-barn;501
+2025;Okt;Lund;Årskurs 4;skola-barn;3
+2025;Okt;Helsingborg;Årskurs 5;skola-barn;24
+2025;Okt;Lund;Årskurs 5;skola-barn;108
+2025;Okt;Lomma;Årskurs 6;skola-barn;5
+2025;Okt;Helsingborg;Årskurs 7;skola-barn;52
+2025;Okt;Malmö;Årskurs 8;skola-barn;47
+2025;Okt;Simrishamn;Årskurs 8;skola-barn;12
+2025;Okt;Kävlinge;Årskurs 9;skola-barn;10
+2025;Okt;Malmö;Årskurs 9;skola-barn;30
+2025;Okt;Staffanstorp;Årskurs 9;skola-barn;44
+2025;Okt;Kristianstad;Högskola;skola-vuxen;
+2025;Okt;Lund;Högskola;skola-vuxen;
+2025;Okt;Burlöv;Vuxenutbildning;skola-vuxen;12
+2025;Okt;Kristianstad;Vuxenutbildning;skola-vuxen;27
+2025;Okt;Kävlinge;Vuxenutbildning;skola-vuxen;20
+2025;Okt;Lund;Vuxenutbildning;skola-vuxen;116
+2025;Okt;Malmö;Vuxenutbildning;skola-vuxen;7
+2025;Okt;Övrigt;Vuxenutbildning;skola-vuxen;30
+2025;Nov;Helsingborg;Förskola;skola-barn;22
+2025;Nov;Lomma;Förskola;skola-barn;18
+2025;Nov;Lund;Förskola;skola-barn;72
+2025;Nov;Lund;Förskoleklass;skola-barn;58
+2025;Nov;Malmö;Förskoleklass;skola-barn;10
+2025;Nov;Båstad;Gymnasium;skola-barn;17
+2025;Nov;Eslöv;Gymnasium;skola-barn;25
+2025;Nov;Helsingborg;Gymnasium;skola-barn;82
+2025;Nov;Lund;Gymnasium;skola-barn;311
+2025;Nov;Malmö;Gymnasium;skola-barn;32
+2025;Nov;Ystad;Gymnasium;skola-barn;33
+2025;Nov;Övrigt;Gymnasium;skola-barn;22
+2025;Nov;Malmö;Årskurs 2;skola-barn;18
+2025;Nov;Lund;Årskurs 3;skola-barn;12
+2025;Nov;Malmö;Årskurs 3;skola-barn;28
+2025;Nov;Lund;Årskurs 5;skola-barn;10
+2025;Nov;Malmö;Årskurs 5;skola-barn;8
+2025;Nov;Lund;Årskurs 9;skola-barn;23
+2025;Nov;Lund;Högskola;skola-vuxen;
+2025;Nov;Övrigt;Högskola;skola-vuxen;
+2025;Nov;Lund;Vuxenutbildning;skola-vuxen;127
+2025;Nov;Malmö;Vuxenutbildning;skola-vuxen;20
+2025;Nov;Skurup;Vuxenutbildning;skola-vuxen;28
+2025;Nov;Svalöv;Vuxenutbildning;skola-vuxen;5
+2025;Nov;Tomelilla;Vuxenutbildning;skola-vuxen;11
+2025;Nov;Övrigt;Vuxenutbildning;skola-vuxen;10
+2025;Dec;Lund;Förskola;skola-barn;30
+2025;Dec;Malmö;Förskola;skola-barn;20
+2025;Dec;Lund;Förskoleklass;skola-barn;78
+2025;Dec;Båstad;Gymnasium;skola-barn;16
+2025;Dec;Kristianstad;Gymnasium;skola-barn;6
+2025;Dec;Lund;Gymnasium;skola-barn;147
+2025;Dec;Malmö;Gymnasium;skola-barn;111
+2025;Dec;Övrigt;Gymnasium;skola-barn;16
+2025;Dec;Lund;Årskurs 1;skola-barn;48
+2025;Dec;Eslöv;Årskurs 2;skola-barn;32
+2025;Dec;Lomma;Årskurs 2;skola-barn;52
+2025;Dec;Lund;Årskurs 2;skola-barn;171
+2025;Dec;Lund;Årskurs 3;skola-barn;7
+2025;Dec;Lund;Årskurs 4;skola-barn;5
+2025;Dec;Eslöv;Årskurs 5;skola-barn;24
+2025;Dec;Lund;Årskurs 5;skola-barn;4
+2025;Dec;Kävlinge;Årskurs 7;skola-barn;50
+2025;Dec;Bjuv;Årskurs 8;skola-barn;8
+2025;Dec;Svalöv;Årskurs 8;skola-barn;92
+2025;Dec;Lund;Högskola;skola-vuxen;
+2025;Dec;Burlöv;Vuxenutbildning;skola-vuxen;6
+2025;Dec;Kävlinge;Vuxenutbildning;skola-vuxen;80
+2025;Dec;Lund;Vuxenutbildning;skola-vuxen;28
+2025;Dec;Malmö;Vuxenutbildning;skola-vuxen;5
+2025;Dec;Skurup;Vuxenutbildning;skola-vuxen;26
+2025;Dec;Svalöv;Vuxenutbildning;skola-vuxen;11
+2026;Jan;Lund;Förskola;skola-barn;1
+2026;Jan;Lund;Gymnasium;skola-barn;79
+2026;Jan;Malmö;Gymnasium;skola-barn;29
+2026;Jan;Övrigt;Gymnasium;skola-barn;19
+2026;Jan;Eslöv;Årskurs 5;skola-barn;25
+2026;Jan;Lund;Årskurs 5;skola-barn;97
+2026;Jan;Lund;Högskola;skola-vuxen;
+2026;Jan;Malmö;Högskola;skola-vuxen;
+2026;Jan;Svalöv;Vuxenutbildning;skola-vuxen;9
+2026;Feb;Lund;Förskola;skola-barn;81
+2026;Feb;Lund;Förskoleklass;skola-barn;29
+2026;Feb;Båstad;Gymnasium;skola-barn;17
+2026;Feb;Eslöv;Gymnasium;skola-barn;3
+2026;Feb;Helsingborg;Gymnasium;skola-barn;11
+2026;Feb;Lund;Gymnasium;skola-barn;68
+2026;Feb;Malmö;Gymnasium;skola-barn;23
+2026;Feb;Övrigt;Gymnasium;skola-barn;36
+2026;Feb;Kävlinge;Årskurs 1;skola-barn;29
+2026;Feb;Lund;Årskurs 1;skola-barn;49
+2026;Feb;Malmö;Årskurs 1;skola-barn;23
+2026;Feb;Lund;Årskurs 2;skola-barn;68
+2026;Feb;Lund;Årskurs 3;skola-barn;11
+2026;Feb;Lund;Årskurs 5;skola-barn;16
+2026;Feb;Malmö;Årskurs 5;skola-barn;74
+2026;Feb;Lomma;Årskurs 7;skola-barn;30
+2026;Feb;Kristianstad;Årskurs 8;skola-barn;15
+2026;Feb;Lomma;Årskurs 9;skola-barn;451
+2026;Feb;Lund;Årskurs 9;skola-barn;45
+2026;Feb;Lund;Högskola;skola-vuxen;
+2026;Feb;Övrigt;Högskola;skola-vuxen;
+2026;Feb;Lomma;Vuxenutbildning;skola-vuxen;6
+2026;Feb;Lund;Vuxenutbildning;skola-vuxen;138
+2026;Mar;Burlöv;Förskola;skola-barn;25
+2026;Mar;Lund;Förskola;skola-barn;205
+2026;Mar;Staffanstorp;Förskola;skola-barn;36
+2026;Mar;Lund;Förskoleklass;skola-barn;20
+2026;Mar;Lund;Gymnasium;skola-barn;110
+2026;Mar;Malmö;Gymnasium;skola-barn;70
+2026;Mar;Övrigt;Gymnasium;skola-barn;24
+2026;Mar;Lund;Årskurs 2;skola-barn;65
+2026;Mar;Staffanstorp;Årskurs 2;skola-barn;28
+2026;Mar;Lund;Årskurs 3;skola-barn;525
+2026;Mar;Malmö;Årskurs 3;skola-barn;120
+2026;Mar;Lund;Årskurs 4;skola-barn;25
+2026;Mar;Malmö;Årskurs 4;skola-barn;13
+2026;Mar;Eslöv;Årskurs 6;skola-barn;60
+2026;Mar;Kävlinge;Årskurs 8;skola-barn;23
+2026;Mar;Malmö;Årskurs 8;skola-barn;8
+2026;Mar;Landskrona;Årskurs 9;skola-barn;28
+2026;Mar;Lomma;Högskola;skola-vuxen;
+2026;Mar;Lund;Högskola;skola-vuxen;
+2026;Mar;Malmö;Högskola;skola-vuxen;
+2026;Mar;Lund;Vuxenutbildning;skola-vuxen;210
+2026;Mar;Svedala;Vuxenutbildning;skola-vuxen;8
+2026;Apr;Helsingborg;Förskola;skola-barn;22
+2026;Apr;Kävlinge;Förskola;skola-barn;20
+2026;Apr;Lund;Förskola;skola-barn;164
+2026;Apr;Malmö;Förskola;skola-barn;45
+2026;Apr;Staffanstorp;Förskola;skola-barn;20
+2026;Apr;Malmö;Förskoleklass;skola-barn;22
+2026;Apr;Båstad;Gymnasium;skola-barn;14
+2026;Apr;Lund;Gymnasium;skola-barn;147
+2026;Apr;Övrigt;Gymnasium;skola-barn;10
+2026;Apr;Lund;Årskurs 1;skola-barn;90
+2026;Apr;Lund;Årskurs 2;skola-barn;19
+2026;Apr;Kävlinge;Årskurs 3;skola-barn;9
+2026;Apr;Lund;Årskurs 3;skola-barn;31
+2026;Apr;Hörby;Årskurs 4;skola-barn;17
+2026;Apr;Lomma;Årskurs 4;skola-barn;26
+2026;Apr;Lund;Årskurs 4;skola-barn;49
+2026;Apr;Lund;Årskurs 5;skola-barn;30
+2026;Apr;Lund;Årskurs 6;skola-barn;98
+2026;Apr;Vellinge;Årskurs 8;skola-barn;12
+2026;Apr;Lomma;Årskurs 9;skola-barn;24
+2026;Apr;Lund;Årskurs 9;skola-barn;83
+2026;Apr;Vellinge;Årskurs 9;skola-barn;12
+2026;Apr;Övrigt;Årskurs 9;skola-barn;14
+2026;Apr;Lund;Högskola;skola-vuxen;
+2026;Apr;Malmö;Högskola;skola-vuxen;
+2026;Apr;Övrigt;Högskola;skola-vuxen;
+2026;Apr;Lund;Vuxenutbildning;skola-vuxen;161
+2026;Apr;Malmö;Vuxenutbildning;skola-vuxen;8
+2026;Apr;Östra Göinge;Vuxenutbildning;skola-vuxen;29
+2026;Maj;Burlöv;Förskola;skola-barn;18
+2026;Maj;Eslöv;Förskola;skola-barn;15
+2026;Maj;Hässleholm;Förskola;skola-barn;19
+2026;Maj;Höör;Förskola;skola-barn;18
+2026;Maj;Kävlinge;Förskola;skola-barn;26
+2026;Maj;Lund;Förskola;skola-barn;202
+2026;Maj;Malmö;Förskola;skola-barn;28
+2026;Maj;Trelleborg;Förskola;skola-barn;32
+2026;Maj;Lund;Förskoleklass;skola-barn;91
+2026;Maj;Burlöv;Gymnasium;skola-barn;43
+2026;Maj;Eslöv;Gymnasium;skola-barn;30
+2026;Maj;Klippan;Gymnasium;skola-barn;29
+2026;Maj;Kristianstad;Gymnasium;skola-barn;36
+2026;Maj;Lund;Gymnasium;skola-barn;160
+2026;Maj;Malmö;Gymnasium;skola-barn;128
+2026;Maj;Trelleborg;Gymnasium;skola-barn;22
+2026;Maj;Ängelholm;Gymnasium;skola-barn;39
+2026;Maj;Övrigt;Gymnasium;skola-barn;65
+2026;Maj;Lund;Årskurs 1;skola-barn;47
+2026;Maj;Eslöv;Årskurs 2;skola-barn;24
+2026;Maj;Lund;Årskurs 2;skola-barn;51
+2026;Maj;Eslöv;Årskurs 3;skola-barn;27
+2026;Maj;Hässleholm;Årskurs 3;skola-barn;372
+2026;Maj;Kristianstad;Årskurs 3;skola-barn;46
+2026;Maj;Lund;Årskurs 3;skola-barn;5
+2026;Maj;Lund;Årskurs 4;skola-barn;54
+2026;Maj;Malmö;Årskurs 4;skola-barn;98
+2026;Maj;Lund;Årskurs 5;skola-barn;56
+2026;Maj;Lomma;Årskurs 6;skola-barn;11
+2026;Maj;Lund;Årskurs 6;skola-barn;10
+2026;Maj;Övrigt;Årskurs 6;skola-barn;9
+2026;Maj;Kävlinge;Årskurs 7;skola-barn;27
+2026;Maj;Lund;Årskurs 7;skola-barn;13
+2026;Maj;Lund;Årskurs 8;skola-barn;103
+2026;Maj;Höganäs;Årskurs 9;skola-barn;46
+2026;Maj;Kristianstad;Högskola;skola-vuxen;
+2026;Maj;Lund;Högskola;skola-vuxen;
+2026;Maj;Malmö;Högskola;skola-vuxen;
+2026;Maj;Övrigt;Högskola;skola-vuxen;
+2026;Maj;Helsingborg;Vuxenutbildning;skola-vuxen;29
+2026;Maj;Lund;Vuxenutbildning;skola-vuxen;15
+2026;Jun;Lund;Förskola;skola-barn;242
+2026;Jun;Malmö;Förskola;skola-barn;46
+2026;Jun;Lund;Förskoleklass;skola-barn;22
+2026;Jun;Kristianstad;Gymnasium;skola-barn;9
+2026;Jun;Lund;Gymnasium;skola-barn;86
+2026;Jun;Malmö;Gymnasium;skola-barn;18
+2026;Jun;Vellinge;Gymnasium;skola-barn;18
+2026;Jun;Lund;Åk 1;skola-barn;66
+2026;Jun;Staffanstorp;Åk 1;skola-barn;30
+2026;Jun;Vellinge;Åk 1;skola-barn;18
+2026;Jun;Burlöv;Åk 2;skola-barn;87
+2026;Jun;Lund;Åk 2;skola-barn;51
+2026;Jun;Staffanstorp;Åk 2;skola-barn;79
+2026;Jun;Eslöv;Åk 3;skola-barn;26
+2026;Jun;Lund;Åk 3;skola-barn;27
+2026;Jun;Staffanstorp;Åk 3;skola-barn;83
+2026;Jun;Vellinge;Åk 3;skola-barn;18
+2026;Jun;Helsingborg;Åk 4;skola-barn;15
+2026;Jun;Lund;Åk 4;skola-barn;42
+2026;Jun;Hässleholm;Åk 5;skola-barn;74
+2026;Jun;Hörby;Åk 5;skola-barn;20
+2026;Jun;Lund;Åk 5;skola-barn;45
+2026;Jun;Malmö;Åk 5;skola-barn;57
+2026;Jun;Vellinge;Åk 5;skola-barn;21
+2026;Jun;Lomma;Åk 8;skola-barn;20
+2026;Jun;Övrigt;Åk 8;skola-barn;21
+2026;Jun;Lund;Åk 9;skola-barn;28
+2026;Jun;Malmö;Åk 9;skola-barn;23
+2026;Jun;Trelleborg;Åk 9;skola-barn;64
+2026;Jun;Övrigt;Åk 9;skola-barn;53
+2026;Jun;Lund;Högskola;skola-vuxen;
+2026;Jun;Helsingborg;Vuxenutbildning;skola-vuxen;10
+2026;Jun;Lund;Vuxenutbildning;skola-vuxen;74
+2026;Jun;Malmö;Vuxenutbildning;skola-vuxen;23
+2026;Jun;Svedala;Vuxenutbildning;skola-vuxen;60
+2026;Jun;Vellinge;Vuxenutbildning;skola-vuxen;11
+2026;Jun;Ängelholm;Vuxenutbildning;skola-vuxen;19
+2026;Jun;Övrigt;Vuxenutbildning;skola-vuxen;27
+2026;Jul;Lund;Förskola;skola-barn;50
+2026;Jul;Lund;Åk 3;skola-barn;32
+2026;Jul;Övrigt;Åk 5;skola-barn;14
+2026;Jul;Eslöv;Vuxenutbildning;skola-vuxen;12
+2026;Jul;Helsingborg;Vuxenutbildning;skola-vuxen;8
+2026;Jul;Malmö;Vuxenutbildning;skola-vuxen;94
+2026;Aug;Lund;Förskola;skola-barn;2
+2026;Aug;Lund;Gymnasium;skola-barn;86
+2026;Aug;Lund;Åk 1;skola-barn;58
+2026;Aug;Lund;Åk 2;skola-barn;46
+2026;Aug;Lund;Åk 3;skola-barn;9
+2026;Aug;Malmö;Åk 5;skola-barn;27
+2026;Aug;Lund;Åk 9;skola-barn;26
+2026;Aug;Övrigt;Högskola;skola-vuxen;
+2026;Aug;Lund;Lunds universitet;skola-vuxen;267
+2026;Aug;Landskrona;Vuxenutbildning;skola-vuxen;12
+2026;Aug;Lund;Vuxenutbildning;skola-vuxen;28
+2026;Aug;Malmö;Vuxenutbildning;skola-vuxen;6
+2026;Aug;Sjöbo;Vuxenutbildning;skola-vuxen;18
+2026;Aug;Övrigt;Vuxenutbildning;skola-vuxen;6
