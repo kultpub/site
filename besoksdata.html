@@ -7,6 +7,9 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore-compat.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
@@ -144,6 +147,24 @@ h1 {
   transform: translateY(0);
   pointer-events: auto;
   display: block;
+}
+
+/* Informationsruta när innevarande månad ingår i den aktuella visningen */
+.current-month-notice {
+  display: none;
+  margin-top: 18px;
+  padding: 10px 12px;
+  border-left: 3px solid #f28c28;
+  border-radius: 6px;
+  background: #fff8ef;
+  color: #555;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.current-month-notice strong {
+  color: #2f2f2f;
+  font-weight: 700;
 }
 
 #kategoriContainer {
@@ -1036,10 +1057,117 @@ h1 {
     overflow: hidden !important;
   }
 }
+
+
+/* =========================================================
+   FIREBASE-INLOGGNING FÖR LIVE-DATA
+   ========================================================= */
+.firebase-login-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(20, 20, 20, 0.52);
+  backdrop-filter: blur(7px);
+}
+.firebase-login-overlay.open { display: flex; }
+.firebase-login-modal {
+  width: min(430px, 96vw);
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 25px 60px rgba(0,0,0,.25);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+.firebase-login-kicker {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: #f28c28;
+  margin-bottom: 7px;
+}
+.firebase-login-modal h2 {
+  margin: 0 0 6px;
+  font-size: 24px;
+  letter-spacing: -.02em;
+}
+.firebase-login-intro {
+  margin: 0 0 22px;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.firebase-login-modal label {
+  display: block;
+  margin: 14px 0 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #555;
+}
+.firebase-login-modal input {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font: inherit;
+  box-sizing: border-box;
+}
+.firebase-login-modal input:focus {
+  outline: none;
+  border-color: #2f2f2f;
+  box-shadow: 0 0 0 3px rgba(47,47,47,.08);
+}
+.firebase-login-status {
+  min-height: 20px;
+  margin-top: 12px;
+  font-size: 13px;
+  color: #b42318;
+}
+.firebase-login-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 18px;
+}
+.firebase-login-button {
+  min-width: 120px;
+  padding: 10px 18px;
+  border: 0;
+  border-radius: 8px;
+  background: #2f2f2f;
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.firebase-login-button:disabled { opacity: .6; cursor: default; }
+
 </style>
 </head>
 
 <body>
+
+<!-- Firebase Authentication: visas bara om ingen giltig lokal inloggning finns -->
+<div class="firebase-login-overlay" id="firebaseLoginOverlay" role="dialog" aria-modal="true" aria-labelledby="firebaseLoginTitle">
+  <form class="firebase-login-modal" id="firebaseLoginForm" autocomplete="on">
+    <div class="firebase-login-kicker">Kulturen i Lund</div>
+    <h2 id="firebaseLoginTitle">Logga in</h2>
+    <p class="firebase-login-intro">Logga in för att läsa den senaste besöksdatan från Firestore.</p>
+    <label for="firebaseLoginEmail">E-postadress</label>
+    <input type="email" id="firebaseLoginEmail" autocomplete="username" required>
+    <label for="firebaseLoginPassword">Lösenord</label>
+    <input type="password" id="firebaseLoginPassword" autocomplete="current-password" required>
+    <div class="firebase-login-status" id="firebaseLoginStatus" aria-live="polite"></div>
+    <div class="firebase-login-actions">
+      <button class="firebase-login-button" id="firebaseLoginButton" type="submit">Logga in</button>
+    </div>
+  </form>
+</div>
+
 
 <!-- BLOCKERARE FÖR SMÅ SKÄRMAR -->
 <div id="screenBlocker">
@@ -1178,6 +1306,8 @@ h1 {
       </div>
     </div>
 
+    <div id="currentMonthNotice" class="current-month-notice" aria-live="polite"></div>
+
   </div>
 
 
@@ -1273,6 +1403,7 @@ let lastFilteredData = {};
 
 let selectedMonths = new Set([...Array(12).keys()]);
 let typeToggleCount = 0;
+let visibleTableYears = [];
 
 /* =========================================================
    KONSTANTER OCH MAPPNINGAR FÖR NY CSV-STRUKTUR
@@ -1318,6 +1449,105 @@ const KATEGORI_MAP = {
 // Fast skoldata för 2017 och delar av 2018 som saknas i den externa filen
 
 const KATEGORI_OPTIONS = Object.keys(KATEGORI_MAP);
+
+/* =========================================================
+   FIREBASE / LIVE SKOLDATA FRÅN 2026-09-01
+   ========================================================= */
+const firebaseConfig = {
+  apiKey: "AIzaSyBxGc4jxkayGoOWDjeVwJqCJJm-536FUkI",
+  authDomain: "kulturen-dagsdata.firebaseapp.com",
+  projectId: "kulturen-dagsdata",
+  storageBucket: "kulturen-dagsdata.firebasestorage.app",
+  messagingSenderId: "306416395027",
+  appId: "1:306416395027:web:0211f420e2ec773d8970e6"
+};
+
+const FIREBASE_COLLECTION = "dailyData";
+const FIREBASE_START_DATE = "2026-09-01";
+const FIREBASE_VENUE = "kulturenilund";
+const FIREBASE_START_YEAR = 2026;
+const FIREBASE_START_MONTH_INDEX = 8; // september, 0-baserat
+
+if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+let historicalVisitRows = [];
+let firestoreSchoolRows = [];
+let firestoreSchoolUnsubscribe = null;
+let historicalDataReady = false;
+let firestoreInitialReady = false;
+let dataUiInitialized = false;
+
+const FIRESTORE_ADULT_SCHOOL_LEVELS = new Set([
+  "Vuxenutbildning",
+  "Högskola",
+  "Högskola, universitet",
+  "Lunds universitet",
+  "Campus Helsingborg",
+  "Malmö universitet",
+  "Högskolan Kristianstad",
+  "SLU"
+]);
+
+function firestoreSchoolCategory(level) {
+  return FIRESTORE_ADULT_SCHOOL_LEVELS.has(String(level || "").trim())
+    ? "skola-vuxen"
+    : "skola-barn";
+}
+
+function isHistoricalSchoolMonth(year, monthIndex) {
+  return year < FIREBASE_START_YEAR ||
+    (year === FIREBASE_START_YEAR && monthIndex < FIREBASE_START_MONTH_INDEX);
+}
+
+function showFirebaseLogin(message = "") {
+  const overlay = document.getElementById("firebaseLoginOverlay");
+  const status = document.getElementById("firebaseLoginStatus");
+  if (status) status.textContent = message;
+  if (overlay) overlay.classList.add("open");
+  setTimeout(() => document.getElementById("firebaseLoginEmail")?.focus(), 0);
+}
+
+function hideFirebaseLogin() {
+  document.getElementById("firebaseLoginOverlay")?.classList.remove("open");
+  const status = document.getElementById("firebaseLoginStatus");
+  if (status) status.textContent = "";
+  const password = document.getElementById("firebaseLoginPassword");
+  if (password) password.value = "";
+}
+
+function friendlyFirebaseAuthError(error) {
+  const code = error?.code || "";
+  if (["auth/invalid-credential", "auth/wrong-password", "auth/user-not-found", "auth/invalid-email"].includes(code)) {
+    return "Fel e-postadress eller lösenord.";
+  }
+  if (code === "auth/too-many-requests") return "För många inloggningsförsök. Försök igen senare.";
+  if (code === "auth/network-request-failed") return "Nätverksfel. Kontrollera anslutningen och försök igen.";
+  return "Inloggningen misslyckades.";
+}
+
+async function loginForFirebaseViews(event) {
+  event.preventDefault();
+  const email = document.getElementById("firebaseLoginEmail").value.trim();
+  const password = document.getElementById("firebaseLoginPassword").value;
+  const button = document.getElementById("firebaseLoginButton");
+  const status = document.getElementById("firebaseLoginStatus");
+  if (status) status.textContent = "";
+  button.disabled = true;
+  button.textContent = "Loggar in…";
+  try {
+    await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+    await auth.signInWithEmailAndPassword(email, password);
+  } catch (error) {
+    console.error("Firebase-inloggning misslyckades:", error);
+    if (status) status.textContent = friendlyFirebaseAuthError(error);
+  } finally {
+    button.disabled = false;
+    button.textContent = "Logga in";
+  }
+}
+
 
 /* =========================================================
    DYNAMISK RUBRIKHÄMTNING
@@ -1429,8 +1659,47 @@ function updateKategoriHint() {
     const isTable = document.getElementById("tableView").style.display !== "none";
     const show = isTable
         && currentFF === "Kulturen i Lund"
+        && document.getElementById("toggleVerksamhet").checked
         && (selectedKategorier.size === 0 || selectedKategorier.size >= 2);
     hint.style.display = show ? "block" : "none";
+}
+
+function updateCurrentMonthNotice() {
+    const notice = document.getElementById("currentMonthNotice");
+    if (!notice) return;
+
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    const currentMonth = today.getMonth();
+    const currentPeriod = currentYear * 12 + currentMonth;
+
+    const isTable = document.getElementById("tableView").style.display !== "none";
+    const isChart = document.getElementById("chartView").style.display !== "none";
+
+    let show = false;
+
+    if (isTable) {
+        // I tabellvyn visas notisen när innevarande års kolumn och månadens rad
+        // faktiskt ingår i den synliga tabellen.
+        show = visibleTableYears.includes(currentYear) && selectedMonths.has(currentMonth);
+    } else if (isChart) {
+        // I diagramvyn styrs notisen av det valda datumintervallet.
+        const startPeriod = startYear * 12 + startMonth;
+        const endPeriod = endYear * 12 + endMonth;
+        show = currentPeriod >= startPeriod && currentPeriod <= endPeriod;
+    }
+
+    if (!show) {
+        notice.style.display = "none";
+        notice.textContent = "";
+        return;
+    }
+
+    const monthNameRaw = new Intl.DateTimeFormat("sv-SE", { month: "long" }).format(today);
+    const monthName = monthNameRaw.charAt(0).toUpperCase() + monthNameRaw.slice(1);
+
+    notice.innerHTML = `<strong>Notera!</strong> ${monthName} ${currentYear} är ännu inte avslutad. Statistiken för månaden uppdateras löpande och omfattar registrerade besök till och med dagens datum.`;
+    notice.style.display = "block";
 }
 
 function updateTableCursor() {
@@ -1766,6 +2035,7 @@ function syncDates() {
 
     updateDateLabels();
     renderCustomRange();
+    updateCurrentMonthNotice();
 }
 
 function updateDateLabels() {
@@ -1847,6 +2117,8 @@ function updateTable() {
     if (toggle5Years.checked) {
         yearsInScope = yearsInScope.slice(-5);
     }
+
+    visibleTableYears = [...yearsInScope];
 
     const toggleOlder = document.getElementById("toggleOlderData");
     if (historicYears.length === 0) {
@@ -2094,6 +2366,8 @@ function updateTable() {
             cell.classList.add("best-cell");
         }
     });
+
+    updateCurrentMonthNotice();
 }
 
 /* =========================================================
@@ -2364,6 +2638,8 @@ function switchView(viewId, btn) {
 		updateKategoriHint();
 		updateTableCursor();
     }
+
+    updateCurrentMonthNotice();
 }
 
 
@@ -2376,6 +2652,7 @@ toggleVerksamhet.onchange = () => {
     toggleAnlaggning.checked = !toggleVerksamhet.checked;
     updateKategoriVisibility();
     renderCustomRange();
+    updateKategoriHint();
     updateTableCursor();
 };
 
@@ -2384,6 +2661,7 @@ toggleAnlaggning.onchange = () => {
     toggleVerksamhet.checked = !toggleAnlaggning.checked;
     updateKategoriVisibility();
     renderCustomRange();
+    updateKategoriHint();
     updateTableCursor();
 };
 
@@ -2731,50 +3009,125 @@ document.addEventListener("click", closeAllSelects);
 
 
 /* =========================================================
-   INITIERING OCH CSV-LADDNING
-   ========================================================= */
+    INITIERING: HISTORISK CSV + LIVE FIRESTORE
+    ========================================================= */
+
+
+function firestoreDocToBesokRow(doc) {
+  const record = doc.data();
+  if (record.type !== "school" || record.venue !== FIREBASE_VENUE) return null;
+  if (!record.date || record.date < FIREBASE_START_DATE) return null;
+
+  const year = Number(record.year || record.date.slice(0, 4));
+  const monthNumber = Number(record.month || record.date.slice(5, 7));
+  const monthIndex = monthNumber - 1;
+  if (!Number.isInteger(year) || monthIndex < 0 || monthIndex > 11) return null;
+
+  return {
+    år: year,
+    månad: monthNamesShort[monthIndex].toLowerCase(),
+    besöksmål: "kulturenilund",
+    typ: "verksamhet",
+    kategori: firestoreSchoolCategory(record.details?.level),
+    antal: Number(record.metrics?.totalCount || 0)
+  };
+}
+
+function rebuildCombinedVisitRows() {
+  visitRows = [...historicalVisitRows, ...firestoreSchoolRows];
+  if (!historicalDataReady || !firestoreInitialReady) return;
+
+  const nextYears = [...new Set(visitRows.map(r => r.år))].sort((a, b) => b - a);
+  const yearsChanged = nextYears.join(",") !== availableYears.join(",");
+  availableYears = nextYears;
+
+  if (!dataUiInitialized) {
+    currentTableYear = availableYears[0] || new Date().getFullYear();
+    initFFSelect();
+    initDateSelects();
+    document.getElementById("tableView").style.display = "block";
+    document.getElementById("chartView").style.display = "none";
+    document.getElementById("tableView").classList.add("visible");
+    document.querySelector(".app").classList.add("full-width");
+    document.getElementById("dateFilters").style.display = "none";
+    dataUiInitialized = true;
+  } else if (yearsChanged) {
+    initDateSelects();
+  }
+
+  renderCustomRange();
+  updateKategoriHint();
+  updateTableCursor();
+}
+
+function startFirestoreSchoolSubscription() {
+  if (firestoreSchoolUnsubscribe) firestoreSchoolUnsubscribe();
+
+  firestoreSchoolUnsubscribe = db.collection(FIREBASE_COLLECTION)
+    .where("type", "==", "school")
+    .onSnapshot(snapshot => {
+      firestoreSchoolRows = snapshot.docs
+        .map(firestoreDocToBesokRow)
+        .filter(Boolean);
+      firestoreInitialReady = true;
+      rebuildCombinedVisitRows();
+    }, error => {
+      console.error("Kunde inte hämta skoldata från Firestore:", error);
+      firestoreSchoolRows = [];
+      firestoreInitialReady = true;
+      rebuildCombinedVisitRows();
+      showFirebaseLogin("Inloggad, men Firestore-data kunde inte läsas. Kontrollera behörigheten.");
+    });
+}
+
 
 async function loadCSVData() {
-    try {
-        // Hämtar båda filerna live från dina rätta GitHub-adresser
-		const [resBesok, resSkola] = await Promise.all([
-		    fetch("https://kultpub.github.io/site/besoksdata.csv", { cache: "no-store" }),
-		    fetch("https://kultpub.github.io/site/skoldata.csv", { cache: "no-store" })
-		]);
+  try {
+    const [resBesok, resSkola] = await Promise.all([
+      fetch("https://kultpub.github.io/site/besoksdata.csv", { cache: "no-store" }),
+      fetch("https://kultpub.github.io/site/skoldata.csv", { cache: "no-store" })
+    ]);
 
-        const textBesok = await resBesok.text();
-        const textSkola = await resSkola.text();
+    if (!resBesok.ok) throw new Error(`Kunde inte läsa besoksdata.csv (${resBesok.status})`);
+    if (!resSkola.ok) throw new Error(`Kunde inte läsa skoldata.csv (${resSkola.status})`);
 
-        // Parsar filerna med sina respektive logiker
-        const vanligaRader = parseCSV(textBesok);
-        const skolRader = parseSkolCSV(textSkola);
+    const textBesok = await resBesok.text();
+    const textSkola = await resSkola.text();
 
-        // Slår ihop vanlig besöksdata och skoldata
-        visitRows = [...vanligaRader, ...skolRader];
-        
-        if(visitRows.length === 0) return;
+    const vanligaRader = parseCSV(textBesok);
+    const skolRader = parseSkolCSV(textSkola).filter(row =>
+      isHistoricalSchoolMonth(row.år, monthMap[row.månad])
+    );
 
-        // Resten av din initieringskod som bygger filter och tabeller
-        availableYears = [...new Set(visitRows.map(r => r.år))].sort((a, b) => b - a);
-        currentTableYear = availableYears[0] || new Date().getFullYear();
-
-        initFFSelect();
-        initDateSelects();
-
-        document.getElementById("tableView").style.display = "block";
-        document.getElementById("chartView").style.display = "none";
-        document.getElementById("tableView").classList.add("visible");
-        document.querySelector(".app").classList.add("full-width");
-        
-        document.getElementById("dateFilters").style.display = "none";
-
-        renderCustomRange();
-        updateTable();
-
-    } catch (e) {
-        console.error("Fel vid laddning av CSV-data:", e);
-    }
+    historicalVisitRows = [...vanligaRader, ...skolRader];
+    historicalDataReady = true;
+    rebuildCombinedVisitRows();
+  } catch (error) {
+    console.error("Fel vid laddning av historisk CSV-data:", error);
+    historicalVisitRows = [];
+    historicalDataReady = true;
+    rebuildCombinedVisitRows();
+  }
 }
+
+
+document.getElementById("firebaseLoginForm").addEventListener("submit", loginForFirebaseViews);
+
+auth.onAuthStateChanged(user => {
+  if (user) {
+    hideFirebaseLogin();
+    startFirestoreSchoolSubscription();
+  } else {
+    if (firestoreSchoolUnsubscribe) {
+      firestoreSchoolUnsubscribe();
+      firestoreSchoolUnsubscribe = null;
+    }
+    firestoreSchoolRows = [];
+    firestoreInitialReady = false;
+    showFirebaseLogin();
+  }
+});
+
 
 loadCSVData();
 </script>
