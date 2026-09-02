@@ -1462,6 +1462,7 @@ if (FIREBASE_CONFIGURED) {
   db = firebase.firestore();
 }
 const FIREBASE_COLLECTION = "dailyData";
+const VISIT_STATS_COLLECTION = "visitStats";
 const FIREBASE_START_DATE = "2026-09-01";
 const VENUE = "kulturenilund";
 
@@ -2061,7 +2062,15 @@ function openModal(key, entry = null) {
     : key === "other"
       ? (entry ? "Redigera övrig data" : "Registrera övrig data")
       : (entry ? "Redigera " : "Registrera ") + label;
-  document.getElementById("modalBody").innerHTML = builders[key](entry);
+  const modalBody = document.getElementById("modalBody");
+  modalBody.innerHTML = builders[key](entry);
+
+  // Stäng av webbläsarens autocomplete i alla textfält i registreringsmodalerna.
+  // Inloggningsformuläret påverkas inte.
+  modalBody.querySelectorAll('input[type="text"], input:not([type]), textarea').forEach(field => {
+    field.setAttribute("autocomplete", "off");
+  });
+
   document.getElementById("overlay").classList.add("open");
   const modalEl = document.querySelector(".modal");
   if (["tickets", "sales", "cafe"].includes(key)) {
@@ -2411,7 +2420,12 @@ async function confirmDelete() {
     deleteButton.textContent = "Raderar…";
   }
   try {
-    await db.collection(FIREBASE_COLLECTION).doc(String(editingId)).delete();
+    const batch = db.batch();
+    const dailyRef = db.collection(FIREBASE_COLLECTION).doc(String(editingId));
+    const statsRef = db.collection(VISIT_STATS_COLLECTION).doc(String(editingId));
+    batch.delete(dailyRef);
+    batch.delete(statsRef);
+    await batch.commit();
     closeDeleteModal();
     closeModal();
   } catch (error) {
@@ -2549,6 +2563,101 @@ function buildFirebaseRecord(entry, dateStr, docId) {
   }
 
   return record;
+}
+
+// Bygger en avskalad publik statistikpost från den interna dailyData-posten.
+// Endast school, group och other får en motsvarighet i visitStats.
+const VISIT_STATS_ADULT_SCHOOL_LEVELS = new Set([
+  "Vuxenutbildning",
+  "Högskola",
+  "Högskola, universitet",
+  "Lunds universitet",
+  "Campus Helsingborg",
+  "Malmö universitet",
+  "Högskolan Kristianstad",
+  "SLU"
+]);
+
+function addVisitStatCount(target, category, value) {
+  const n = Number(value || 0);
+  if (!n) return;
+  target[category] = (target[category] || 0) + n;
+}
+
+function buildVisitStatsRecord(record) {
+  if (!["school", "group", "other"].includes(record.type)) return null;
+
+  const counts = {};
+  let details = null;
+
+  if (record.type === "school") {
+    const level = String(record.details?.level || "").trim();
+    const schoolCategory = VISIT_STATS_ADULT_SCHOOL_LEVELS.has(level)
+      ? "skola-vuxen"
+      : "skola-barn";
+    addVisitStatCount(counts, schoolCategory, record.metrics?.totalCount);
+
+    // Behövs av den publika skolbesökssidan. Ingen skolnotering följer med.
+    details = {
+      municipality: record.details?.municipality || "",
+      level
+    };
+  }
+
+  if (record.type === "group") {
+    const sourceCounts = record.metrics?.counts || {};
+
+    // Konferens lagras i inmatningssidan som freeAdults, men ska statistikföras som konferens.
+    if (record.category === "Konferens och möte") {
+      addVisitStatCount(counts, "konferens", sourceCounts.freeAdults);
+    } else {
+      addVisitStatCount(counts, "vuxen", sourceCounts.adults);
+      addVisitStatCount(counts, "barn", sourceCounts.children);
+      addVisitStatCount(counts, "fri-vuxen", sourceCounts.freeAdults);
+      addVisitStatCount(counts, "rabatt", sourceCounts.discountAdults);
+    }
+  }
+
+  if (record.type === "other") {
+    const sourceCounts = record.metrics?.counts || {};
+    addVisitStatCount(counts, "vuxen", sourceCounts.adults);
+    addVisitStatCount(counts, "pensionär", sourceCounts.pensioners);
+    addVisitStatCount(counts, "student", sourceCounts.students);
+    addVisitStatCount(counts, "fri-vuxen", sourceCounts.freeAdults);
+    addVisitStatCount(counts, "barn", sourceCounts.children);
+    addVisitStatCount(counts, "medlem", sourceCounts.members);
+  }
+
+  const normalizedTotal = Object.values(counts).reduce((sum, value) => sum + Number(value || 0), 0);
+  const sourceTotal = Number(record.metrics?.totalCount || 0);
+
+  // Stoppa skrivningen om en framtida ändring i registreringsschemat annars skulle tappa besök.
+  if (normalizedTotal !== sourceTotal) {
+    throw new Error(
+      `visitStats stämmer inte med dailyData för ${record.type}/${record.category || ""}: ` +
+      `${normalizedTotal} av ${sourceTotal} besök har mappats.`
+    );
+  }
+
+  const publicRecord = {
+    sourceType: record.type,
+    date: record.date,
+    year: record.year,
+    month: record.month,
+    monthShort: record.monthShort,
+    venue: record.venue,
+    metrics: {
+      totalCount: sourceTotal,
+      counts
+    },
+    metadata: {
+      updatedTs: record.metadata?.updatedTs || new Date().toISOString(),
+      schemaVersion: 1
+    }
+  };
+
+  if (details) publicRecord.details = details;
+  return publicRecord;
 }
 
 function firebaseRecordToEntry(doc) {
@@ -2954,8 +3063,21 @@ async function saveEntry() {
     const docRef = id
       ? db.collection(FIREBASE_COLLECTION).doc(String(id))
       : db.collection(FIREBASE_COLLECTION).doc();
+    const statsRef = db.collection(VISIT_STATS_COLLECTION).doc(docRef.id);
     const record = buildFirebaseRecord(entry, selectedEntryDate, docRef.id);
-    await docRef.set(record);
+    const visitStatsRecord = buildVisitStatsRecord(record);
+
+    // Samma batch gör att intern rådata och publik statistik aldrig kan hamna ur synk.
+    const batch = db.batch();
+    batch.set(docRef, record);
+    if (visitStatsRecord) {
+      batch.set(statsRef, visitStatsRecord);
+    } else {
+      // Säkerhetsstädning: intäkter/dagsrapport ska aldrig ligga i visitStats.
+      batch.delete(statsRef);
+    }
+    await batch.commit();
+
     closeModal();
     if (selectedEntryDate !== selectedDate) subscribeToDate(selectedEntryDate);
   } catch (error) {
