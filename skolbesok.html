@@ -1888,7 +1888,7 @@ const monthNamesShort = [
 ];
 
 /* =========================================================
-   FIREBASE / LIVE SKOLDATA FRÅN 2026-09-01
+   FIREBASE / PUBLIK SKOLSTATISTIK FRÅN 2026-09-01
    ========================================================= */
 const firebaseConfig = {
   apiKey: "AIzaSyBxGc4jxkayGoOWDjeVwJqCJJm-536FUkI",
@@ -1899,7 +1899,7 @@ const firebaseConfig = {
   appId: "1:306416395027:web:0211f420e2ec773d8970e6"
 };
 
-const FIREBASE_COLLECTION = "dailyData";
+const VISIT_STATS_COLLECTION = "visitStats";
 const FIREBASE_START_DATE = "2026-09-01";
 const FIREBASE_VENUE = "kulturenilund";
 const FIREBASE_START_YEAR = 2026;
@@ -1915,23 +1915,6 @@ let historicalDataReady = false;
 let firestoreInitialReady = false;
 let dataUiInitialized = false;
 let latestAvailablePeriod = null;
-
-const FIRESTORE_ADULT_SCHOOL_LEVELS = new Set([
-  "Vuxenutbildning",
-  "Högskola",
-  "Högskola, universitet",
-  "Lunds universitet",
-  "Campus Helsingborg",
-  "Malmö universitet",
-  "Högskolan Kristianstad",
-  "SLU"
-]);
-
-function firestoreSchoolCategory(level) {
-  return FIRESTORE_ADULT_SCHOOL_LEVELS.has(String(level || "").trim())
-    ? "skola-vuxen"
-    : "skola-barn";
-}
 
 function isHistoricalSchoolMonth(year, monthIndex) {
   return year < FIREBASE_START_YEAR ||
@@ -3437,13 +3420,13 @@ document.addEventListener("click", closeAllSelects);
 
 
 /* =========================================================
-    INITIERING: HISTORISK CSV + LIVE FIRESTORE
+    INITIERING: HISTORISK CSV + PUBLIK LIVE-DATA I visitStats
     ========================================================= */
 
 
 function firestoreDocToSkolbesokRow(doc) {
   const record = doc.data();
-  if (record.type !== "school" || record.venue !== FIREBASE_VENUE) return null;
+  if (record.sourceType !== "school" || record.venue !== FIREBASE_VENUE) return null;
   if (!record.date || record.date < FIREBASE_START_DATE) return null;
 
   const year = Number(record.year || record.date.slice(0, 4));
@@ -3452,19 +3435,46 @@ function firestoreDocToSkolbesokRow(doc) {
   if (!Number.isInteger(year) || monthIndex < 0 || monthIndex > 11) return null;
 
   const rawLevel = String(record.details?.level || "").trim();
+  const counts = record.metrics?.counts || {};
+  const childCount = Number(counts["skola-barn"] || 0);
+  const adultCount = Number(counts["skola-vuxen"] || 0);
+
+  let schoolCategory = "";
+  let schoolCount = 0;
+
+  if (childCount > 0 && adultCount === 0) {
+    schoolCategory = "skola-barn";
+    schoolCount = childCount;
+  } else if (adultCount > 0 && childCount === 0) {
+    schoolCategory = "skola-vuxen";
+    schoolCount = adultCount;
+  } else {
+    console.warn("Ogiltig skolpost i visitStats:", doc.id, record);
+    return null;
+  }
+
+  const sourceTotal = Number(record.metrics?.totalCount || 0);
+  if (sourceTotal !== schoolCount) {
+    console.warn(
+      "Skolpostens totalCount stämmer inte med normaliserad kategori:",
+      doc.id,
+      { sourceTotal, schoolCount }
+    );
+  }
+
   return {
     år: year,
     månad: monthNamesShort[monthIndex],
     kommun: String(record.details?.municipality || "Övrigt").trim() || "Övrigt",
     skolnivå: normaliseSchoolLevel(rawLevel),
-    skolkategori: firestoreSchoolCategory(rawLevel),
-    antal: Number(record.metrics?.totalCount || 0)
+    skolkategori: schoolCategory,
+    antal: schoolCount
   };
 }
 
 function rebuildCombinedVisitRows() {
   // Historiken ska fungera helt oberoende av Firestore.
-  // Firestore-rader läggs ovanpå så snart de finns tillgängliga.
+  // visitStats-rader läggs ovanpå så snart de finns tillgängliga.
   visitRows = [...historicalVisitRows, ...firestoreSchoolRows];
   if (!historicalDataReady || !firestoreInitialReady) return;
 
@@ -3495,7 +3505,7 @@ function rebuildCombinedVisitRows() {
     document.getElementById("mapView").classList.add("visible");
     dataUiInitialized = true;
   } else {
-    // Om Firestore tillför en ny senaste månad (t.ex. aug -> sep) och
+    // Om visitStats tillför en ny senaste månad (t.ex. aug -> sep) och
     // användaren fortfarande står på den tidigare automatiska slutmånaden,
     // flyttas datumfiltret fram. Manuella äldre urval lämnas däremot orörda.
     if (yearsChanged || (latestPeriodChanged && wasFollowingLatestPeriod)) {
@@ -3510,8 +3520,8 @@ function rebuildCombinedVisitRows() {
 function startFirestoreSchoolSubscription() {
   if (firestoreSchoolUnsubscribe) firestoreSchoolUnsubscribe();
 
-  firestoreSchoolUnsubscribe = db.collection(FIREBASE_COLLECTION)
-    .where("type", "==", "school")
+  firestoreSchoolUnsubscribe = db.collection(VISIT_STATS_COLLECTION)
+    .where("sourceType", "==", "school")
     .onSnapshot(snapshot => {
       firestoreSchoolRows = snapshot.docs
         .map(firestoreDocToSkolbesokRow)
@@ -3519,7 +3529,7 @@ function startFirestoreSchoolSubscription() {
       firestoreInitialReady = true;
       rebuildCombinedVisitRows();
     }, error => {
-      console.error("Kunde inte hämta skoldata från Firestore:", error);
+      console.error("Kunde inte hämta skoldata från visitStats:", error);
       firestoreSchoolRows = [];
       firestoreInitialReady = true;
       rebuildCombinedVisitRows();
