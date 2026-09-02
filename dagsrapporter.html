@@ -1215,17 +1215,37 @@ function openSharedReportIfAvailable() {
 }
 
 function subscribeToFirebaseReports() {
-  db.collection(DAILY_REPORTS_COLLECTION)
-    .where("date", ">=", FIREBASE_START_DATE)
-    .onSnapshot(snapshot => {
-      firebaseReports = snapshot.docs
-        .map(firebaseDocToReport)
-        .filter(Boolean);
-      rebuildAllReports();
-    }, error => {
-      console.error("Kunde inte hämta nya dagsrapporter från Firebase:", error);
-      // Historiska CSV-rapporter fortsätter fungera även om Firebase tillfälligt misslyckas.
-    });
+  // Första Firebase-snapshoten ska vara inläst innan sidan renderas första gången.
+  // Därefter fortsätter samma listener att uppdatera sidan live.
+  let initialSnapshotHandled = false;
+
+  return new Promise(resolve => {
+    db.collection(DAILY_REPORTS_COLLECTION)
+      .where("date", ">=", FIREBASE_START_DATE)
+      .onSnapshot(snapshot => {
+        firebaseReports = snapshot.docs
+          .map(firebaseDocToReport)
+          .filter(Boolean);
+
+        if (!initialSnapshotHandled) {
+          initialSnapshotHandled = true;
+          resolve();
+          return;
+        }
+
+        // Endast senare Firebase-förändringar renderas direkt.
+        rebuildAllReports();
+      }, error => {
+        console.error("Kunde inte hämta nya dagsrapporter från Firebase:", error);
+        firebaseReports = [];
+
+        // Låt CSV-arkivet visas även om den första Firebase-hämtningen misslyckas.
+        if (!initialSnapshotHandled) {
+          initialSnapshotHandled = true;
+          resolve();
+        }
+      });
+  });
 }
 
 function escapeHTML(str) {
@@ -1303,22 +1323,29 @@ async function loadData() {
   // återställa tidigare formulärstatus efter omladdning/back-navigation.
   document.getElementById("toggleSortOrder").checked = false;
 
-  try {
-    const response = await fetch(`${csvUrl}?v=${Date.now()}`);
-    if (!response.ok) throw new Error("Kunde inte läsa CSV-arkivet.");
+  // CSV och Firebase hämtas parallellt, men INGET renderas förrän båda
+  // första hämtningarna är klara. Användaren ska aldrig först se CSV-arkivet
+  // och därefter få Firebase-posterna inskjutna en sekund senare.
+  const csvPromise = (async () => {
+    try {
+      const response = await fetch(`${csvUrl}?v=${Date.now()}`);
+      if (!response.ok) throw new Error("Kunde inte läsa CSV-arkivet.");
 
-    const csvText = await response.text();
-    historicalReports = parseCSV(csvText)
-      .filter(report => report.date < FIREBASE_START_DATE);
-  } catch (error) {
-    console.error("Kunde inte hämta historiska dagsrapporter:", error);
-    historicalReports = [];
-  }
+      const csvText = await response.text();
+      historicalReports = parseCSV(csvText)
+        .filter(report => report.date < FIREBASE_START_DATE);
+    } catch (error) {
+      console.error("Kunde inte hämta historiska dagsrapporter:", error);
+      historicalReports = [];
+    }
+  })();
 
-  // Bygg först det material som finns och starta därefter liveflödet.
-  // Firebase får alltså fortsätta fungera även om CSV-källan tillfälligt fallerar.
+  const firebasePromise = subscribeToFirebaseReports();
+
+  await Promise.all([csvPromise, firebasePromise]);
+
+  // Första renderingen sker exakt en gång, med det kompletta materialet.
   rebuildAllReports();
-  subscribeToFirebaseReports();
 }
 
 function setDefaultDateRange() {
