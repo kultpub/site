@@ -1463,6 +1463,7 @@ if (FIREBASE_CONFIGURED) {
 }
 const FIREBASE_COLLECTION = "dailyData";
 const VISIT_STATS_COLLECTION = "visitStats";
+const DAILY_REPORTS_COLLECTION = "dailyReports";
 const FIREBASE_START_DATE = "2026-09-01";
 const VENUE = "kulturenilund";
 
@@ -2423,8 +2424,10 @@ async function confirmDelete() {
     const batch = db.batch();
     const dailyRef = db.collection(FIREBASE_COLLECTION).doc(String(editingId));
     const statsRef = db.collection(VISIT_STATS_COLLECTION).doc(String(editingId));
+    const reportRef = db.collection(DAILY_REPORTS_COLLECTION).doc(String(editingId));
     batch.delete(dailyRef);
     batch.delete(statsRef);
+    batch.delete(reportRef);
     await batch.commit();
     closeDeleteModal();
     closeModal();
@@ -2658,6 +2661,43 @@ function buildVisitStatsRecord(record) {
 
   if (details) publicRecord.details = details;
   return publicRecord;
+}
+
+// Bygger den publika dagsrapportpost som dagsrapportsidan får läsa.
+// Endast dagsrapporter får en motsvarighet i dailyReports.
+function buildDailyReportPublicRecord(record) {
+  if (record.type !== "dailyReport") return null;
+
+  const report = String(record.details?.report || "").trim();
+  if (!report) {
+    throw new Error("Dagsrapporten saknar rapporttext och kan inte publiceras.");
+  }
+
+  const viewings = Array.isArray(record.details?.viewings)
+    ? record.details.viewings
+        .map(viewing => ({
+          name: String(viewing?.name || "").trim(),
+          participants: Number(viewing?.participants || 0)
+        }))
+        .filter(viewing => viewing.name && Number.isInteger(viewing.participants) && viewing.participants > 0)
+    : [];
+
+  return {
+    sourceType: "dailyReport",
+    date: record.date,
+    year: record.year,
+    month: record.month,
+    monthShort: record.monthShort,
+    venue: record.venue,
+    details: {
+      report,
+      viewings
+    },
+    metadata: {
+      updatedTs: record.metadata?.updatedTs || new Date().toISOString(),
+      schemaVersion: 1
+    }
+  };
 }
 
 function firebaseRecordToEntry(doc) {
@@ -3064,10 +3104,12 @@ async function saveEntry() {
       ? db.collection(FIREBASE_COLLECTION).doc(String(id))
       : db.collection(FIREBASE_COLLECTION).doc();
     const statsRef = db.collection(VISIT_STATS_COLLECTION).doc(docRef.id);
+    const reportRef = db.collection(DAILY_REPORTS_COLLECTION).doc(docRef.id);
     const record = buildFirebaseRecord(entry, selectedEntryDate, docRef.id);
     const visitStatsRecord = buildVisitStatsRecord(record);
+    const dailyReportPublicRecord = buildDailyReportPublicRecord(record);
 
-    // Samma batch gör att intern rådata och publik statistik aldrig kan hamna ur synk.
+    // Samma batch håller intern rådata och respektive publika samling i synk.
     const batch = db.batch();
     batch.set(docRef, record);
     if (visitStatsRecord) {
@@ -3075,6 +3117,12 @@ async function saveEntry() {
     } else {
       // Säkerhetsstädning: intäkter/dagsrapport ska aldrig ligga i visitStats.
       batch.delete(statsRef);
+    }
+    if (dailyReportPublicRecord) {
+      batch.set(reportRef, dailyReportPublicRecord);
+    } else {
+      // Säkerhetsstädning: endast dagsrapporter ska ligga i dailyReports.
+      batch.delete(reportRef);
     }
     await batch.commit();
 
