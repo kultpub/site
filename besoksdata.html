@@ -1344,7 +1344,7 @@ const KATEGORI_MAP = {
 const KATEGORI_OPTIONS = Object.keys(KATEGORI_MAP);
 
 /* =========================================================
-   FIREBASE / LIVE SKOLDATA FRÅN 2026-09-01
+   FIREBASE / PUBLIK BESÖKSSTATISTIK FRÅN 2026-09-01
    ========================================================= */
 const firebaseConfig = {
   apiKey: "AIzaSyBxGc4jxkayGoOWDjeVwJqCJJm-536FUkI",
@@ -1355,7 +1355,7 @@ const firebaseConfig = {
   appId: "1:306416395027:web:0211f420e2ec773d8970e6"
 };
 
-const FIREBASE_COLLECTION = "dailyData";
+const VISIT_STATS_COLLECTION = "visitStats";
 const FIREBASE_START_DATE = "2026-09-01";
 const FIREBASE_VENUE = "kulturenilund";
 const FIREBASE_START_YEAR = 2026;
@@ -1365,28 +1365,11 @@ if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 let historicalVisitRows = [];
-let firestoreSchoolRows = [];
-let firestoreSchoolUnsubscribe = null;
+let firestoreVisitRows = [];
+let firestoreVisitUnsubscribe = null;
 let historicalDataReady = false;
 let firestoreInitialReady = false;
 let dataUiInitialized = false;
-
-const FIRESTORE_ADULT_SCHOOL_LEVELS = new Set([
-  "Vuxenutbildning",
-  "Högskola",
-  "Högskola, universitet",
-  "Lunds universitet",
-  "Campus Helsingborg",
-  "Malmö universitet",
-  "Högskolan Kristianstad",
-  "SLU"
-]);
-
-function firestoreSchoolCategory(level) {
-  return FIRESTORE_ADULT_SCHOOL_LEVELS.has(String(level || "").trim())
-    ? "skola-vuxen"
-    : "skola-barn";
-}
 
 function isHistoricalSchoolMonth(year, monthIndex) {
   return year < FIREBASE_START_YEAR ||
@@ -2853,32 +2836,78 @@ document.addEventListener("click", closeAllSelects);
 
 
 /* =========================================================
-    INITIERING: HISTORISK CSV + LIVE FIRESTORE
+    INITIERING: HISTORISK CSV + PUBLIK LIVE-DATA I visitStats
     ========================================================= */
 
 
-function firestoreDocToBesokRow(doc) {
+function firestoreVisitStatsDocToBesokRows(doc) {
   const record = doc.data();
-  if (record.type !== "school" || record.venue !== FIREBASE_VENUE) return null;
-  if (!record.date || record.date < FIREBASE_START_DATE) return null;
+
+  if (!["school", "group", "other"].includes(record.sourceType)) return [];
+  if (record.venue !== FIREBASE_VENUE) return [];
+  if (!record.date || record.date < FIREBASE_START_DATE) return [];
 
   const year = Number(record.year || record.date.slice(0, 4));
   const monthNumber = Number(record.month || record.date.slice(5, 7));
   const monthIndex = monthNumber - 1;
-  if (!Number.isInteger(year) || monthIndex < 0 || monthIndex > 11) return null;
 
-  return {
-    år: year,
-    månad: monthNamesShort[monthIndex].toLowerCase(),
-    besöksmål: "kulturenilund",
-    typ: "verksamhet",
-    kategori: firestoreSchoolCategory(record.details?.level),
-    antal: Number(record.metrics?.totalCount || 0)
-  };
+  if (!Number.isInteger(year) || monthIndex < 0 || monthIndex > 11) {
+    console.warn("Ogiltigt år/månad i visitStats:", doc.id, record);
+    return [];
+  }
+
+  const allowedCategories = new Set([
+    "vuxen",
+    "barn",
+    "medlem",
+    "pensionär",
+    "student",
+    "rabatt",
+    "fri-vuxen",
+    "konferens",
+    "skola-barn",
+    "skola-vuxen"
+  ]);
+
+  const rows = [];
+  const counts = record.metrics?.counts || {};
+
+  Object.entries(counts).forEach(([category, value]) => {
+    const antal = Number(value || 0);
+
+    if (!allowedCategories.has(category)) {
+      console.warn("Okänd kategori i visitStats:", doc.id, category);
+      return;
+    }
+
+    if (!Number.isFinite(antal) || antal <= 0) return;
+
+    rows.push({
+      år: year,
+      månad: monthNamesShort[monthIndex].toLowerCase(),
+      besöksmål: FIREBASE_VENUE,
+      typ: "verksamhet",
+      kategori: category,
+      antal
+    });
+  });
+
+  const normalizedTotal = rows.reduce((sum, row) => sum + row.antal, 0);
+  const sourceTotal = Number(record.metrics?.totalCount || 0);
+
+  if (Number.isFinite(sourceTotal) && normalizedTotal !== sourceTotal) {
+    console.warn(
+      "visitStats-totalen stämmer inte med kategorisumman:",
+      doc.id,
+      { normalizedTotal, sourceTotal }
+    );
+  }
+
+  return rows;
 }
 
 function rebuildCombinedVisitRows() {
-  visitRows = [...historicalVisitRows, ...firestoreSchoolRows];
+  visitRows = [...historicalVisitRows, ...firestoreVisitRows];
   if (!historicalDataReady || !firestoreInitialReady) return;
 
   const nextYears = [...new Set(visitRows.map(r => r.år))].sort((a, b) => b - a);
@@ -2904,20 +2933,20 @@ function rebuildCombinedVisitRows() {
   updateTableCursor();
 }
 
-function startFirestoreSchoolSubscription() {
-  if (firestoreSchoolUnsubscribe) firestoreSchoolUnsubscribe();
+function startFirestoreVisitStatsSubscription() {
+  if (firestoreVisitUnsubscribe) firestoreVisitUnsubscribe();
 
-  firestoreSchoolUnsubscribe = db.collection(FIREBASE_COLLECTION)
-    .where("type", "==", "school")
+  firestoreVisitUnsubscribe = db.collection(VISIT_STATS_COLLECTION)
+    .where("date", ">=", FIREBASE_START_DATE)
     .onSnapshot(snapshot => {
-      firestoreSchoolRows = snapshot.docs
-        .map(firestoreDocToBesokRow)
-        .filter(Boolean);
+      firestoreVisitRows = snapshot.docs
+        .flatMap(firestoreVisitStatsDocToBesokRows);
+
       firestoreInitialReady = true;
       rebuildCombinedVisitRows();
     }, error => {
-      console.error("Kunde inte hämta skoldata från Firestore:", error);
-      firestoreSchoolRows = [];
+      console.error("Kunde inte hämta visitStats från Firestore:", error);
+      firestoreVisitRows = [];
       firestoreInitialReady = true;
       rebuildCombinedVisitRows();
     });
@@ -2953,7 +2982,7 @@ async function loadCSVData() {
   }
 }
 
-startFirestoreSchoolSubscription();
+startFirestoreVisitStatsSubscription();
 loadCSVData();
 </script>
 
