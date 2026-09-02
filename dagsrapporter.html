@@ -1063,24 +1063,53 @@ h1 {
   </div>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore-compat.js"></script>
+
 <script>
 /* =========================================================
    1. GLOBAL DATA OCH KONSTANTER
    ========================================================= */
 
 let allReports = [];
+let historicalReports = [];
+let firebaseReports = [];
 let currentFilteredReports = [];
 let startYear, startMonth, endYear, endMonth;
 let availableYears = [];
 let currentOpenReportDate = null;
 let currentSearchTerms = [];
+let filtersInitialized = false;
+let sharedReportOpened = false;
 
 const csvUrl = "https://kultpub.github.io/site/dagsrapporter.csv";
+const FIREBASE_START_DATE = "2026-09-01";
+const DAILY_REPORTS_COLLECTION = "dailyReports";
+const VENUE = "kulturenilund";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBxGc4jxkayGoOWDjeVwJqCJJm-536FUkI",
+  authDomain: "kulturen-dagsdata.firebaseapp.com",
+  projectId: "kulturen-dagsdata",
+  storageBucket: "kulturen-dagsdata.firebasestorage.app",
+  messagingSenderId: "306416395027",
+  appId: "1:306416395027:web:0211f420e2ec773d8970e6"
+};
+
+if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 const dayNames = ["sön", "mån", "tis", "ons", "tor", "fre", "lör"];
 const monthNamesShort = [
   "Jan", "Feb", "Mar", "Apr", "Maj", "Jun",
   "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"
 ];
+
+// En enda sorteringsregel för hela arkivet. ISO-datum (YYYY-MM-DD)
+// kan jämföras som text, så ordningen i CSV/Firebase spelar ingen roll.
+function compareReportsByDate(a, b, oldestFirst = false) {
+  const cmp = String(a.date).localeCompare(String(b.date));
+  return oldestFirst ? cmp : -cmp;
+}
 
 
 /* =========================================================
@@ -1101,13 +1130,102 @@ function parseCSV(text) {
       const date = line.substring(0, index).trim();
       const reportText = line.substring(index + 1).trim();
 
-      if (date && reportText) {
-        rows.push({ date, text: reportText });
+      if (/^\d{4}-\d{2}-\d{2}$/.test(date) && reportText) {
+        rows.push({ date, text: reportText, source: "csv" });
       }
     }
   }
 
   return rows;
+}
+
+function formatFirebaseReportText(record) {
+  const report = String(record.details?.report || "").trim();
+  const viewings = Array.isArray(record.details?.viewings)
+    ? record.details.viewings
+        .map(viewing => ({
+          name: String(viewing?.name || "").trim(),
+          participants: Number(viewing?.participants || 0)
+        }))
+        .filter(viewing => viewing.name && Number.isInteger(viewing.participants) && viewing.participants > 0)
+    : [];
+
+  if (!viewings.length) return report;
+
+  const total = viewings.reduce((sum, viewing) => sum + viewing.participants, 0);
+  const rows = viewings.map(viewing =>
+    `${viewing.name}, antal deltagare: ${viewing.participants}.`
+  );
+
+  return [
+    report,
+    "",
+    "Dagens programvisningar:",
+    ...rows,
+    `Totalt antal deltagare i programvisningar: ${total}.`
+  ].join("\n");
+}
+
+function firebaseDocToReport(doc) {
+  const record = doc.data();
+  const date = String(record.date || "");
+
+  if (record.sourceType !== "dailyReport") return null;
+  if (record.venue !== VENUE) return null;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || date < FIREBASE_START_DATE) return null;
+
+  const text = formatFirebaseReportText(record);
+  if (!text) return null;
+
+  return { date, text, source: "firebase", id: doc.id };
+}
+
+function rebuildAllReports() {
+  const byDate = new Map();
+
+  historicalReports.forEach(report => {
+    if (report.date < FIREBASE_START_DATE) byDate.set(report.date, report);
+  });
+
+  // Firebase är källa från och med 2026-09-01 och vinner vid eventuell datumkrock.
+  firebaseReports.forEach(report => byDate.set(report.date, report));
+
+  allReports = [...byDate.values()].sort((a, b) => compareReportsByDate(a, b, false));
+
+  if (!filtersInitialized) {
+    initCustomFilters();
+    filtersInitialized = true;
+  } else {
+    render();
+  }
+
+  openSharedReportIfAvailable();
+}
+
+function openSharedReportIfAvailable() {
+  if (sharedReportOpened) return;
+  const sharedDate = new URLSearchParams(window.location.search).get("date");
+  if (!sharedDate) return;
+
+  const reportToOpen = allReports.find(report => report.date === sharedDate);
+  if (reportToOpen) {
+    sharedReportOpened = true;
+    openModal(reportToOpen);
+  }
+}
+
+function subscribeToFirebaseReports() {
+  db.collection(DAILY_REPORTS_COLLECTION)
+    .where("date", ">=", FIREBASE_START_DATE)
+    .onSnapshot(snapshot => {
+      firebaseReports = snapshot.docs
+        .map(firebaseDocToReport)
+        .filter(Boolean);
+      rebuildAllReports();
+    }, error => {
+      console.error("Kunde inte hämta nya dagsrapporter från Firebase:", error);
+      // Historiska CSV-rapporter fortsätter fungera även om Firebase tillfälligt misslyckas.
+    });
 }
 
 function escapeHTML(str) {
@@ -1181,29 +1299,26 @@ function updateHeaderCount(count, rawSearch = "") {
    ========================================================= */
 
 async function loadData() {
+  // Säkerställ sidans verkliga default även om webbläsaren försöker
+  // återställa tidigare formulärstatus efter omladdning/back-navigation.
+  document.getElementById("toggleSortOrder").checked = false;
+
   try {
     const response = await fetch(`${csvUrl}?v=${Date.now()}`);
-    if (!response.ok) throw new Error("Kunde inte läsa filen.");
+    if (!response.ok) throw new Error("Kunde inte läsa CSV-arkivet.");
 
     const csvText = await response.text();
-    allReports = parseCSV(csvText);
-    allReports.sort((a, b) => b.date.localeCompare(a.date));
-
-    initCustomFilters();
-    render();
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const sharedDate = urlParams.get("date");
-
-    if (sharedDate) {
-      const reportToOpen = allReports.find(r => r.date === sharedDate);
-      if (reportToOpen) openModal(reportToOpen);
-    }
+    historicalReports = parseCSV(csvText)
+      .filter(report => report.date < FIREBASE_START_DATE);
   } catch (error) {
-    console.error(error);
-    document.getElementById("reportList").innerHTML =
-      `<div class="no-results">Fel vid hämtning av arkivet.</div>`;
+    console.error("Kunde inte hämta historiska dagsrapporter:", error);
+    historicalReports = [];
   }
+
+  // Bygg först det material som finns och starta därefter liveflödet.
+  // Firebase får alltså fortsätta fungera även om CSV-källan tillfälligt fallerar.
+  rebuildAllReports();
+  subscribeToFirebaseReports();
 }
 
 function setDefaultDateRange() {
@@ -1377,7 +1492,7 @@ function render() {
   const clearSearch = document.getElementById("clearSearch");
   const listContainer = document.getElementById("reportList");
 
-  if (!searchInput || !clearSearch || !listContainer || !allReports.length) return;
+  if (!searchInput || !clearSearch || !listContainer) return;
 
   const rawSearch = searchInput.value.toLowerCase().trim();
   const searchTerms = getSearchTerms(rawSearch);
@@ -1403,10 +1518,9 @@ function render() {
 	return matchesSearch && (searchAll && searchTerms.length > 0 ? true : matchesDate);
   });
 
-  filtered.sort((a, b) => sortOldestFirst
-    ? a.date.localeCompare(b.date)
-    : b.date.localeCompare(a.date)
-  );
+  // Sortera alltid explicit efter datum efter filtrering.
+  // Därmed påverkar varken CSV-radordning eller Firestores leveransordning resultatet.
+  filtered.sort((a, b) => compareReportsByDate(a, b, sortOldestFirst));
 
   currentFilteredReports = filtered;
   updateHeaderCount(filtered.length, rawSearch);
@@ -1420,13 +1534,14 @@ function render() {
   }
 
   if (filtered.length === 0) {
-	listContainer.innerHTML = `
-	<div class="no-results">
-		<i class="fa-solid fa-magnifying-glass"></i>
-		<div>Inga träffar hittades</div>
-		<small>Prova att ändra sökord eller datumintervall.</small>
-	</div>
-	`;
+    const hasAnyReports = allReports.length > 0;
+    listContainer.innerHTML = `
+    <div class="no-results">
+      <i class="fa-solid ${hasAnyReports ? "fa-magnifying-glass" : "fa-regular fa-file-lines"}"></i>
+      <div>${hasAnyReports ? "Inga träffar hittades" : "Inga dagsrapporter tillgängliga"}</div>
+      <small>${hasAnyReports ? "Prova att ändra sökord eller datumintervall." : "Arkivet innehåller ännu inga rapporter för vald period."}</small>
+    </div>
+    `;
     return;
   }
 
