@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Gruppbesök</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg: #f8f9fa;
+  --surface: #fff;
+  --surface2: #f1f3f5;
+  --text: #1a1a1a;
+  --muted: #6c757d;
+  --border: #e9ecef;
+  --border2: #dee2e6;
+  --accent: #7c4b2a;
+  --accent-light: #fdf1e8;
+  --green: #2b8a3e;
+  --green-bg: #ebfbee;
+  --orange: #c56a00;
+  --orange-bg: #fff4e6;
+  --blue: #1971c2;
+  --blue-bg: #e7f5ff;
+  --danger: #c92a2a;
+  --radius: 14px;
+  --shadow: 0 4px 12px rgba(0,0,0,.055);
+}
+
+* { box-sizing: border-box; }
+html { scrollbar-gutter: stable; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+button, input, select { font: inherit; }
+
+.page {
+  width: min(1540px, calc(100vw - 40px));
+  margin: 0 auto;
+  padding: 34px 0 64px;
+}
+
+.topbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 22px;
+}
+.kicker {
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin-bottom: 7px;
+}
+h1 {
+  margin: 0;
+  font-size: clamp(30px, 3.4vw, 44px);
+  line-height: 1;
+  letter-spacing: -.04em;
+}
+.subtitle {
+  margin-top: 9px;
+  color: var(--muted);
+  font-size: 14px;
+}
+.top-actions { display: flex; gap: 10px; align-items: center; }
+.btn {
+  border: 1px solid var(--border2);
+  border-radius: 30px;
+  background: var(--surface);
+  color: var(--text);
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,.035);
+}
+.btn:hover { border-color: #adb5bd; background: #f8f9fa; }
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(150px, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.summary-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 17px 18px;
+  box-shadow: var(--shadow);
+}
+.summary-label {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .055em;
+  text-transform: uppercase;
+  margin-bottom: 7px;
+}
+.summary-value { font-size: 26px; line-height: 1; font-weight: 700; letter-spacing: -.03em; }
+.summary-note { margin-top: 6px; color: var(--muted); font-size: 12px; }
+
+.filters {
+  display: grid;
+  grid-template-columns: minmax(260px, 1.5fr) 150px 150px minmax(230px, 1fr) 170px auto;
+  gap: 10px;
+  align-items: end;
+  padding: 16px;
+  margin-bottom: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.field { min-width: 0; }
+.field > label {
+  display: block;
+  margin: 0 0 6px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.field input,
+.field select {
+  width: 100%;
+  height: 40px;
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  background: #f8f9fa;
+  color: var(--text);
+  padding: 0 11px;
+  outline: none;
+}
+.field input:focus,
+.field select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); background: #fff; }
+.toggle-wrap { height: 40px; display: flex; align-items: center; }
+.field .toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #444;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.toggle input { display: none; }
+.toggle-track {
+  display: inline-block;
+  flex: 0 0 42px;
+  width: 42px;
+  height: 24px;
+  border: 1px solid #b9c0c7;
+  border-radius: 999px;
+  background: #ced4da;
+  position: relative;
+  transition: background .16s, border-color .16s;
+}
+.toggle-track::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,.22);
+  transition: transform .16s;
+}
+.toggle input:checked + .toggle-track {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.toggle input:checked + .toggle-track::after { transform: translateX(18px); }
+
+.table-shell {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.table-scroller { overflow: auto; max-height: calc(100vh - 345px); min-height: 360px; }
+.table {
+  min-width: 1280px;
+  width: 100%;
+}
+.table-head,
+.data-row {
+  display: grid;
+  grid-template-columns: 112px minmax(220px, 1.25fr) minmax(260px, 1.35fr) 78px minmax(175px, .9fr) minmax(175px, .9fr) minmax(260px, 1.45fr);
+  align-items: center;
+}
+.table-head {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: #f1f3f5;
+  border-bottom: 1px solid var(--border2);
+  color: #555;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+.table-head > div { padding: 12px 14px; }
+.data-row {
+  min-height: 72px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background .12s ease;
+}
+.data-row:last-child { border-bottom: 0; }
+.data-row:hover { background: #fff9db; }
+.cell { padding: 12px 14px; min-width: 0; }
+.date-main { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600; }
+.date-sub { margin-top: 3px; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .04em; }
+.group-title { font-size: 14px; font-weight: 700; line-height: 1.35; }
+.count-badges { display: flex; flex-wrap: wrap; gap: 5px; }
+.badge {
+  display: inline-flex; align-items: center; gap: 4px; min-height: 25px; padding: 4px 8px; border-radius: 999px; background: var(--surface2); color: #495057; font-size: 11px; font-weight: 700; white-space: nowrap;
+}
+.badge strong { color: #111; }
+.badge.invoice { background: var(--orange-bg); color: var(--orange); }
+.badge.direct { background: var(--green-bg); color: var(--green); }
+.badge.viewing { background: var(--blue-bg); color: var(--blue); }
+.total { text-align: right; font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.payment-lines { display: grid; gap: 4px; }
+.payment-line { font-size: 12px; line-height: 1.35; }
+.payment-line .label { color: var(--muted); }
+.note {
+  color: #343a40;
+  font-size: 13px;
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.muted { color: #adb5bd; }
+.empty {
+  min-height: 330px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 30px;
+  color: var(--muted);
+  font-size: 15px;
+}
+.statusbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 4px 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* Login */
+.auth-overlay {
+  position: fixed; inset: 0; z-index: 1200; display: none; align-items: center; justify-content: center; padding: 20px; background: rgba(20,20,20,.52); backdrop-filter: blur(7px);
+}
+.auth-overlay.open { display: flex; }
+.auth-modal {
+  width: min(430px, 96vw); background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 30px; box-shadow: 0 25px 60px rgba(0,0,0,.25);
+}
+.auth-kicker { color: var(--accent); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 7px; }
+.auth-modal h2 { margin: 0 0 6px; font-size: 24px; letter-spacing: -.02em; }
+.auth-intro { margin: 0 0 20px; color: var(--muted); font-size: 14px; line-height: 1.5; }
+.auth-modal label { display: block; margin: 13px 0 6px; color: var(--muted); font-size: 11px; font-weight: 700; text-transform: uppercase; }
+.auth-modal input { width: 100%; height: 42px; border: 1px solid var(--border2); border-radius: 7px; padding: 0 11px; }
+.auth-actions { display: flex; justify-content: flex-end; margin-top: 20px; }
+.auth-status { min-height: 18px; margin-top: 10px; color: var(--danger); font-size: 12px; }
+
+/* Detail modal */
+.detail-overlay {
+  position: fixed; inset: 0; z-index: 1000; display: none; align-items: center; justify-content: center; padding: 22px; background: rgba(20,20,20,.42); backdrop-filter: blur(4px);
+}
+.detail-overlay.open { display: flex; }
+.detail-modal {
+  width: min(760px, 96vw); max-height: 88vh; overflow: auto; background: #fff; border-radius: 16px; padding: 28px; box-shadow: 0 25px 60px rgba(0,0,0,.24); position: relative;
+}
+/* Samma stängningsknapp som i övriga interna sidor */
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font-size: 0;
+  line-height: 1;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modal-close::before,
+.modal-close::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 2px;
+  background-color: var(--text);
+  border-radius: 2px;
+}
+
+.modal-close::before { transform: rotate(45deg); }
+.modal-close::after  { transform: rotate(-45deg); }
+
+.modal-close:hover {
+  background-color: var(--danger);
+  border-color: var(--danger);
+  transform: rotate(90deg);
+}
+
+.modal-close:hover::before,
+.modal-close:hover::after {
+  background-color: #fff;
+}
+.detail-date { color: var(--accent); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
+.detail-modal h2 { margin: 0 44px 20px 0; font-size: 25px; letter-spacing: -.025em; }
+.detail-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+.detail-box { background: #f8f9fa; border: 1px solid var(--border); border-radius: 10px; padding: 13px 14px; }
+.detail-box.full { grid-column: 1 / -1; }
+.detail-label { color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; margin-bottom: 5px; }
+.detail-value { font-size: 14px; line-height: 1.55; }
+
+@media (max-width: 1050px) {
+  .filters { grid-template-columns: 1fr 1fr 1fr; }
+  .summary-grid { grid-template-columns: 1fr 1fr; }
+  .table-scroller { max-height: none; }
+}
+@media (max-width: 650px) {
+  .page { width: min(100% - 24px, 1540px); padding-top: 20px; }
+  .topbar { align-items: flex-start; flex-direction: column; }
+  .filters { grid-template-columns: 1fr; }
+  .summary-grid { grid-template-columns: 1fr 1fr; }
+  .detail-grid { grid-template-columns: 1fr; }
+  .detail-box.full { grid-column: auto; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="topbar">
+    <div>
+      <div class="kicker">Intern vy</div>
+      <h1>Gruppbesök</h1>
+      <div class="subtitle">Registrerade grupper och evenemang på Kulturen i Lund</div>
+    </div>
+    <div class="top-actions">
+      <button class="btn" id="resetBtn" type="button">Återställ filter</button>
+      <button class="btn" id="logoutBtn" type="button" style="display:none;">Logga ut</button>
+    </div>
+  </header>
+
+  <section class="summary-grid" aria-label="Sammanfattning">
+    <div class="summary-card"><div class="summary-label">Visade grupposter</div><div class="summary-value" id="sumRecords">0</div><div class="summary-note" id="sumRecordsNote">—</div></div>
+    <div class="summary-card"><div class="summary-label">Personer</div><div class="summary-value" id="sumPeople">0</div><div class="summary-note">i visade poster</div></div>
+    <div class="summary-card"><div class="summary-label">Poster med faktura</div><div class="summary-value" id="sumInvoices">0</div><div class="summary-note">entré, evenemang eller visning</div></div>
+    <div class="summary-card"><div class="summary-label">Bokade visningar</div><div class="summary-value" id="sumViewings">0</div><div class="summary-note">i visade poster</div></div>
+  </section>
+
+  <section class="filters" aria-label="Filter">
+    <div class="field">
+      <label for="searchInput">Sök</label>
+      <input id="searchInput" type="search" autocomplete="off" placeholder="Grupp, notering, datum…" />
+    </div>
+    <div class="field">
+      <label for="yearFilter">År</label>
+      <select id="yearFilter"><option value="">Alla år</option></select>
+    </div>
+    <div class="field">
+      <label for="monthFilter">Månad</label>
+      <select id="monthFilter">
+        <option value="">Alla månader</option>
+        <option value="1">Januari</option><option value="2">Februari</option><option value="3">Mars</option><option value="4">April</option>
+        <option value="5">Maj</option><option value="6">Juni</option><option value="7">Juli</option><option value="8">Augusti</option>
+        <option value="9">September</option><option value="10">Oktober</option><option value="11">November</option><option value="12">December</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="typeFilter">Grupptyp</label>
+      <select id="typeFilter"><option value="">Alla grupptyper</option></select>
+    </div>
+    <div class="field">
+      <label for="paymentFilter">Betalning</label>
+      <select id="paymentFilter">
+        <option value="">Alla</option>
+        <option value="invoice">Har faktura</option>
+        <option value="direct">Har direktbetalning</option>
+        <option value="none">Ingen betaluppgift</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Sortering</label>
+      <div class="toggle-wrap">
+        <label class="toggle"><input type="checkbox" id="oldestFirst"><span class="toggle-track"></span><span>Äldst först</span></label>
+      </div>
+    </div>
+  </section>
+
+  <section class="table-shell">
+    <div class="table-scroller">
+      <div class="table">
+        <div class="table-head">
+          <div>Datum</div><div>Grupp / evenemang</div><div>Besökare</div><div style="text-align:right;">Totalt</div><div>Betalning</div><div>Visning</div><div>Notering</div>
+        </div>
+        <div id="rows"></div>
+      </div>
+      <div class="empty" id="emptyState">Logga in för att läsa gruppdata.</div>
+    </div>
+  </section>
+  <div class="statusbar"><span id="statusText">—</span><span id="liveText"></span></div>
+</div>
+
+<div class="auth-overlay" id="authOverlay" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+  <form class="auth-modal" id="authForm" autocomplete="on">
+    <div class="auth-kicker">Kulturen i Lund</div>
+    <h2 id="authTitle">Logga in</h2>
+    <p class="auth-intro">Sidan använder samma Firebase-inloggning som registreringen av dagsdata. Om du redan är inloggad används den sessionen automatiskt.</p>
+    <label for="authEmail">E-postadress</label>
+    <input type="email" id="authEmail" autocomplete="username" required />
+    <label for="authPassword">Lösenord</label>
+    <input type="password" id="authPassword" autocomplete="current-password" required />
+    <div class="auth-status" id="authStatus"></div>
+    <div class="auth-actions"><button class="btn" id="loginBtn" type="submit">Logga in</button></div>
+  </form>
+</div>
+
+<div class="detail-overlay" id="detailOverlay">
+  <div class="detail-modal" role="dialog" aria-modal="true">
+    <button class="modal-close" id="detailClose" type="button" aria-label="Stäng"></button>
+    <div class="detail-date" id="detailDate"></div>
+    <h2 id="detailTitle"></h2>
+    <div class="detail-grid" id="detailGrid"></div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBxGc4jxkayGoOWDjeVwJqCJJm-536FUkI",
+  authDomain: "kulturen-dagsdata.firebaseapp.com",
+  projectId: "kulturen-dagsdata",
+  storageBucket: "kulturen-dagsdata.firebasestorage.app",
+  messagingSenderId: "306416395027",
+  appId: "1:306416395027:web:0211f420e2ec773d8970e6"
+};
+
+if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+const FIREBASE_COLLECTION = "dailyData";
+const VENUE = "kulturenilund";
+const FIREBASE_START_DATE = "2026-09-01";
+
+let allGroups = [];
+let visibleGroups = [];
+let unsubscribeGroups = null;
+
+const fmt = new Intl.NumberFormat("sv-SE");
+const monthNames = ["januari","februari","mars","april","maj","juni","juli","augusti","september","oktober","november","december"];
+const dayNames = ["sön","mån","tis","ons","tor","fre","lör"];
+
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[ch]));
+}
+
+function localDate(dateStr) { return new Date(dateStr + "T00:00:00"); }
+function dayName(dateStr) { const d = localDate(dateStr); return Number.isNaN(d.getTime()) ? "" : dayNames[d.getDay()]; }
+function paymentLabel(value) { return value === "invoice" ? "Faktura" : value === "direct" ? "Direkt" : ""; }
+
+function mapGroupDoc(doc) {
+  const r = doc.data();
+  if (r.type !== "group" || r.venue !== VENUE) return null;
+  const date = String(r.date || "");
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || date < FIREBASE_START_DATE) return null;
+  return {
+    id: doc.id,
+    date,
+    year: Number(r.year || date.slice(0,4)),
+    month: Number(r.month || date.slice(5,7)),
+    groupType: String(r.category || "Grupp"),
+    counts: r.metrics?.counts || {},
+    total: Number(r.metrics?.totalCount || 0),
+    payments: r.payments || {},
+    note: String(r.note || ""),
+    createdTs: r.metadata?.createdTs || r.timestamp || "",
+    updatedTs: r.metadata?.updatedTs || ""
+  };
+}
+
+function countItems(group) {
+  const labels = {
+    adults: "Vuxen",
+    children: "Barn",
+    freeAdults: group.groupType === "Konferens och möte" ? "Deltagare" : "Fri vuxen",
+    discountAdults: "Rabatt"
+  };
+  const preferred = ["adults","discountAdults","freeAdults","children"];
+  const keys = [...preferred, ...Object.keys(group.counts).filter(k => !preferred.includes(k))];
+  return [...new Set(keys)]
+    .map(key => ({ key, label: labels[key] || key, value: Number(group.counts[key] || 0) }))
+    .filter(item => item.value > 0);
+}
+
+function hasInvoice(group) {
+  const p = group.payments;
+  return [p.eventPayment, p.entrancePayment, p.viewingPayment].includes("invoice") || p.flags?.entranceInvoice === true || p.flags?.viewingInvoice === true;
+}
+function hasDirect(group) {
+  const p = group.payments;
+  return [p.eventPayment, p.entrancePayment, p.viewingPayment].includes("direct");
+}
+function hasAnyPayment(group) { return hasInvoice(group) || hasDirect(group); }
+function hasViewing(group) { return group.payments?.bookedViewing === true; }
+
+function paymentSummaryHtml(group) {
+  const p = group.payments || {};
+  const lines = [];
+  if (p.eventPayment) lines.push(`<div class="payment-line"><span class="label">Evenemang:</span> <span class="badge ${p.eventPayment}">${paymentLabel(p.eventPayment)}</span></div>`);
+  if (p.entrancePayment) lines.push(`<div class="payment-line"><span class="label">Entré:</span> <span class="badge ${p.entrancePayment}">${paymentLabel(p.entrancePayment)}</span></div>`);
+  if (!lines.length) return `<span class="muted">—</span>`;
+  return `<div class="payment-lines">${lines.join("")}</div>`;
+}
+
+function viewingSummaryHtml(group) {
+  const p = group.payments || {};
+  if (typeof p.bookedViewing !== "boolean") return `<span class="muted">—</span>`;
+  if (!p.bookedViewing) return `<span class="muted">Nej</span>`;
+  const pay = paymentLabel(p.viewingPayment);
+  return `<div class="payment-lines"><div class="payment-line"><span class="badge viewing">Ja</span>${pay ? ` <span class="badge ${p.viewingPayment}">${pay}</span>` : ""}</div></div>`;
+}
+
+function buildFilters() {
+  const years = [...new Set(allGroups.map(g => g.year).filter(Boolean))].sort((a,b) => b-a);
+  const yearSel = document.getElementById("yearFilter");
+  const currentYear = yearSel.value;
+  yearSel.innerHTML = `<option value="">Alla år</option>` + years.map(y => `<option value="${y}">${y}</option>`).join("");
+  if (years.map(String).includes(currentYear)) yearSel.value = currentYear;
+
+  const types = [...new Set(allGroups.map(g => g.groupType).filter(Boolean))].sort((a,b) => a.localeCompare(b,"sv"));
+  const typeSel = document.getElementById("typeFilter");
+  const currentType = typeSel.value;
+  typeSel.innerHTML = `<option value="">Alla grupptyper</option>` + types.map(t => `<option value="${esc(t)}">${esc(t)}</option>`).join("");
+  if (types.includes(currentType)) typeSel.value = currentType;
+}
+
+function applyFilters() {
+  const q = document.getElementById("searchInput").value.trim().toLowerCase();
+  const year = document.getElementById("yearFilter").value;
+  const month = document.getElementById("monthFilter").value;
+  const type = document.getElementById("typeFilter").value;
+  const pay = document.getElementById("paymentFilter").value;
+  const oldest = document.getElementById("oldestFirst").checked;
+
+  visibleGroups = allGroups.filter(g => {
+    if (year && String(g.year) !== year) return false;
+    if (month && String(g.month) !== month) return false;
+    if (type && g.groupType !== type) return false;
+    if (pay === "invoice" && !hasInvoice(g)) return false;
+    if (pay === "direct" && !hasDirect(g)) return false;
+    if (pay === "none" && hasAnyPayment(g)) return false;
+    if (q) {
+      const countText = countItems(g).map(x => `${x.label} ${x.value}`).join(" ");
+      const hay = `${g.date} ${g.groupType} ${g.note} ${countText}`.toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+
+  visibleGroups.sort((a,b) => {
+    const dateCmp = a.date.localeCompare(b.date);
+    if (dateCmp !== 0) return oldest ? dateCmp : -dateCmp;
+    const timeCmp = String(a.createdTs).localeCompare(String(b.createdTs));
+    return oldest ? timeCmp : -timeCmp;
+  });
+
+  renderRows();
+  updateSummary();
+}
+
+function renderRows() {
+  const rows = document.getElementById("rows");
+  const empty = document.getElementById("emptyState");
+  rows.innerHTML = "";
+
+  if (!visibleGroups.length) {
+    empty.style.display = "flex";
+    empty.textContent = allGroups.length ? "Inga grupposter matchar de valda filtren." : "Inga grupposter finns registrerade ännu.";
+    return;
+  }
+  empty.style.display = "none";
+
+  visibleGroups.forEach(group => {
+    const countHtml = countItems(group).length
+      ? `<div class="count-badges">${countItems(group).map(item => `<span class="badge">${esc(item.label)} <strong>${fmt.format(item.value)}</strong></span>`).join("")}</div>`
+      : `<span class="muted">—</span>`;
+    const row = document.createElement("div");
+    row.className = "data-row";
+    row.innerHTML = `
+      <div class="cell"><div class="date-main">${esc(group.date)}</div><div class="date-sub">${esc(dayName(group.date))}</div></div>
+      <div class="cell"><div class="group-title">${esc(group.groupType)}</div></div>
+      <div class="cell">${countHtml}</div>
+      <div class="cell total">${fmt.format(group.total)}</div>
+      <div class="cell">${paymentSummaryHtml(group)}</div>
+      <div class="cell">${viewingSummaryHtml(group)}</div>
+      <div class="cell"><div class="note" title="${esc(group.note)}">${group.note ? esc(group.note) : '<span class="muted">—</span>'}</div></div>`;
+    row.addEventListener("click", () => openDetail(group));
+    rows.appendChild(row);
+  });
+}
+
+function updateSummary() {
+  const people = visibleGroups.reduce((s,g) => s + g.total, 0);
+  const invoices = visibleGroups.filter(hasInvoice).length;
+  const viewings = visibleGroups.filter(hasViewing).length;
+  document.getElementById("sumRecords").textContent = fmt.format(visibleGroups.length);
+  document.getElementById("sumPeople").textContent = fmt.format(people);
+  document.getElementById("sumInvoices").textContent = fmt.format(invoices);
+  document.getElementById("sumViewings").textContent = fmt.format(viewings);
+  document.getElementById("sumRecordsNote").textContent = visibleGroups.length === allGroups.length ? "alla registrerade poster" : `av ${fmt.format(allGroups.length)} totalt`;
+  const postWord = visibleGroups.length === 1 ? "post" : "poster";
+  const personWord = people === 1 ? "person" : "personer";
+  document.getElementById("statusText").textContent = `${fmt.format(visibleGroups.length)} ${postWord} · ${fmt.format(people)} ${personWord}`;
+}
+
+function detailPaymentText(group) {
+  const p = group.payments || {};
+  const parts = [];
+  if (p.eventPayment) parts.push(`Evenemang: ${paymentLabel(p.eventPayment)}`);
+  if (p.entrancePayment) parts.push(`Entré: ${paymentLabel(p.entrancePayment)}`);
+  return parts.length ? parts.join(" · ") : "Ingen betaluppgift";
+}
+function detailViewingText(group) {
+  const p = group.payments || {};
+  if (typeof p.bookedViewing !== "boolean") return "Ingen visningsuppgift";
+  if (!p.bookedViewing) return "Nej";
+  return `Ja${p.viewingPayment ? ` · ${paymentLabel(p.viewingPayment)}` : ""}`;
+}
+function openDetail(group) {
+  document.getElementById("detailDate").textContent = `${dayName(group.date)} ${group.date}`;
+  document.getElementById("detailTitle").textContent = group.groupType;
+  const counts = countItems(group).map(i => `${esc(i.label)}: <strong>${fmt.format(i.value)}</strong>`).join(" · ") || "—";
+  document.getElementById("detailGrid").innerHTML = `
+    <div class="detail-box"><div class="detail-label">Besökare</div><div class="detail-value">${counts}</div></div>
+    <div class="detail-box"><div class="detail-label">Totalt</div><div class="detail-value"><strong>${fmt.format(group.total)}</strong> ${group.total === 1 ? "person" : "personer"}</div></div>
+    <div class="detail-box"><div class="detail-label">Betalning</div><div class="detail-value">${esc(detailPaymentText(group))}</div></div>
+    <div class="detail-box"><div class="detail-label">Bokad visning</div><div class="detail-value">${esc(detailViewingText(group))}</div></div>
+    <div class="detail-box full"><div class="detail-label">Notering</div><div class="detail-value">${group.note ? esc(group.note) : "—"}</div></div>
+    <div class="detail-box"><div class="detail-label">Registrerad</div><div class="detail-value">${group.createdTs ? esc(new Date(group.createdTs).toLocaleString("sv-SE")) : "—"}</div></div>
+    <div class="detail-box"><div class="detail-label">Senast ändrad</div><div class="detail-value">${group.updatedTs ? esc(new Date(group.updatedTs).toLocaleString("sv-SE")) : "—"}</div></div>`;
+  document.getElementById("detailOverlay").classList.add("open");
+}
+function closeDetail() { document.getElementById("detailOverlay").classList.remove("open"); }
+
+function subscribeGroups() {
+  if (unsubscribeGroups) unsubscribeGroups();
+  document.getElementById("emptyState").style.display = "flex";
+  document.getElementById("emptyState").textContent = "Hämtar gruppdata…";
+  unsubscribeGroups = db.collection(FIREBASE_COLLECTION)
+    .where("type", "==", "group")
+    .onSnapshot(snapshot => {
+      allGroups = snapshot.docs.map(mapGroupDoc).filter(Boolean);
+      buildFilters();
+      applyFilters();
+      document.getElementById("liveText").textContent = "Live från Firebase";
+    }, error => {
+      console.error("Kunde inte hämta gruppdata:", error);
+      allGroups = [];
+      applyFilters();
+      document.getElementById("emptyState").style.display = "flex";
+      document.getElementById("emptyState").textContent = "Kunde inte hämta gruppdata från Firebase.";
+      document.getElementById("liveText").textContent = "Firebase-fel";
+    });
+}
+
+function showLogin(message = "") {
+  document.getElementById("authStatus").textContent = message;
+  document.getElementById("authOverlay").classList.add("open");
+}
+function hideLogin() {
+  document.getElementById("authOverlay").classList.remove("open");
+  document.getElementById("authStatus").textContent = "";
+  document.getElementById("authPassword").value = "";
+}
+function authError(error) {
+  if (error?.code === "auth/invalid-credential" || error?.code === "auth/wrong-password" || error?.code === "auth/user-not-found") return "Fel e-postadress eller lösenord.";
+  if (error?.code === "auth/too-many-requests") return "För många inloggningsförsök. Försök igen senare.";
+  if (error?.code === "auth/network-request-failed") return "Nätverksfel. Kontrollera anslutningen.";
+  return "Inloggningen misslyckades.";
+}
+
+document.getElementById("authForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const button = document.getElementById("loginBtn");
+  button.disabled = true;
+  button.textContent = "Loggar in…";
+  try {
+    await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+    await auth.signInWithEmailAndPassword(document.getElementById("authEmail").value.trim(), document.getElementById("authPassword").value);
+  } catch (error) {
+    console.error(error);
+    document.getElementById("authStatus").textContent = authError(error);
+  } finally {
+    button.disabled = false;
+    button.textContent = "Logga in";
+  }
+});
+
+document.getElementById("logoutBtn").addEventListener("click", () => auth.signOut());
+
+auth.onAuthStateChanged(user => {
+  document.getElementById("logoutBtn").style.display = user ? "inline-block" : "none";
+  if (user) {
+    hideLogin();
+    subscribeGroups();
+  } else {
+    if (unsubscribeGroups) { unsubscribeGroups(); unsubscribeGroups = null; }
+    allGroups = [];
+    visibleGroups = [];
+    renderRows();
+    updateSummary();
+    document.getElementById("liveText").textContent = "";
+    showLogin();
+  }
+});
+
+["searchInput","yearFilter","monthFilter","typeFilter","paymentFilter","oldestFirst"].forEach(id => {
+  const el = document.getElementById(id);
+  el.addEventListener(id === "searchInput" ? "input" : "change", applyFilters);
+});
+
+document.getElementById("resetBtn").addEventListener("click", () => {
+  document.getElementById("searchInput").value = "";
+  document.getElementById("yearFilter").value = "";
+  document.getElementById("monthFilter").value = "";
+  document.getElementById("typeFilter").value = "";
+  document.getElementById("paymentFilter").value = "";
+  document.getElementById("oldestFirst").checked = false;
+  applyFilters();
+});
+
+document.getElementById("detailClose").addEventListener("click", closeDetail);
+document.getElementById("detailOverlay").addEventListener("click", e => { if (e.target.id === "detailOverlay") closeDetail(); });
+window.addEventListener("keydown", e => { if (e.key === "Escape") closeDetail(); });
+</script>
+</body>
+</html>
