@@ -2737,10 +2737,10 @@ document.addEventListener("click", closeAllSelects);
 async function loadCSVData() {
     try {
         // Hämtar båda filerna live från dina rätta GitHub-adresser
-        const [resBesok, resSkola] = await Promise.all([
-            fetch("https://kultpub.github.io/site/besoksdata.csv"),
-            fetch("https://kultpub.github.io/site/skoldata.csv")
-        ]);
+		const [resBesok, resSkola] = await Promise.all([
+		    fetch("https://kultpub.github.io/site/besoksdata.csv", { cache: "no-store" }),
+		    fetch("https://kultpub.github.io/site/skoldata.csv", { cache: "no-store" })
+		]);
 
         const textBesok = await resBesok.text();
         const textSkola = await resSkola.text();
@@ -2749,7 +2749,7 @@ async function loadCSVData() {
         const vanligaRader = parseCSV(textBesok);
         const skolRader = parseSkolCSV(textSkola);
 
-        // Slår ihop besöksdata, skoldata från fil samt den hårdkodade skoldatan i minnet
+        // Slår ihop vanlig besöksdata och skoldata
         visitRows = [...vanligaRader, ...skolRader];
         
         if(visitRows.length === 0) return;
