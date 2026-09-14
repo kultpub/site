@@ -1,0 +1,718 @@
+
+
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <title>Summering VP2026</title>
+  <style>
+html {
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
+}
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: #f5f7fa;
+  margin: 0;
+  padding: 20px;
+  color: #222;
+  transition: background 0.3s, color 0.3s;
+}
+body.dark {
+  background: #1e1e1e;
+  color: #ddd;
+}
+h1 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 26px;
+  color: #333;
+}
+body.dark h1 {
+  color: #eee;
+}
+
+/* ==== Filtergrupper ==== */
+.filters {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+}
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 5px 8px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background: #fafafa;
+}
+body.dark .filter-group {
+  border-color: #555;
+  background: #2a2a2a;
+}
+.filter-label {
+  font-weight: 700;
+  margin-right: 0px;
+  color: #0b66ff;
+}
+body.dark .filter-label {
+  color: white;
+}
+.filter-group label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #f8f8f8;
+  padding: 4px 0px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.filter-group label:hover {
+  background: #e8f0ff;
+}
+body.dark .filter-group label {
+  background: #333;
+  color: #eee;
+}
+body.dark .filter-group label:hover {
+  background: #444;
+}
+.filter-group input[type="checkbox"] {
+  accent-color: #0b66ff;
+}
+select {
+  padding: 6px 10px;
+  font-size: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: #fff;
+  cursor: pointer;
+}
+body.dark select {
+  background: #333;
+  color: #eee;
+  border-color: #555;
+}
+
+/* ==== Tabell ==== */
+.table-wrapper {
+  max-width: 900px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  transition: background 0.3s;
+}
+body.dark .table-wrapper {
+  background: #2a2a2a;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  table-layout: fixed;
+}
+th, td {
+  padding: 12px 10px;
+  text-align: center;
+  border-bottom: 1px solid #e5e5e5;
+}
+body.dark th, body.dark td {
+  border-color: #444;
+}
+th {
+  background: #0b66ff;
+  color: #fff;
+  font-weight: 600;
+  font-size: 15px;
+  position: sticky;
+  top: 0;
+}
+td:first-child {
+  text-align: left;
+  font-weight: 600;
+}
+tbody tr:nth-child(even) {
+  background: #fafafa;
+}
+body.dark tbody tr:nth-child(even) {
+  background: #333;
+}
+tbody tr:hover {
+  background: #f0f6ff;
+}
+body.dark tbody tr:hover {
+  background: #3a3a3a;
+}
+body.dark .close-btn:before,
+body.dark .close-btn:after {
+  background: #eee;
+}
+
+/* ==== Klickbara celler ==== */
+td[data-m] {
+  cursor: pointer;
+  font-weight: 500;
+  transition: transform 0.1s;
+}
+td[data-m]:hover {
+  background: #e8f0ff;
+  transform: scale(1.05);
+  border-radius: 6px;
+  box-shadow: 0 0 0 1px #ccc inset;
+}
+body.dark td[data-m]:hover {
+  background: #444;
+  transform: scale(1.05);
+  border-radius: 6px;
+  box-shadow: 0 0 0 1px #666 inset;
+}
+td[data-m]:focus {
+  outline: 2px solid #0b66ff;
+  outline-offset: -2px;
+  background: inherit;
+}
+
+/* ==== Statusfärger ==== */
+.status-Påspår { background: #d8f5e0; color:#19692c; font-weight:600; }
+.status-Mindreavvikelse { background: #fff5d9; color:#856404; font-weight:600; }
+.status-Störreavvikelse { background: #ffe0e0; color:#8b0000; font-weight:600; }
+.status-Borttagen { background: #fde2e2; color:#721c24; font-weight:600; }
+.status-Ingen { background: #f1f1f1; color:#383d41; font-weight:600; }
+body.dark .status-Påspår { background: #2e4d38; color:#9fd6af; }
+body.dark .status-Mindreavvikelse { background: #4d4630; color:#ffda75; }
+body.dark .status-Störreavvikelse { background: #662a2a; color:#ff9999; }
+body.dark .status-Borttagen { background: #5c2a2a; color:#f4aaaa; }
+body.dark .status-Ingen { background: #555; color:#aaa; }
+
+tfoot td {
+  background: #f0f0f0;
+  font-weight: 700;
+  border-top: 2px solid #ccc;
+}
+body.dark tfoot td {
+  background: #444;
+  border-top-color: #666;
+}
+
+/* ==== Detaljruta ==== */
+#details {
+  max-width: 900px;
+  margin: 25px auto 0;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  padding: 20px;
+  display: none;
+}
+body.dark #details {
+  background: #2a2a2a;
+}
+#details h3 {
+  margin-top: 0;
+  font-size: 18px;
+  color: #0b66ff;
+}
+
+body.dark #details h3 {
+  color: #fff;
+}
+#details ul {
+  margin: 0;
+  padding-left: 20px;
+}
+#details li {
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+
+/* ==== Flytande knappar ==== */
+.floating {
+  position: fixed;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  z-index: 1000;
+}
+.info-btn {
+  background: #0b66ff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+  transition: background 0.3s;
+}
+.info-btn:hover {
+  background: #0951cc;
+}
+
+.theme-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+}
+body.dark .theme-wrapper {
+  color: #eee;
+}
+
+.theme-label {
+  user-select: none;
+}
+.theme-toggle {
+  width: 50px;
+  height: 24px;
+  background: #ccc;
+  border-radius: 24px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.theme-toggle .ball {
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.3s;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+.theme-toggle.active {
+  background: #0b66ff;
+}
+.theme-toggle.active .ball {
+  transform: translateX(26px);
+}
+
+/* ==== Modal ==== */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+.modal-content {
+  background: #fff;
+  padding: 25px;
+  border-radius: 10px;
+  max-width: 500px;
+  width: 90%;
+  position: relative;
+  animation: fadeIn 0.3s ease;
+}
+body.dark .modal-content {
+  background: #2a2a2a;
+  color: #eee;
+}
+@keyframes fadeIn {
+  from {opacity:0; transform:scale(0.95);}
+  to {opacity:1; transform:scale(1);}
+}
+.close-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+.close-btn:before, .close-btn:after {
+  content: "";
+  position: absolute;
+  top: 11px;
+  left: 0;
+  width: 24px;
+  height: 2px;
+  background: #333;
+  transition: transform 0.3s;
+}
+.close-btn:before {
+  transform: rotate(45deg);
+}
+.close-btn:after {
+  transform: rotate(-45deg);
+}
+.close-btn:hover:before {
+  transform: rotate(135deg);
+}
+.close-btn:hover:after {
+  transform: rotate(-135deg);
+}
+
+/* ==== Resetknapp ==== */
+#resetBtn {
+  padding: 6px 14px;
+  font-size: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: #f8f8f8;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+#resetBtn:hover {
+  background: #e2e6ea;
+}
+
+  </style>
+</head>
+<body>
+  <h1>Summering VP2026</h1>
+
+  <!-- Flytande knappar -->
+<div class="floating" style="top:20px;">
+  <button class="info-btn" id="infoBtn">Info</button>
+  <div class="theme-wrapper">
+    <span class="theme-label">Tema</span>
+    <div class="theme-toggle" id="themeToggle"><div class="ball"></div></div>
+  </div>
+</div>
+
+  <!-- Modal -->
+  <div class="modal" id="infoModal">
+    <div class="modal-content">
+      <div class="close-btn" id="closeModal"></div>
+      <h2>Information</h2>
+      <p>Här kan du filtrera poster i VP utifrån typ (aktivitet och projekt), form (utveckling och löpande) och målområde. 
+         Klicka på en summa i tabellens statuskolumner (2–6) för att se vilka poster som berörs.</p>
+      <p>Använd Tema-knappen för att växla mellan ljust och mörkt läge.</p>
+    </div>
+  </div>
+
+  <!-- Filter och tabell -->
+<div class="filters">
+  <div class="filter-group">
+    <span class="filter-label">Typ: </span>
+    <label><input type="checkbox" class="filterTyp" value="Aktivitet" checked> Aktivitet</label>
+    <label><input type="checkbox" class="filterTyp" value="Projekt" checked> Projekt</label>
+  </div>
+  <div class="filter-group">
+    <span class="filter-label">Form: </span>
+    <label><input type="checkbox" class="filterForm" value="Utveckling" checked> Utveckling</label>
+    <label><input type="checkbox" class="filterForm" value="Löpande" checked> Löpande</label>
+  </div>
+  <div class="filter-group">
+    <span class="filter-label">Målområde:</span>
+    <select id="filterMal">
+      <option value="">Alla</option>
+      <option>Publika möten</option>
+      <option>Bevara och utveckla</option>
+      <option>Finansiering</option>
+      <option>Vi som arbetar här</option>
+    </select>
+  </div>
+  <button id="resetBtn">Återställ</button>
+</div>
+
+  <div class="table-wrapper">
+    <table id="resultTable">
+<colgroup>
+  <col style="width:17%;">   <!-- Målområde -->
+  <col style="width:13%;">   <!-- På spår -->
+  <col style="width:13%;">   <!-- Mindre avvikelse -->
+  <col style="width:13%;">   <!-- Större avvikelse -->
+  <col style="width:13%;">   <!-- Borttagen -->
+  <col style="width:13%;">   <!-- Ingen status -->
+  <col style="width:8%;">    <!-- Totalt -->
+</colgroup>
+<thead>
+  <tr>
+    <th>Målområde</th>
+    <th class="status-Påspår">På spår</th>
+    <th class="status-Mindreavvikelse">Mindre<br />avvikelse</th>
+    <th class="status-Störreavvikelse">Större<br />avvikelse</th>
+    <th class="status-Borttagen">Borttagen</th>
+    <th class="status-Ingen">Ingen<br />status</th>
+    <th>Totalt</th>
+  </tr>
+</thead>
+      <tbody></tbody>
+<tfoot>
+  <tr>
+    <td>Totalt</td>
+    <td id="sumPaspar"></td>
+    <td id="sumMindre"></td>
+    <td id="sumStorre"></td>
+    <td id="sumBorttagen"></td>
+    <td id="sumIngen"></td>
+    <td id="sumTotal"></td>
+  </tr>
+</tfoot>
+    </table>
+  </div>
+
+  <div id="details">
+    <h3>Detaljer</h3>
+    <ul id="list"></ul>
+  </div>
+
+<script>
+// ==== Rådata (kortad, fyll på med alla rader) ====
+const aktiviteter = [
+  {titel:"Uppordning av stenmaterial", typ:"Aktivitet", form:"Utveckling", mål:"Bevara och utveckla", status:"På spår"},
+  {titel:"Inventering och uppordning av samlingar inför flytt/nybygg. av magasin", typ:"Aktivitet", form:"Löpande", mål:"Bevara och utveckla", status:"På spår"},
+  {titel:"Utreda hur digitalisering av samlingar ska ske framöver", typ:"Aktivitet", form:"Utveckling", mål:"Bevara och utveckla", status:"På spår"},
+  {titel:"Gallringsrutiner", typ:"Aktivitet", form:"Löpande", mål:"Bevara och utveckla", status:"På spår"},
+  {titel:"Påbörja arkeologisk konservering", typ:"Aktivitet", form:"Utveckling", mål:"Bevara och utveckla", status:"Större avvikelse"},
+  {titel:"Inventera finrekvisita (inkl. foto)", typ:"Aktivitet", form:"Utveckling", mål:"Bevara och utveckla", status:"På spår"},
+  {titel:"Rutiner och policies (insamling, förvärv, gallring)", typ:"Aktivitet", form:"Löpande", mål:"Bevara och utveckla", status:"På spår"},
+  {titel:"Fortsättning \"beredskapsområdet\"", typ:"Aktivitet", form:"Löpande", mål:"Bevara och utveckla", status:"På spår"},
+  {titel:"Fotografering silver i SR", typ:"Aktivitet", form:"Löpande", mål:"Bevara och utveckla", status:"På spår"},
+  {titel:"Logistik KM-märkta böcker ev. i Kattvinden", typ:"Aktivitet", form:"Utveckling", mål:"Bevara och utveckla", status:"Mindre avvikelse"},
+  {titel:"Omflyttning och översyn av föremålskategorier", typ:"Aktivitet", form:"Utveckling", mål:"Bevara och utveckla", status:"På spår"},
+  {titel:"Utforma arbetsmetoder för medarb. Kulturmiljö i förh. till Samlingsavd.", typ:"Aktivitet", form:"Utveckling", mål:"Vi som arbetar här", status:"På spår"},
+  {titel:"Uppdatera utställningsdelen \"Att transportera\"", typ:"Aktivitet", form:"Utveckling", mål:"Bevara och utveckla", status:"På spår"},
+  {titel:"Förproduktion/-studie ny tillfällig utställning 2027", typ:"Aktivitet", form:"Utveckling", mål:"Bevara och utveckla", status:"På spår"},
+  {titel:"Flytt föremål från S:t Lars sjukhus till magasin", typ:"Aktivitet", form:"Löpande", mål:"Bevara och utveckla", status:"På spår"},
+  {titel:"Utveckla årshjul till Tegnérmuseet (10 händelser/år)", typ:"Aktivitet", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Ny webb lansering", typ:"Aktivitet", form:"Utveckling", mål:"Publika möten", status:"Mindre avvikelse"},
+  {titel:"Auktoriserad museibesökare för barn", typ:"Aktivitet", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Grafisk profil uppdatering i samband med ny webb", typ:"Aktivitet", form:"Utveckling", mål:"Publika möten", status:"Mindre avvikelse"},
+  {titel:"Skyltarbete Kulturen i Lund: avser husskyltar, fortsatt arbete att förnya dessa", typ:"Aktivitet", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Ta fram case för vita huset donationer", typ:"Aktivitet", form:"Utveckling", mål:"Finansiering", status:"På spår"},
+  {titel:"Medlemsvärvning och fundraising stora evenemang (förstudie)", typ:"Aktivitet", form:"Utveckling", mål:"Finansiering", status:"På spår"},
+  {titel:"Utveckling av volontärverksamhet", typ:"Aktivitet", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"miljögruppen och hållbarnhetsarbete", typ:"Aktivitet", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"utbyte av datorer windows 11", typ:"Aktivitet", form:"Löpande", mål:"Vi som arbetar här", status:"På spår"},
+  {titel:"HLR-kurs", typ:"Aktivitet", form:"Utveckling", mål:"Vi som arbetar här", status:"Ingen status"},
+  {titel:"Utrustning projektor, datorer i auditoriet", typ:"Aktivitet", form:"Utveckling", mål:"Bevara och utveckla", status:"Större avvikelse"},
+  {titel:"Spotlights i auditoriet- inköp", typ:"Aktivitet", form:"Utveckling", mål:"Bevara och utveckla", status:"På spår"},
+  {titel:"Borttagande av spotlights i auditoriet", typ:"Aktivitet", form:"Utveckling", mål:"Bevara och utveckla", status:"På spår"},
+  {titel:"värdskap på Östarp", typ:"Aktivitet", form:"Löpande", mål:"Publika möten", status:"På spår"},
+  {titel:"Planera extra öppettider i januari för schemaläggning", typ:"Aktivitet", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Skapande skola-program Lomma, åk 9, 40 visningar", typ:"Aktivitet", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Skapande skola-program, åk 3, VT Ett barns dag förr och nu", typ:"Aktivitet", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Skapande skola-program, åk 3 HT", typ:"Aktivitet", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Underhåll lekplatsen – leksaker", typ:"Aktivitet", form:"Löpande", mål:"Bevara och utveckla", status:"På spår"},
+  {titel:"Underhåll- lekplatsen måleri mm", typ:"Aktivitet", form:"Löpande", mål:"Bevara och utveckla", status:"På spår"},
+  {titel:"Utöka volontärverksamheten, lov, stora arrangemang", typ:"Aktivitet", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Byta ut brandcentraler", typ:"Aktivitet", form:"Utveckling", mål:"Bevara och utveckla", status:"Mindre avvikelse"},
+  {titel:"Fortsätta att etablera kontakt med kulturutvecklare i Skåne", typ:"Aktivitet", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Elevutställning i workshopsrummet i Allmogehallen", typ:"Aktivitet", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Utveckla aktiviteter i friluftsmuseet för familjer i samband med lov", typ:"Aktivitet", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Planera och genomföra Julstöket", typ:"Aktivitet", form:"Löpande", mål:"Publika möten", status:"På spår"},
+  {titel:"Söka medel från Lunds barnhemsstiftelse till Barnens dag", typ:"Aktivitet", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Sommarteater", typ:"Aktivitet", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Samarbete med Lunds måltidsgille", typ:"Aktivitet", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Marknadsföring till penionärsföreningar; visning/fika", typ:"Aktivitet", form:"Löpande", mål:"Finansiering", status:"På spår"},
+  {titel:"Lunds historiedag och projektet Slaget vid Lund", typ:"Aktivitet", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Utveckla midsommarfirandet", typ:"Aktivitet", form:"Löpande", mål:"Publika möten", status:"På spår"},
+  {titel:"Nationaldagsfirande", typ:"Aktivitet", form:"Löpande", mål:"Publika möten", status:"På spår"},
+  {titel:"Utveckla parken under höstlovet", typ:"Aktivitet", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Kulturnatten", typ:"Aktivitet", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Lovverksamheten, sport, påsk, sommar, höst, jul", typ:"Aktivitet", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Helgverkstäder", typ:"Aktivitet", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Implementering av barnkonventionen", typ:"Aktivitet", form:"Utveckling", mål:"Vi som arbetar här", status:"Ingen status"},
+  {titel:"Lekfulla tidsresa", typ:"Aktivitet", form:"Löpande", mål:"Publika möten", status:"På spår"},
+  {titel:"Historiska uppdrag", typ:"Aktivitet", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Arkeologisk uppdragsverksamhet: marknadsutveckling, genomförande och resultat", typ:"Aktivitet", form:"Löpande", mål:"Bevara och utveckla", status:"På spår"},
+  {titel:"Bebyggelseantikvarisk uppdragsverksamhet: marknadsutveckling, genomförande och resultat", typ:"Aktivitet", form:"Löpande", mål:"Bevara och utveckla", status:"På spår"},
+  {titel:"Byggnadsvård Kulturens fastigheter: förundersökning och antikvarisk medverkan", typ:"Aktivitet", form:"Löpande", mål:"Bevara och utveckla", status:"På spår"},
+  {titel:"Genomföra rådgivning, remisser, kunskapsunderlag inom ämnesansvar och samlingar/arkiv", typ:"Aktivitet", form:"Löpande", mål:"Publika möten", status:"På spår"},
+  {titel:"Lunds stadshistoria och kulturmiljöer, samverkan Lunds kommun", typ:"Aktivitet", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Samverkan Kulturmiljöarbete: Kulturmiljö Skåne, SUBo, M-ark, BARK, FORUM, BEVIS", typ:"Aktivitet", form:"Löpande", mål:"Publika möten", status:"På spår"},
+  {titel:"Utveckling IT-arkeologi", typ:"Aktivitet", form:"Utveckling", mål:"Bevara och utveckla", status:"Mindre avvikelse"},
+  {titel:"Oral history: Klostergården och Norra fäladen", typ:"Aktivitet", form:"Utveckling", mål:"Bevara och utveckla", status:"På spår"},
+  {titel:"Miniföreläsningar stadsdelsbiblioteken", typ:"Aktivitet", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Staden som mosaik", typ:"Aktivitet", form:"Utveckling", mål:"Bevara och utveckla", status:"På spår"},
+  {titel:"Lund delad stad", typ:"Aktivitet", form:"Utveckling", mål:"Bevara och utveckla", status:"På spår"},
+  {titel:"Spår av osynlig lundahistoria i Kulturens samlingar", typ:"Aktivitet", form:"Utveckling", mål:"Bevara och utveckla", status:"På spår"},
+  {titel:"Process för on-/offboarding av medarbetare", typ:"Aktivitet", form:"Utveckling", mål:"Vi som arbetar här", status:"På spår"},
+  {titel:"Utveckling för projektledare och projektteam", typ:"Aktivitet", form:"Utveckling", mål:"Vi som arbetar här", status:"På spår"},
+  {titel:"Identifiera idéer/aktiviteter med syfte att behålla och utveckla medarbetare", typ:"Aktivitet", form:"Löpande", mål:"Vi som arbetar här", status:"Ingen status"},
+  {titel:"Rekrytering av medarbetare i enlighet med verksamhetens behov och förutsättningar", typ:"Aktivitet", form:"Löpande", mål:"Vi som arbetar här", status:"På spår"},
+  {titel:"Implementera program för utveckling av ledare.", typ:"Aktivitet", form:"Utveckling", mål:"Vi som arbetar här", status:"På spår"},
+  {titel:"Utveckling av Värdskap i världsklass - om inte Yvonne eller Elena har med det", typ:"Aktivitet", form:"Utveckling", mål:"Vi som arbetar här", status:"Ingen status"},
+  {titel:"Butiksevent ca 4ggr/år", typ:"Aktivitet", form:"Löpande", mål:"Finansiering", status:"På spår"},
+  {titel:"Innehåll hemsida för butik/entré, webshop för enbart egenproducerade produkter?", typ:"Aktivitet", form:"Utveckling", mål:"Finansiering", status:"Ingen status"},
+  {titel:"Nytt kassa/betalsystem butik/entré", typ:"Aktivitet", form:"Löpande", mål:"Finansiering", status:"På spår"},
+  {titel:"Utveckla och optimera  bemanningsplan för större evenemang", typ:"Aktivitet", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Planera logistik inför ombyggnad Vita Huset", typ:"Aktivitet", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Långsiktig plan för Östarp, restaurang och café", typ:"Aktivitet", form:"Utveckling", mål:"Finansiering", status:"På spår"},
+  {titel:"Marknadsföringsstrategi för Försäljningsavdelningens enheter", typ:"Aktivitet", form:"Utveckling", mål:"Publika möten", status:"Ingen status"},
+  {titel:"Personalfest, Personalgåvor, Personalutflykt", typ:"Aktivitet", form:"Löpande", mål:"Vi som arbetar här", status:"På spår"},
+  {titel:"Erbjuda konferenser m.fl \"fikapaket\", presenter till föreläsare etc.", typ:"Aktivitet", form:"Löpande", mål:"Publika möten", status:"Borttagen"},
+  {titel:"Se över förvaring/lagerhållning av butikens produkter/effektivisera inleverans av varor etc", typ:"Aktivitet", form:"Löpande", mål:"Finansiering", status:"På spår"},
+  {titel:"Ledarskapsutbildning", typ:"Aktivitet", form:"Löpande", mål:"Vi som arbetar här", status:"På spår"},
+  {titel:"Utbildning Värdskap, Bemötande,Kroppshållning etc.", typ:"Aktivitet", form:"Utveckling", mål:"Publika möten", status:"Ingen status"},
+  {titel:"Plan för renovering/uppdatering av café för att möta behov till sommarsäsong", typ:"Aktivitet", form:"Löpande", mål:"Publika möten", status:"På spår"},
+  {titel:"Projekt: Arkeologisk undersökning kv Grynmalaren Lund", typ:"Projekt", form:"Utveckling", mål:"Bevara och utveckla", status:"På spår"},
+  {titel:"Projekt: Borgarhuset, teknisk förstudie", typ:"Projekt", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Projekt: Diabasen utbyggnad", typ:"Projekt", form:"Utveckling", mål:"Bevara och utveckla", status:"Mindre avvikelse"},
+  {titel:"Projekt: Ombyggnad vita huset", typ:"Projekt", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Projekt: 3:e våningen vita huset , modernismen", typ:"Projekt", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Projekt: Madicken lekuställning 2026", typ:"Projekt", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Projekt: Lützendioramat", typ:"Projekt", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Projekt: Berlingska huset miljö, utställning?", typ:"Projekt", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Projekt: Vattenmöllan Östarp", typ:"Projekt", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Projekt: Möllegården, användning", typ:"Projekt", form:"Utveckling", mål:"Bevara och utveckla", status:"På spår"},
+  {titel:"Projekt: Medeltida miljöer - lapidariet/Örtagåden + Bottenvåning", typ:"Projekt", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Projekt: 60-80-tal", typ:"Projekt", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Projekt: Ny Ravensbrück", typ:"Projekt", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Projekt: Sven Fristedt (Turné)", typ:"Projekt", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Projekt: Textil och Lundahallen 2027", typ:"Projekt", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Projekt: Formfröjd 2.0", typ:"Projekt", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Projekt: Elevutställningar", typ:"Projekt", form:"Löpande", mål:"Publika möten", status:"På spår"},
+  {titel:"MFA för alla användare", typ:"Aktivitet", form:"Utveckling", mål:"Vi som arbetar här", status:"På spår"},
+  {titel:"internutbildning One Drive", typ:"Aktivitet", form:"Utveckling", mål:"Vi som arbetar här", status:"På spår"},
+  {titel:"fokus hållbarhet i ÅR", typ:"Aktivitet", form:"Utveckling", mål:"Bevara och utveckla", status:"På spår"},
+  {titel:"värvningsbodar vid stora evenemang", typ:"Aktivitet", form:"Utveckling", mål:"Finansiering", status:"På spår"},
+  {titel:"Projekt: Fastighetsåtgärder gårdshuset inför 60-70 tal", typ:"Projekt", form:"Utveckling", mål:"Publika möten", status:"På spår"},
+  {titel:"Fasadarbeten Berlingska", typ:"Aktivitet", form:"Utveckling", mål:"Bevara och utveckla", status:"På spår"},
+  {titel:"undersök gemensam app för digitala vandringar", typ:"Aktivitet", form:"Utveckling", mål:"Publika möten", status:"På spår"}
+];
+
+// ==== Filterelement ====
+const filterTypBoxes = document.querySelectorAll(".filterTyp");
+const filterFormBoxes = document.querySelectorAll(".filterForm");
+const filterMal = document.getElementById("filterMal");
+
+const malOrdning = [
+  "Publika möten",
+  "Bevara och utveckla",
+  "Finansiering",
+  "Vi som arbetar här"
+];
+
+function renderTable() {
+  // Hämta alla valda värden
+  const typer = [...filterTypBoxes].filter(b => b.checked).map(b => b.value);
+  const former = [...filterFormBoxes].filter(b => b.checked).map(b => b.value);
+  const mal = filterMal.value;
+
+  const filtered = aktiviteter.filter(a =>
+    (typer.length > 0 && typer.includes(a.typ)) &&
+    (former.length > 0 && former.includes(a.form)) &&
+    (mal === "" || a.mål === mal)
+  );
+
+  // Nollställ details varje gång tabellen renderas om
+  document.getElementById("details").style.display = "none";
+  document.getElementById("list").innerHTML = "";
+
+  // Gruppera efter målområde och status
+  const grupper = {};
+  filtered.forEach(a => {
+    if (!grupper[a.mål]) grupper[a.mål] = {
+      Påspår:0,
+      Mindreavvikelse:0,
+      Störreavvikelse:0,
+      Borttagen:0,
+      Ingenstatus:0
+    };
+    if (a.status === "På spår") grupper[a.mål].Påspår++;
+    if (a.status === "Mindre avvikelse") grupper[a.mål].Mindreavvikelse++;
+    if (a.status === "Större avvikelse") grupper[a.mål].Störreavvikelse++;
+    if (a.status === "Borttagen") grupper[a.mål].Borttagen++;
+    if (a.status === "Ingen status") grupper[a.mål].Ingenstatus++;
+  });
+
+  // Summeringar
+  let totalPaspar = 0, totalMindre = 0, totalStorre = 0, totalBort = 0, totalIngen = 0;
+  const tbody = document.querySelector("#resultTable tbody");
+  tbody.innerHTML = "";
+
+  malOrdning.forEach(mål => {
+    if (grupper[mål]) {
+      const g = grupper[mål];
+      const total = g.Påspår + g.Mindreavvikelse + g.Störreavvikelse + g.Borttagen + g.Ingenstatus;
+      totalPaspar += g.Påspår;
+      totalMindre += g.Mindreavvikelse;
+      totalStorre += g.Störreavvikelse;
+      totalBort += g.Borttagen;
+      totalIngen += g.Ingenstatus;
+      const tr = `<tr>
+        <td>${mål}</td>
+        <td data-m="${mål}" data-s="På spår">${g.Påspår}</td>
+        <td data-m="${mål}" data-s="Mindre avvikelse">${g.Mindreavvikelse}</td>
+        <td data-m="${mål}" data-s="Större avvikelse">${g.Störreavvikelse}</td>
+        <td data-m="${mål}" data-s="Borttagen">${g.Borttagen}</td>
+        <td data-m="${mål}" data-s="Ingen status">${g.Ingenstatus}</td>
+        <td><strong>${total}</strong></td>
+      </tr>`;
+      tbody.innerHTML += tr;
+    }
+  });
+
+  // Skriv ut summeringar
+  document.getElementById("sumPaspar").textContent = totalPaspar;
+  document.getElementById("sumMindre").textContent = totalMindre;
+  document.getElementById("sumStorre").textContent = totalStorre;
+  document.getElementById("sumBorttagen").textContent = totalBort;
+  document.getElementById("sumIngen").textContent = totalIngen;
+  document.getElementById("sumTotal").textContent =
+    totalPaspar + totalMindre + totalStorre + totalBort + totalIngen;
+
+  // Reset-knappen – nollställ alla filter
+  document.getElementById("resetBtn").onclick = () => {
+    filterTypBoxes.forEach(b => b.checked = true);
+    filterFormBoxes.forEach(b => b.checked = true);
+    filterMal.value = "";
+    renderTable();
+  };
+
+  // Klickbara celler som öppnar detaljer
+  document.querySelectorAll("td[data-m]").forEach(cell => {
+    cell.addEventListener("click", () => {
+      const mål = cell.dataset.m;
+      const status = cell.dataset.s;
+      const listEl = document.getElementById("list");
+      listEl.innerHTML = "";
+      const match = filtered.filter(a => a.mål === mål && a.status === status);
+      if (match.length) {
+        match.forEach(a => {
+          const li = document.createElement("li");
+          li.textContent = a.titel;
+          listEl.appendChild(li);
+        });
+      } else {
+        listEl.innerHTML = "<li>Det finns inga poster med denna status.</li>";
+      }
+      document.getElementById("details").style.display = "block";
+      document.querySelector("#details h3").textContent = `${mål} – ${status}`;
+    });
+  });
+}
+
+// Initiera tabellen
+renderTable();
+
+// Knyt event på alla filter
+[...filterTypBoxes, ...filterFormBoxes, filterMal]
+  .forEach(el => el.addEventListener("change", renderTable));
+
+// === Modal ===
+const modal = document.getElementById("infoModal");
+const infoBtn = document.getElementById("infoBtn");
+const closeModal = document.getElementById("closeModal");
+infoBtn.onclick = () => modal.style.display = "flex";
+closeModal.onclick = () => modal.style.display = "none";
+window.onclick = e => { if (e.target === modal) modal.style.display = "none"; };
+
+// === Tema-toggle ===
+const themeToggle = document.getElementById("themeToggle");
+themeToggle.addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+  themeToggle.classList.toggle("active");
+});
+</script>
+</body>
+
+</html>
