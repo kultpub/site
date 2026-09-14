@@ -56,12 +56,12 @@ th.actions,td.actions{width:40px;background:#fff;border:none;padding:0 0 0 6px}
 tbody tr{height:var(--row-height)}
 td[contenteditable="true"]{outline:none;cursor:text}
 td[contenteditable="true"]:focus{box-shadow:inset 0 0 0 2px #5f9de4;background:#f8fbff}
-td.date-cell{cursor:pointer;white-space:nowrap;font-size:calc(var(--table-font-size) - 2px);line-height:1.28;padding-left:3px;padding-right:3px;overflow-wrap:normal;word-break:normal}
+td.date-cell{cursor:pointer;white-space:nowrap;font-size:calc(var(--table-font-size) - 2px);line-height:1.28;padding:2px 3px;overflow-wrap:normal;word-break:normal}
 td.date-cell.five-dates{font-size:calc(var(--table-font-size) - 5px);line-height:1.15}
 td.date-cell sup{font-size:.62em;line-height:0;margin-left:1px}
 td.date-cell.five-dates sup{font-size:.55em;margin-left:0}
-.date-lines{display:grid;gap:2px;justify-items:center}
-.date-line{display:flex;justify-content:center;gap:0;white-space:nowrap}
+.date-lines{display:inline-grid;gap:2px;justify-items:center;vertical-align:middle}
+.date-line{display:flex;justify-content:center;align-items:center;gap:0;white-space:nowrap}
 td.date-cell:hover{background:#f3f7f3}
 .row-menu{position:relative}
 .row-menu>button{padding:3px 7px;border:none;background:transparent;font-size:20px;line-height:1;color:#687278}
@@ -251,8 +251,8 @@ function parsePlace(text){
 }
 function formatDateParts(parts){
   const line=(items,compact=false)=>`<span class="date-line">${items.map((part,i)=>`${i?(compact?',':', '):''}${part}`).join('')}</span>`;
-  if(parts.length>=5) return `<span class="date-lines">${line(parts.slice(0,2))}${line(parts.slice(2),true)}</span>`;
-  if(parts.length>2) return `<span class="date-lines">${line(parts.slice(0,2))}${line(parts.slice(2))}</span>`;
+  if(parts.length===3) return `<span class="date-lines">${line(parts.slice(0,1))}${line(parts.slice(1))}</span>`;
+  if(parts.length>=4) return `<span class="date-lines">${line(parts.slice(0,2))}${line(parts.slice(2),parts.length>=5)}</span>`;
   return line(parts);
 }
 function sortedDateEntries(entries,maxDay=31){
