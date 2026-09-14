@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mötesschema</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{
+  --green:#4caf50; --green-dark:#3f9143; --bg:#f3f5f6; --panel:#fff; --line:#d7dcdf;
+  --text:#1d2428; --muted:#667178; --danger:#b3261e; --shadow:0 8px 24px rgba(0,0,0,.08);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+body{padding:24px}
+.app{max-width:1400px;margin:0 auto}
+.toolbar{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  width:1120px;max-width:100%;margin:0 auto 18px;padding:12px 14px;background:#eceff1;border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow)
+}
+.toolbar-left,.toolbar-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+button{
+  appearance:none;border:1px solid var(--line);background:#fff;color:var(--text);border-radius:7px;padding:9px 12px;
+  font-size:14px;cursor:pointer
+}
+button i{margin-right:6px}
+button:hover{background:#f6f7f7}
+button.primary{background:var(--green);border-color:var(--green);color:#fff;font-weight:700}
+button.primary:hover{background:var(--green-dark)}
+button.danger{color:var(--danger)}
+button.danger-confirm{background:var(--danger);border-color:var(--danger);color:#fff;font-weight:700}
+button.danger-confirm:hover{background:#971f19;border-color:#971f19}
+.year-control{display:flex;align-items:center;gap:6px}
+.year-control input{width:82px;padding:8px;border:1px solid var(--line);border-radius:7px;font-size:14px;text-align:center}
+.hint{font-size:12px;color:var(--muted)}
+
+.sheet-wrap{overflow:auto;padding:4px 0 20px}
+.sheet{
+  width:1120px;height:792px;margin:0 auto;background:#fff;padding:var(--sheet-pad-top) 30px var(--sheet-pad-bottom);box-shadow:var(--shadow);
+  --sheet-pad-top:28px;--sheet-pad-bottom:22px;
+  --title-size:28px;--title-gap:20px;--table-font-size:14px;--cell-pad-y:10px;--row-height:52px;
+  --table-line:1.2;--footnote-size:12px;--footnote-gap:16px;--footnote-line:1.35;--add-row-gap:10px;
+  display:flex;flex-direction:column;overflow:hidden
+}
+.sheet h1{text-align:center;margin:0 0 var(--title-gap);font-size:var(--title-size)}
+.table-wrap{position:relative}
+table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:var(--table-font-size)}
+th,td{border:1px solid #d3d8da;text-align:center;vertical-align:middle;padding:var(--cell-pad-y) 6px;line-height:var(--table-line);overflow-wrap:anywhere}
+th{background:var(--green);color:white;font-weight:700}
+th:nth-child(1),td:nth-child(1){width:10%;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;overflow-wrap:normal}
+th:nth-child(2),td:nth-child(2){width:25.2%;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;overflow-wrap:normal}
+th:nth-child(n+3):nth-child(-n+14),td:nth-child(n+3):nth-child(-n+14){width:5.4%}
+th.actions,td.actions{width:40px;background:#fff;border:none;padding:0 0 0 6px}
+tbody tr{height:var(--row-height)}
+td[contenteditable="true"]{outline:none;cursor:text}
+td[contenteditable="true"]:focus{box-shadow:inset 0 0 0 2px #5f9de4;background:#f8fbff}
+td.date-cell{cursor:pointer;white-space:nowrap;font-size:calc(var(--table-font-size) - 2px);line-height:1.28;padding-left:3px;padding-right:3px;overflow-wrap:normal;word-break:normal}
+td.date-cell.five-dates{font-size:calc(var(--table-font-size) - 5px);line-height:1.15}
+td.date-cell sup{font-size:.62em;line-height:0;margin-left:1px}
+td.date-cell.five-dates sup{font-size:.55em;margin-left:0}
+.date-lines{display:grid;gap:2px;justify-items:center}
+.date-line{display:flex;justify-content:center;gap:0;white-space:nowrap}
+td.date-cell:hover{background:#f3f7f3}
+.row-menu{position:relative}
+.row-menu>button{padding:3px 7px;border:none;background:transparent;font-size:20px;line-height:1;color:#687278}
+.menu{display:none;position:absolute;right:0;top:28px;z-index:30;width:150px;background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.16);padding:5px}
+.menu.open{display:block}
+.menu button{display:block;width:100%;text-align:left;border:0;padding:8px;background:#fff}
+.menu button:hover{background:#f2f4f5}
+.menu button.delete{color:var(--danger)}
+.add-row-bottom{margin-top:var(--add-row-gap);align-self:flex-start}
+#footnotes{margin-top:var(--footnote-gap);font-size:var(--footnote-size);line-height:var(--footnote-line);text-align:left;column-count:var(--footnote-cols,1);column-gap:18px}
+#footnotes:empty{display:none}
+#footnotes .note{margin:0 0 3px;break-inside:avoid}
+sup{font-size:9px;vertical-align:super}
+
+.popover{
+  position:fixed;z-index:1000;width:320px;max-width:calc(100vw - 24px);background:#fff;border:1px solid var(--line);
+  --date-day-width:86px;border-radius:10px;box-shadow:0 12px 34px rgba(0,0,0,.22);padding:12px;display:none
+}
+.popover.open{display:block}
+.popover h3{font-size:15px;margin:0 0 10px}
+.date-list{display:flex;flex-direction:column;gap:8px}
+.date-entry{display:grid;grid-template-columns:var(--date-day-width) 1fr 30px;gap:6px;align-items:start}
+.date-entry input[type="number"]{width:100%;padding:7px;border:1px solid var(--line);border-radius:6px}
+.comment-field{position:relative}
+.comment-field input[type="text"]{width:100%;padding:7px 30px 7px 7px;border:1px solid var(--line);border-radius:6px}
+.comment-clear{
+  position:absolute;right:3px;top:50%;width:24px;height:24px;padding:0;border:0;background:transparent;color:#687278;
+  transform:translateY(-50%);border-radius:50%;font-size:18px;line-height:1;display:grid;place-items:center
+}
+.comment-clear[hidden]{display:none}
+.comment-clear:hover{background:#f2f4f5;color:#4f5a60}
+.date-entry button.remove-date{
+  position:relative;width:30px;height:30px;padding:0;border:0;background:transparent;color:#687278;
+  border-radius:50%;cursor:pointer;transition:transform .18s ease,background-color .18s ease,color .18s ease
+}
+.date-entry button.remove-date::before,
+.date-entry button.remove-date::after{
+  content:"";position:absolute;left:8px;right:8px;top:50%;height:2px;background:currentColor;border-radius:999px;transform-origin:center
+}
+.date-entry button.remove-date::before{transform:translateY(-50%) rotate(45deg)}
+.date-entry button.remove-date::after{transform:translateY(-50%) rotate(-45deg)}
+.date-entry button.remove-date:hover{transform:rotate(90deg) scale(1.12);background:#f2f4f5;color:#4f5a60}
+.date-entry button.remove-date:active{transform:rotate(90deg) scale(1.12);transition:none}
+.date-list.suppress-remove-hover .date-entry button.remove-date:hover,
+.date-list.suppress-remove-hover .date-entry button.remove-date:active{transform:none;transition:none}
+.date-entry button.remove-date:focus-visible{outline:2px solid #5f9de4;outline-offset:2px}
+.popover-actions{display:grid;grid-template-columns:var(--date-day-width) 1fr 30px;gap:6px;margin-top:10px;align-items:center}
+.popover-actions #addDate{width:100%;padding-left:0;padding-right:0}
+.popover-actions .right{grid-column:2;display:flex;gap:8px;justify-content:flex-start}
+
+.reset-modal{position:fixed;inset:0;z-index:2000;display:grid;place-items:center;background:rgba(29,36,40,.32);padding:18px}
+.reset-modal[aria-hidden="true"]{display:none}
+.reset-dialog{width:360px;max-width:100%;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 18px 50px rgba(0,0,0,.24);padding:18px}
+.reset-dialog h2{font-size:18px;line-height:1.25;margin:0 0 8px}
+.reset-dialog p{font-size:14px;line-height:1.45;color:var(--muted);margin:0}
+.reset-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+
+@media(max-width:800px){body{padding:10px}.sheet{margin:0;width:1120px}.toolbar{align-items:flex-start}}
+@media print{
+  @page{size:A4 landscape;margin:8mm}
+  body{padding:0;background:#fff}
+  .toolbar,.actions,.add-row-bottom,.reset-modal{display:none!important}
+  .sheet-wrap{overflow:visible;padding:0}
+  .sheet{box-shadow:none;width:100%;min-height:auto;padding:0}
+  .sheet h1{margin-bottom:12px}
+}
+.exporting .actions,.exporting .add-row-bottom{display:none!important}
+.exporting .sheet{box-shadow:none}
+.exporting .date-cell:hover{background:#fff}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <span class="year-control">År <input id="yearInput" type="number" min="2000" max="9999"></span>
+      <span class="hint">Klicka direkt i namn och plats och tid. Klicka på en månad för datum.</span>
+    </div>
+    <div class="toolbar-right">
+      <button id="exportPng"><i class="fa-regular fa-image" aria-hidden="true"></i>Exportera som bild (A4)</button>
+      <button id="exportPdf"><i class="fa-regular fa-file-pdf" aria-hidden="true"></i>Exportera som PDF (A4)</button>
+      <button id="resetBtn" class="danger">Återställ</button>
+    </div>
+  </div>
+
+  <div class="sheet-wrap">
+    <section class="sheet" id="sheet">
+      <h1>Mötesschema <span id="yearTitle"></span></h1>
+      <div class="table-wrap">
+        <table id="scheduleTable">
+          <thead><tr>
+            <th></th><th>Plats och tid</th>
+            <th>Jan</th><th>Feb</th><th>Mar</th><th>Apr</th><th>Maj</th><th>Jun</th>
+            <th>Jul</th><th>Aug</th><th>Sep</th><th>Okt</th><th>Nov</th><th>Dec</th><th class="actions"></th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <button class="add-row-bottom" id="addRowBottom">+ Lägg till rad</button>
+      <div id="footnotes"></div>
+    </section>
+  </div>
+</div>
+
+<div class="popover" id="datePopover" role="dialog" aria-modal="false">
+  <h3 id="popoverTitle">Datum</h3>
+  <div class="date-list" id="dateList"></div>
+  <div class="popover-actions">
+    <button id="addDate">+ Datum</button>
+    <div class="right"><button id="cancelDates">Avbryt</button><button class="primary" id="saveDates">Spara</button></div>
+  </div>
+</div>
+
+<div class="reset-modal" id="resetModal" role="dialog" aria-modal="true" aria-labelledby="resetTitle" aria-hidden="true">
+  <div class="reset-dialog">
+    <h2 id="resetTitle">Återställ schema?</h2>
+    <p>Alla egna ändringar ersätts med standardraderna och aktuellt år.</p>
+    <div class="reset-actions">
+      <button id="cancelReset" type="button">Avbryt</button>
+      <button id="confirmReset" class="danger-confirm" type="button">Återställ</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+const months=['Jan','Feb','Mar','Apr','Maj','Jun','Jul','Aug','Sep','Okt','Nov','Dec'];
+const STORAGE='motesschema-v2';
+const DEFAULT_ROWS=[
+ {name:'AU',place:'Nordenstedtska',time:'09:00–11:00'},
+ {name:'Styrelse',place:'Nordenstedtska',time:'16:00–18:00'},
+ {name:'Årsmöte',place:'Auditoriet',time:'18:00–19:30'},
+ {name:'LG',place:'Nordenstedtska',time:'09:00–12:00'},
+ {name:'Personalinfo',place:'Auditoriet',time:'09:00–10:30'},
+ {name:'Samverkan',place:'Nordenstedtska',time:'13:00–14:00'},
+ {name:'Kulturmiljö',place:'Nordenstedtska',time:'09:30–11:30'},
+ {name:'PoF',place:'Nordenstedtska',time:'10:30–11:30'},
+ {name:'SoP',place:'Hornsbergssalen',time:'10:00–11:00'}
+].map(r=>({...r,dates:Array.from({length:12},()=>[]),id:crypto.randomUUID?.()||Math.random().toString(36).slice(2)}));
+
+let state=loadState();
+let undoStack=[];
+let editing={rowId:null,month:null,anchor:null,temp:[]};
+
+const tbody=document.querySelector('#scheduleTable tbody');
+const yearInput=document.getElementById('yearInput');
+const yearTitle=document.getElementById('yearTitle');
+const footnotes=document.getElementById('footnotes');
+const pop=document.getElementById('datePopover');
+const dateList=document.getElementById('dateList');
+const resetModal=document.getElementById('resetModal');
+const resetBtn=document.getElementById('resetBtn');
+const cancelReset=document.getElementById('cancelReset');
+const confirmReset=document.getElementById('confirmReset');
+
+function freshState(){return {year:new Date().getFullYear(),rows:structuredClone(DEFAULT_ROWS)}}
+function loadState(){
+  try{
+    const s=JSON.parse(localStorage.getItem(STORAGE));
+    if(s?.rows?.length){
+      // Migrering från äldre version: BG ska inte längre finnas som standardrad.
+      const originalLength=s.rows.length;
+      s.rows=s.rows.filter(r=>String(r.name||'').trim().toUpperCase()!=='BG');
+      if(!s.rows.length) return freshState();
+      if(s.rows.length!==originalLength) localStorage.setItem(STORAGE,JSON.stringify(s));
+      return s;
+    }
+  }catch(e){}
+  return freshState();
+}
+function snapshot(){undoStack.push(JSON.stringify(state)); if(undoStack.length>40) undoStack.shift()}
+function persist(){localStorage.setItem(STORAGE,JSON.stringify(state))}
+function formatPlace(row){return [row.place,row.time].filter(Boolean).join(' ')}
+function parsePlace(text){
+  const lines=text.split(/\n+/).map(s=>s.trim()).filter(Boolean);
+  const timeRe=/\b\d{1,2}[:.]\d{2}\s*[–-]\s*\d{1,2}[:.]\d{2}\b/;
+  let time='',place='';
+  const joined=lines.join(' ');
+  const match=joined.match(timeRe);
+  if(match){
+    time=match[0].replace(/-/g,'–').replace(/\./g,':');
+    place=joined.replace(match[0],'').trim();
+  }else{
+    place=joined;
+  }
+  return {place,time};
+}
+function formatDateParts(parts){
+  const line=(items,compact=false)=>`<span class="date-line">${items.map((part,i)=>`${i?(compact?',':', '):''}${part}`).join('')}</span>`;
+  if(parts.length>=5) return `<span class="date-lines">${line(parts.slice(0,2))}${line(parts.slice(2),true)}</span>`;
+  if(parts.length>2) return `<span class="date-lines">${line(parts.slice(0,2))}${line(parts.slice(2))}</span>`;
+  return line(parts);
+}
+function sortedDateEntries(entries,maxDay=31){
+  return entries.filter(e=>e.day).map((e,i)=>({
+    day:Math.max(1,Math.min(maxDay,Number(e.day))),
+    comment:limitComment((e.comment||'').trim()),
+    order:i
+  })).sort((a,b)=>a.day-b.day||a.order-b.order).map(({day,comment})=>({day,comment}));
+}
+function clampDay(value,maxDay){
+  if(value==='') return '';
+  const day=Math.floor(Number(value));
+  if(!Number.isFinite(day)) return '';
+  return Math.max(1,Math.min(maxDay,day));
+}
+function render(){
+  yearInput.value=state.year; yearTitle.textContent=state.year;
+  tbody.innerHTML='';
+  const notes=[];
+  state.rows.forEach((row,ri)=>{
+    const tr=document.createElement('tr'); tr.dataset.id=row.id;
+    const name=document.createElement('td'); name.contentEditable='true'; name.textContent=row.name; name.dataset.field='name'; tr.append(name);
+    const pt=document.createElement('td'); pt.contentEditable='true'; pt.innerText=formatPlace(row); pt.dataset.field='place'; tr.append(pt);
+    row.dates.forEach((entries,mi)=>{
+      const td=document.createElement('td'); td.className='date-cell'; td.dataset.month=mi;
+      const parts=[];
+      entries.slice().sort((a,b)=>a.day-b.day).forEach(e=>{
+        let txt=String(e.day);
+        if(e.comment){notes.push({row:ri,month:mi,day:e.day,text:e.comment}); txt+=`<sup data-note-key="${row.id}-${mi}-${e.day}-${notes.length-1}"></sup>`}
+        parts.push(txt);
+      });
+      td.classList.toggle('five-dates',parts.length>=5);
+      td.innerHTML=formatDateParts(parts); tr.append(td);
+    });
+    const action=document.createElement('td'); action.className='actions';
+    action.innerHTML=`<div class="row-menu"><button aria-label="Radmeny">⋮</button><div class="menu"><button data-action="up">Flytta upp</button><button data-action="down">Flytta ned</button><button data-action="duplicate">Duplicera</button><button class="delete" data-action="delete">Ta bort</button></div></div>`;
+    tr.append(action); tbody.append(tr);
+  });
+  notes.sort((a,b)=>a.month-b.month||a.day-b.day||a.row-b.row);
+  const noteMap=new Map(); notes.forEach((n,i)=>noteMap.set(`${state.rows[n.row].id}-${n.month}-${n.day}-${notes.indexOf(n)}`,i+1));
+  // Assign by matching row/month/day/comment occurrence instead, robustly
+  let counter=0; const ordered=[];
+  state.rows.forEach((row,ri)=>row.dates.forEach((entries,mi)=>entries.forEach(e=>{if(e.comment) ordered.push({row,ri,mi,e})})));
+  ordered.sort((a,b)=>a.mi-b.mi||a.e.day-b.e.day||a.ri-b.ri);
+  const keyNumbers=new Map(); ordered.forEach((n,i)=>{ keyNumbers.set(`${n.row.id}|${n.mi}|${n.e.day}|${n.e.comment}`,i+1); });
+  tbody.querySelectorAll('.date-cell').forEach(td=>{
+    const row=state.rows.find(r=>r.id===td.parentElement.dataset.id); const mi=Number(td.dataset.month);
+    const parts=row.dates[mi].slice().sort((a,b)=>a.day-b.day).map(e=>{
+      const num=e.comment?keyNumbers.get(`${row.id}|${mi}|${e.day}|${e.comment}`):null;
+      return e.comment?`${e.day}<sup>${num}</sup>`:String(e.day);
+    }); td.classList.toggle('five-dates',parts.length>=5); td.innerHTML=formatDateParts(parts);
+  });
+  footnotes.style.setProperty('--footnote-cols',noteColumnCount(ordered.length));
+  footnotes.innerHTML=ordered.map((n,i)=>`<div class="note"><sup>${i+1}</sup> ${escapeHtml(limitComment(n.e.comment))}</div>`).join('');
+  fitForA4();
+}
+function escapeHtml(s){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function limitComment(text){return String(text||'').slice(0,40)}
+function noteColumnCount(count){return count?Math.min(4,Math.ceil(count/3)):1}
+function applyA4Packing(cfg){
+  const sheet=document.getElementById('sheet');
+  sheet.style.setProperty('--sheet-pad-top',cfg.sheetPadTop+'px');
+  sheet.style.setProperty('--sheet-pad-bottom',cfg.sheetPadBottom+'px');
+  sheet.style.setProperty('--title-size',cfg.titleSize+'px');
+  sheet.style.setProperty('--title-gap',cfg.titleGap+'px');
+  sheet.style.setProperty('--table-font-size',cfg.fontSize+'px');
+  sheet.style.setProperty('--cell-pad-y',cfg.cellPad+'px');
+  sheet.style.setProperty('--row-height',cfg.rowHeight+'px');
+  sheet.style.setProperty('--table-line',cfg.tableLine);
+  sheet.style.setProperty('--footnote-size',cfg.noteSize+'px');
+  sheet.style.setProperty('--footnote-gap',cfg.noteGap+'px');
+  sheet.style.setProperty('--footnote-line',cfg.noteLine);
+  sheet.style.setProperty('--footnote-cols',cfg.noteCols);
+  sheet.style.setProperty('--add-row-gap',cfg.addRowGap+'px');
+}
+function fitSingleLineColumns(){
+  const baseSize=parseFloat(getComputedStyle(document.getElementById('scheduleTable')).fontSize);
+  tbody.querySelectorAll('td:nth-child(1),td:nth-child(2)').forEach(td=>{
+    let size=baseSize;
+    td.style.fontSize='';
+    td.style.whiteSpace='nowrap';
+    while(td.scrollWidth>td.clientWidth+1&&size>6){
+      size-=.5;
+      td.style.fontSize=size+'px';
+    }
+  });
+}
+function fitForA4(){
+  const sheet=document.getElementById('sheet');
+  const rowCount=Math.max(1,state.rows.length);
+  const noteCount=footnotes.children.length;
+  const extraRows=Math.max(0,rowCount-10);
+  const extraNotes=Math.max(0,noteCount-6);
+  const cfg={
+    sheetPadTop:Math.max(12,28-extraRows*.65),
+    sheetPadBottom:Math.max(10,22-extraRows*.55),
+    titleSize:Math.max(18,28-extraRows*.75),
+    titleGap:Math.max(6,20-extraRows*.9),
+    fontSize:Math.max(9,14-extraRows*.32),
+    cellPad:Math.max(2,10-extraRows*.55),
+    rowHeight:Math.max(20,52-extraRows*1.7),
+    tableLine:Math.max(1.05,1.2-extraRows*.01),
+    noteSize:Math.max(8,12-extraNotes*.18),
+    noteGap:Math.max(5,16-extraRows*.65),
+    noteLine:Math.max(1.08,1.35-extraNotes*.015),
+    noteCols:noteColumnCount(noteCount),
+    addRowGap:Math.max(4,10-extraRows*.35)
+  };
+  if(rowCount>14&&noteCount) cfg.noteCols=Math.max(cfg.noteCols,Math.min(4,Math.ceil(noteCount/2)));
+  applyA4Packing(cfg);
+  fitSingleLineColumns();
+
+  for(let i=0;i<18&&sheet.scrollHeight>sheet.clientHeight+1;i++){
+    cfg.titleSize=Math.max(16,cfg.titleSize-.6);
+    cfg.titleGap=Math.max(3,cfg.titleGap-1);
+    cfg.fontSize=Math.max(7,cfg.fontSize-.35);
+    cfg.cellPad=Math.max(1,cfg.cellPad-.35);
+    cfg.rowHeight=Math.max(16,cfg.rowHeight-1.25);
+    cfg.sheetPadTop=Math.max(8,cfg.sheetPadTop-.8);
+    cfg.sheetPadBottom=Math.max(8,cfg.sheetPadBottom-.8);
+    cfg.tableLine=Math.max(1,cfg.tableLine-.01);
+    cfg.noteSize=Math.max(7,cfg.noteSize-.25);
+    cfg.noteGap=Math.max(2,cfg.noteGap-.8);
+    cfg.noteLine=Math.max(1.02,cfg.noteLine-.015);
+    cfg.addRowGap=Math.max(2,cfg.addRowGap-.5);
+    if(noteCount&&i%2===0) cfg.noteCols=Math.min(4,cfg.noteCols+1);
+    applyA4Packing(cfg);
+    fitSingleLineColumns();
+  }
+  if(sheet.scrollHeight>sheet.clientHeight+1){
+    const rows=Math.max(1,tbody.querySelectorAll('tr').length);
+    const overflow=sheet.scrollHeight-sheet.clientHeight;
+    cfg.sheetPadTop=6;
+    cfg.sheetPadBottom=6;
+    cfg.titleSize=Math.max(14,cfg.titleSize-1);
+    cfg.titleGap=2;
+    cfg.fontSize=Math.max(6,cfg.fontSize-.8);
+    cfg.cellPad=0;
+    cfg.rowHeight=Math.max(10,cfg.rowHeight-Math.ceil(overflow/rows)-1);
+    cfg.tableLine=1;
+    cfg.noteSize=Math.max(6,cfg.noteSize-.8);
+    cfg.noteGap=1;
+    cfg.noteLine=1;
+    cfg.noteCols=noteCount?4:1;
+    cfg.addRowGap=1;
+    applyA4Packing(cfg);
+    fitSingleLineColumns();
+  }
+}
+function addRow(afterIndex=state.rows.length-1){
+  snapshot(); const id=crypto.randomUUID?.()||Math.random().toString(36).slice(2);
+  const row={id,name:'Ny rad',place:'',time:'',dates:Array.from({length:12},()=>[])};
+  state.rows.splice(afterIndex+1,0,row); persist(); render();
+  setTimeout(()=>{const cell=tbody.querySelector(`tr[data-id="${id}"] td[data-field="name"]`); cell?.focus(); document.execCommand?.('selectAll',false,null)},0)
+}
+function deleteRow(id){if(state.rows.length<=1){alert('Schemat måste innehålla minst en rad.');return} snapshot(); state.rows=state.rows.filter(r=>r.id!==id);persist();render()}
+function moveRow(id,dir){const i=state.rows.findIndex(r=>r.id===id),j=i+dir;if(j<0||j>=state.rows.length)return;snapshot();[state.rows[i],state.rows[j]]=[state.rows[j],state.rows[i]];persist();render()}
+function duplicateRow(id){const i=state.rows.findIndex(r=>r.id===id);snapshot();const copy=structuredClone(state.rows[i]);copy.id=crypto.randomUUID?.()||Math.random().toString(36).slice(2);copy.name+=' kopia';state.rows.splice(i+1,0,copy);persist();render()}
+
+function openDates(td){
+  const row=state.rows.find(r=>r.id===td.parentElement.dataset.id),mi=Number(td.dataset.month);
+  editing={rowId:row.id,month:mi,anchor:td,temp:sortedDateEntries(structuredClone(row.dates[mi]),daysInMonth(state.year,mi))};
+  dateList.classList.remove('suppress-remove-hover');
+  document.getElementById('popoverTitle').textContent=`${row.name || 'Rad'} – ${months[mi]}`;
+  renderDateEditor();
+  const r=td.getBoundingClientRect();
+  let left=Math.min(window.innerWidth-332,Math.max(8,r.left)); let top=r.bottom+6;
+  if(top+300>window.innerHeight) top=Math.max(8,r.top-300);
+  pop.style.left=left+'px';pop.style.top=top+'px';pop.classList.add('open');
+}
+function renderDateEditor(){
+  dateList.innerHTML='';
+  const maxDay=daysInMonth(state.year,editing.month);
+  editing.temp.forEach((e,i)=>{
+    const d=document.createElement('div');d.className='date-entry';
+    const comment=limitComment(e.comment);
+    d.innerHTML=`<input type="number" min="1" max="${maxDay}" value="${e.day??''}" placeholder="Dag"><span class="comment-field"><input type="text" maxlength="40" value="${escapeHtml(comment)}" placeholder="Kommentar (valfritt)"><button class="comment-clear" type="button" title="Radera kommentar" aria-label="Radera kommentar"${comment?'':' hidden'}>×</button></span><button class="remove-date" type="button" title="Radera datum och kommentar" aria-label="Radera datum och kommentar"></button>`;
+    const commentInput=d.querySelector('input[type=text]');
+    const clearComment=d.querySelector('.comment-clear');
+    d.querySelector('input[type=number]').addEventListener('input',ev=>{
+      const day=clampDay(ev.target.value,maxDay);
+      editing.temp[i].day=day;
+      ev.target.value=day;
+    });
+    commentInput.addEventListener('input',ev=>{
+      editing.temp[i].comment=limitComment(ev.target.value);
+      clearComment.hidden=!editing.temp[i].comment;
+    });
+    clearComment.addEventListener('click',ev=>{
+      ev.preventDefault();ev.stopPropagation();
+      editing.temp[i].comment='';
+      commentInput.value='';
+      clearComment.hidden=true;
+      commentInput.focus();
+    });
+    d.querySelector('.remove-date').addEventListener('pointerdown',()=>dateList.classList.add('suppress-remove-hover'));
+    d.querySelector('.remove-date').addEventListener('click',ev=>{
+      ev.preventDefault();ev.stopPropagation();
+      dateList.classList.add('suppress-remove-hover');
+      if(editing.temp.length<=1) editing.temp[i]={day:'',comment:''};
+      else editing.temp.splice(i,1);
+      renderDateEditor();
+    });dateList.append(d);
+  });
+  if(!editing.temp.length) document.getElementById('addDate').click();
+}
+function daysInMonth(year,month){return new Date(year,month+1,0).getDate()}
+function closePopover(){pop.classList.remove('open');editing={rowId:null,month:null,anchor:null,temp:[]}}
+
+tbody.addEventListener('click',e=>{
+  const date=e.target.closest('.date-cell');if(date){openDates(date);return}
+  const menuBtn=e.target.closest('.row-menu>button'); if(menuBtn){document.querySelectorAll('.menu.open').forEach(m=>m.classList.remove('open'));menuBtn.nextElementSibling.classList.toggle('open');return}
+  const act=e.target.closest('[data-action]'); if(act){const id=act.closest('tr').dataset.id;const a=act.dataset.action;if(a==='up')moveRow(id,-1);if(a==='down')moveRow(id,1);if(a==='duplicate')duplicateRow(id);if(a==='delete')deleteRow(id)}
+});
+tbody.addEventListener('focusout',e=>{
+  const td=e.target.closest('td[contenteditable=true]');if(!td)return;const row=state.rows.find(r=>r.id===td.parentElement.dataset.id);if(!row)return;
+  const old=JSON.stringify(row); if(td.dataset.field==='name')row.name=td.innerText.trim(); else Object.assign(row,parsePlace(td.innerText));
+  if(old!==JSON.stringify(row)){undoStack.push(JSON.stringify({...state,rows:state.rows.map(r=>r.id===row.id?JSON.parse(old):r)}));persist();render()}
+});
+
+document.getElementById('addDate').addEventListener('click',e=>{if(e.isTrusted && editing.temp.length>=5){alert('Högst fem datum per månadscell.');return} if(editing.temp.length<5) editing.temp.push({day:'',comment:''}); renderDateEditor()});
+dateList.addEventListener('pointerleave',()=>dateList.classList.remove('suppress-remove-hover'));
+document.getElementById('cancelDates').onclick=closePopover;
+document.getElementById('saveDates').onclick=()=>{
+  const max=daysInMonth(state.year,editing.month);const clean=sortedDateEntries(editing.temp,max);
+  const row=state.rows.find(r=>r.id===editing.rowId);snapshot();row.dates[editing.month]=clean;persist();closePopover();render();
+};
+document.addEventListener('click',e=>{if(pop.classList.contains('open')&&!pop.contains(e.target)&&!e.target.closest('.date-cell'))closePopover();if(!e.target.closest('.row-menu'))document.querySelectorAll('.menu.open').forEach(m=>m.classList.remove('open'))});
+
+document.getElementById('addRowBottom').onclick=()=>addRow(state.rows.length-1);
+yearInput.addEventListener('change',()=>{const y=Number(yearInput.value);if(y>=2000&&y<=9999){snapshot();state.year=y;persist();render()}else{yearInput.value=state.year}});
+function openResetModal(){resetModal.setAttribute('aria-hidden','false');cancelReset.focus()}
+function closeResetModal(){resetModal.setAttribute('aria-hidden','true');resetBtn.focus()}
+resetBtn.onclick=openResetModal;
+cancelReset.onclick=closeResetModal;
+confirmReset.onclick=()=>{snapshot();state=freshState();persist();closeResetModal();render()};
+resetModal.addEventListener('click',e=>{if(e.target===resetModal)closeResetModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&resetModal.getAttribute('aria-hidden')==='false')closeResetModal()});
+
+async function renderA4Canvas(dpi=300){
+  closePopover();document.body.classList.add('exporting');
+  const sheet=document.getElementById('sheet');
+  const old={w:sheet.style.width,h:sheet.style.height,minH:sheet.style.minHeight,p:sheet.style.padding};
+  sheet.style.width='1120px';sheet.style.height='792px';sheet.style.minHeight='';
+  await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+
+  // A4 liggande: 297 × 210 mm. Rendera direkt i den upplösning som exporten kräver
+  // så att PDF-versionen inte bara förstorar en lågupplöst skärmbild.
+  const targetW=Math.round(297/25.4*dpi);
+  const targetH=Math.round(210/25.4*dpi);
+  const renderScale=Math.max(2,targetW/sheet.getBoundingClientRect().width);
+  const base=await html2canvas(sheet,{backgroundColor:'#ffffff',scale:renderScale,useCORS:true,logging:false});
+  const out=document.createElement('canvas');out.width=targetW;out.height=targetH;
+  const ctx=out.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,out.width,out.height);
+  ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
+  const ratio=Math.min(out.width/base.width,out.height/base.height);const w=base.width*ratio,h=base.height*ratio;
+  ctx.drawImage(base,(out.width-w)/2,(out.height-h)/2,w,h);
+  Object.assign(sheet.style,{width:old.w,height:old.h,minHeight:old.minH,padding:old.p});document.body.classList.remove('exporting');return out;
+}
+function downloadBlob(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.append(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000)}
+document.getElementById('exportPng').onclick=async()=>{const c=await renderA4Canvas(600);c.toBlob(b=>downloadBlob(b,`motesschema-${state.year}-A4-600dpi.png`),'image/png')};
+document.getElementById('exportPdf').onclick=async()=>{const c=await renderA4Canvas(900);const img=c.toDataURL('image/jpeg',1.0);const {jsPDF}=window.jspdf;const pdf=new jsPDF({orientation:'landscape',unit:'mm',format:'a4',compress:true});pdf.addImage(img,'JPEG',0,0,297,210,undefined,'SLOW');pdf.save(`motesschema-${state.year}-A4-900dpi.pdf`)};
+render();
+})();
+</script>
+</body>
+</html>
