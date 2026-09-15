@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Körkort för lärare - PDF-export</title>
+  <title>Skapa lärarkörkort</title>
   <style>
     :root {
       --ink: #242424;
@@ -35,10 +35,19 @@
       padding: 18px;
     }
 
+    .page-title {
+      width: min(100%, 960px);
+      margin: 0;
+      color: #111827;
+      font-size: 28px;
+      line-height: 1.1;
+      font-weight: 800;
+    }
+
     .toolbar {
       width: min(100%, 960px);
       display: flex;
-      align-items: end;
+      align-items: center;
       justify-content: space-between;
       gap: 14px;
       padding: 12px;
@@ -49,8 +58,9 @@
     }
 
     .field {
-      display: grid;
-      gap: 5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
     .select-wrap {
@@ -131,6 +141,7 @@
     label {
       font-size: 13px;
       font-weight: 700;
+      line-height: 1;
       color: #334155;
     }
 
@@ -391,6 +402,11 @@
         flex-direction: column;
       }
 
+      .field {
+        justify-content: space-between;
+        width: 100%;
+      }
+
       .select-button,
       button {
         width: 100%;
@@ -412,6 +428,8 @@
   </style>
 </head>
 <body>
+  <h1 class="page-title">Skapa lärarkörkort</h1>
+
   <div class="toolbar" aria-label="Exportinställningar">
     <div class="field">
       <label for="periodSelect">Giltighetsperiod</label>
@@ -627,7 +645,7 @@
         content.push(titleLine(xMm + textLeft, yMm + 31.0, selectedPeriod));
         content.push(textLine('F3', 9.50, xMm + textLeft, yMm + 38.0, 'Gäller som entré för en person till Kulturens besöksmål.', 0.35));
         content.push(textLine('F1', 11.48, xMm + textLeft, yMm + 48.3, 'Namn:', 0));
-        content.push(textLine('F1', 11.48, xMm + textLeft, yMm + 56.0, 'Skola:', 0));
+        content.push(textLine('F1', 11.48, xMm + textLeft, yMm + 54.7, 'Skola:', 0));
 
         const lineY = yMm + 58.1;
         content.push(`0 g 0.99 w ${(xMm * mmToPt).toFixed(2)} ${pdfY(lineY).toFixed(2)} m ${((xMm + cardWidth) * mmToPt).toFixed(2)} ${pdfY(lineY).toFixed(2)} l S\n`);
@@ -770,11 +788,6 @@
       }
     });
     window.addEventListener('resize', scalePreview);
-    window.addEventListener('beforeprint', () => {
-      sheet.style.transform = '';
-      sheet.parentElement.style.height = '';
-    });
-    window.addEventListener('afterprint', scalePreview);
     downloadButton.addEventListener('click', downloadPdf);
   </script>
 </body>
