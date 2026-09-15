@@ -63,6 +63,61 @@
       gap: 10px;
     }
 
+    .text-field {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .text-input-wrap {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .text-input {
+      width: 100%;
+      min-height: 40px;
+      padding: 0 34px 0 12px;
+      color: #111827;
+      background: #fff;
+      border: 1px solid #b8c2cc;
+      border-radius: 6px;
+      font: 400 15px/1 Arial, Helvetica, sans-serif;
+    }
+
+    .text-input:focus {
+      outline: 3px solid color-mix(in srgb, var(--ring), transparent 55%);
+      outline-offset: 2px;
+    }
+
+    .clear-input {
+      position: absolute;
+      right: 7px;
+      width: 22px;
+      height: 22px;
+      min-height: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      color: #475569;
+      background: transparent;
+      border: 0;
+      border-radius: 50%;
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .clear-input:hover {
+      color: #111827;
+      background: #e8edf3;
+    }
+
+    .text-input-wrap.has-value .clear-input {
+      display: inline-flex;
+    }
+
     .select-wrap {
       position: relative;
       display: inline-block;
@@ -187,6 +242,49 @@
       display: flex;
       gap: 10px;
       align-items: center;
+    }
+
+    .details-panel {
+      width: min(100%, 960px);
+      padding: 12px;
+      background: var(--paper);
+      border: 1px solid #d8dde3;
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(25, 31, 39, 0.08);
+    }
+
+    .details-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 12px;
+    }
+
+    .detail-row {
+      display: grid;
+      grid-template-columns: 58px minmax(0, 1fr) minmax(0, 1fr);
+      gap: 8px;
+      align-items: center;
+      padding: 8px;
+      background: #f8fafc;
+      border: 1px solid #e1e7ee;
+      border-radius: 6px;
+    }
+
+    .detail-card-number {
+      color: #334155;
+      font: 800 13px/1 Arial, Helvetica, sans-serif;
+      white-space: nowrap;
+    }
+
+    .detail-field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      min-width: 0;
+    }
+
+    .detail-field label {
+      font-size: 11px;
     }
 
     .button-icon {
@@ -322,6 +420,16 @@
       font-weight: 800;
     }
 
+    .form-lines > div {
+      display: grid;
+      grid-template-columns: 15.3mm minmax(0, 1fr);
+      align-items: baseline;
+    }
+
+    .form-value {
+      font-weight: 600;
+    }
+
     .footer {
       position: absolute;
       left: 0;
@@ -373,6 +481,11 @@
         display: none !important;
       }
 
+      .page-title,
+      .details-panel {
+        display: none !important;
+      }
+
       .sheet-wrap {
         width: 210mm;
         height: 297mm !important;
@@ -407,9 +520,27 @@
         width: 100%;
       }
 
+      .text-field {
+        justify-content: space-between;
+        width: 100%;
+      }
+
       .select-button,
+      .text-input,
       button {
         width: 100%;
+      }
+
+      .text-input-wrap {
+        width: 100%;
+      }
+
+      .details-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .detail-row {
+        grid-template-columns: 1fr;
       }
 
       .toolbar-actions {
@@ -450,6 +581,10 @@
     </div>
   </div>
 
+  <section class="details-panel" aria-label="Uppgifter per körkort">
+    <div class="details-grid" id="detailsGrid"></div>
+  </section>
+
   <main class="sheet-wrap" aria-label="A4-ark med åtta körkort">
     <section class="sheet" id="sheet"></section>
   </main>
@@ -461,8 +596,8 @@
         <h2 class="title">Körkort för lärare <span class="period"></span></h2>
         <p class="body-text">Gäller som entré för en person till Kulturens besöksmål.</p>
         <div class="form-lines">
-          <div>Namn:</div>
-          <div>Skola:</div>
+          <div>Namn:<span class="form-value name-value"></span></div>
+          <div>Skola:<span class="form-value school-value"></span></div>
         </div>
       </div>
       <footer class="footer">
@@ -475,6 +610,7 @@
   <script>
     const periodSelect = document.getElementById('periodSelect');
     const downloadButton = document.getElementById('downloadButton');
+    const detailsGrid = document.getElementById('detailsGrid');
     const sheet = document.getElementById('sheet');
     const template = document.getElementById('cardTemplate');
     const selectWrap = periodSelect.closest('.select-wrap');
@@ -492,7 +628,9 @@
     function buildCards() {
       const fragment = document.createDocumentFragment();
       for (let index = 0; index < 8; index += 1) {
-        fragment.appendChild(template.content.firstElementChild.cloneNode(true));
+        const card = template.content.firstElementChild.cloneNode(true);
+        card.dataset.cardIndex = String(index);
+        fragment.appendChild(card);
       }
       ['vertical', 'horizontal row-1', 'horizontal row-2', 'horizontal row-3'].forEach((className) => {
         const line = document.createElement('div');
@@ -503,11 +641,70 @@
       sheet.replaceChildren(fragment);
     }
 
+    function buildDetailsInputs() {
+      const fragment = document.createDocumentFragment();
+
+      for (let index = 0; index < 8; index += 1) {
+        const row = document.createElement('div');
+        const nameId = `cardName${index}`;
+        const schoolId = `cardSchool${index}`;
+        row.className = 'detail-row';
+        row.innerHTML = `
+          <span class="detail-card-number">Kort ${index + 1}</span>
+          <span class="detail-field">
+            <label for="${nameId}">Namn</label>
+            <span class="text-input-wrap">
+              <input class="text-input detail-input" id="${nameId}" type="text" autocomplete="off" data-card-index="${index}" data-field="name" aria-label="Namn kort ${index + 1}">
+              <button class="clear-input" type="button" data-clear="${nameId}" aria-label="Radera namn på kort ${index + 1}">×</button>
+            </span>
+          </span>
+          <span class="detail-field">
+            <label for="${schoolId}">Skola</label>
+            <span class="text-input-wrap">
+              <input class="text-input detail-input" id="${schoolId}" type="text" autocomplete="off" data-card-index="${index}" data-field="school" aria-label="Skola kort ${index + 1}">
+              <button class="clear-input" type="button" data-clear="${schoolId}" aria-label="Radera skola på kort ${index + 1}">×</button>
+            </span>
+          </span>
+        `;
+        fragment.appendChild(row);
+      }
+
+      detailsGrid.replaceChildren(fragment);
+    }
+
     function updatePeriod() {
       periodSelect.textContent = selectedPeriod;
       document.querySelectorAll('.period').forEach((target) => {
         target.textContent = selectedPeriod;
       });
+    }
+
+    function cleanValue(value) {
+      return value.trim().replace(/\s+/g, ' ');
+    }
+
+    function updateTextFieldState(input) {
+      input.closest('.text-input-wrap').classList.toggle('has-value', input.value.length > 0);
+    }
+
+    function getCardDetails(index) {
+      const nameInput = document.getElementById(`cardName${index}`);
+      const schoolInput = document.getElementById(`cardSchool${index}`);
+
+      return {
+        name: nameInput ? cleanValue(nameInput.value) : '',
+        school: schoolInput ? cleanValue(schoolInput.value) : ''
+      };
+    }
+
+    function updatePersonalDetails() {
+      document.querySelectorAll('.card').forEach((card) => {
+        const details = getCardDetails(Number(card.dataset.cardIndex));
+        card.querySelector('.name-value').textContent = details.name;
+        card.querySelector('.school-value').textContent = details.school;
+      });
+
+      document.querySelectorAll('.detail-input').forEach(updateTextFieldState);
     }
 
     function setSelectOpen(isOpen) {
@@ -640,12 +837,20 @@
         content.push(`q ${(cardWidth * mmToPt).toFixed(2)} 0 0 ${(logoHeight * mmToPt).toFixed(2)} ${(xMm * mmToPt).toFixed(2)} ${pdfY(yMm, logoHeight).toFixed(2)} cm /Logo Do Q\n`);
       }
 
-      function drawCard(xMm, yMm) {
+      function drawCard(xMm, yMm, cardIndex) {
+        const { name: nameValue, school: schoolValue } = getCardDetails(cardIndex);
+
         drawLogo(xMm, yMm);
         content.push(titleLine(xMm + textLeft, yMm + 31.0, selectedPeriod));
         content.push(textLine('F3', 9.50, xMm + textLeft, yMm + 38.0, 'Gäller som entré för en person till Kulturens besöksmål.', 0.35));
-        content.push(textLine('F1', 11.48, xMm + textLeft, yMm + 48.3, 'Namn:', 0));
-        content.push(textLine('F1', 11.48, xMm + textLeft, yMm + 54.7, 'Skola:', 0));
+        content.push(textLine('F1', 11.48, xMm + textLeft, yMm + 47.1, 'Namn:', 0));
+        if (nameValue) {
+          content.push(textLine('F2', 11.10, xMm + textLeft + 15.3, yMm + 47.1, nameValue, 0));
+        }
+        content.push(textLine('F1', 11.48, xMm + textLeft, yMm + 53.5, 'Skola:', 0));
+        if (schoolValue) {
+          content.push(textLine('F2', 11.10, xMm + textLeft + 15.1, yMm + 53.5, schoolValue, 0));
+        }
 
         const lineY = yMm + 58.1;
         content.push(`0 g 0.99 w ${(xMm * mmToPt).toFixed(2)} ${pdfY(lineY).toFixed(2)} m ${((xMm + cardWidth) * mmToPt).toFixed(2)} ${pdfY(lineY).toFixed(2)} l S\n`);
@@ -657,7 +862,8 @@
         for (let column = 0; column < 2; column += 1) {
           drawCard(
             sheetPadX + column * (cardWidth + columnGap),
-            sheetPadTop + row * (cardHeight + rowGap)
+            sheetPadTop + row * (cardHeight + rowGap),
+            row * 2 + column
           );
         }
       }
@@ -754,7 +960,9 @@
     });
 
     buildCards();
+    buildDetailsInputs();
     updatePeriod();
+    updatePersonalDetails();
     scalePreview();
 
     periodSelect.addEventListener('click', () => setSelectOpen(!selectWrap.classList.contains('is-open')));
@@ -786,6 +994,22 @@
       if (!selectWrap.contains(event.target)) {
         setSelectOpen(false);
       }
+    });
+    detailsGrid.addEventListener('input', (event) => {
+      if (event.target.classList.contains('detail-input')) {
+        updatePersonalDetails();
+      }
+    });
+    detailsGrid.addEventListener('click', (event) => {
+      const button = event.target.closest('.clear-input');
+      if (!button) {
+        return;
+      }
+
+      const input = document.getElementById(button.dataset.clear);
+      input.value = '';
+      input.focus();
+      updatePersonalDetails();
     });
     window.addEventListener('resize', scalePreview);
     downloadButton.addEventListener('click', downloadPdf);
