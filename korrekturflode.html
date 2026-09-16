@@ -56,7 +56,7 @@ const renderEditsWithFinalNotice=renderEdits;renderEdits=function(){renderEditsW
 </script>
 <script>
 (function(){
-const READER_SLOTS=["A","B","C"],DEFAULT_READER_SETTINGS={A:{firstName:"",lastName:"",email:""},B:{firstName:"",lastName:"",email:""},C:{firstName:"",lastName:"",email:""}};
+const READER_SLOTS=["A","B","C"],DEFAULT_READER_SETTINGS={A:{firstName:"Carina",lastName:"Rundberg",email:"carina.rundberg@kulturen.com"},B:{firstName:"Nina",lastName:"Davis",email:"nina.davis@kulturen.com"},C:{firstName:"Johanna",lastName:"Tallefors",email:"johanna.tallefors@kulturen.com"}};
 document.head.insertAdjacentHTML("beforeend",'<style>.readers-button{margin-left:auto;display:inline-flex;align-items:center;gap:8px}.readers-backdrop{z-index:180}.readers-backdrop .modal{width:min(760px,100%)!important}.reader-settings-grid{display:grid;gap:10px}.reader-settings-head,.reader-settings-row{display:grid;grid-template-columns:44px minmax(0,1fr) minmax(0,1fr) minmax(0,1.35fr);gap:10px;align-items:center}.reader-settings-head{padding:0 4px;color:#64748b;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}.reader-settings-slot{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:#e4f1fb;color:#0b5f9e;font-size:12px;font-weight:750}.reader-settings-row input{width:100%;height:38px;border:1px solid #cbd2dc;border-radius:8px;padding:7px 10px;background:#fbfcfe;font:inherit}.reader-settings-row input:focus{outline:0;border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px rgba(15,108,189,.14)}@media(max-width:700px){.reader-settings-head{display:none}.reader-settings-row{grid-template-columns:34px 1fr}.reader-settings-row input{grid-column:2}}</style>');
 document.body.insertAdjacentHTML("beforeend",'<div class="backdrop readers-backdrop" id="readersBackdrop"><section class="modal reader-settings-modal" role="dialog" aria-modal="true" aria-labelledby="readersModalTitle"><div class="modal-head"><h2 id="readersModalTitle">Läsare</h2><button class="modal-close" id="readersClose" type="button" aria-label="Stäng"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12"></path><path d="M18 6L6 18"></path></svg></button></div><form id="readersForm"><div class="modal-body"><div class="reader-settings-grid"><div class="reader-settings-head"><span></span><span>Förnamn</span><span>Efternamn</span><span>E-post</span></div><div class="reader-settings-row" data-slot="A"><span class="reader-settings-slot">1</span><input name="firstName-A" type="text" autocomplete="off" placeholder="Förnamn"><input name="lastName-A" type="text" autocomplete="off" placeholder="Efternamn"><input name="email-A" type="email" autocomplete="off" placeholder="namn@example.com"></div><div class="reader-settings-row" data-slot="B"><span class="reader-settings-slot">2</span><input name="firstName-B" type="text" autocomplete="off" placeholder="Förnamn"><input name="lastName-B" type="text" autocomplete="off" placeholder="Efternamn"><input name="email-B" type="email" autocomplete="off" placeholder="namn@example.com"></div><div class="reader-settings-row" data-slot="C"><span class="reader-settings-slot">3</span><input name="firstName-C" type="text" autocomplete="off" placeholder="Förnamn"><input name="lastName-C" type="text" autocomplete="off" placeholder="Efternamn"><input name="email-C" type="email" autocomplete="off" placeholder="namn@example.com"></div></div></div><div class="modal-actions"><button class="secondary" id="readersCancel" type="button">Avbryt</button><button class="primary" type="submit">Spara</button></div></form></section></div>');
 function normalizedReader(slot,value){const fallback=DEFAULT_READER_SETTINGS[slot],reader=value&&typeof value==="object"?value:{};return{firstName:String(reader.firstName||fallback.firstName).trim(),lastName:String(reader.lastName||fallback.lastName).trim(),email:String(reader.email||fallback.email).trim()}}
@@ -81,28 +81,17 @@ applyReaderSettings();render();
 </script>
 <script>
 const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycby2O0ZywESKuIToQGrbmL3diOpNB2TRJFZUjEOQHdY0srAljwFzq2zS_XAAHy7x3-7_/exec";
-const TEST_MODE = true;
-const TEST_EMAIL = "johan.hofvendahl@kulturen.com";
 const PLATFORM_URL = "https://kultpub.github.io/site/korrekturflode.html";
 
-async function sendEmailViaGAS(toEmail, subject, htmlBody, intendedForInfo) {
+async function sendEmailViaGAS(toEmail, subject, htmlBody) {
   if(!GAS_WEB_APP_URL || GAS_WEB_APP_URL.includes("KLISTRA_IN")) return;
   
-  let finalTo = toEmail;
-  let finalBody = htmlBody;
-
-  if (TEST_MODE) {
-    finalTo = TEST_EMAIL;
-    const testHeader = `<div style="background:#fff3cd;color:#856404;padding:12px;border:1px solid #ffeeba;border-radius:6px;margin-bottom:16px;font-family:sans-serif;"><strong>DETTA MEJL ÄR ETT TEST.</strong><br>Det skulle egentligen ha skickats till: <u>${intendedForInfo}</u> (${toEmail})</div><hr style="border:0;border-top:1px solid #eee;margin-bottom:16px;">`;
-    finalBody = testHeader + htmlBody;
-  }
-
   try {
     await fetch(GAS_WEB_APP_URL, {
       method: "POST",
       mode: "no-cors",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ to: finalTo, subject: subject, body: finalBody })
+      body: JSON.stringify({ to: toEmail, subject: subject, body: htmlBody })
     });
   } catch (err) {
     console.error("Fel vid e-postanrop:", err);
@@ -128,7 +117,7 @@ function checkAndTriggerEmails(article) {
     if (r1.email) {
       const subj = `Korrekturläsning: ${article.title}`;
       const body = `<p>Hej ${r1.firstName}.</p><p>Nu är årsboksartikeln <strong>${article.title}</strong>${authorText} redo för din korrekturläsning.</p>${docLinkHtml}${instructionHtml}${signatureHtml}`;
-      sendEmailViaGAS(r1.email, subj, body, `Läsare 1 (${r1.firstName})`);
+      sendEmailViaGAS(r1.email, subj, body);
       article.emailsSent.flowStarted = true;
     }
   }
@@ -140,7 +129,7 @@ function checkAndTriggerEmails(article) {
     if (r2.email) {
       const subj = `Korrekturläsning: ${article.title}`;
       const body = `<p>Hej ${r2.firstName}.</p><p>Nu är årsboksartikeln <strong>${article.title}</strong>${authorText} korrekturläst av ${r1.firstName} och redo för din läsning.</p>${docLinkHtml}${instructionHtml}${signatureHtml}`;
-      sendEmailViaGAS(r2.email, subj, body, `Läsare 2 (${r2.firstName})`);
+      sendEmailViaGAS(r2.email, subj, body);
       article.emailsSent[rOrder[0]] = true;
     }
   }
@@ -152,7 +141,7 @@ function checkAndTriggerEmails(article) {
     if (r3.email) {
       const subj = `Korrekturläsning: ${article.title}`;
       const body = `<p>Hej ${r3.firstName}.</p><p>Nu är årsboksartikeln <strong>${article.title}</strong>${authorText} korrekturläst av ${r2.firstName} och redo för din läsning.</p>${docLinkHtml}${instructionHtml}${signatureHtml}`;
-      sendEmailViaGAS(r3.email, subj, body, `Läsare 3 (${r3.firstName})`);
+      sendEmailViaGAS(r3.email, subj, body);
       article.emailsSent[rOrder[1]] = true;
     }
   }
@@ -161,7 +150,7 @@ function checkAndTriggerEmails(article) {
   if (article.status[rOrder[2]] === "done" && !article.emailsSent[rOrder[2]]) {
     const subj = `Korrekturläsning klar: ${article.title}`;
     const body = `<p>Hej Johan.</p><p>Nu har årsboksartikeln <strong>${article.title}</strong>${authorText} blivit korrekturläst av samtliga läsare.</p>${docLinkHtml}<p>Gå till plattformen:<br><a href="${PLATFORM_URL}">${PLATFORM_URL}</a></p><p>Med vänlig hälsning,<br>Årsbokens flödesgeneral</p>`;
-    sendEmailViaGAS("johan.hofvendahl@kulturen.com", subj, body, "Johan Hofvendahl");
+    sendEmailViaGAS("johan.hofvendahl@kulturen.com", subj, body);
     article.emailsSent[rOrder[2]] = true;
   }
 }
@@ -176,6 +165,12 @@ const FIREBASE_CONFIG={
   messagingSenderId:"112934438801",
   appId:"1:112934438801:web:608ca3af1eed5bca31fc30"
 },FIREBASE_COLLECTION="korrekturflode",FIREBASE_DOC="state";
+// Uppdatera äldre sparade läsare en gång vid övergången till skarp drift.
+const READER_CONFIGURATION_VERSION=1;
+function applyStoredReaders(data){
+  if(window.setKorrekturReaders)window.setKorrekturReaders(
+    data.readerConfigurationVersion===READER_CONFIGURATION_VERSION?data.readers:null,{render:false});
+}
 
 let auth, inactivityTimer;
 const INACTIVITY_LIMIT = 60 * 60 * 1000; // 1 timme i millisekunder
@@ -243,7 +238,7 @@ async function initFirebaseStorage(){
 
         window.saveFirebaseState=async()=>{
           if(applyingRemote)return;
-          await firestoreMod.setDoc(stateRef,{articles,readers:readerPayload(),updatedAt:firestoreMod.serverTimestamp()},{merge:true});
+          await firestoreMod.setDoc(stateRef,{articles,readers:readerPayload(),readerConfigurationVersion:READER_CONFIGURATION_VERSION,updatedAt:firestoreMod.serverTimestamp()},{merge:true});
           window.__pendingFirebaseSave=false;
         };
 
@@ -252,9 +247,10 @@ async function initFirebaseStorage(){
           const data=snapshot.data();
           applyingRemote=true;
           if(Array.isArray(data.articles))articles=data.articles;
-          if(data.readers&&window.setKorrekturReaders)window.setKorrekturReaders(data.readers,{render:false});
+          applyStoredReaders(data);
           applyingRemote=false;
           render();
+          if(data.readerConfigurationVersion!==READER_CONFIGURATION_VERSION)await window.saveFirebaseState();
         } else await window.saveFirebaseState();
 
         firestoreMod.onSnapshot(stateRef,snap=>{
@@ -262,7 +258,7 @@ async function initFirebaseStorage(){
           const data=snap.data();
           applyingRemote=true;
           if(Array.isArray(data.articles))articles=data.articles;
-          if(data.readers&&window.setKorrekturReaders)window.setKorrekturReaders(data.readers,{render:false});
+          applyStoredReaders(data);
           applyingRemote=false;
           render();
         },error=>console.error("Firebase-synk misslyckades",error));
