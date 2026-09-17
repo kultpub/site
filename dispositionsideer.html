@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Byggstenar och rörelser i kulturhistoriskt skrivande</title>
+  <meta name="description" content="En skrivhandledning med byggstenar och modeller för kulturhistoriska texter.">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f7f5f0;
+      --panel: #ffffff;
+      --panel-soft: #fbfaf7;
+      --text: #20201d;
+      --muted: #64615b;
+      --line: #ded9cf;
+      --accent: #0d6f73;
+      --accent-strong: #064f54;
+      --example: #f1ece1;
+      --shadow: 0 24px 70px rgba(32, 32, 29, 0.12);
+      --radius: 8px;
+      --content: min(100% - 40px, 920px);
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    body.dark {
+      color-scheme: dark;
+      --bg: #151615;
+      --panel: #20211f;
+      --panel-soft: #191a19;
+      --text: #f2eee5;
+      --muted: #beb8ad;
+      --line: #393a35;
+      --accent: #76c7c5;
+      --accent-strong: #a5e5e0;
+      --example: #2a2a26;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.32);
+    }
+    * {
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+      scrollbar-gutter: stable;
+      overflow-y: scroll;
+    }
+    body {
+      margin: 0;
+      padding-top: 74px;
+      background:
+        linear-gradient(180deg, rgba(13, 111, 115, 0.08), transparent 420px),
+        var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 17px;
+      line-height: 1.68;
+      overflow-x: hidden;
+      transition: background-color 240ms ease, color 240ms ease;
+    }
+    a {
+      color: var(--accent);
+      text-decoration-thickness: 0.09em;
+      text-underline-offset: 0.18em;
+    }
+    a:hover {
+      color: var(--accent-strong);
+    }
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      backdrop-filter: blur(18px);
+      background: color-mix(in srgb, var(--bg) 84%, transparent);
+      border-bottom: 1px solid color-mix(in srgb, var(--line) 72%, transparent);
+    }
+    body.menu-open .topbar {
+      z-index: 60;
+      pointer-events: none;
+      background: transparent;
+      border-bottom-color: transparent;
+      backdrop-filter: none;
+    }
+    .topbar-inner {
+      width: var(--content);
+      margin: 0 auto;
+      min-height: 74px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .site-title {
+      display: flex;
+      align-items: center;
+      min-width: 0;
+      margin: 0;
+      overflow: hidden;
+      color: var(--text);
+      font-family: var(--serif);
+      font-size: clamp(1.08rem, 2vw, 1.28rem);
+      font-weight: 600;
+      line-height: 1.1;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 0 0 auto;
+    }
+    body.menu-open .site-title,
+    body.menu-open .theme-toggle {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .theme-toggle {
+      position: relative;
+      width: 68px;
+      height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel);
+      color: var(--muted);
+      cursor: pointer;
+      transition: border-color 180ms ease, background-color 180ms ease;
+    }
+    .theme-toggle i {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.84rem;
+      pointer-events: none;
+    }
+    .theme-toggle .fa-sun {
+      left: 11px;
+      color: #b87910;
+    }
+    .theme-toggle .fa-moon {
+      right: 11px;
+      color: #6d7786;
+    }
+    .theme-toggle::after {
+      content: "";
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+      transition: transform 220ms ease, background-color 180ms ease;
+    }
+    body.dark .theme-toggle::after {
+      transform: translateX(32px);
+    }
+    .hamburger {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: var(--panel);
+      cursor: pointer;
+    }
+    body.menu-open .hamburger {
+      pointer-events: auto;
+    }
+    .hamburger-lines {
+      position: relative;
+      width: 19px;
+      height: 14px;
+    }
+    .hamburger-lines span {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      border-radius: 999px;
+      background: var(--text);
+      transition: transform 220ms ease, opacity 160ms ease, top 220ms ease;
+    }
+    .hamburger-lines span:nth-child(1) { top: 0; }
+    .hamburger-lines span:nth-child(2) { top: 6px; }
+    .hamburger-lines span:nth-child(3) { top: 12px; }
+    body.menu-open .hamburger-lines span:nth-child(1) {
+      top: 6px;
+      transform: rotate(45deg);
+    }
+    body.menu-open .hamburger-lines span:nth-child(2) {
+      opacity: 0;
+      transform: translateX(5px);
+    }
+    body.menu-open .hamburger-lines span:nth-child(3) {
+      top: 6px;
+      transform: rotate(-45deg);
+    }
+    .scrim {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      background: rgba(0, 0, 0, 0.32);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 220ms ease;
+    }
+    body.menu-open .scrim {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      z-index: 40;
+      width: min(86vw, 370px);
+      height: 100dvh;
+      padding: 30px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      transform: translateX(105%);
+      transition: transform 260ms cubic-bezier(.2, .8, .2, 1);
+      overflow-y: auto;
+    }
+    body.menu-open .drawer {
+      transform: translateX(0);
+    }
+    .drawer h2 {
+      margin: 0 0 18px;
+      font-family: var(--serif);
+      font-size: 1.55rem;
+      line-height: 1.15;
+    }
+    .drawer-group {
+      margin-top: 26px;
+      padding-top: 22px;
+      border-top: 1px solid var(--line);
+    }
+    .drawer-label {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+    .drawer nav,
+    .link-list {
+      display: grid;
+      gap: 4px;
+    }
+    .drawer a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 9px 0;
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+    }
+    .drawer a:hover {
+      color: var(--accent-strong);
+    }
+    .drawer i {
+      color: var(--accent);
+      font-size: 0.84rem;
+    }
+    .hero {
+      width: var(--content);
+      margin: 0 auto;
+      padding: clamp(54px, 9vw, 98px) 0 clamp(34px, 6vw, 62px);
+    }
+    .eyebrow {
+      margin: 0 0 15px;
+      color: var(--accent-strong);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+    h1 {
+      max-width: 820px;
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(2.55rem, 6.2vw, 5.35rem);
+      font-weight: 500;
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+    .intro {
+      max-width: 720px;
+      margin: 28px 0 0;
+      color: var(--muted);
+      font-size: clamp(1.05rem, 2.2vw, 1.24rem);
+      line-height: 1.58;
+    }
+    main {
+      width: var(--content);
+      margin: 0 auto;
+      padding-bottom: 76px;
+    }
+    .content-shell {
+      display: grid;
+      gap: 18px;
+    }
+    section {
+      scroll-margin-top: 96px;
+      padding: clamp(24px, 4vw, 38px);
+      border-bottom: 1px solid var(--line);
+      background: transparent;
+    }
+    section h2 {
+      margin: 0 0 13px;
+      font-family: var(--serif);
+      font-size: clamp(1.55rem, 2.6vw, 2rem);
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+    p {
+      margin: 0 0 16px;
+    }
+    p:last-child,
+    ul:last-child {
+      margin-bottom: 0;
+    }
+    ul {
+      margin: 12px 0 0;
+      padding-left: 1.35rem;
+    }
+    li {
+      margin: 8px 0;
+      padding-left: 0.25rem;
+    }
+    strong {
+      font-weight: 760;
+    }
+    em {
+      font-style: italic;
+    }
+    .example {
+      margin: 18px 0 0;
+      padding: 18px 18px 18px 20px;
+      border-left: 4px solid var(--accent);
+      border-radius: var(--radius);
+      background: var(--example);
+    }
+    .example-label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--accent-strong);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+    .example p,
+    .example blockquote {
+      margin: 10px 0 0;
+      color: var(--text);
+      font-family: var(--serif);
+      font-size: 1.18rem;
+      line-height: 1.5;
+    }
+    .footer {
+      width: var(--content);
+      margin: 0 auto;
+      padding: 0 0 54px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      text-align: center;
+    }
+    @media (max-width: 720px) {
+      :root {
+        --content: min(100% - 24px, 920px);
+      }
+      body {
+        font-size: 16px;
+        padding-top: 64px;
+      }
+      .topbar-inner {
+        min-height: 64px;
+      }
+      .site-title {
+        max-width: 46vw;
+        font-size: 1rem;
+      }
+      .theme-toggle {
+        width: 62px;
+        height: 34px;
+      }
+      body.dark .theme-toggle::after {
+        transform: translateX(28px);
+      }
+      .theme-toggle::after {
+        width: 24px;
+        height: 24px;
+      }
+      .hero {
+        padding-top: 48px;
+      }
+      section {
+        padding: 23px 18px;
+      }
+      .drawer {
+        padding: 24px;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <p class="site-title">Skrivhandledning kulturhistoria</p>
+      <div class="actions">
+        <button class="theme-toggle" type="button" id="themeToggle" aria-label="Växla mörkt läge" aria-pressed="false">
+          <i class="fa-solid fa-sun" aria-hidden="true"></i>
+          <i class="fa-solid fa-moon" aria-hidden="true"></i>
+        </button>
+        <button class="hamburger" type="button" id="menuToggle" aria-label="Öppna meny" aria-expanded="false" aria-controls="drawer">
+          <span class="hamburger-lines" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="scrim" id="scrim" hidden></div>
+
+  <aside class="drawer" id="drawer" aria-label="Sidomeny" aria-hidden="true">
+    <h2>Innehåll</h2>
+    <nav aria-label="Navigationslänkar">
+      <a href="#kronologisk">1. Kronologisk rörelse <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+      <a href="#trednedslag">2. Tre nedslag <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+      <a href="#foreunderefter">3. Före–under–efter <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+      <a href="#nutidursprung">4. Från nutid till ursprung <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+      <a href="#detaljhelhet">5. Från detalj till helhet <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+      <a href="#parallell">6. Parallell rörelse då och nu <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+      <a href="#flerperspektiv">7. Flera perspektiv <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+      <a href="#ingangar">Ingångar <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+    </nav>
+  </aside>
+
+  <div id="top" class="hero">
+    <p class="eyebrow">Kulturhistoriska föreningen för södra Sverige</p>
+    <h1>Byggstenar och rörelser</h1>
+    <p class="intro">En god kulturhistorisk text behöver en tydlig arkitektur: en ingång som fångar läsaren, en rörelse som för texten framåt, en vändpunkt eller fördjupning, samt ett slut som samlar betydelsen. Men ett kärt barn har många namn – det här kan lika gärna kallas <em>berättarstruktur</em>, <em>dispositionsidé</em>, <em>makrosyntaktisk idé</em> eller <em>narrativ modell</em>. Denna handledning vill dock inte låsa in hur en text måste behandlas, utan är snarare tänkt att inspirera till hur den kan ta form.</p>
+  </div>
+
+  <main>
+    <div class="content-shell">
+      <section id="introduktion">
+        <h2>Grundprinciper för formen</h2>
+        <p>Valet av modell styrs av vad texten handlar om och vilket syfte du har. Oavsett om det gäller en person, ett föremål, en teknik, en förändring över tid eller en specifik händelse, hjälper de fasta byggstenarna till att bära upp stoffet utan att det tappar i skärpa.</p>
+      </section>
+
+      <section id="kronologisk">
+        <h2>1. Kronologisk rörelse</h2>
+        <p><em>Passar för:</em> Ett längre historiskt förlopp eller en utvecklingslinje.</p>
+        <ul>
+          <li><strong>Utgångsläge eller ursprung:</strong> Etablera hur det såg ut från början.</li>
+          <li><strong>Något sätter utvecklingen i gång:</strong> Katalysatorn eller drivkraften introduceras.</li>
+          <li><strong>Förloppet fortskrider:</strong> Händelserna rullar på i tidsenlig ordning.</li>
+          <li><strong>Avgörande förändring eller brytpunkt:</strong> En milstolpe eller ett vägskäl som förändrar spelplanen.</li>
+          <li><strong>Resultat och efterverkningar:</strong> Var landade vi till slut och vad betyder det i dag?</li>
+        </ul>
+      </section>
+
+      <section id="trednedslag">
+        <h2>2. Tre nedslag</h2>
+        <p><em>Passar för:</em> Att fånga en helhet genom att antingen följa en utveckling i korta kliv eller belysa ett fenomen genom tre typiska exempel.</p>
+        
+        <div class="example">
+          <span class="example-label">Variant A: Kronologiska ögonblick</span>
+          <p>Tre avgörande faser där tiden däremellan hoppas över.</p>
+          <ul>
+            <li>Övergripande tema eller fråga</li>
+            <li><strong>Första scenen:</strong> Början eller det första formativa ögonblicket.</li>
+            <li><strong>Andra scenen:</strong> Förändringen eller kontrasten i ett nytt skede.</li>
+            <li><strong>Tredje scenen:</strong> Följden eller arvet efter det som varit.</li>
+            <li>Sammanfattande reflektion.</li>
+          </ul>
+        </div>
+
+        <div class="example" style="margin-top: 14px;">
+          <span class="example-label">Variant B: Tre skilda exempel</span>
+          <p>Tre sinsemellan helt olika föremål, personer eller platser som tillsammans illustrerar samma bredare kulturhistoriska princip.</p>
+          <ul>
+            <li>Det gemensamma temat presenteras.</li>
+            <li><strong>Första exemplet:</strong> Det första nedslaget (t.ex. ett specifikt föremål eller fall).</li>
+            <li><strong>Andra exemplet:</strong> Det andra nedslaget (som visar en annan sida av samma sak).</li>
+            <li><strong>Tredje exemplet:</strong> Det tredje nedslaget (som fullbordar bilden).</li>
+            <li>Sammanfattande reflektion: Vad har de tre exemplen gemensamt och vad säger de oss?</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="foreunderefter">
+        <h2>3. Före–under–efter</h2>
+        <p><em>Passar för:</em> En avgränsad, specifik händelse eller en hastig förändring.</p>
+        <ul>
+          <li><strong>Situationen före händelsen:</strong> Det rådande tillståndet och lugnet före stormen.</li>
+          <li><strong>Upptakten:</strong> De första tecknen på att något är på väg att hända.</li>
+          <li><strong>Själva händelsen eller förändringen:</strong> Själva kärnan i skeendet – dramats mittpunkt.</li>
+          <li><strong>De omedelbara reaktionerna:</strong> Hur omgivningen eller de inblandade direkt reagerade.</li>
+          <li><strong>De långsiktiga följderna:</strong> Vilka historiska spår händelsen lämnade efter sig.</li>
+        </ul>
+      </section>
+
+      <section id="nutidursprung">
+        <h2>4. Från nutid till ursprung – och tillbaka</h2>
+        <p><em>Passar för:</em> Ett historiskt detektivarbete eller när man drivs av ett sökande.</p>
+        <ul>
+          <li><strong>Ett synligt spår i nutiden:</strong> En ruin, ett föremål eller en rest som väcker nyfikenhet.</li>
+          <li><strong>En fråga väcks:</strong> Varför ser det ut så här? Vem gjorde detta?</li>
+          <li><strong>Berättelsen söker sig bakåt:</strong> Spårandet genom arkiv, källor och historisk tid.</li>
+          <li><strong>Ursprunget klarläggs:</strong> Själva källan till spåret (personen eller händelsen) hittas.</li>
+          <li><strong>Utvecklingen följs framåt:</strong> Hur historien rullade vidare från ursprunget.</li>
+          <li><strong>Återkomst till nutiden:</strong> Cirkeln sluts med en ny, fördjupad förståelse för det synliga spåret.</li>
+        </ul>
+      </section>
+
+      <section id="detaljhelhet">
+        <h2>5. Från detalj till helhet</h2>
+        <p><em>Passar för:</em> När man vill förstå det stora genom det lilla (mikrohistoria).</p>
+        <ul>
+          <li><strong>En konkret detalj:</strong> En slitagepunkt, en söm, en enskild siffra eller ett ord.</li>
+          <li><strong>Detaljen identifieras och förklaras:</strong> Vad är detta för något rent konkret?</li>
+          <li><strong>Perspektivet vidgas till närmiljön:</strong> Hur användes det i rummet eller på platsen?</li>
+          <li><strong>Det större historiska sammanhanget framträder:</strong> Hur speglar detaljen sin samtid och strukturerna i samhället?</li>
+          <li><strong>Detaljen återkommer:</strong> Vi landar i ursprungsdetaljen, som nu bär på hela sammanhanget.</li>
+        </ul>
+      </section>
+
+      <section id="parallell">
+        <h2>6. Parallell rörelse mellan då och nu</h2>
+        <p><em>Passar för:</em> Att spegla historiska fenomen i samtidiga företeelser.</p>
+        <ul>
+          <li><strong>En aktuell fråga eller situation:</strong> Nutidsperspektivet introduceras.</li>
+          <li><strong>En historisk motsvarighet introduceras:</strong> Vi flyttar blicken bakåt till en parallell situation.</li>
+          <li><strong>Likheter undersöks:</strong> Vad förenar de två tidsplanen?</li>
+          <li><strong>Skillnader och förändrade villkor tydliggörs:</strong> Vad skiljer dem åt på grund av tid och struktur?</li>
+          <li><strong>Dåtid och nutid förs samman:</strong> En avslutande spegling som kastar ljus över båda tiderna.</li>
+        </ul>
+      </section>
+
+      <section id="flerperspektiv">
+        <h2>7. Flera perspektiv</h2>
+        <p><em>Passar för:</em> Kontroverser, komplexa skeenden eller när källorna spretar.</p>
+        <ul>
+          <li><strong>Den gemensamma händelsen presenteras:</strong> Det som alla blickar riktas mot.</li>
+          <li><strong>Det första perspektivet:</strong> En aktörs eller grupps synvinkel.</li>
+          <li><strong>Ett annat eller motsatt perspektiv:</strong> En annan röst eller konfliktlinje.</li>
+          <li><strong>Perspektiven jämförs:</strong> Hur ställs de mot varandra och vad säger källorna?</li>
+          <li><strong>En samlad förståelse:</strong> Eine nyanserad bild formuleras utifrån de skilda blickarna.</li>
+        </ul>
+      </section>
+
+      <section id="ingangar">
+        <h2>Ingångar till texterna</h2>
+        <p>Själva <strong>startpunkten</strong> för texten kan varieras oberoende av vilken övergripande modell du väljer. Samma utgångspunkt kan kombineras med nästan samtliga modeller:</p>
+        <ul>
+          <li><strong>Platsen:</strong> Rummet, byggnaden eller miljön.</li>
+          <li><strong>Föremålet:</strong> Den materialiserade saken.</li>
+          <li><strong>Fotografiet:</strong> Bilden som fryst en sekund i tiden.</li>
+          <li><strong>Personen:</strong> Människan i centrum.</li>
+        </ul>
+        <div class="example">
+          <span class="example-label">Exempel på kombination</span>
+          <p>Ett historiskt föremål kan fungera utmärkt som ingång i antingen en kronologisk berättelse, i tre nedslag eller i en rörelse från nutid tillbaka till ursprunget.</p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>Skrivhandledning för kulturhistoriskt skrivande</p>
+  </footer>
+
+  <script>
+    const body = document.body;
+    const menuToggle = document.getElementById("menuToggle");
+    const themeToggle = document.getElementById("themeToggle");
+    const drawer = document.getElementById("drawer");
+    const scrim = document.getElementById("scrim");
+    const storedTheme = localStorage.getItem("kultur-skriv-theme");
+
+    if (storedTheme === "dark" || (!storedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+      body.classList.add("dark");
+      themeToggle.setAttribute("aria-pressed", "true");
+    }
+
+    function setMenu(open) {
+      body.classList.toggle("menu-open", open);
+      menuToggle.setAttribute("aria-expanded", String(open));
+      menuToggle.setAttribute("aria-label", open ? "Stäng meny" : "Öppna meny");
+      drawer.setAttribute("aria-hidden", String(!open));
+      scrim.hidden = !open;
+    }
+
+    menuToggle.addEventListener("click", () => {
+      setMenu(!body.classList.contains("menu-open"));
+    });
+
+    scrim.addEventListener("click", () => setMenu(false));
+
+    drawer.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => setMenu(false));
+    });
+
+    themeToggle.addEventListener("click", () => {
+      const isDark = body.classList.toggle("dark");
+      themeToggle.setAttribute("aria-pressed", String(isDark));
+      localStorage.setItem("kultur-skriv-theme", isDark ? "dark" : "light");
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && body.classList.contains("menu-open")) {
+        setMenu(false);
+      }
+    });
+  </script>
+</body>
+</html>
