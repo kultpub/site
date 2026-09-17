@@ -301,6 +301,25 @@
       font-size: clamp(1.05rem, 2.2vw, 1.24rem);
       line-height: 1.58;
     }
+    .quote-block {
+      margin: 28px 0 0;
+      padding: 16px 20px;
+      border-left: 3px solid var(--accent);
+      background: var(--panel-soft);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      color: var(--text);
+      font-style: italic;
+    }
+    .quote-block span {
+      display: block;
+      margin-top: 6px;
+      font-family: var(--sans);
+      font-size: 0.9rem;
+      font-style: normal;
+      color: var(--muted);
+    }
     main {
       width: var(--content);
       margin: 0 auto;
@@ -461,8 +480,13 @@
 
   <div id="top" class="hero">
     <p class="eyebrow">Kulturhistoriska föreningen för södra Sverige</p>
-    <h1>Byggstenar och rörelser</h1>
-    <p class="intro">En god kulturhistorisk text behöver en tydlig arkitektur: en ingång som fångar läsaren, en rörelse som för texten framåt, en vändpunkt eller fördjupning, samt ett slut som samlar betydelsen. Men ett kärt barn har många namn – det här kan lika gärna kallas <em>berättarstruktur</em>, <em>dispositionsidé</em>, <em>makrosyntaktisk idé</em> eller <em>narrativ modell</em>. Denna handledning vill dock inte låsa in hur en text måste behandlas, utan är snarare tänkt att inspirera till hur den kan ta form.</p>
+    <h1>Kulturhistoriskt skrivande</h1>
+    <p class="intro">En god kulturhistorisk text behöver en tydlig arkitektur: en ingång som fångar läsaren, en rörelse som för texten framåt, en vändpunkt eller fördjupning, samt ett slut som samlar betydelsen. Men ett kärt barn har många namn – det här kan lika gärna kallas <em>berättarstruktur</em>, <em>dispositionsidé</em>, <em>makrosyntaktisk idé</em> eller <em>narrativ modell</em>. Denna handledning vill erbjuda uppslag kring byggstenar och textens rörelse, men utan att låsa fast hur en text <em>måste</em> behandlas – den är snarare tänkt att inspirera till hur den kan ta form.</p>
+    
+    <div class="quote-block">
+      ”The past is a foreign country, they do things differently there.”
+      <span>— Leslie Poles Hartley</span>
+    </div>
   </div>
 
   <main>
@@ -475,9 +499,10 @@
       <section id="kronologisk">
         <h2>1. Kronologisk rörelse</h2>
         <p><em>Passar för:</em> Ett längre historiskt förlopp eller en utvecklingslinje.</p>
+        <p>Denna modell följer ett skeende i tidsenlig ordning och passar bäst när man vill visa hur någonting vuxit fram, förändrats eller tagit form över en längre period. Genom att binda ihop ursprung med resultat blir utvecklingslinjen tydlig för läsaren.</p>
         <ul>
           <li><strong>Utgångsläge eller ursprung:</strong> Etablera hur det såg ut från början.</li>
-          <li><strong>Något sätter utvecklingen i gång:</strong> Katalysatorn eller drivkraften introduceras.</li>
+          <li><strong>Något sätter igång utvecklingen:</strong> Katalysatorn eller drivkraften introduceras.</li>
           <li><strong>Förloppet fortskrider:</strong> Händelserna rullar på i tidsenlig ordning.</li>
           <li><strong>Avgörande förändring eller brytpunkt:</strong> En milstolpe eller ett vägskäl som förändrar spelplanen.</li>
           <li><strong>Resultat och efterverkningar:</strong> Var landade vi till slut och vad betyder det i dag?</li>
@@ -487,6 +512,7 @@
       <section id="trednedslag">
         <h2>2. Tre nedslag</h2>
         <p><em>Passar för:</em> Att fånga en helhet genom att antingen följa en utveckling i korta kliv eller belysa ett fenomen genom tre typiska exempel.</p>
+        <p>När tiden är knapp eller materialet spretigt kan man välja bort de långa transportsträckorna och istället fokusera på tre bärande punkter. Det ger en koncentrerad berättelse som snabbt griper tag och illustrerar kärnan i ämnet.</p>
         
         <div class="example">
           <span class="example-label">Variant A: Kronologiska ögonblick</span>
@@ -516,6 +542,7 @@
       <section id="foreunderefter">
         <h2>3. Före–under–efter</h2>
         <p><em>Passar för:</em> En avgränsad, specifik händelse eller en hastig förändring.</p>
+        <p>Denna uppställning fungerar som ett mikroskop riktat mot ett enskilt drama eller en avgörande vändpunkt. Fokus ligger helt på spänningskurvan kring själva skeendet – från den inledande stiltjen till de långsiktiga spår som händelsen lämnade efter sig.</p>
         <ul>
           <li><strong>Situationen före händelsen:</strong> Det rådande tillståndet och lugnet före stormen.</li>
           <li><strong>Upptakten:</strong> De första tecknen på att något är på väg att hända.</li>
@@ -528,6 +555,7 @@
       <section id="nutidursprung">
         <h2>4. Från nutid till ursprung – och tillbaka</h2>
         <p><em>Passar för:</em> Ett historiskt detektivarbete eller när man drivs av ett sökande.</p>
+        <p>Här låter man läsaren följa med på en upptäcktsfärd som tar avstamp i något vi kan se eller röra vid i dag. Berättelsen rör sig bakåt i tiden för att finna ursprunget, för att sedan följa tråden framåt igen och knyta ihop säcken i nutiden med en ny insikt.</p>
         <ul>
           <li><strong>Ett synligt spår i nutiden:</strong> En ruin, ett föremål eller en rest som väcker nyfikenhet.</li>
           <li><strong>En fråga väcks:</strong> Varför ser det ut så här? Vem gjorde detta?</li>
@@ -541,8 +569,9 @@
       <section id="detaljhelhet">
         <h2>5. Från detalj till helhet</h2>
         <p><em>Passar för:</em> När man vill förstå det stora genom det lilla (mikrohistoria).</p>
+        <p>Genom att zooma in på mikronivå – ett slitagemärke, ett ord eller ett enskilt föremål – öppnar man ett nyckelhål till en hel tidsepok. Det lilla föremålet blir en bärare av de stora strukturella sammanhangen i samhället.</p>
         <ul>
-          <li><strong>En konkret detalj:</strong> En slitagepunkt, en söm, en enskild siffra eller ett ord.</li>
+          <li><strong>En konkret detalj:</strong> En del av ett föremål, en söm, en enskild siffra eller ett ord.</li>
           <li><strong>Detaljen identifieras och förklaras:</strong> Vad är detta för något rent konkret?</li>
           <li><strong>Perspektivet vidgas till närmiljön:</strong> Hur användes det i rummet eller på platsen?</li>
           <li><strong>Det större historiska sammanhanget framträder:</strong> Hur speglar detaljen sin samtid och strukturerna i samhället?</li>
@@ -551,8 +580,9 @@
       </section>
 
       <section id="parallell">
-        <h2>6. Parallell rörelse mellan då och nu</h2>
+        <h2>6. Parallell rörelse då och nu</h2>
         <p><em>Passar för:</em> Att spegla historiska fenomen i samtidiga företeelser.</p>
+        <p>Denna modell bygger på att ställa två tidsplan mot varandra för att belysa mänskliga erfarenheter, likheter och skillnader. Genom att pendla mellan nutid och dåtid kastar tiderna ljus över varandra och gör det förflutna levande.</p>
         <ul>
           <li><strong>En aktuell fråga eller situation:</strong> Nutidsperspektivet introduceras.</li>
           <li><strong>En historisk motsvarighet introduceras:</strong> Vi flyttar blicken bakåt till en parallell situation.</li>
@@ -565,12 +595,13 @@
       <section id="flerperspektiv">
         <h2>7. Flera perspektiv</h2>
         <p><em>Passar för:</em> Kontroverser, komplexa skeenden eller när källorna spretar.</p>
+        <p>Historia är inte enbart en färdig samling fakta som väntar på att samlas in, utan bygger på att vi prövar tolkningar och argument utifrån det som har lämnats till eftervärlden. Här ställs olika aktörers röster och skilda källors vittnesmål mot varandra för att skapa en bredare förståelse.</p>
         <ul>
-          <li><strong>Den gemensamma händelsen presenteras:</strong> Det som alla blickar riktas mot.</li>
-          <li><strong>Det första perspektivet:</strong> En aktörs eller grupps synvinkel.</li>
-          <li><strong>Ett annat eller motsatt perspektiv:</strong> En annan röst eller konfliktlinje.</li>
-          <li><strong>Perspektiven jämförs:</strong> Hur ställs de mot varandra och vad säger källorna?</li>
-          <li><strong>En samlad förståelse:</strong> En nyanserad bild formuleras utifrån de skilda blickarna.</li>
+          <li><strong>Den gemensamma händelsen eller frågan presenteras:</strong> Det centrala skeende eller problem som blickarna riktas mot.</li>
+          <li><strong>Det första perspektivet:</strong> En aktörs, en grupps eller en källas synvinkel och berättelse.</li>
+          <li><strong>Ett annat eller motsatt perspektiv:</strong> En annan röst, en motbild eller en alternativ konfliktlinje.</li>
+          <li><strong>Perspektiven jämförs och prövas mot källorna:</strong> Vilka intressen, avsikter eller tider präglar de olika berättelserna? Hur skiljer de sig åt?</li>
+          <li><strong>En samlad men nyanserad förståelse formuleras:</strong> En tolkning som väger samman de skilda blickarna till en rikare helhetsbild.</li>
         </ul>
       </section>
 
