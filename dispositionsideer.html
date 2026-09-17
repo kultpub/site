@@ -302,13 +302,14 @@
       line-height: 1.58;
     }
     .quote-block {
+      max-width: 75%;
       margin: 28px 0 0;
       padding: 16px 20px;
       border-left: 3px solid var(--accent);
       background: var(--panel-soft);
       border-radius: 0 var(--radius) var(--radius) 0;
       font-family: var(--serif);
-      font-size: 1.5rem;
+      font-size: 1.3rem;
       color: var(--text);
       font-style: italic;
     }
@@ -357,6 +358,13 @@
       margin: 8px 0;
       padding-left: 0.25rem;
     }
+    /* Extra luft och ordning för ingångarnas listpunkter */
+    #ingangar ul li {
+      margin-bottom: 24px;
+    }
+    #ingangar ul li:last-child {
+      margin-bottom: 0;
+    }
     strong {
       font-weight: 760;
     }
@@ -364,6 +372,7 @@
       font-style: italic;
     }
     .example {
+	  max-width: 75%;
       margin: 18px 0 0;
       padding: 18px 18px 18px 20px;
       border-left: 4px solid var(--accent);
@@ -430,6 +439,9 @@
       .drawer {
         padding: 24px;
       }
+      .quote-block {
+        max-width: 100%;
+      }
     }
     @media (prefers-reduced-motion: reduce) {
       *,
@@ -475,7 +487,7 @@
       <a href="#parallell">6. Parallell rörelse då och nu <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
       <a href="#flerperspektiv">7. Flera perspektiv <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
       <a href="#kallansomberattare">8. Källan som berättare <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
-      <a href="#ingangar">Ingångar <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+      <a href="#ingangar">Ingång till texten <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
     </nav>
   </aside>
 
@@ -506,19 +518,19 @@
           <li><strong>Något sätter igång utvecklingen:</strong> Katalysatorn eller drivkraften introduceras.</li>
           <li><strong>Förloppet fortskrider:</strong> Händelserna rullar på i tidsenlig ordning.</li>
           <li><strong>Avgörande förändring eller brytpunkt:</strong> En milstolpe eller ett vägskäl som förändrar spelplanen.</li>
-          <li><strong>Resultat och efterverkningar:</strong> Var landade vi till slut och vad betyder det i dag?</li>
+          <li><strong>Resultat och efterverkningar:</strong> Var landade vi till slut och vad betyder det idag?</li>
         </ul>
       </section>
 
-      <section id="trednedslag">
+<section id="trednedslag">
         <h2>2. Tre nedslag</h2>
         <p><em>Passar för:</em> Att fånga en helhet genom att antingen följa en utveckling i korta kliv eller belysa ett fenomen genom tre typiska exempel.</p>
         <p>När tiden är knapp eller materialet spretigt kan man välja bort de långa transportsträckorna och istället fokusera på tre bärande punkter. Det ger en koncentrerad berättelse som snabbt griper tag och illustrerar kärnan i ämnet.</p>
         
-        <div class="example">
-          <span class="example-label">Variant A: Kronologiska ögonblick</span>
-          <p>Tre avgörande faser där tiden däremellan hoppas över.</p>
-          <ul>
+        <div style="margin-top: 22px; padding: 22px; background: var(--panel-soft); border: 1px solid var(--line); border-radius: var(--radius);">
+          <h3 style="margin: 0 0 8px; font-family: var(--serif); font-size: 1.25rem; font-weight: 600; color: var(--text);">Variant A: Kronologiska ögonblick</h3>
+          <p style="margin: 0 0 12px; color: var(--muted);">Tre avgörande faser där tiden däremellan hoppas över.</p>
+          <ul style="margin: 0;">
             <li>Övergripande tema eller fråga</li>
             <li><strong>Första scenen:</strong> Början eller det första formativa ögonblicket.</li>
             <li><strong>Andra scenen:</strong> Förändringen eller kontrasten i ett nytt skede.</li>
@@ -527,10 +539,10 @@
           </ul>
         </div>
 
-        <div class="example" style="margin-top: 14px;">
-          <span class="example-label">Variant B: Tre skilda exempel</span>
-          <p>Tre sinsemellan helt olika föremål, personer eller platser som tillsammans illustrerar samma bredare kulturhistoriska princip.</p>
-          <ul>
+        <div style="margin-top: 18px; padding: 22px; background: var(--panel-soft); border: 1px solid var(--line); border-radius: var(--radius);">
+          <h3 style="margin: 0 0 8px; font-family: var(--serif); font-size: 1.25rem; font-weight: 600; color: var(--text);">Variant B: Tre skilda exempel</h3>
+          <p style="margin: 0 0 12px; color: var(--muted);">Tre sinsemellan helt olika föremål, personer eller platser som tillsammans illustrerar samma bredare kulturhistoriska princip.</p>
+          <ul style="margin: 0;">
             <li>Det gemensamma temat presenteras.</li>
             <li><strong>Första exemplet:</strong> Det första nedslaget (t.ex. ett specifikt föremål eller fall).</li>
             <li><strong>Andra exemplet:</strong> Det andra nedslaget (som visar en annan sida av samma sak).</li>
@@ -549,14 +561,14 @@
           <li><strong>Upptakten:</strong> De första tecknen på att något är på väg att hända.</li>
           <li><strong>Själva händelsen eller förändringen:</strong> Själva kärnan i skeendet – dramats mittpunkt.</li>
           <li><strong>De omedelbara reaktionerna:</strong> Hur omgivningen eller de inblandade direkt reagerade.</li>
-          <li><strong>De långsiktiga följderna:</strong> Vilka historiska spår händelsen lämnade efter sig.</li>
+          <li><strong>De långsiktiga följdena:</strong> Vilka historiska spår händelsen lämnade efter sig.</li>
         </ul>
       </section>
 
       <section id="nutidursprung">
         <h2>4. Från nutid till ursprung – och tillbaka</h2>
         <p><em>Passar för:</em> Ett historiskt detektivarbete eller när man drivs av ett sökande.</p>
-        <p>Här låter man läsaren följa med på en upptäcktsfärd som tar avstamp i något vi kan se eller röra vid i dag. Berättelsen rör sig bakåt i tiden för att finna ursprunget, för att sedan följa tråden framåt igen och knyta ihop säcken i nutiden med en ny insikt.</p>
+        <p>Här låter man läsaren följa med på en upptäcktsfärd som tar avstamp i något vi kan se eller röra vid idag. Berättelsen rör sig bakåt i tiden för att finna ursprunget, för att sedan följa tråden framåt igen och knyta ihop säcken i nutiden med en ny insikt.</p>
         <ul>
           <li><strong>Ett synligt spår i nutiden:</strong> En ruin, ett föremål eller en rest som väcker nyfikenhet.</li>
           <li><strong>En fråga väcks:</strong> Varför ser det ut så här? Vem gjorde detta?</li>
@@ -620,18 +632,67 @@
       </section>
 
       <section id="ingangar">
-        <h2>Ingångar till texterna</h2>
+        <h2>Ingång till texten</h2>
         <p>Själva <strong>startpunkten</strong> för texten kan varieras oberoende av vilken övergripande modell du väljer. Samma utgångspunkt kan kombineras med nästan samtliga modeller:</p>
+        
         <ul>
-          <li><strong>Platsen:</strong> Rummet, byggnaden eller miljön.</li>
-          <li><strong>Föremålet:</strong> Den materialiserade saken.</li>
-          <li><strong>Fotografiet:</strong> Bilden som fryst en sekund i tiden.</li>
-          <li><strong>Personen:</strong> Människan i centrum.</li>
+          <li>
+            <strong>Platsen</strong><br/>Utgå från rummet eller miljön för att ge läsaren ett fotfäste från första raden.
+            <div class="example" style="margin-top: 8px; margin-bottom: 0;">
+              <span class="example-label">Exempel</span>
+              <p>Det lilla skomakartorpets väggar står kvar än idag i skogsbrynet utanför Harlösa.</p>
+            </div>
+          </li>
+          <li>
+            <strong>Föremålet</strong><br/>Låt den materialiserade saken stå i centrum för att förankra texten i något konkret.
+            <div class="example" style="margin-top: 8px; margin-bottom: 0;">
+              <span class="example-label">Exempel</span>
+              <p>Asken, som idag vilar tryggt i Kulturens magasin, ekar nu tom men rymde en gång ett helt års sparade slantar.</p>
+            </div>
+          </li>
+          <li>
+            <strong>Fotografiet</strong><br/>Använd den frysta sekunden i bilden som en visuell hävstång in i det förflutna.
+            <div class="example" style="margin-top: 8px; margin-bottom: 0;">
+              <span class="example-label">Exempel</span>
+              <p>Tre okända män blickar mot kameran från ett solblekt gammalt foto taget vid torget 1912.</p>
+            </div>
+          </li>
+          <li>
+            <strong>Personen</strong><br/>Sätt en enskild människa i blickfånget för att ge historien ett direkt mänskligt ansikte.
+            <div class="example" style="margin-top: 8px; margin-bottom: 0;">
+              <span class="example-label">Exempel</span>
+              <p>När stationsinspektoren kom till byn vågade barnen knappt cykla förbi järnvägsstationen.</p>
+            </div>
+          </li>
+          <li>
+            <strong>Siffran</strong><br/>Väck intresse med en oväntad, talande siffra som förankrar texten i hårdkokt verklighet.
+            <div class="example" style="margin-top: 8px; margin-bottom: 0;">
+              <span class="example-label">Exempel</span>
+              <p>1742 kostade en fullvuxen skånsk oxe lika mycket som en dräng kunde tjäna i lön under ett helt arbetsår.</p>
+            </div>
+          </li>
+          <li>
+            <strong>Röstinsläppet</strong><br/>Kasta in läsaren i ett direkt citat ur en källa för att låta historien tala med egen röst.
+            <div class="example" style="margin-top: 8px; margin-bottom: 0;">
+              <span class="example-label">Exempel</span>
+              <p>”Det var den värsta stormen som någonsin drabbat kusten", antecknade fiskaren Ola i sin almanacka.</p>
+            </div>
+          </li>
+          <li>
+            <strong>Sinnesintrycket</strong><br/>Starta i det sinnliga – ljudet, kylan, doften – för att dra in läsaren i historisk miljö.
+            <div class="example" style="margin-top: 8px; margin-bottom: 0;">
+              <span class="example-label">Exempel</span>
+              <p>Smaken av surströmming låg tät över marknadsboden när höstmarknaden drog igång.</p>
+            </div>
+          </li>
+          <li>
+            <strong>Det oväntade</strong><br/>Väck nyfikenhet med en iakttagelse som bryter mot våra gängse föreställningar.
+            <div class="example" style="margin-top: 8px; margin-bottom: 0;">
+              <span class="example-label">Exempel</span>
+              <p>Det ansågs länge finare att äta gröt tre gånger om dagen än att ha färskt kött på tallriken.</p>
+            </div>
+          </li>
         </ul>
-        <div class="example">
-          <span class="example-label">Exempel på kombination</span>
-          <p>Ett historiskt föremål kan fungera utmärkt som ingång i antingen en kronologisk berättelse, i tre nedslag eller i en rörelse från nutid tillbaka till ursprunget.</p>
-        </div>
       </section>
     </div>
   </main>
