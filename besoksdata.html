@@ -1356,6 +1356,7 @@ const firebaseConfig = {
 };
 
 const VISIT_STATS_COLLECTION = "visitStats";
+const MONTHLY_DATA_COLLECTION = "monthlyData"; // Ny samling för månadsdata
 const FIREBASE_START_DATE = "2026-09-01";
 const FIREBASE_VENUE = "kulturenilund";
 const FIREBASE_START_YEAR = 2026;
@@ -1366,14 +1367,82 @@ const db = firebase.firestore();
 
 let historicalVisitRows = [];
 let firestoreVisitRows = [];
+let monthlyVisitRows = []; // Ny array för månadsdata
 let firestoreVisitUnsubscribe = null;
+let monthlyDataUnsubscribe = null; // Ny lyssnare för månadsdata
+
 let historicalDataReady = false;
 let firestoreInitialReady = false;
+let monthlyInitialReady = false; // Ny flagga för månadsdata
 let dataUiInitialized = false;
 
 function isHistoricalSchoolMonth(year, monthIndex) {
   return year < FIREBASE_START_YEAR ||
     (year === FIREBASE_START_YEAR && monthIndex < FIREBASE_START_MONTH_INDEX);
+}
+
+// Omvandlar månadssiffror från monthlyData till systemets format
+// Omvandlar månadssiffror från monthlyData till systemets format
+function monthlyDocToBesokRows(doc) {
+  const record = doc.data();
+  if (!record.year || !record.month || !record.cats) return [];
+
+  const year = Number(record.year);
+  const monthIndex = Number(record.month) - 1; // 1-12 till 0-11
+
+  if (!Number.isInteger(year) || monthIndex < 0 || monthIndex > 11) return [];
+
+  // Mappning av de tillåtna kategorierna som används på månadssidan
+  const categoryKeyMap = {
+    "vuxen": "vuxen",
+    "barn": "barn",
+    "medlem": "medlem",
+    "pensionär": "pensionär",
+    "student": "student",
+    "rabatt": "rabatt",
+    "fri vuxen": "fri-vuxen",
+    "fri-vuxen": "fri-vuxen",
+    "konferens": "konferens"
+  };
+
+  const rows = [];
+  const venueId = (record.venueId || record.venue || "kulturen").toLowerCase().trim();
+  
+  // Mappning av besöksmål som täcker alla era fasta platser och varianter
+  const venueMapping = {
+    "kulturenilund": "kulturenilund",
+    "kulturen": "kulturenilund",
+    "lund": "kulturenilund",
+    "kulturensostarp": "kulturensostarp",
+    "ostarp": "kulturensostarp",
+    "livetsmuseum": "livetsmuseum",
+    "livets": "livetsmuseum",
+    "hokeriet": "hokeriet",
+    "tegnermuseet": "tegnermuseet",
+    "tegner": "tegnermuseet",
+    "ovrigt": "kulturenilund"
+  };
+  
+  const mappedVenue = venueMapping[venueId] || "kulturenilund";
+
+  Object.entries(record.cats).forEach(([catName, value]) => {
+    const antal = Number(value || 0);
+    if (antal <= 0) return;
+
+    const cleanCatName = catName.toLowerCase().trim();
+    const categoryId = categoryKeyMap[cleanCatName] || cleanCatName.replace(/\s+/g, '-');
+
+    rows.push({
+      år: year,
+      månad: monthNamesShort[monthIndex].toLowerCase(),
+      besöksmål: mappedVenue,
+      typ: "verksamhet",
+      kategori: categoryId,
+      antal
+    });
+  });
+
+  return rows;
 }
 
 /* =========================================================
@@ -1757,7 +1826,9 @@ function isRowMatchingFilters(row) {
     if (targetFFId !== "all" && row.besöksmål !== targetFFId) return false;
 
     // 2. Typ (Verksamhet vs Anläggning)
-    if (row.typ !== "kombinerat") {
+    // De fyra fasta besöksmålen räknas som både verksamhet och anläggning
+    const staticVenues = ["kulturensostarp", "livetsmuseum", "hokeriet", "tegnermuseet"];
+    if (!staticVenues.includes(row.besöksmål) && row.typ !== "kombinerat") {
         const checkedTyp = document.getElementById("toggleAnlaggning").checked ? "anläggning" : "verksamhet";
         if (row.typ !== checkedTyp) return false;
     }
@@ -2844,7 +2915,6 @@ function firestoreVisitStatsDocToBesokRows(doc) {
   const record = doc.data();
 
   if (!["school", "group", "other"].includes(record.sourceType)) return [];
-  if (record.venue !== FIREBASE_VENUE) return [];
   if (!record.date || record.date < FIREBASE_START_DATE) return [];
 
   const year = Number(record.year || record.date.slice(0, 4));
@@ -2855,6 +2925,23 @@ function firestoreVisitStatsDocToBesokRows(doc) {
     console.warn("Ogiltigt år/månad i visitStats:", doc.id, record);
     return [];
   }
+
+  // Mappning av besöksmål för dagsdata (precis som för månadssidan)
+  const venueId = record.venue || "kulturenilund";
+  const venueMapping = {
+    "kulturenilund": "kulturenilund",
+    "kulturen": "kulturenilund",
+    "ostarp": "kulturensostarp",
+    "kulturensostarp": "kulturensostarp",
+    "livetsmuseum": "livetsmuseum",
+    "livets": "livetsmuseum",
+    "hokeriet": "hokeriet",
+    "tegnermuseet": "tegnermuseet",
+    "tegner": "tegnermuseet",
+    "ovrigt": "kulturenilund"
+  };
+  
+  const mappedVenue = venueMapping[venueId] || venueId;
 
   const allowedCategories = new Set([
     "vuxen",
@@ -2885,30 +2972,21 @@ function firestoreVisitStatsDocToBesokRows(doc) {
     rows.push({
       år: year,
       månad: monthNamesShort[monthIndex].toLowerCase(),
-      besöksmål: FIREBASE_VENUE,
+      besöksmål: mappedVenue,
       typ: "verksamhet",
       kategori: category,
       antal
     });
   });
 
-  const normalizedTotal = rows.reduce((sum, row) => sum + row.antal, 0);
-  const sourceTotal = Number(record.metrics?.totalCount || 0);
-
-  if (Number.isFinite(sourceTotal) && normalizedTotal !== sourceTotal) {
-    console.warn(
-      "visitStats-totalen stämmer inte med kategorisumman:",
-      doc.id,
-      { normalizedTotal, sourceTotal }
-    );
-  }
-
   return rows;
 }
 
 function rebuildCombinedVisitRows() {
-  visitRows = [...historicalVisitRows, ...firestoreVisitRows];
-  if (!historicalDataReady || !firestoreInitialReady) return;
+  // Slå ihop historisk data, dagssida och månadssida
+  visitRows = [...historicalVisitRows, ...firestoreVisitRows, ...monthlyVisitRows];
+  
+  if (!historicalDataReady || !firestoreInitialReady || !monthlyInitialReady) return;
 
   const nextYears = [...new Set(visitRows.map(r => r.år))].sort((a, b) => b - a);
   const yearsChanged = nextYears.join(",") !== availableYears.join(",");
@@ -2952,6 +3030,23 @@ function startFirestoreVisitStatsSubscription() {
     });
 }
 
+// Ny lyssnare för månadssamlingen (monthlyData)
+function startMonthlyDataSubscription() {
+  if (monthlyDataUnsubscribe) monthlyDataUnsubscribe();
+
+  monthlyDataUnsubscribe = db.collection(MONTHLY_DATA_COLLECTION)
+    .onSnapshot(snapshot => {
+      monthlyVisitRows = snapshot.docs.flatMap(monthlyDocToBesokRows);
+      monthlyInitialReady = true;
+      rebuildCombinedVisitRows();
+    }, error => {
+      console.error("Kunde inte hämta monthlyData från Firestore:", error);
+      monthlyVisitRows = [];
+      monthlyInitialReady = true;
+      rebuildCombinedVisitRows();
+    });
+}
+
 
 async function loadCSVData() {
   try {
@@ -2983,6 +3078,7 @@ async function loadCSVData() {
 }
 
 startFirestoreVisitStatsSubscription();
+startMonthlyDataSubscription();
 loadCSVData();
 </script>
 
