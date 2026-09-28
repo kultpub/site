@@ -1,10 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="sv">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Månadens besök</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 <style>
 /* ── 1. BAS & TYPOGRAFI ── */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -59,14 +59,10 @@ main {
   padding: 30px;
   box-shadow: var(--shadow);
   display: flex;
-  align-items: flex-end;     /* Justerar ner rubriken och bubblorna så att de vilar på samma baslinje */
+  align-items: flex-end;     
   justify-content: space-between;
-  gap: 16px;
-  flex-wrap: nowrap;         /* STRIKT: Förbjuder radbrytning inuti header-kortet */
-}
-
-.header-left {
-  flex-shrink: 0;            /* Säkerställer att rubriken aldrig trycks ihop */
+  gap: 24px;
+  flex-wrap: nowrap;         
 }
 
 .header-left .kicker {
@@ -88,13 +84,83 @@ main {
 .header-left .dateline {
   font-size: 13px;
   color: var(--muted);
+  margin-top: 4px;
 }
+
+.period-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  cursor: pointer;
+}
+
+.period-trigger:hover {
+  color: var(--accent);
+}
+
+/* ── Unik stil för periodväljaren inne i modalen ── */
+.modal-period-trigger {
+  padding: 10px 14px;
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  color: var(--accent-dark);
+  background: var(--accent-light);
+  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.modal-period-trigger:hover {
+  border-color: var(--accent);
+  background: #fae4d5;
+}
+
+.modal-period-trigger svg.chevron,
+.modal-period-trigger svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
+.period-trigger svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
+.month-dialog { margin:auto; padding:24px; width:360px; max-width:calc(100vw - 32px); max-height:calc(100dvh - 32px); overflow:auto; border:1px solid var(--border); border-radius:var(--radius); background:var(--surface); color:var(--text); box-shadow:0 20px 60px rgba(0,0,0,.2); }
+.month-dialog::backdrop { background:rgba(26,26,26,.3); }
+.month-dialog-heading { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
+.month-dialog-heading h2 { font-size:18px; }
+.month-dialog button { font:inherit; cursor:pointer; }
+.year-arrow { display:grid; place-items:center; width:36px; height:36px; border:1px solid var(--border); border-radius:50%; background:var(--surface); color:var(--text); }
+.year-arrow svg { width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.month-year-nav { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; padding-inline:2px; }
+.month-year-nav strong { font-size:20px; font-weight:600; }
+.month-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
+.month-choice { min-height:46px; padding:8px 2px; border:1px solid var(--border); border-radius:8px; background:var(--surface2); color:var(--text); font-size:13px !important; }
+.month-choice:not(:disabled):hover, .year-arrow:not(:disabled):hover { background:var(--accent-light); border-color:var(--accent); }
+.month-choice[aria-pressed="true"] { background:var(--accent); color:white; border-color:var(--accent); }
+.month-choice[aria-pressed="true"]:hover { background:var(--accent-dark); color:white; }
+.month-dialog button:disabled { color:#a5a5a5; background:#f8f9fa; border-color:#f1f3f5; cursor:default; }
+.period-trigger:focus-visible, .month-dialog :focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+.period-help { margin-top:16px; font-size:12px; color:var(--muted); }
+
+.period-help p { margin-top:8px; line-height:1.5; }
 
 /* ── 3. STATISTIK-RAD ── */
 .stats-row {
   display: flex;
-  gap: 12px;                  /* Luftigare avstånd mellan bubblorna */
-  flex: 0 0 auto;             /* Låter raden ta precis den plats bubblorna kräver */
+  gap: 12px;                  
+  flex: 0 0 auto;             
   justify-content: flex-end;
 }
 
@@ -107,28 +173,28 @@ main {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  width: 115px;         /* Din önskade fasta bredd */
-  height: 85px;         /* En fast höjd som ger bra proportioner till 32px ikoner */
-  flex: 0 0 115px;      /* Förbjuder flexbox att stretcha eller trycka ihop bredden (0 0) */
-  flex-shrink: 0;       /* Extra livrem för att garantera att höjden inte kollapsar */
+  width: 115px;         
+  height: 85px;         
+  flex: 0 0 115px;      
+  flex-shrink: 0;       
 }
 
 .stat-box .venue-icon {
-  width: 32px;                /* Snygg och tydlig ikonstorlek (samma som i din bild) */
+  width: 32px;                
   height: 32px;
   object-fit: contain;
 }
 
 .stat-num {
   font-family: 'Inter', system-ui, sans-serif;
-  font-size: 16px;            /* Tydlig sifferstorlek */
+  font-size: 16px;            
   font-weight: 700;
   color: var(--text);
   line-height: 1;
   white-space: nowrap; 
 }
 
-/* ── 4. PANELER & ACTION GRID (Mitten på sidan) ── */
+/* ── 4. PANELER & ACTION GRID ── */
 .panel {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -144,6 +210,53 @@ main {
   text-transform: uppercase;
   color: var(--muted);
   margin-bottom: 20px;
+}
+
+.entries-panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.entries-panel-heading .panel-label { margin-bottom: 0; }
+
+.entry-sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.entry-sort-label {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.entry-sort-button {
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  background: var(--surface);
+  color: var(--muted);
+  padding: 7px 12px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.entry-sort-button:hover,
+.entry-sort-button.active {
+  border-color: var(--accent);
+  background: var(--surface2);
+  color: var(--accent-dark);
+}
+
+@media (max-width: 600px) {
+  .entries-panel-heading { align-items: flex-start; flex-direction: column; }
+  .entry-sort-controls { flex-wrap: wrap; }
 }
 
 .action-grid {
@@ -188,43 +301,34 @@ main {
   line-height: 1.5;
 }
 
-/* ── UNIKA BAKGRUNDER & IKONFÄRGER ── */
 .action-btn[data-modal="kulturen"] .fa-icon { fill: #1d4ed8; }
-
 .action-btn[data-modal="ostarp"] .fa-icon { fill: #15803d; }
-
 .action-btn[data-modal="livets"] .fa-icon { fill: #a16207; }
-
 .action-btn[data-modal="hokeriet"] .fa-icon { fill: #be185d; }
-
 .action-btn[data-modal="tegner"] .fa-icon { fill: #6d28d9; }
-
 .action-btn[data-modal="ovrigt"] .fa-icon { fill: var(--muted); }
 
-/* Ikonbehållare för det runda och växande utseendet */
 .icon-wrap {
   flex: 0 0 54px;
   height: 54px;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: visible; /* Viktigt så att den stora zoomen inte klipper ikonen */
+  overflow: visible; 
 }
 
 .icon-wrap .venue-icon,
 .icon-wrap .fa-icon {
   transition: transform .28s cubic-bezier(.34,1.56,.64,1);
   display: block;
-  will-change: transform; /* Lägg till för att säkra flytet vid scale(1.5) */
+  will-change: transform; 
 }
 
-/* Här sätter du grundstorleken för dina nya SVG-ikoner till 32px så att de fyller ut fint */
 .icon-wrap .fa-icon { 
   width: 32px; 
   height: 32px; 
 }
 
-/* Din exakta hover-effekt från filen körs på båda */
 .action-btn:hover .icon-wrap .venue-icon,
 .action-btn:hover .icon-wrap .fa-icon {
   transform: scale(1.5);
@@ -237,21 +341,14 @@ main {
   width: 100%;
 }
 
-.action-btn .btn-title {
-  font-size: 16px;
-  font-weight: 600;
-  display: block;
-  margin-bottom: 6px;
-}
-
-/* ── 5. ENTRIES-LISTA (Nedre panelen) ── */
+/* ── 5. ENTRIES-LISTA ── */
 .entries-list { display: grid; gap: 10px; }
 
 .entry-row {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  padding: 16px 20px;
+  padding: 18px 20px;
   display: flex;
   align-items: center;
   gap: 16px;
@@ -269,16 +366,19 @@ main {
 .entry-badge {
   font-size: 11px;
   font-weight: 700;
-  padding: 4px 12px;
+  padding: 5px 12px;
+  min-height: 32px;
   border-radius: 20px;
   white-space: nowrap;
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  width: 140px;
+  width: 150px;
+  gap: 8px;
   justify-content: flex-start;
 }
 
+.entry-badge .fa-map-pin { width:14px; text-align:center; flex-shrink:0; }
 .badge-kulturen { background: #e7f5ff; color: #1971c2; }
 .badge-ostarp   { background: #ebfbee; color: #2f9e44; }
 .badge-livets   { background: #fff9db; color: #f08c00; }
@@ -299,10 +399,17 @@ main {
 
 .entry-time {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--muted);
   text-align: right;
   line-height: 1.4;
+  align-self: flex-start;
+  padding-top: 1px;
+}
+
+.entry-time span {
+  display: block;
+  white-space: nowrap;
 }
 
 .entry-time strong {
@@ -330,7 +437,7 @@ main {
 .modal {
   background: var(--surface);
   border-radius: var(--radius);
-  width: min(525px, 96vw);   /* Ökad från 460px till 680px för att rymma båda kolumnerna */
+  width: min(525px, 96vw);   
   max-height: 92vh;
   overflow-y: auto;
   padding: 32px;
@@ -362,7 +469,7 @@ main {
   align-items: center;
   justify-content: center;
   position: relative;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
 }
 
 .modal-close::before, .modal-close::after {
@@ -372,7 +479,9 @@ main {
   height: 2px;
   background-color: var(--text);
   border-radius: 2px;
+  pointer-events: none;
 }
+
 .modal-close::before { transform: rotate(45deg); }
 .modal-close::after { transform: rotate(-45deg); }
 
@@ -381,6 +490,7 @@ main {
   border-color: var(--danger);
   transform: rotate(90deg);
 }
+
 .modal-close:hover::before, .modal-close:hover::after {
   background-color: #fff;
 }
@@ -414,7 +524,6 @@ select:focus, input:focus, textarea:focus {
   box-shadow: 0 0 0 3px var(--accent-light);
 }
 
-/* Custom-select komponenter */
 .custom-select-wrapper { position: relative; width: 100%; user-select: none; }
 
 .custom-select-trigger {
@@ -467,24 +576,24 @@ select:focus, input:focus, textarea:focus {
 .dropdown-option:hover { background: var(--accent-light); color: var(--accent); }
 .dropdown-option.selected { background: var(--accent-light); color: var(--accent); font-weight: 600; }
 
-/* ── VISITOR CATEGORY GRID ── */
 .cat-grid  { 
   display: grid; 
-  grid-template-columns: repeat(2, 1fr); /* Skapar två lika breda kolumner */
-  gap: 12px 24px;                        /* 12px luft mellan raderna, 24px mellan kolumnerna */
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 12px 24px;                        
   margin-top: 4px; 
 }
 
 .cat-row {
   display: grid;
-  grid-template-columns: 70px 100px;  /* ta bort 1fr */
+  grid-template-columns: minmax(0, 1fr) 100px;  
   align-items: center;
   gap: 12px;
 }
 
 .cat-label { 
   font-size: 14px; 
-  font-weight: 500; 
+  font-weight: 600; 
+  line-height: 1.35;
   color: var(--text); 
   text-align: left; 
 }
@@ -493,13 +602,10 @@ select:focus, input:focus, textarea:focus {
   text-align: right !important;
   font-variant-numeric: tabular-nums;
   font-weight: 500;
-  padding: 9px 6px !important; /* Ger ett jämnt och tight avstånd till högerkanten */
-  
-  /* Tar bort pilarna i Firefox */
+  padding: 12px !important; 
   -moz-appearance: textfield;
 }
 
-/* Tar bort pilarna i Chrome, Safari, Edge och Opera */
 .cat-input::-webkit-outer-spin-button,
 .cat-input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -507,26 +613,14 @@ select:focus, input:focus, textarea:focus {
 }
 
 .cat-total-row {
-  grid-column: span 2;
-  display: grid;
-  grid-template-columns: subgrid;  /* ärver exakt samma kolumner som .cat-grid */
-  align-items: center;
-  margin-top: 6px;
-  padding-top: 12px;
-  border-top: 1px solid var(--border2);
+  grid-column: 1 / -1; /* Spänner över båda kolumnerna på en egen rad längst ner */
+  display: flex;
+  justify-content: flex-end; /* Skjuter hela total-boxen till höger */
+  margin-top: 4px;
 }
 
 .cat-input:focus::placeholder {
   color: transparent;
-}
-
-.cat-label {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--text);
-  text-align: left;
-  position: relative;
-  cursor: default;
 }
 
 .cat-tooltip {
@@ -553,12 +647,19 @@ select:focus, input:focus, textarea:focus {
   transform: translateY(0);
 }
 
+.cat-total-label {
+  font-size: 14px;
+  font-weight: 700;
+}
+
 .cat-total-val {
   text-align: right;
-  margin-right: 40px;
-  font-size: 20px;
-  font-weight: 600;
+  margin-right: 0;
+  font-size: 16px;
+  font-weight: 700;
   color: var(--accent);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
 }
 
 /* ── 8. FORM-LAYOUT & KNAPPAR ── */
@@ -566,7 +667,7 @@ select:focus, input:focus, textarea:focus {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-top: 12px;
+  margin-top: 24px;
   padding-top: 20px;
   border-top: 1px solid var(--border);
 }
@@ -592,7 +693,7 @@ select:focus, input:focus, textarea:focus {
   cursor: pointer;
   color: var(--text);
 }
-.btn-secondary:hover { background: var(--surface3); }
+.btn-secondary:hover { background: var(--border); }
 
 .btn-danger {
   color: var(--danger);
@@ -625,27 +726,206 @@ select:focus, input:focus, textarea:focus {
   to   { opacity: 1; transform: scale(1) translateY(0); }
 }
 
+/* ── FIREBASE AUTH & LOGOUT BUTTON ── */
+.other-data-action {
+  position: fixed;
+  right: 24px;
+  top: 24px;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.btn-other-data {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border: 1px solid var(--border2);
+  border-radius: 30px;
+  background: var(--surface);
+  color: var(--text);
+  padding: 11px 17px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: all .2s ease;
+  white-space: nowrap;
+  width: 150px;
+}
+.btn-other-data:hover {
+  border-color: var(--danger);
+  background: #fff5f5;
+  color: var(--danger);
+}
+
+.auth-login-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(20, 20, 20, .52);
+  backdrop-filter: blur(7px);
+}
+.auth-login-overlay.open { display: flex; }
+.auth-login-modal {
+  width: min(430px, 96vw);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 30px;
+  box-shadow: 0 25px 60px rgba(0,0,0,.25);
+}
+.auth-login-kicker {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 7px;
+}
+.auth-login-modal h2 {
+  font-size: 24px;
+  letter-spacing: -.02em;
+  margin-bottom: 6px;
+}
+.auth-login-intro {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 22px;
+}
+.auth-login-modal .field-label { margin-top: 14px; }
+.auth-login-modal .field-label:first-of-type { margin-top: 0; }
+.auth-login-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 22px;
+}
+.auth-login-button { min-width: 120px; }
+.auth-login-status {
+  min-height: 20px;
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--danger);
+}
+
 /* ── 10. RESPONSIVITET ── */
 @media (max-width: 700px) {
   .action-grid { grid-template-columns: 1fr 1fr; }
+  .other-data-action { right: 12px; top: 12px; }
 }
 @media (max-width: 440px) {
   .action-grid { grid-template-columns: 1fr; }
+}
+button { font-family:inherit; }
+button:focus-visible, .entry-row:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+.entry-row:focus-visible { border-color:var(--accent); background:var(--surface2); }
+.entry-meta { overflow-wrap:anywhere; }
+.modal-close { flex-shrink:0; }
+.modal-top { gap:16px; }
+.form-footer { flex-wrap:wrap; justify-content:flex-end; }
+.status-msg:empty { display:none; }
+.status-msg:not(:empty) { flex-basis:100%; }
+input::placeholder { color:var(--muted); opacity:.6; font-style:normal; }
+.month-dialog[open] { animation:modalIn .18s ease; }
+@media (max-width:1100px) {
+  .header-card { flex-wrap:wrap; align-items:flex-start; }
+  .stats-row { width:100%; display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); }
+  .stat-box { width:100%; min-width:0; }
+}
+@media (max-width:800px) {
+  .entry-row { flex-wrap:wrap; }
+  .entry-time { flex-basis:100%; text-align:left; padding-top:4px; }
+  .action-btn { padding:18px; gap:12px; }
+}
+@media (max-width:600px) {
+  main { padding-top:20px; }
+  .header-card, .panel { padding:20px; }
+  .header-left { min-width:0; flex-shrink:1; }
+  .header-left h1 { font-size:28px; }
+  .stats-row { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .entry-row { padding:16px; gap:12px; }
+  .entry-body { flex-basis:100%; }
+  .entry-time span { white-space:normal; }
+  .modal { padding:22px; max-height:calc(100dvh - 32px); }
+  .modal-top h2 { font-size:20px; }
+  .cat-grid { 
+  display: grid; 
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 12px 24px;                        
+  margin-top: 4px; 
+}
+
+.cat-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 100px;  
+  align-items: center;
+  gap: 12px;
+}
+
+.cat-total-row {
+  grid-column: 2; /* Placeras i högra kolumnen */
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+}
+
+.cat-total-row-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 100px; /* Matchar exakt samma bredd som fälten ovanför (100px input) */
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px; /* Matchar insidan av fälten */
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  width: 100%; /* Gör att den speglar exakt en kolumns bredd */
+}
+
+  .form-footer { gap:8px; }
+  .form-footer button { padding:10px 16px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  *, *::before, *::after { animation:none !important; transition:none !important; }
 }
 </style>
 </head>
 <body>
 
+  <div class="other-data-action">
+    <button type="button" class="btn-other-data" id="authLogoutButton" style="display:none;">Logga ut</button>
+  </div>
+
   <main>
     <!-- 1. Header & Statistik -->
-    <div class="header-card">
-<div class="header-left">
-  <div class="kicker">Registrera</div>
-  <h1>Månadsresultat</h1>
-  <div class="dateline" id="dateline">Antal besök per kategori</div>
-</div>
+<div class="header-card">
+      <div class="header-left">
+        <div class="kicker">Registrera</div>
+        <h1>Månadsresultat</h1>
+        <div class="dateline">
+          <button type="button" class="period-trigger" id="periodPicker" aria-haspopup="dialog" aria-controls="monthDialog">
+            <span id="periodLabel"></span>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a3 3 0 0 1 3 3v2H2V7a3 3 0 0 1 3-3h1V3a1 1 0 0 1 1-1ZM2 11h20v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2Z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
 
-<div class="stats-row">
+      <div class="stats-row">
         <div class="stat-box" id="statBox_kulturen" title="Kulturen i Lund">
           <img src="https://kultpub.github.io/site/kulturen-i-lund.svg" alt="" class="venue-icon">
           <div class="stat-num" id="statKulturen">0</div>
@@ -679,62 +959,62 @@ select:focus, input:focus, textarea:focus {
       <div class="action-grid">
         
         <button class="action-btn" data-modal="kulturen">
-  <div class="icon-wrap">
-    <img src="https://kultpub.github.io/site/kulturen-i-lund.svg" alt="" class="venue-icon">
-  </div>
+          <div class="icon-wrap">
+            <img src="https://kultpub.github.io/site/kulturen-i-lund.svg" alt="" class="venue-icon">
+          </div>
           <div class="btn-text-group">
             <span class="btn-title">Kulturen i Lund</span>
-			<span class="btn-desc">Fördelning alla kategorier</span>
+            <span class="btn-desc">Fördelning alla kategorier</span>
           </div>
         </button>
 
         <button class="action-btn" data-modal="ostarp">
-  <div class="icon-wrap">
-    <img src="https://kultpub.github.io/site/kulturens-ostarp.svg" alt="" class="venue-icon">
-  </div>
+          <div class="icon-wrap">
+            <img src="https://kultpub.github.io/site/kulturens-ostarp.svg" alt="" class="venue-icon">
+          </div>
           <div class="btn-text-group">
             <span class="btn-title">Kulturens Östarp</span>
-			<span class="btn-desc">Vuxna och barn</span>
+            <span class="btn-desc">Vuxna och barn</span>
           </div>
         </button>
 
         <button class="action-btn" data-modal="livets">
-  <div class="icon-wrap">
-    <img src="https://kultpub.github.io/site/livetsmuseum.svg" alt="" class="venue-icon">
-  </div>
+          <div class="icon-wrap">
+            <img src="https://kultpub.github.io/site/livetsmuseum.svg" alt="" class="venue-icon">
+          </div>
           <div class="btn-text-group">
             <span class="btn-title">Livets museum</span>
-			<span class="btn-desc">Vuxna och barn</span>
+            <span class="btn-desc">Vuxna och barn</span>
           </div>
         </button>
 
         <button class="action-btn" data-modal="hokeriet">
-  <div class="icon-wrap">
-    <img src="https://kultpub.github.io/site/hokeriet.svg" alt="" class="venue-icon">
-  </div>
+          <div class="icon-wrap">
+            <img src="https://kultpub.github.io/site/hokeriet.svg" alt="" class="venue-icon">
+          </div>
           <div class="btn-text-group">
             <span class="btn-title">Hökeriet</span>
-			<span class="btn-desc">Vuxna och barn</span>
+            <span class="btn-desc">Vuxna och barn</span>
           </div>
         </button>
 
         <button class="action-btn" data-modal="tegner">
-  <div class="icon-wrap">
-    <img src="https://kultpub.github.io/site/tegner.svg" alt="" class="venue-icon">
-  </div>
+          <div class="icon-wrap">
+            <img src="https://kultpub.github.io/site/tegner.svg" alt="" class="venue-icon">
+          </div>
           <div class="btn-text-group">
             <span class="btn-title">Tegnérmuseet</span>
-			<span class="btn-desc">Vuxna och barn</span>
+            <span class="btn-desc">Vuxna och barn</span>
           </div>
         </button>
 
         <button class="action-btn" data-modal="ovrigt">
-  <div class="icon-wrap">
-    <img src="https://kultpub.github.io/site/ovrigt.svg" alt="" class="venue-icon">
-  </div>
+          <div class="icon-wrap">
+            <img src="https://kultpub.github.io/site/ovrigt.svg" alt="" class="venue-icon">
+          </div>
           <div class="btn-text-group">
             <span class="btn-title">Övrigt</span>
-			<span class="btn-desc">Fördelning alla kategorier</span>
+            <span class="btn-desc">Fördelning alla kategorier</span>
           </div>
         </button>
       </div>
@@ -742,7 +1022,14 @@ select:focus, input:focus, textarea:focus {
 
     <!-- 3. Loggade händelser -->
     <div class="panel">
-      <div class="panel-label">Loggad månadsstatistik</div>
+      <div class="entries-panel-heading">
+        <div class="panel-label">Loggad månadsstatistik</div>
+        <div class="entry-sort-controls" role="group" aria-label="Sortera loggad månadsstatistik">
+          <span class="entry-sort-label">Sortera:</span>
+          <button type="button" class="entry-sort-button" data-entry-sort="type" aria-pressed="false">Besöksmål</button>
+          <button type="button" class="entry-sort-button active" data-entry-sort="time" aria-pressed="true">Registreringstid ↑</button>
+        </div>
+      </div>
       <div class="entries-list" id="entriesList">
         <div class="empty-state" id="emptyState" style="color:var(--muted);font-size:14px;">Ingen besöksstatistik registrerad än.</div>
       </div>
@@ -750,8 +1037,27 @@ select:focus, input:focus, textarea:focus {
   </main>
 
   <!-- 4. Modaler & Overlays -->
+  <div class="auth-login-overlay" id="authLoginOverlay" role="dialog" aria-modal="true" aria-labelledby="authLoginTitle">
+    <form class="auth-login-modal" id="authLoginForm" autocomplete="on">
+      <div class="auth-login-kicker">Kulturen</div>
+      <h2 id="authLoginTitle">Logga in</h2>
+      <p class="auth-login-intro">Logga in för att registrera månatlig besöksstatistik.</p>
+
+      <label class="field-label" for="authEmail">E-postadress</label>
+      <input type="email" id="authEmail" autocomplete="username" required />
+
+      <label class="field-label" for="authPassword">Lösenord</label>
+      <input type="password" id="authPassword" autocomplete="current-password" required />
+
+      <div class="auth-login-status" id="authLoginStatus" aria-live="polite"></div>
+      <div class="auth-login-actions">
+        <button class="btn-primary auth-login-button" id="authLoginButton" type="submit">Logga in</button>
+      </div>
+    </form>
+  </div>
+
   <div class="modal-overlay" id="overlay">
-    <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
       <div class="modal-top">
         <h2 id="modalTitle">Registrering</h2>
         <button class="modal-close" id="modalClose" aria-label="Stäng"></button>
@@ -780,20 +1086,52 @@ select:focus, input:focus, textarea:focus {
     </div>
   </div>
 
+<dialog class="month-dialog" id="monthDialog" aria-labelledby="monthDialogTitle">
+  <div class="month-dialog-heading"><h2 id="monthDialogTitle">Välj månad</h2><button type="button" class="modal-close" id="monthClose" aria-label="Stäng månadsväljaren"></button></div>
+  <div class="month-year-nav"><button type="button" class="year-arrow" id="previousYear" aria-label="Föregående år"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg></button><strong id="pickerYear" aria-live="polite"></strong><button type="button" class="year-arrow" id="nextYear" aria-label="Nästa år"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6"/></svg></button></div>
+  <div class="month-grid" id="monthGrid" role="group" aria-label="Månader"></div>
+  <div class="period-help"><p>Grå månad? Månaden ligger i framtiden eller före september 2026, då den här registreringen infördes.</p></div>
+</dialog>
+
+<!-- Firebase App, Auth & Firestore SDKs -->
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore-compat.js"></script>
 <script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBxGc4jxkayGoOWDjeVwJqCJJm-536FUkI",
+  authDomain: "kulturen-dagsdata.firebaseapp.com",
+  projectId: "kulturen-dagsdata",
+  storageBucket: "kulturen-dagsdata.firebasestorage.app",
+  messagingSenderId: "306416395027",
+  appId: "1:306416395027:web:0211f420e2ec773d8970e6"
+};
+
+let db = null;
+let auth = null;
+const FIREBASE_CONFIGURED = Boolean(firebaseConfig.apiKey && firebaseConfig.projectId && firebaseConfig.appId);
+if (FIREBASE_CONFIGURED) {
+  firebase.initializeApp(firebaseConfig);
+  auth = firebase.auth();
+  db = firebase.firestore();
+}
+
+const FIREBASE_COLLECTION = "monthlyData";
+const VENUE = "kulturenilund";
+
 const VENUES = {
   kulturen: {
     label:"Kulturen i Lund",
     badge:"badge-kulturen",
-  cats: [
-    { name: "Vuxen",     tip: "Fullt betalande vuxna personer" },
-    { name: "Medlem",    tip: "Medlemmar oavsett typ" },
-    { name: "Barn",      tip: "Besökare 0–18 år" },
-    { name: "Rabatt",    tip: "Alla varianter nedsatt pris, t.ex. grupp, Kulturarvskortet, Club Øresund, SJ-Prio etc." },
-    { name: "Student",   tip: "Besökare med studentrabatt" },
-    { name: "Fri vuxen", tip: "Alla varianter som ger fri entré för vuxen, t.ex. fribiljett, ICOM, ledsagare, press etc." },
-    { name: "Pensionär", tip: "Kallas även \u201cSeniorer\u201d" },
-  ],
+    cats: [
+      { name: "Vuxen",     tip: "Fullt betalande vuxna personer" },
+      { name: "Medlem",    tip: "Medlemmar oavsett typ" },
+      { name: "Barn",      tip: "Besökare 0–18 år" },
+      { name: "Rabatt",    tip: "Alla varianter nedsatt pris, t.ex. grupp, Kulturarvskortet, Club Øresund, SJ-Prio etc." },
+      { name: "Student",   tip: "Besökare med studentrabatt" },
+      { name: "Fri vuxen", tip: "Alla varianter som ger fri entré för vuxen, t.ex. fribiljett, ICOM, ledsagare, press etc." },
+      { name: "Pensionär", tip: "Kallas även \u201cSeniorer\u201d" },
+    ],
     icon: '<svg class="badge-icon" viewBox="0 0 640 512"><path fill="currentColor" d="M0 224v272c0 8.84 7.16 16 16 16h80V192H32c-17.67 0-32 14.33-32 32zm360-48h-24v-40c0-4.42-3.58-8-8-8h-16c-4.42 0-8 3.58-8 8v64c0 4.42 3.58 8 8 8h48c4.42 0 8-3.58 8-8v-16c0-4.42-3.58-8-8-8zm137.75-63.96l-160-106.67a32.02 32.02 0 0 0-35.5 0l-160 106.67A32.002 32.002 0 0 0 128 138.66V512h128V368c0-8.84 7.16-16 16-16h96c8.84 0 16 7.16 16 16v144h128V138.67c0-10.7-5.35-20.7-14.25-26.63z"/></svg>'
   },
   ostarp: {
@@ -823,21 +1161,24 @@ const VENUES = {
   ovrigt: {
     label:"Övrigt",
     badge:"badge-ovrigt",
-  cats: [
-    { name: "Vuxen",     tip: "Fullt betalande vuxna personer" },
-    { name: "Medlem",    tip: "Medlemmar oavsett typ" },
-    { name: "Barn",      tip: "Besökare 0–18 år" },
-    { name: "Rabatt",    tip: "Alla varianter nedsatt pris, t.ex. grupp, Kulturarvskortet, Club Øresund, SJ-Prio etc." },
-    { name: "Student",   tip: "Besökare med studentrabatt" },
-    { name: "Fri vuxen", tip: "Alla varianter som ger fri entré för vuxen, t.ex. fribiljett, ICOM, ledsagare, press etc." },
-    { name: "Pensionär", tip: "Kallas även \u201cSeniorer\u201d" },
-  ],
+    cats: [
+      { name: "Vuxen",     tip: "Fullt betalande vuxna personer" },
+      { name: "Medlem",    tip: "Medlemmar oavsett typ" },
+      { name: "Barn",      tip: "Besökare 0–18 år" },
+      { name: "Rabatt",    tip: "Alla varianter nedsatt pris, t.ex. grupp, Kulturarvskortet, Club Øresund, SJ-Prio etc." },
+      { name: "Student",   tip: "Besökare med studentrabatt" },
+      { name: "Fri vuxen", tip: "Alla varianter som ger fri entré för vuxen, t.ex. fribiljett, ICOM, ledsagare, press etc." },
+      { name: "Pensionär", tip: "Kallas även \u201cSeniorer\u201d" },
+    ],
     icon: '<svg class="badge-icon" viewBox="0 0 512 512"><path fill="currentColor" d="M256 352c-17.7 0-32 14.3-32 32v64c0 17.7 14.3 32 32 32s32-14.3 32-32V384c0-17.7-14.3-32-32-32z"/></svg>'
   }
 };
 
 let entries = {};
+let entrySortKey = "time";
+let entrySortDirection = "asc";
 let activeModal = null;
+let unsubscribeMonthly = null;
 
 const MONTHS_SV = ["Januari","Februari","Mars","April","Maj","Juni","Juli","Augusti","September","Oktober","November","December"];
 
@@ -862,62 +1203,96 @@ function esc(v) {
   return String(v||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 }
 
-function buildMonthSelect(selMonth, selYear) {
+const FIRST_PERIOD = 2026 * 12 + 8; // September 2026
+function periodNumber(period) { return period.year * 12 + period.month - 1; }
+function currentPeriodNumber() {
   const now = new Date();
-  const opts = [];
-  for (let i = 0; i < 12; i++) {
-    let m = now.getMonth() + 1 - i;
-    let y = now.getFullYear();
-    if (m <= 0) { m += 12; y--; }
-    const sel = (m === selMonth && y === selYear) ? " selected" : "";
-    opts.push({ val: `${y}-${String(m).padStart(2,'0')}`, label: fmtMonth(m, y) });
-  }
+  return now.getFullYear() * 12 + now.getMonth();
+}
+function periodFromNumber(value) { return { year: Math.floor(value / 12), month: value % 12 + 1 }; }
+function allowedPeriod(period) {
+  return period && Number.isInteger(period.year) && Number.isInteger(period.month) &&
+    period.month >= 1 && period.month <= 12 &&
+    periodNumber(period) >= FIRST_PERIOD && periodNumber(period) <= currentPeriodNumber();
+}
+function defaultPeriod() { return periodFromNumber(Math.max(FIRST_PERIOD, currentPeriodNumber() - 1)); }
+let activePeriod = defaultPeriod();
+let modalPeriod = null;
+let modalDirty = false;
+let observedMonth = currentPeriodNumber();
+let rolloverTimer;
 
-  const currentLabel = fmtMonth(selMonth, selYear);
-  const hiddenVal = `${selYear}-${String(selMonth).padStart(2,'0')}`;
-
-  return `
-    <label class="field-label">Avser månad</label>
-    <div class="custom-select-wrapper" id="monthSelectWrapper" style="width: 182px;">
-      <div class="custom-select-trigger" id="monthSelectTrigger">
-        <span id="monthSelectLabel">${esc(currentLabel)}</span>
-        <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-      </div>
-      <div class="custom-select-dropdown">
-        <div class="dropdown-options-list">
-          ${opts.map(o => `<div class="dropdown-option${o.val === hiddenVal ? ' selected' : ''}" data-value="${o.val}">${esc(o.label)}</div>`).join('')}
-        </div>
-      </div>
-    </div>
-    <input type="hidden" id="fMonth" value="${hiddenVal}" />`;
+function entryKey(venueId, period = activePeriod) {
+  return `${period.year}-${String(period.month).padStart(2, '0')}-${venueId}`;
 }
 
-function initMonthSelect() {
-  const wrapper = document.getElementById("monthSelectWrapper");
-  const trigger = document.getElementById("monthSelectTrigger");
-  const labelEl = document.getElementById("monthSelectLabel");
-  const hidden  = document.getElementById("fMonth");
+let pickerTarget = 'page';
+let pickerYear = activePeriod.year;
+let pickerOpener = null;
+function refreshPeriodPicker() {
+  document.getElementById("periodLabel").textContent = fmtMonth(activePeriod.month, activePeriod.year);
+  renderEntries();
+  updateStats();
+  if (document.getElementById("monthDialog").open) renderMonthGrid();
+}
+function renderMonthGrid() {
+  const selected = pickerTarget === 'modal' ? modalPeriod : activePeriod;
+  document.getElementById("pickerYear").textContent = pickerYear;
+  document.getElementById("previousYear").disabled = pickerYear <= 2026;
+  document.getElementById("nextYear").disabled = pickerYear >= new Date().getFullYear();
+  document.getElementById("monthGrid").innerHTML = MONTHS_SV.map((name, i) =>
+    `<button type="button" class="month-choice" data-month="${i+1}" aria-label="${name} ${pickerYear}" aria-pressed="${selected.year === pickerYear && selected.month === i+1}"${allowedPeriod({year:pickerYear,month:i+1}) ? '' : ' disabled'}>${name}</button>`).join('');
+}
+function openMonthPicker(target, opener) {
+  checkMonthRollover();
+  pickerTarget = target;
+  pickerOpener = opener;
+  pickerYear = (target === 'modal' ? modalPeriod : activePeriod).year;
+  renderMonthGrid();
+  document.getElementById("monthDialog").showModal();
+  document.querySelector('#monthGrid [aria-pressed="true"]:not(:disabled)')?.focus();
+}
+function shiftPickerYear(delta) {
+  const year = pickerYear + delta;
+  if (year < 2026 || year > new Date().getFullYear()) return;
+  pickerYear = year;
+  renderMonthGrid();
+  if (document.activeElement?.disabled || document.activeElement === document.body)
+    document.querySelector('#monthGrid button:not(:disabled)')?.focus();
+}
+function choosePickerMonth(month) {
+  const candidate = {year:pickerYear, month};
+  if (!allowedPeriod(candidate)) return;
+  const selected = pickerTarget === 'modal' ? modalPeriod : activePeriod;
+  const changed = periodNumber(candidate) !== periodNumber(selected);
+  if (pickerTarget === 'modal' && changed && modalDirty &&
+      !window.confirm("Byta månad? Osparade ändringar i formuläret försvinner.")) return;
+  document.getElementById("monthDialog").close();
+  if (!changed) return;
+  if (pickerTarget === 'modal') {
+    openModal(activeModal, candidate);
+    pickerOpener = document.getElementById("modalPeriodButton");
+  } else {
+    activePeriod = candidate;
+    refreshPeriodPicker();
+  }
+}
 
-  wrapper.querySelectorAll(".dropdown-option").forEach(opt => {
-    opt.addEventListener("click", () => {
-      const val = opt.dataset.value;
-      hidden.value = val;
-      labelEl.textContent = opt.textContent;
-      wrapper.querySelectorAll(".dropdown-option").forEach(o => o.classList.remove("selected"));
-      opt.classList.add("selected");
-      wrapper.classList.remove("open");
-    });
-  });
-
-  trigger.addEventListener("click", e => {
-    e.stopPropagation();
-    wrapper.classList.toggle("open");
-  });
+function checkMonthRollover() {
+  if (observedMonth !== currentPeriodNumber()) {
+    observedMonth = currentPeriodNumber();
+    activePeriod = defaultPeriod();
+    refreshPeriodPicker();
+  }
+  clearTimeout(rolloverTimer);
+  const now = new Date();
+  const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+  rolloverTimer = setTimeout(checkMonthRollover, Math.min(nextMonth - now, 2147483647));
 }
 
 function buildVenueForm(venueId, existing) {
   const venue = VENUES[venueId];
-  const def   = getPreviousMonthYear();
+  const def   = modalPeriod;
   const selM = existing ? existing.month : def.month;
   const selY = existing ? existing.year  : def.year;
 
@@ -926,12 +1301,11 @@ function buildVenueForm(venueId, existing) {
     const tip  = typeof cat === 'object' ? cat.tip  : null;
     const val  = (existing && existing.cats[name] != null) ? existing.cats[name] : "";
     const id   = `fCat_${name.replace(/\s/g,'_')}`;
-    return `<div class="cat-row">
+return `<div class="cat-row">
       <div class="cat-label"${tip ? ` data-tooltip="${esc(tip)}"` : ''}>${esc(name)}</div>
-      <input type="number" id="${id}" class="cat-input" inputmode="numeric"
-             min="0" placeholder="0" value="${val}"
-             oninput="this.value=this.value.replace(/[^0-9]/g,'');recalcTotal('${venueId}')"
-             onkeydown="return ['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(event.key)||(event.key>='0'&&event.key<='9')">
+      <input type="number" id="${id}" class="cat-input" aria-label="${esc(name)}" inputmode="numeric"
+             min="0" placeholder="Antal" value="${val}"
+             oninput="this.value=this.value.replace(/[^0-9]/g,'');recalcTotal('${venueId}')">
     </div>`;
   }).join('');
 
@@ -939,13 +1313,14 @@ function buildVenueForm(venueId, existing) {
   if (venueId === 'ovrigt') {
     const commentVal = existing && existing.comment ? existing.comment : '';
     commentHtml = `
-      <label class="field-label" style="margin-top:20px;">Kommentar (Obligatorisk)</label>
+      <label for="fComment" class="field-label" style="margin-top:20px;">Kommentar (Obligatorisk)</label>
       <input type="text" id="fComment" placeholder="Ange varför eller var besöken registrerats..." value="${esc(commentVal)}" style="width:100%;">
     `;
   }
 
   const isEdit = !!existing;
-  return `${buildMonthSelect(selM,selY)}
+  return `<div class="field-label">Avser månad</div>
+    <button type="button" class="period-trigger modal-period-trigger" id="modalPeriodButton" aria-haspopup="dialog" aria-controls="monthDialog">${fmtMonth(selM,selY)}<svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
     <label class="field-label" style="margin-top:20px;">Antal besökare per kategori</label>
     ${(venueId === 'kulturen' || venueId === 'ovrigt') ? `
     <p style="font-size:12px; color:var(--muted); margin-bottom:20px; display:flex; align-items:center; gap:6px;">
@@ -954,19 +1329,21 @@ function buildVenueForm(venueId, existing) {
       </svg>
       Håll muspekaren över ett kategorinamn för en förklaring
     </p>` : ''}
-    <div class="cat-grid">
+	<div class="cat-grid">
       ${rows}
       <div class="cat-total-row">
-        <div class="cat-total-label">Totalt</div>
-        <div class="cat-total-val" id="catTotal">0</div>
+        <div class="cat-total-row-inner">
+          <div class="cat-total-label">Totalt</div>
+          <div class="cat-total-val" id="catTotal">0</div>
+        </div>
       </div>
     </div>
     ${commentHtml}
     <div class="form-footer">
-      <span class="status-msg" id="formStatus"></span>
-      ${isEdit ? `<button class="btn-danger" onclick="deleteEntry()">Radera</button>` : ''}
-      <button class="btn-secondary" onclick="closeModal()">Avbryt</button>
-      <button class="btn-primary" id="saveBtn">${isEdit ? 'Spara ändringar' : 'Spara'}</button>
+      <span class="status-msg" id="formStatus" role="alert"></span>
+      ${isEdit ? `<button class="btn-danger" type="button" onclick="deleteEntry()">Radera</button>` : ''}
+      <button class="btn-secondary" type="button" onclick="closeModal()">Avbryt</button>
+      <button class="btn-primary" type="button" id="saveBtn">${isEdit ? 'Spara ändringar' : 'Spara'}</button>
     </div>`;
 }
 
@@ -982,15 +1359,22 @@ function recalcTotal(venueId) {
   if (el) el.textContent = fmtInt(total);
 }
 
-function openModal(venueId) {
+function openModal(venueId, period = activePeriod) {
+  checkMonthRollover();
+  if (!allowedPeriod(period)) return;
   activeModal = venueId;
-  const existing = entries[venueId] || null;
+  modalPeriod = { ...period };
+  modalDirty = false;
+  const existing = entries[entryKey(venueId, modalPeriod)] || null;
   const venue    = VENUES[venueId];
   document.getElementById("modalTitle").textContent =
     (existing ? "Redigera " : "Registrera ") + venue.label;
   document.getElementById("modalBody").innerHTML = buildVenueForm(venueId, existing);
   recalcTotal(venueId);
-  initMonthSelect();
+  document.getElementById("modalBody").oninput = () => {
+    modalDirty = true;
+  };
+  document.getElementById("modalPeriodButton").addEventListener("click", event => openMonthPicker('modal', event.currentTarget));
   document.getElementById("overlay").classList.add("open");
   document.getElementById("saveBtn").addEventListener("click", () => saveEntry(venueId));
 }
@@ -1008,24 +1392,42 @@ function closeDeleteModal() {
   document.getElementById("deleteOverlay").classList.remove("open");
 }
 
-function confirmDelete() {
-  if (activeModal) {
-    delete entries[activeModal];
-    renderEntries();
-    updateStats();
+async function confirmDelete() {
+  if (!activeModal) return;
+  if (!db) {
+    alert("Firebase är inte konfigurerat.");
+    return;
+  }
+  const key = entryKey(activeModal, modalPeriod);
+  const entry = entries[key];
+  if (entry && entry.docId) {
+    try {
+      await db.collection(FIREBASE_COLLECTION).doc(entry.docId).delete();
+    } catch (error) {
+      console.error("Kunde inte radera posten:", error);
+      alert("Kunde inte radera posten från databasen.");
+      return;
+    }
   }
   closeDeleteModal();
   closeModal();
 }
 
-function saveEntry(venueId) {
+async function saveEntry(venueId) {
+  if (!db) {
+    alert("Firebase är inte konfigurerat.");
+    return;
+  }
+  if (!allowedPeriod(modalPeriod)) {
+    document.getElementById("formStatus").textContent = "Välj en månad från september 2026 till aktuell månad.";
+    return;
+  }
   const venue    = VENUES[venueId];
-  const monthVal = document.getElementById("fMonth").value;
-  const [year, month] = monthVal.split("-").map(Number);
+  const { year, month } = modalPeriod;
   const cats = {};
   let total  = 0;
 
-  const resetStyle = (el) => { if (el) { el.style.borderColor = ""; el.style.boxShadow = ""; } };
+  const resetStyle = (el) => { if (el) { el.style.borderColor = ""; el.style.boxShadow = ""; el.removeAttribute("aria-invalid"); } };
   document.querySelectorAll('input, .custom-select-trigger').forEach(resetStyle);
   const st = document.getElementById("formStatus");
   if (st) st.textContent = "";
@@ -1044,6 +1446,7 @@ function saveEntry(venueId) {
       const name = typeof cat === 'object' ? cat.name : cat;
       const el = document.getElementById(`fCat_${name.replace(/\s/g,'_')}`);
       if (el) {
+        el.setAttribute("aria-invalid", "true");
         el.style.borderColor = "var(--danger)";
         el.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
       }
@@ -1058,6 +1461,7 @@ function saveEntry(venueId) {
     if (!comment) {
       if (st) st.textContent = "Du måste fylla i en kommentar.";
       if (commentEl) {
+        commentEl.setAttribute("aria-invalid", "true");
         commentEl.style.borderColor = "var(--danger)";
         commentEl.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
         commentEl.focus();
@@ -1066,49 +1470,136 @@ function saveEntry(venueId) {
     }
   }
 
-  entries[venueId] = { venueId, month, year, cats, total, comment, logTs: new Date().toISOString() };
-  renderEntries();
-  updateStats();
-  closeModal();
+  const saveButton = document.getElementById("saveBtn");
+  if (saveButton) {
+    saveButton.disabled = true;
+    saveButton.textContent = "Sparar…";
+  }
+
+  try {
+    const key = entryKey(venueId, modalPeriod);
+    const existing = entries[key];
+    const now = new Date().toISOString();
+    
+    const record = {
+      venueId,
+      venueLabel: venue.label,
+      month,
+      year,
+      cats,
+      total,
+      comment,
+      venue: VENUE,
+      logTs: existing?.logTs || now,
+      _updatedTs: now
+    };
+
+    let docRef;
+    if (existing && existing.docId) {
+      docRef = db.collection(FIREBASE_COLLECTION).doc(existing.docId);
+    } else {
+      docRef = db.collection(FIREBASE_COLLECTION).doc();
+    }
+
+    await docRef.set(record);
+    activePeriod = { ...modalPeriod };
+    refreshPeriodPicker();
+    closeModal();
+  } catch (error) {
+    console.error("Kunde inte spara till databasen:", error);
+    if (st) st.textContent = "Kunde inte spara. Kontrollera anslutningen.";
+    if (saveButton) {
+      saveButton.disabled = false;
+      saveButton.textContent = "Spara";
+    }
+  }
 }
+
+function renderTimeInfo(e) {
+  if (!e.logTs) return "";
+  const created = new Date(e.logTs);
+  const logDate = created.toLocaleDateString("sv-SE");
+  const logTime = created.toLocaleTimeString("sv-SE", {hour:"2-digit", minute:"2-digit"});
+  const updated = e._updatedTs ? new Date(e._updatedTs) : null;
+  const updatedDate = updated?.toLocaleDateString("sv-SE");
+  const revised = updated && updatedDate !== logDate
+    ? `<span>Reviderad ${updatedDate} kl. ${updated.toLocaleTimeString("sv-SE", {hour:"2-digit", minute:"2-digit"})}</span>` : "";
+  return `<span>Registrerad ${logDate} kl. ${logTime}</span>${revised}`;
+}
+
+function compareEntries(a, b) {
+  const timeDifference = (new Date(a.logTs).getTime() || 0) - (new Date(b.logTs).getTime() || 0);
+  if (entrySortKey === "type") {
+    const comparison = VENUES[a.venueId].label.localeCompare(VENUES[b.venueId].label, "sv-SE");
+    return comparison ? (entrySortDirection === "asc" ? comparison : -comparison) : timeDifference;
+  }
+  return entrySortDirection === "asc" ? timeDifference : -timeDifference;
+}
+
+function updateEntrySortButtons() {
+  document.querySelectorAll("[data-entry-sort]").forEach(button => {
+    const isActive = button.dataset.entrySort === entrySortKey;
+    button.classList.toggle("active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+    const label = button.dataset.entrySort === "type" ? "Besöksmål" : "Registreringstid";
+    button.textContent = isActive ? `${label} ${entrySortDirection === "asc" ? "↑" : "↓"}` : label;
+  });
+}
+
+document.querySelectorAll("[data-entry-sort]").forEach(button => {
+  button.addEventListener("click", () => {
+    const requestedKey = button.dataset.entrySort;
+    if (entrySortKey === requestedKey) {
+      entrySortDirection = entrySortDirection === "asc" ? "desc" : "asc";
+    } else {
+      entrySortKey = requestedKey;
+      entrySortDirection = "asc";
+    }
+    updateEntrySortButtons();
+    renderEntries();
+  });
+});
 
 function renderEntries() {
   const list  = document.getElementById("entriesList");
   const empty = document.getElementById("emptyState");
   list.querySelectorAll(".entry-row").forEach(r => r.remove());
-  if (!Object.keys(entries).length) { empty.style.display = "block"; return; }
+  const visibleKeys = Object.keys(entries).filter(key => entries[key].month === activePeriod.month && entries[key].year === activePeriod.year);
+  empty.textContent = `Ingen besöksstatistik registrerad för ${fmtMonth(activePeriod.month, activePeriod.year)}.`;
+  if (!visibleKeys.length) { empty.style.display = "block"; return; }
   empty.style.display = "none";
 
-  const sortedKeys = Object.keys(entries).sort((a, b) => new Date(entries[b].logTs) - new Date(entries[a].logTs));
+  const sortedKeys = visibleKeys.sort((a, b) => compareEntries(entries[a], entries[b]));
 
-  sortedKeys.forEach(venueId => {
-    const e = entries[venueId];
+  sortedKeys.forEach(key => {
+    const e = entries[key];
+    const venueId = e.venueId;
     const venue = VENUES[venueId];
     const row   = document.createElement("div");
     row.className = "entry-row";
+    row.tabIndex = 0;
+    row.setAttribute("role", "button");
+    row.setAttribute("aria-label", `Redigera ${venue.label}, ${fmtMonth(e.month,e.year)}, ${fmtInt(e.total)} besökare`);
+    row.onkeydown = event => {
+      if (event.key === "Enter" || event.key === " ") { event.preventDefault(); openModal(venueId); }
+    };
     
-let parts = venue.cats
-  .filter(c => { const n = typeof c === 'object' ? c.name : c; return e.cats[n] > 0; })
-  .map(c => { const n = typeof c === 'object' ? c.name : c; return `${n}: ${fmtInt(e.cats[n])}`; })
-  .join(" · ");
+    let parts = venue.cats
+      .filter(c => { const n = typeof c === 'object' ? c.name : c; return e.cats[n] > 0; })
+      .map(c => { const n = typeof c === 'object' ? c.name : c; return `${n}: ${fmtInt(e.cats[n])}`; })
+      .join(" · ");
     
     if (e.comment) {
       parts += ` <br><span style="color:var(--text); font-style:italic; display:inline-block; margin-top:4px;">💬 ${esc(e.comment)}</span>`;
     }
     
-    const logTime = new Date(e.logTs);
-    const logStr  = logTime.toLocaleTimeString("sv-SE",{hour:"2-digit",minute:"2-digit"});
-    const logDate = logTime.toLocaleDateString("sv-SE");
-row.innerHTML = `
-  <span class="entry-badge ${venue.badge}">${venue.icon} ${esc(venue.label)}</span>
-  <div class="entry-body">
-    <div class="entry-title">${fmtInt(e.total)} besökare</div>
-    <div class="entry-meta">${parts}</div>
-  </div>
-  <div class="entry-time">
-    <strong>${fmtMonth(e.month,e.year)}</strong>
-    <span>Loggat: ${logDate} ${logStr}</span>
-  </div>`;
+    row.innerHTML = `
+      <span class="entry-badge ${venue.badge}"><i class="fa-solid fa-map-pin" aria-hidden="true"></i> ${esc(venue.label)}</span>
+      <div class="entry-body">
+        <div class="entry-title">${fmtInt(e.total)} besökare</div>
+        <div class="entry-meta">${parts}</div>
+      </div>
+      <div class="entry-time">${renderTimeInfo(e)}</div>`;
     row.onclick = () => openModal(venueId);
     list.appendChild(row);
   });
@@ -1119,7 +1610,7 @@ function updateStats() {
     const id = `stat${venueId.charAt(0).toUpperCase()+venueId.slice(1)}`;
     const el = document.getElementById(id);
     if (!el) return;
-    const e = entries[venueId];
+    const e = entries[entryKey(venueId)];
     el.textContent = e ? fmtInt(e.total) : "0";
   });
 }
@@ -1144,19 +1635,165 @@ document.addEventListener('mouseout', e => {
   if (label) tooltip.classList.remove('visible');
 });
 
+// Firebase Auth & Live Sync
+function showLoginModal(message = "") {
+  const overlay = document.getElementById("authLoginOverlay");
+  const status = document.getElementById("authLoginStatus");
+  if (status) status.textContent = message;
+  if (overlay) overlay.classList.add("open");
+  setTimeout(() => document.getElementById("authEmail")?.focus(), 0);
+}
+
+function hideLoginModal() {
+  document.getElementById("authLoginOverlay")?.classList.remove("open");
+  const status = document.getElementById("authLoginStatus");
+  if (status) status.textContent = "";
+  const password = document.getElementById("authPassword");
+  if (password) password.value = "";
+}
+
+function setSignedInUser(user) {
+  const logoutButton = document.getElementById("authLogoutButton");
+  if (logoutButton) logoutButton.style.display = user ? "flex" : "none";
+}
+
+function friendlyAuthError(error) {
+  const code = error?.code || "";
+  if (["auth/invalid-credential", "auth/wrong-password", "auth/user-not-found", "auth/invalid-email"].includes(code)) {
+    return "Fel e-postadress eller lösenord.";
+  }
+  if (code === "auth/too-many-requests") return "För många inloggningsförsök. Försök igen senare.";
+  return "Inloggningen misslyckades.";
+}
+
+async function loginWithEmailPassword(event) {
+  event.preventDefault();
+  if (!auth) return;
+  const email = document.getElementById("authEmail").value.trim();
+  const password = document.getElementById("authPassword").value;
+  const button = document.getElementById("authLoginButton");
+  const status = document.getElementById("authLoginStatus");
+  if (status) status.textContent = "";
+  button.disabled = true;
+  button.textContent = "Loggar in…";
+  try {
+    await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+    await auth.signInWithEmailAndPassword(email, password);
+  } catch (error) {
+    console.error("Inloggning misslyckades:", error);
+    if (status) status.textContent = friendlyAuthError(error);
+  } finally {
+    button.disabled = false;
+    button.textContent = "Logga in";
+  }
+}
+
+async function logoutFirebaseUser() {
+  if (!auth) return;
+  try {
+    await auth.signOut();
+  } catch (error) {
+    console.error("Kunde inte logga ut:", error);
+  }
+}
+
+function subscribeToMonthlyData() {
+  if (unsubscribeMonthly) unsubscribeMonthly();
+  const empty = document.getElementById("emptyState");
+  if (!db || !auth?.currentUser) {
+    entries = {};
+    renderEntries();
+    updateStats();
+    return;
+  }
+
+  unsubscribeMonthly = db.collection(FIREBASE_COLLECTION)
+    .where("venue", "==", VENUE)
+    .onSnapshot(snapshot => {
+      entries = {};
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const k = `${data.year}-${String(data.month).padStart(2, '0')}-${data.venueId}`;
+        entries[k] = {
+          docId: doc.id,
+          venueId: data.venueId,
+          venueLabel: data.venueLabel,
+          month: data.month,
+          year: data.year,
+          cats: data.cats || {},
+          total: data.total || 0,
+          comment: data.comment || "",
+          venue: data.venue,
+          logTs: data.logTs || new Date().toISOString(),
+          _updatedTs: data._updatedTs || null
+        };
+      });
+      renderEntries();
+      updateStats();
+    }, error => {
+      console.error("Kunde inte hämta månadssiffror:", error);
+    });
+}
+
 // Init
+refreshPeriodPicker();
+checkMonthRollover();
+document.addEventListener("visibilitychange", checkMonthRollover);
+window.addEventListener("focus", checkMonthRollover);
+document.getElementById("periodPicker").addEventListener("click", event => openMonthPicker('page', event.currentTarget));
+document.getElementById("previousYear").addEventListener("click", () => shiftPickerYear(-1));
+document.getElementById("nextYear").addEventListener("click", () => shiftPickerYear(1));
+document.getElementById("monthClose").addEventListener("click", () => document.getElementById("monthDialog").close());
+document.getElementById("monthGrid").addEventListener("click", event => {
+  const button = event.target.closest('button[data-month]');
+  if (button && !button.disabled) choosePickerMonth(Number(button.dataset.month));
+});
+const monthDialog = document.getElementById("monthDialog");
+monthDialog.addEventListener("close", () => pickerOpener?.focus());
+monthDialog.addEventListener("click", event => {
+  const rect = monthDialog.getBoundingClientRect();
+  if (event.target === monthDialog && (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom)) monthDialog.close();
+});
+monthDialog.addEventListener("keydown", event => {
+  if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+    event.preventDefault();
+    shiftPickerYear(event.key === 'ArrowLeft' ? -1 : 1);
+  }
+});
+
 document.querySelectorAll(".action-btn").forEach(btn => {
   btn.addEventListener("click", () => openModal(btn.dataset.modal));
 });
 document.getElementById("modalClose").addEventListener("click", closeModal);
 document.getElementById("overlay").addEventListener("click", e => { if(e.target.id==="overlay") closeModal(); });
 document.getElementById("deleteOverlay").addEventListener("click", e => { if(e.target.id==="deleteOverlay") closeDeleteModal(); });
+document.getElementById("authLoginForm").addEventListener("submit", loginWithEmailPassword);
+document.getElementById("authLogoutButton").addEventListener("click", logoutFirebaseUser);
 
 document.addEventListener("click", () => {
   document.querySelectorAll(".custom-select-wrapper.open").forEach(w => w.classList.remove("open"));
 });
 
-updateStats();
+if (auth) {
+  auth.onAuthStateChanged(user => {
+    setSignedInUser(user);
+    if (user) {
+      hideLoginModal();
+      subscribeToMonthlyData();
+    } else {
+      if (unsubscribeMonthly) {
+        unsubscribeMonthly();
+        unsubscribeMonthly = null;
+      }
+      entries = {};
+      renderEntries();
+      updateStats();
+      showLoginModal();
+    }
+  });
+} else {
+  showLoginModal("Firebase Authentication är inte konfigurerat.");
+}
 </script>
 </body>
 </html>
