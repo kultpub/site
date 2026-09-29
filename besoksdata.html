@@ -3439,7 +3439,9 @@ if (isMicrosoftEdge()) {
         contentEl.appendChild(iconDiv);
 
         addP("Du kör Microsoft Edge! Klicka på <strong>Copilot-ikonen</strong> längst upp till höger i fönstret för att öppna sidopanelen.");
-        addP("Om det är första gången du använder Copilot på sidan kan du behöva godkänna att den får läsa av aktivt sidinnehåll (behörighet för sidåtkomst). När det är klart kan du be Copilot att göra olika analyser av datan, t.ex. att hitta avvikelser.");
+        addP("Om det är första gången du använder Copilot på sidan kan du behöva godkänna att den får läsa av aktivt sidinnehåll (behörighet för sidåtkomst).");
+        addP("Kontrollera även att Copilot får läsa av sidan: skriv <code>edge://settings/ai</code> i adressfältet och se till att inställningen <strong>Tillåt att Copilot använder webbinnehåll</strong> är aktiv.");
+        addP("När det är klart kan du be Copilot att göra olika analyser av datan, t.ex. att hitta avvikelser.");
     } else {
         titleEl.textContent = "Analysera med AI";
         addP("Du använder just nu en webbläsare som inte har integrerad AI-assistent. Om du har möjlighet att öppna sidan i Microsoft Edge, kan du be Microsofts inbyggda AI-assistent Copilot att göra olika analyser av data, t.ex. att hitta avvikelser.");
