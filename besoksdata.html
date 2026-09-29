@@ -453,6 +453,24 @@ h1 {
   transform: translateX(18px);
 }
 
+#comparisonDialog p {
+  line-height: 1.6;
+  text-align: left;
+  margin-bottom: 20px; /* Lägger till luft under varje stycke, inklusive det sista */
+}
+
+#comparisonDialog .comparison-number.positive {
+  color: #1b8a36; /* Grön färg för fler */
+}
+
+#comparisonDialog .comparison-number.negative {
+  color: #d9381e; /* Röd färg för färre */
+}
+
+#comparisonDialog[aria-labelledby="comparisonTitle"]:not(:has(#comparisonContent p)) #comparisonContinue {
+  display: none !important;
+}
+
 
 /* =========================================================
    8. KNAPPAR
@@ -1003,6 +1021,23 @@ h1 {
   opacity: 1;
 }
 
+@keyframes intensePulse {
+  0%, 100% {
+    border-color: #d0deee;
+    background-color: #f0f4f8;
+    box-shadow: 0 0 0 rgba(217, 56, 30, 0);
+  }
+  50% {
+    border-color: #d9381e;
+    background-color: #fae1dc; /* Djupare röd ton */
+    box-shadow: 0 0 10px rgba(217, 56, 30, 0.4); /* Extra skugga som glöder */
+  }
+}
+
+.status-blink {
+  animation: intensePulse 1.2s ease-in-out infinite; /* Kör i evighet tills läget ändras */
+}
+
 /* =========================================================   18. MOBIL- OCH SURFPLATTESPÄRR   ========================================================= */
 #screenBlocker {
   display: none;
@@ -1057,6 +1092,50 @@ h1 {
   }
 }
 
+
+#comparisonDialog { border:0; width:720px; box-sizing:border-box; max-height:90vh; overflow:auto; color:#222; }
+#comparisonDialog::backdrop { background:rgba(0,0,0,.4); backdrop-filter:blur(2px); }
+#comparisonDialog p { line-height:1.6; text-align:left; }
+#comparisonDialog .comparison-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin:18px 0; }
+#comparisonDialog .comparison-card { padding:18px 12px; background:#f5f5f5; border:1px solid #e3e3e3; border-radius:12px; }
+#comparisonDialog .comparison-label { font-size:16px; margin:8px 0 14px; }
+#comparisonDialog .comparison-number { display:block; font-size:30px; line-height:1.3; margin:6px 0; font-variant-numeric:tabular-nums; }
+#comparisonDialog .comparison-caption { display:block; font-size:13px; color:#666; }
+#comparisonDialog .comparison-result { padding:18px 12px; background:#fff7ee; border-radius:12px; line-height:1.5; }
+#comparisonDialog .comparison-difference { font-weight:600; margin:14px 0; }
+@media(max-width:480px) { #comparisonDialog .comparison-grid { grid-template-columns:1fr; } }
+#comparisonStatus { margin:12px 0; padding:12px 16px; background:#f5f5f5; border-radius:12px; line-height:1.5; }
+#comparisonStatus[hidden], #startComparison[hidden] { display:none; }
+#comparisonStatus .tips-btn { width:auto; margin-top:8px; }
+#statsTable.comparison-active td.comparison-value { cursor:crosshair !important; }
+#statsTable.comparison-active td.comparison-value:hover, #statsTable .comparison-value:focus-visible { outline:2px solid #385a80; outline-offset:-2px; }
+#statsTable td.comparison-selected {
+  position: relative;
+  background-color: #e8f0fe !important;
+  box-shadow: inset 0 0 0 2px #385a80;
+}
+#statsTable td.comparison-selected::after {
+  content: attr(data-comparison-number);
+  position: absolute;
+  left: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #385a80;
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* AI-analys modal */
+#aiModal { border:0; width:520px; box-sizing:border-box; max-height:90vh; overflow:auto; color:#222; border-radius:16px; padding:30px; }
+#aiModal::backdrop { background:rgba(0,0,0,.4); backdrop-filter:blur(2px); }
+#aiModal p { line-height:1.6; text-align:left; margin-bottom:20px; }
+#aiModal[hidden] { display:none; }
 </style>
 </head>
 
@@ -1079,12 +1158,11 @@ h1 {
   </div>
 
 
-  <!-- VÄNSTERPANEL -->
+<!-- VÄNSTERPANEL -->
   <div class="ff-filter">
 
     <!-- Sidrubrik -->
     <h1 id="mainSiteHeader">Alla besöksmål</h1>
-
 
     <!-- Vyväljare: tabell / diagram -->
     <div class="view-selector">
@@ -1108,59 +1186,52 @@ h1 {
       </div>
     </div>
 
-<!-- Behållare för Kategori (Dold som standard) -->
-<div id="kategoriContainer">
-  <div id="kategoriSlider">
-    <div class="select-title">Kategori</div>
-  </div>
-  <div class="custom-select-wrapper" id="kategoriSelectWrapper">
-    <div class="custom-select-trigger" id="kategoriSelectTrigger">
-      <span id="kategoriSelectLabel">Alla kategorier</span>
-      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M6 9l6 6 6-6" />
-      </svg>
+    <!-- Behållare för Kategori (Dold som standard) -->
+    <div id="kategoriContainer">
+      <div id="kategoriSlider">
+        <div class="select-title">Kategori</div>
+      </div>
+      <div class="custom-select-wrapper" id="kategoriSelectWrapper">
+        <div class="custom-select-trigger" id="kategoriSelectTrigger">
+          <span id="kategoriSelectLabel">Alla kategorier</span>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </div>
+        <div class="custom-select-dropdown">
+          <div class="dropdown-cols-kategori" id="kategoriDropdownCols"></div>
+        </div>
+      </div>
     </div>
-    <div class="custom-select-dropdown">
-      <div class="dropdown-cols-kategori" id="kategoriDropdownCols"></div>
-    </div>
-  </div>
-</div>
 
     <input type="hidden" id="ffFilter" value="Alla besöksmål">
-
 
     <!-- Återställning av filter -->
     <button class="reset-btn" id="resetFilters" style="margin-bottom: 20px;">Återställ filter</button>
 	
-<div id="kategoriHint" style="display:none; font-size:14px; color:#666; line-height:1.5; margin-top:8px; margin-bottom:12px;">
-  <i class="fa-solid fa-circle-info" style="margin-right:6px; color:#f28c28;"></i>Klicka på ett värde i tabellen för att se månadens fördelning av olika besökskategorier.
-</div>
-
+    <div id="kategoriHint" style="display:none; font-size:14px; color:#666; line-height:1.5; margin-top:8px; margin-bottom:12px;">
+      <i class="fa-solid fa-circle-info" style="margin-right:6px; color:#f28c28;"></i>Klicka på ett värde i tabellen för att se månadens fördelning av olika besökskategorier.
+    </div>
 
     <!-- Datumfilter -->
     <div id="dateFilters" class="view-container">
       <div class="controls">
-
         <!-- Från och med -->
         <div class="filter-group">
           <label class="summary-label">Från och med</label>
-
           <div style="display: flex; gap: 8px;">
             <div class="custom-select-wrapper date-small" id="fromYearWrapper">
               <div class="custom-select-trigger" id="fromYearTrigger">
                 <span id="fromYearLabel">År</span>
               </div>
-
               <div class="custom-select-dropdown">
                 <div id="fromYearCols"></div>
               </div>
             </div>
-
             <div class="custom-select-wrapper date-medium" id="fromMonthWrapper">
               <div class="custom-select-trigger" id="fromMonthTrigger">
                 <span id="fromMonthLabel">Månad</span>
               </div>
-
               <div class="custom-select-dropdown">
                 <div id="fromMonthCols"></div>
               </div>
@@ -1168,34 +1239,28 @@ h1 {
           </div>
         </div>
 
-
         <!-- Till och med -->
         <div class="filter-group">
           <label class="summary-label">Till och med</label>
-
           <div style="display: flex; gap: 8px;">
             <div class="custom-select-wrapper date-small" id="toYearWrapper">
               <div class="custom-select-trigger" id="toYearTrigger">
                 <span id="toYearLabel">År</span>
               </div>
-
               <div class="custom-select-dropdown">
                 <div id="toYearCols"></div>
               </div>
             </div>
-
             <div class="custom-select-wrapper date-medium" id="toMonthWrapper">
               <div class="custom-select-trigger" id="toMonthTrigger">
                 <span id="toMonthLabel">Månad</span>
               </div>
-
               <div class="custom-select-dropdown">
                 <div id="toMonthCols"></div>
               </div>
             </div>
           </div>
         </div>
-
       </div>
     </div>
 
@@ -1204,7 +1269,7 @@ h1 {
   </div>
 
 
-  <!-- HÖGERPANEL -->
+<!-- HÖGERPANEL -->
   <div class="highlight-controls">
 
     <!-- Typ av besök-togglar -->
@@ -1242,7 +1307,17 @@ h1 {
 	<span id="labelOlderData">Äldre data</span>
 	</label>
 
-    <!-- Hjälp och export -->
+<!-- Hjälp och export -->
+    <button class="tips-btn" id="startComparison">Jämför två värden</button>
+    
+    <div id="comparisonStatus" style="display:none; width: 100%; margin-top: -6px; padding: 10px 12px; background: #f0f4f8; border: 1px solid #d0deee; border-radius: 8px; font-size: 13px; line-height: 1.4;" hidden role="status" aria-live="polite">
+      <div id="comparisonStatusText" style="margin-bottom: 8px; font-weight: 500; color: #2f2f2f;"></div>
+      <div style="display: flex; justify-content: flex-end;">
+        <button class="tips-btn" id="resetComparison" style="width: auto; padding: 6px 12px; font-size: 13px; margin-top: 0;">Avbryt</button>
+      </div>
+    </div>
+
+    <button class="tips-btn" id="startAiAnalysis">Analysera med AI</button>
     <button class="tips-btn" id="showTips">Information</button>
     <button class="save-btn" id="saveImage">Spara tabell JPG</button>
 
@@ -1277,6 +1352,20 @@ h1 {
 
   </div>
 </div>
+
+<dialog id="comparisonDialog" class="modal-content" aria-labelledby="comparisonTitle">
+  <button class="modal-close" id="comparisonClose" aria-label="Stäng">&times;</button>
+  <h3 id="comparisonTitle"></h3>
+  <div id="comparisonContent"></div>
+  <button class="tips-btn" id="comparisonContinue">Välj två värden</button>
+</dialog>
+
+<dialog id="aiModal" class="modal-content" aria-labelledby="aiModalTitle">
+  <button class="modal-close" style="width: auto" id="aiClose" aria-label="Stäng">&times;</button>
+  <h3 id="aiModalTitle">Analysera med AI</h3>
+  <div id="aiModalContent"></div>
+  <button class="tips-btn" style="width: auto" id="aiCloseBtn">Stäng</button>
+</dialog>
 
 <script>
 /* =========================================================
@@ -2191,6 +2280,7 @@ function updateTable() {
 
             const cell = row.insertCell();
             cell.textContent = val > 0 ? formatSwedishNumber(val) : "-";
+            if (val > 0) bindComparisonCell(cell, val, y, mIdx);
 
             if (val > 0
                 && currentFF === "Kulturen i Lund"
@@ -2248,6 +2338,7 @@ function updateTable() {
 
         const cell = footerRow.insertCell();
         cell.textContent = formatSwedishNumber(totalForYear);
+        bindComparisonCell(cell, totalForYear, y, null);
         
         if (totalForYear > 0
             && currentFF === "Kulturen i Lund"
@@ -3076,6 +3167,314 @@ async function loadCSVData() {
     rebuildCombinedVisitRows();
   }
 }
+
+/* Jämförelsen sparar ögonblicksbilder, oberoende av senare filterbyten. */
+const comparison = { active: false, values: [] };
+const comparisonMonths = ['Januari','Februari','Mars','April','Maj','Juni','Juli','Augusti','September','Oktober','November','December'];
+function bindComparisonCell(cell, value, year, month) {
+    if (!Number.isFinite(value)) return;
+    const data = { value, year, month, periodType: month === null ? 'total' : 'månad',
+        visitType: getBesokTypPrefix(), venue: currentFF,
+        categories: currentFF === 'Kulturen i Lund' ? [...selectedKategorier].sort() : [],
+        months: month === null ? [...selectedMonths].sort((a,b) => a-b) : [month] };
+    cell.comparisonData = data;
+    cell.classList.add('comparison-value');
+    paintComparisonCell(cell);
+}
+function comparisonKey(data) { return JSON.stringify(data); }
+function comparisonAllowed(a, b) {
+    return a.visitType === b.visitType && (a.periodType === b.periodType || a.year === b.year);
+}
+function paintComparisonCell(cell) {
+    const index = comparison.values.findIndex(v => comparisonKey(v) === comparisonKey(cell.comparisonData));
+    cell.classList.toggle('comparison-selected', index >= 0);
+    if (index >= 0) cell.dataset.comparisonNumber = index + 1;
+    else delete cell.dataset.comparisonNumber;
+    if (comparison.active) cell.tabIndex = 0;
+    else cell.removeAttribute('tabindex');
+}
+function comparisonPeriod(v) {
+    if (v.month !== null) return `${comparisonMonths[v.month]} ${v.year}`;
+    return v.months.length === 12 ? `Årsutfallet ${v.year}` : `Totalt ${v.year} (${v.months.map(m => monthNamesShort[m]).join(', ') || 'inga månader'})`;
+}
+function comparisonDescription(v, lowercaseMonth = false) {
+    if (v.month === null) {
+        if (v.months.length === 12) return `årsresultat ${v.year}`;
+        return `total ${v.year} (${v.months.map(m => monthNamesShort[m].toLowerCase()).join(', ')})`;
+    }
+    const monthName = comparisonMonths[v.month];
+    const formattedMonth = lowercaseMonth ? monthName.toLocaleLowerCase('sv-SE') : monthName;
+    return `${formattedMonth} ${v.year}`;
+}
+function renderComparisonResult(content) {
+    const [a,b] = comparison.values; // a = tidigaste/månad, b = senaste/total
+    const visitLabel = a.visitType.toLocaleLowerCase('sv-SE');
+    const element = (tag, className, text, parent = content) => {
+        const node = document.createElement(tag);
+        node.className = className;
+        if (text !== undefined) node.textContent = text;
+        parent.appendChild(node);
+        return node;
+    };
+    const pct = n => n.toLocaleString('sv-SE', {minimumFractionDigits:1, maximumFractionDigits:1});
+    const cards = element('div', 'comparison-grid');
+    
+    [a,b].forEach((v,i) => {
+        const card = element('div', 'comparison-card', undefined, cards);
+        element('h4', 'comparison-label', comparisonDescription(v), card);
+        element('strong', 'comparison-number', formatSwedishNumber(v.value), card);
+        element('span', 'comparison-caption', visitLabel, card);
+    });
+    
+    const month = a.month !== null ? a : b;
+    const total = a.month === null ? a : b;
+    const partOfWhole = a.periodType !== b.periodType && a.year === b.year && a.visitType === b.visitType && a.venue === b.venue && JSON.stringify(a.categories) === JSON.stringify(b.categories) && total.months.includes(month.month);
+    
+    if (partOfWhole) {
+        const result = element('div', 'comparison-result');
+        element('span', 'comparison-caption', 'Andel av totalen', result);
+        element('strong', 'comparison-number', total.value === 0 ? 'Kan inte beräknas' : `${pct(month.value / total.value * 100)} %`, result);
+        element('div', '', `${comparisonDescription(month)} av ${comparisonDescription(total)}`, result);
+        if (total.value === 0) element('div', 'comparison-caption', `Totalen är 0 ${visitLabel}.`, result);
+    } else {
+        const results = element('div', 'comparison-grid');
+        [[a,b],[b,a]].forEach(([x,y]) => {
+            const result = element('div', 'comparison-result', undefined, results);
+            const comparisonTitleText = `${comparisonDescription(x, false)} jämfört med ${comparisonDescription(y, true)}`;
+            element('span', 'comparison-caption', comparisonTitleText, result);
+            
+            // Beräkna procent utan tecken, men sätt rätt färgklass
+            let percentageText = '0,0 %';
+            let colorClass = '';
+            
+            if (x.value !== y.value && y.value === 0) {
+                percentageText = '—';
+            } else if (x.value !== y.value) {
+                const percentageValue = pct(Math.abs(x.value - y.value) / Math.abs(y.value) * 100);
+                percentageText = `${percentageValue} %`;
+                if (x.value > y.value) {
+                    colorClass = 'positive'; // Grön för fler
+                } else {
+                    colorClass = 'negative'; // Röd för färre
+                }
+            }
+
+            const numberEl = element('strong', `comparison-number ${colorClass}`, percentageText, result);
+            
+            element('div', '', x.value === y.value ? `lika många ${visitLabel}` : y.value === 0 ? 'Kan inte beräknas: jämförelsevärdet är 0.' : `${x.value < y.value ? 'färre' : 'fler'} ${visitLabel}`, result);
+        });
+        element('div', 'comparison-difference', `Skillnad i antal: ${formatSwedishNumber(Math.abs(a.value-b.value))} ${visitLabel}`);
+    }
+}
+function comparisonText(a, b) {
+    const pct = n => n.toLocaleString('sv-SE', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+    const month = a.month !== null ? a : b;
+    const total = a.month === null ? a : b;
+    const sameScope = a.year === b.year && a.visitType === b.visitType && a.venue === b.venue && JSON.stringify(a.categories) === JSON.stringify(b.categories);
+    if (a.periodType !== b.periodType && sameScope && total.months.includes(month.month)) {
+        return total.value === 0 ? 'Andelen kan inte beräknas eftersom totalsumman är 0.' :
+            `${comparisonPeriod(month)} utgör ${pct(month.value / total.value * 100)} % av ${comparisonPeriod(total).replace(/^Å/, 'å').replace(/^Totalt/, 'totalsumman för')}.`;
+    }
+    const direction = (x, y, label, base) => x.value === y.value ? `${label} visar lika många besök som ${base}.` :
+        y.value === 0 ? `${label} visar ${formatSwedishNumber(x.value)} besök jämfört med 0 för ${base}. Procentuell skillnad kan inte beräknas med 0 som bas.` :
+        `${label} visar ${pct(Math.abs(x.value - y.value) / Math.abs(y.value) * 100)} % ${x.value < y.value ? 'färre' : 'fler'} besök jämfört med ${base}.`;
+    return `${direction(a,b,'Värde 1','värde 2')} Omvänt ${direction(b,a,'visar värde 2','värde 1').replace('visar värde 2 visar', 'visar värde 2')} Skillnaden i antal är ${formatSwedishNumber(Math.abs(a.value-b.value))} besök.`;
+}
+function refreshComparison() {
+    document.getElementById('statsTable').classList.toggle('comparison-active', comparison.active);
+    document.querySelectorAll('#statsTable .comparison-value').forEach(paintComparisonCell);
+    
+    const status = document.getElementById('comparisonStatus');
+    const hasState = comparison.active || comparison.values.length > 0;
+    status.style.display = hasState ? 'block' : 'none';
+    status.hidden = !hasState;
+    
+    const textEl = document.getElementById('comparisonStatusText');
+    const text = comparison.active ?
+        (comparison.values.length ? 'Välj värde 2.' : 'Välj två värden.') : 'Två värden valda.';
+    
+    textEl.textContent = text;
+
+    // Sätt på pulseringen så länge vi väntar på val 1 eller val 2
+    status.classList.remove('status-blink');
+    if (text === 'Välj två värden.' || text === 'Välj värde 2.') {
+        status.classList.add('status-blink');
+    }
+}
+function resetComparison() { comparison.active = false; comparison.values = []; refreshComparison(); }
+const comparisonDialog = document.getElementById('comparisonDialog');
+let comparisonInstruction = false;
+let comparisonReturnFocus;
+function openComparisonDialog(instruction) {
+    comparisonInstruction = instruction;
+    comparisonReturnFocus = document.activeElement;
+    document.getElementById('comparisonTitle').textContent = instruction ? 'Jämför två värden' : 'Din jämförelse';
+    
+    // NYTT: Sätt unik bredd beroende på vilken modal som öppnas
+    const modalContent = comparisonDialog.querySelector('.modal-content') || comparisonDialog;
+    modalContent.style.width = instruction ? '420px' : '720px'; // 420px för den första, 720px för resultatvyn
+
+    const content = document.getElementById('comparisonContent');
+    content.replaceChildren();
+    const add = text => { const p = document.createElement('p'); p.innerHTML = text; content.appendChild(p); };
+    if (instruction) add('Välj två värden i tabellen. Båda måste avse samma besökstyp (verksamhets- <strong>eller</strong> anläggningsbesök).<br><br>Du kan t.ex. jämföra två månader med varandra (inom samma eller över olika år) eller jämföra två årsresultat. Jämförelser mellan en månad och ett årsresultat kräver dock att de är från samma år.');
+    else {
+        renderComparisonResult(content);
+    }
+    
+    const continueBtn = document.getElementById('comparisonContinue');
+    continueBtn.textContent = instruction ? 'Välj två värden' : 'Stäng';
+    continueBtn.style.width = 'auto';
+    continueBtn.style.display = 'inline-block';
+    continueBtn.style.padding = '10px 20px';
+    
+    comparisonDialog.showModal();
+}
+function closeComparisonDialog() {
+    comparisonDialog.close();
+    
+    // Nollställ enbart om vi stänger resultatvyn (inte instruktionsrutan)
+    if (!comparisonInstruction) {
+        resetComparison();
+    }
+    
+    if (comparisonReturnFocus?.isConnected) comparisonReturnFocus.focus();
+}
+document.getElementById('startComparison').onclick = () => { resetComparison(); openComparisonDialog(true); };
+document.getElementById('resetComparison').onclick = resetComparison;
+document.getElementById('comparisonContinue').onclick = () => {
+    if (comparisonInstruction) { comparison.active = true; refreshComparison(); }
+    closeComparisonDialog();
+};
+document.getElementById('comparisonClose').onclick = closeComparisonDialog;
+comparisonDialog.addEventListener('cancel', e => { e.preventDefault(); closeComparisonDialog(); });
+comparisonDialog.addEventListener('click', e => { if (e.target === comparisonDialog) { const r = comparisonDialog.getBoundingClientRect(); if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) closeComparisonDialog(); } });
+function selectComparisonCell(event) {
+    if (!comparison.active) return;
+    const cell = event.target.closest('td.comparison-value');
+    if (!cell || !cell.comparisonData) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    if (comparison.values.some(v => comparisonKey(v) === comparisonKey(cell.comparisonData))) return;
+    if (comparison.values.length && !comparisonAllowed(comparison.values[0], cell.comparisonData)) {
+        refreshComparison();
+        const reason = comparison.values[0].visitType !== cell.comparisonData.visitType
+            ? 'Verksamhetsbesök och anläggningsbesök kan inte jämföras med varandra.'
+            : 'Månad mot total kräver samma år.';
+        
+        const modal = document.getElementById("dataModal");
+        const modalContent = modal.querySelector(".modal-content");
+        modalContent.className = "modal-content";
+        modalContent.style.width = "420px";
+        modal.querySelector("h3").textContent = "Går ej att jämföra";
+        document.getElementById("modalMessage").innerHTML = `
+            <div style="text-align: left; line-height: 1.5; font-size: 16px; margin-top: 10px;">
+                ${reason}<br><br>
+                Första valet (${comparisonDescription(comparison.values[0])}) finns kvar. Välj ett giltigt andra värde.
+            </div>
+        `;
+        modal.style.display = "flex";
+        return;
+    }
+    
+    comparison.values.push(JSON.parse(JSON.stringify(cell.comparisonData)));
+    
+    if (comparison.values.length === 2) {
+        comparison.active = false;
+
+        comparison.values.sort((a, b) => {
+            if (a.periodType !== b.periodType) {
+                return a.periodType === 'månad' ? -1 : 1;
+            }
+            const timeA = a.year * 12 + (a.month !== null ? a.month : 0);
+            const timeB = b.year * 12 + (b.month !== null ? b.month : 0);
+            return timeA - timeB;
+        });
+
+        refreshComparison();
+        
+        // FÖRDRÖJNING: Vänta 350 ms så att användaren hinner se att den andra cellen markeras
+        setTimeout(() => {
+            openComparisonDialog(false);
+        }, 350);
+        return;
+    }
+
+    refreshComparison();
+}
+document.getElementById('statsTable').addEventListener('click', selectComparisonCell, true);
+document.getElementById('statsTable').addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') selectComparisonCell(e); }, true);
+new MutationObserver(() => {
+    document.getElementById('startComparison').hidden = document.getElementById('tableView').style.display === 'none';
+}).observe(document.getElementById('tableView'), { attributes: true, attributeFilter: ['style'] });
+
+/* =========================================================
+   AI-ANALYS OCH WEBBÄSARENS AVKÄNNING (EDGE / EJ EDGE)
+   ========================================================= */
+
+function isMicrosoftEdge() {
+    return navigator.userAgent.includes("Edg/");
+}
+
+const aiModal = document.getElementById('aiModal');
+
+document.getElementById('startAiAnalysis').onclick = () => {
+    const titleEl = document.getElementById('aiModalTitle');
+    const contentEl = document.getElementById('aiModalContent');
+    contentEl.replaceChildren();
+
+    const addP = (text) => {
+        const p = document.createElement('p');
+        p.innerHTML = text;
+        contentEl.appendChild(p);
+    };
+
+if (isMicrosoftEdge()) {
+        titleEl.textContent = "Analysera med AI";
+        
+        // Lägger till ikonen i toppen av innehållet
+        const iconDiv = document.createElement('div');
+        iconDiv.style.cssText = "text-align: center; margin-bottom: 20px;";
+        iconDiv.innerHTML = `<img src="svg-microsoft-copilot.svg" alt="Copilot" style="width: 52px; height: 52px;">`;
+        contentEl.appendChild(iconDiv);
+
+        addP("Du kör Microsoft Edge! Klicka på <strong>Copilot-ikonen</strong> längst upp till höger i fönstret för att öppna sidopanelen.");
+        addP("Om det är första gången du använder Copilot på sidan kan du behöva godkänna att den får läsa av aktivt sidinnehåll (behörighet för sidåtkomst). När det är klart kan du be Copilot att göra olika analyser av datan, t.ex. att hitta avvikelser.");
+    } else {
+        titleEl.textContent = "Analysera med AI";
+        addP("Du använder just nu en webbläsare som inte har integrerad AI-assistent. Om du har möjlighet att öppna sidan i Microsoft Edge, kan du be Microsofts inbyggda AI-assistent Copilot att göra olika analyser av data, t.ex. att hitta avvikelser.");
+        
+		const copyBtn = document.createElement('button');
+        copyBtn.className = 'tips-btn';
+        copyBtn.style.cssText = 'width: auto; padding: 8px 16px; margin: 10px 0 20px 0;';
+        copyBtn.textContent = 'Kopiera länk till sidan';
+        copyBtn.onclick = () => {
+            navigator.clipboard.writeText("https://kultpub.github.io/site/besoksdata.html").then(() => {
+                copyBtn.textContent = 'Länken kopierad!';
+                setTimeout(() => { copyBtn.textContent = 'Kopiera länk till sidan'; }, 2000);
+            });
+        };
+        contentEl.appendChild(copyBtn);
+
+        addP("Starta sedan Edge, klistra in länken i URL-fältet och klicka på knappen \"Analysera med AI\" igen för vidare instruktioner.");
+    }
+
+    aiModal.showModal();
+};
+
+document.getElementById('aiClose').onclick = () => aiModal.close();
+document.getElementById('aiCloseBtn').onclick = () => aiModal.close();
+aiModal.addEventListener('cancel', e => { e.preventDefault(); aiModal.close(); });
+aiModal.addEventListener('click', e => {
+    if (e.target === aiModal) {
+        const r = aiModal.getBoundingClientRect();
+        if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) aiModal.close();
+    }
+});
+
+new MutationObserver(() => {
+    document.getElementById('startAiAnalysis').hidden = document.getElementById('tableView').style.display === 'none';
+}).observe(document.getElementById('tableView'), { attributes: true, attributeFilter: ['style'] });
 
 startFirestoreVisitStatsSubscription();
 startMonthlyDataSubscription();
