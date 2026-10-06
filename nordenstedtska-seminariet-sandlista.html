@@ -4,11 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nordenstedtska seminariet – Anmälan till sändlista</title>
+    <!-- Importerar typsnittet Work Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: #f7f9fa;
-            color: #222;
+            color: #000000;
             margin: 0;
             padding: 20px;
             display: flex;
@@ -18,19 +22,45 @@
             min-height: 90vh;
             box-sizing: border-box;
         }
-        /* Fast positionerad rubrik i toppen som aldrig flyttar sig på skärmen */
+        /* Hamburgermenyknapp i övre högra hörnet */
+        .menu-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #ffffff;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+            z-index: 20;
+        }
+        .menu-btn span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background-color: #000000;
+            margin: 3px 0;
+            border-radius: 2px;
+        }
+        /* Vänsterjusterad rubrik i smal Work Sans (vikt 300) i svart */
         h1 {
             position: fixed;
-            top: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 1.8rem;
-            color: #1a365d;
-            text-align: center;
+            top: 20px;
+            left: 20px;
+            right: 74px;
+            font-family: 'Work Sans', sans-serif;
+            font-weight: 300;
+            font-size: 1.7rem;
+            color: #000000;
+            text-align: left;
             margin: 0;
-            width: 100%;
-            max-width: 450px;
-            line-height: 1.3;
+            line-height: 1.2;
             z-index: 10;
         }
         .card {
@@ -41,33 +71,56 @@
             width: 100%;
             max-width: 450px;
             box-sizing: border-box;
-            margin-top: 50px;
+            margin-top: 85px;
             margin-bottom: 40px;
+            text-align: center;
+        }
+        /* Bild-styling för mailsent.jpg */
+        .mailsent-img {
+            max-width: 80px;
+            height: auto;
+            margin-bottom: 16px;
         }
         p {
             font-size: 1.1rem;
-            color: #2d3748;
+            color: #000000;
             line-height: 1.5;
             margin-top: 0;
+            text-align: left;
         }
-        /* Större och tydligare "Tack!" */
+        
+        /* Större text för intro-meddelandet */
+        .intro-text {
+            font-size: 1.25rem; /* Här kan du justera upp/ner om du vill ha den ännu större (t.ex. 1.3rem) */
+            color: #000000;
+            line-height: 1.5;
+            margin-top: 0;
+            text-align: center;
+        }
+        
+        /* Tydligt och snyggt "Tack!" (får ha egen färg) */
         .success-title {
+            font-family: 'Work Sans', sans-serif;
+            font-weight: 700;
             font-size: 2.2rem;
-            font-weight: bold;
             text-align: center;
             color: #276749;
             margin-top: 10px;
             margin-bottom: 28px;
         }
+        .success-text {
+            text-align: center;
+        }
         .form-group {
             margin-top: 20px;
+            text-align: left;
         }
         label {
             display: block;
             font-size: 1rem;
             font-weight: 600;
             margin-bottom: 8px;
-            color: #1a365d;
+            color: #000000;
         }
         input[type="email"] {
             width: 100%;
@@ -100,7 +153,6 @@
         }
         .success-msg {
             display: none;
-            text-align: center;
         }
         /* Fast positionerad sidfot med logotypen längst ner */
         .footer-logo {
@@ -116,16 +168,85 @@
             width: auto;
             display: block;
         }
+        /* Modal-styling för "Vad är Nordenstedtska seminariet?" */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .modal-content {
+            background: #ffffff;
+            padding: 30px 24px 24px 24px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 420px;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            text-align: left;
+        }
+        .modal-content h3 {
+            font-family: 'Work Sans', sans-serif;
+            font-weight: 600;
+            color: #000000;
+            margin-top: 0;
+            font-size: 1.3rem;
+            padding-right: 30px;
+        }
+        .modal-content p {
+            font-size: 1rem;
+            color: #000000;
+            line-height: 1.6;
+            margin-bottom: 0;
+        }
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #000000;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin-top: 0;
+            padding: 0;
+        }
+        .close-btn:hover {
+            background-color: #f7f9fa;
+        }
     </style>
 </head>
 <body>
 
-    <!-- Helt fastlåst rubrik i toppen -->
-    <h1>Nordenstedtska seminariet</h1>
+    <!-- Hamburgermenyknapp -->
+    <div class="menu-btn" id="open-modal" title="Om seminariet">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <!-- Svart, vänsterjusterad rubrik i smal Work Sans på två rader -->
+    <h1>Nordenstedtska<br>seminariet</h1>
 
 <div class="card">
     <div id="form-container">
-        <p>Vill du ha mailutskick om kommande föreläsningar?<br><br>Fyll i din e-postadress nedan.</p>
+        <!-- Inlagd bild före texten -->
+        <img src="mailsent.jpg" alt="Mail illustration" class="mailsent-img">
+        <p class="intro-text">Vill du ha mailutskick om kommande föreläsningar?<br><br>Fyll i din e-postadress nedan.</p>
         
         <form id="signup-form">
             <div class="form-group">
@@ -138,16 +259,45 @@
 
     <div id="success-container" class="success-msg">
         <p class="success-title">Tack!</p>
-        <p>Din e-postadress har sparats.<br><br>Du kommer att få information om framtida föreläsningar.</p>
+        <p class="success-text">Din e-postadress har sparats.<br><br>Du kommer att få information om framtida föreläsningar.</p>
     </div>
 </div>
 
-    <!-- Fast positionerad sidfot med logotypen på båda sidor -->
+    <!-- Fast positionerad sidfot med logotypen -->
     <div class="footer-logo">
         <img src="logotypekulturen.png" alt="Kulturen logotyp">
     </div>
 
+    <!-- Modal-fönster -->
+    <div class="modal-overlay" id="info-modal">
+        <div class="modal-content">
+            <button class="close-btn" id="close-modal">&times;</button>
+            <h3>Vad är Nordenstedtska seminariet?</h3>
+            <p>Nordenstedtska seminariet är en föreläsningsserie som hålls på Kulturen sedan 2022 med målet att främja vetenskaplig forskning och spridning av forskningsresultat med koppling till museets verksamhet. Serien finansieras av Nordenstedtska Stiftelsen och inkluderar både presentationer av museets egen personal och gästföreläsare inom olika ämnesområden.</p>
+        </div>
+    </div>
+
 <script>
+    // Hantera modalen
+    const modal = document.getElementById('info-modal');
+    const openBtn = document.getElementById('open-modal');
+    const closeBtn = document.getElementById('close-modal');
+
+    openBtn.addEventListener('click', () => {
+        modal.style.display = 'flex';
+    });
+
+    closeBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+
+    // Hantera formulärinlämning
     document.getElementById('signup-form').addEventListener('submit', function(e) {
         e.preventDefault();
         const email = document.getElementById('email').value;
