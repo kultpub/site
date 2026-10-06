@@ -50,7 +50,7 @@
             line-height: 1.5;
             margin-top: 0;
         }
-        /* Ännu större och tydligare "Tack!" */
+        /* Större och tydligare "Tack!" */
         .success-title {
             font-size: 2.2rem;
             font-weight: bold;
@@ -112,7 +112,7 @@
             z-index: 10;
         }
         .footer-logo img {
-            max-height: 45px; /* Justera höjden efter behov så den ser proportionerlig ut */
+            max-height: 45px;
             width: auto;
             display: block;
         }
@@ -158,22 +158,19 @@
 
         const scriptURL = 'https://script.google.com/macros/s/AKfycbxpxR_H71oonTkmDLAxLdNY05em4s5EpGwG9NmQgqs_JeiQ6ch486zM01-53hp-c-fC8Q/exec';
 
+        // Skickar i bakgrunden utan att blockera
         fetch(scriptURL, {
             method: 'POST',
             mode: 'no-cors',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: email })
-        })
-        .then(() => {
-            document.getElementById('form-container').style.display = 'none';
-            document.getElementById('success-container').style.display = 'block';
-        })
-        .catch(error => {
+        }).catch(error => {
             console.error('Fel:', error);
-            alert('Något gick fel, försök igen.');
-            btn.disabled = false;
-            btn.textContent = 'Lägg till mig i sändlistan';
         });
+
+        // Växlar till tacksidan omedelbart
+        document.getElementById('form-container').style.display = 'none';
+        document.getElementById('success-container').style.display = 'block';
     });
 </script>
 
