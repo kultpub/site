@@ -12,45 +12,69 @@
             margin: 0;
             padding: 20px;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            min-height: 85vh;
+            justify-content: center;
+            min-height: 90vh;
+            box-sizing: border-box;
+        }
+        /* Fast positionerad rubrik i toppen som aldrig flyttar sig på skärmen */
+        h1 {
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.8rem;
+            color: #1a365d;
+            text-align: center;
+            margin: 0;
+            width: 100%;
+            max-width: 450px;
+            line-height: 1.3;
+            z-index: 10;
         }
         .card {
             background: #ffffff;
-            padding: 24px;
+            padding: 28px;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
             width: 100%;
-            max-width: 400px;
+            max-width: 450px;
             box-sizing: border-box;
-        }
-        h2 {
-            font-size: 1.25rem;
-            margin-top: 0;
-            color: #1a365d;
+            margin-top: 50px;
+            margin-bottom: 40px;
         }
         p {
-            font-size: 0.95rem;
-            color: #4a5568;
-            line-height: 1.4;
+            font-size: 1.1rem;
+            color: #2d3748;
+            line-height: 1.5;
+            margin-top: 0;
+        }
+        /* Ännu större och tydligare "Tack!" */
+        .success-title {
+            font-size: 2.2rem;
+            font-weight: bold;
+            text-align: center;
+            color: #276749;
+            margin-top: 10px;
+            margin-bottom: 28px;
         }
         .form-group {
-            margin-top: 16px;
+            margin-top: 20px;
         }
         label {
             display: block;
-            font-size: 0.85rem;
+            font-size: 1rem;
             font-weight: 600;
-            margin-bottom: 6px;
-            color: #2d3748;
+            margin-bottom: 8px;
+            color: #1a365d;
         }
         input[type="email"] {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #cbd5e0;
+            padding: 14px;
+            border: 2px solid #cbd5e0;
             border-radius: 8px;
-            font-size: 1rem;
+            font-size: 1.1rem;
             box-sizing: border-box;
             outline: none;
             transition: border-color 0.2s;
@@ -63,12 +87,12 @@
             background-color: #2b6cb0;
             color: white;
             border: none;
-            padding: 12px;
+            padding: 16px;
             border-radius: 8px;
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
-            margin-top: 20px;
+            margin-top: 24px;
             transition: background-color 0.2s;
         }
         button:hover {
@@ -77,25 +101,35 @@
         .success-msg {
             display: none;
             text-align: center;
-            color: #276749;
-            background: #f0fff4;
-            border: 1px solid #c6f6d5;
-            padding: 16px;
-            border-radius: 8px;
+        }
+        /* Fast positionerad sidfot med logotypen längst ner */
+        .footer-logo {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 10;
+        }
+        .footer-logo img {
+            max-height: 45px; /* Justera höjden efter behov så den ser proportionerlig ut */
+            width: auto;
+            display: block;
         }
     </style>
 </head>
 <body>
 
+    <!-- Helt fastlåst rubrik i toppen -->
+    <h1>Nordenstedtska seminariet</h1>
+
 <div class="card">
     <div id="form-container">
-        <h2>Nordenstedtska seminariet</h2>
-        <p>Vill du ha mailutskick om kommande föreläsningar? Fyll i din e-postadress nedan.</p>
+        <p>Vill du ha mailutskick om kommande föreläsningar?<br><br>Fyll i din e-postadress nedan.</p>
         
         <form id="signup-form">
             <div class="form-group">
                 <label for="email">E-postadress</label>
-                <!-- Här har vi lagt till attribut för att stänga av autofill/autocomplete -->
                 <input type="email" id="email" name="email" required autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="namn@exempel.se">
             </div>
             <button type="submit" id="submit-btn">Lägg till mig i sändlistan</button>
@@ -103,10 +137,15 @@
     </div>
 
     <div id="success-container" class="success-msg">
-        <h2>Tack!</h2>
-        <p>Din e-postadress har sparats. Du kommer att få information om framtida seminarier.</p>
+        <p class="success-title">Tack!</p>
+        <p>Din e-postadress har sparats.<br><br>Du kommer att få information om framtida föreläsningar.</p>
     </div>
 </div>
+
+    <!-- Fast positionerad sidfot med logotypen på båda sidor -->
+    <div class="footer-logo">
+        <img src="logotypekulturen.png" alt="Kulturen logotyp">
+    </div>
 
 <script>
     document.getElementById('signup-form').addEventListener('submit', function(e) {
@@ -117,7 +156,6 @@
         btn.disabled = true;
         btn.textContent = 'Sparar...';
 
-        // Uppdaterad till din absolut senaste och slutgiltiga exec-länk
         const scriptURL = 'https://script.google.com/macros/s/AKfycbxpxR_H71oonTkmDLAxLdNY05em4s5EpGwG9NmQgqs_JeiQ6ch486zM01-53hp-c-fC8Q/exec';
 
         fetch(scriptURL, {
