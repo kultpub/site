@@ -5155,7 +5155,7 @@ const utstallningar = [
   namn: "Modernismen – en ny konst, en ny värld",
   typ: "Basutställning",
   start: "1998-06-14",
-  slut: "åååå-mm-dd",
+  slut: "2026-11-01",
   lokal: "Vita huset (tredje våningen)",
   kommentar: "Lunds två modernistiska pionjärer, målaren GAN (Gösta Adrian-Nilsson) och silversmeden Wiwen Nilsson, ledsagar oss genom modernismens idéer" 
   },
@@ -6499,7 +6499,7 @@ const utstallningar = [
   namn: "Gamla leksaker",
   typ: "Basutställning",
   start: "2005-03-10",
-  slut: "åååå-mm-dd",
+  slut: "2025-09-30",
   lokal: "Gårdshuset",
   kommentar: "Utställningen var tidigare en del av den större utställningen \"Ting för lek\" (se d.o.)" 
   },
@@ -8238,5 +8238,68 @@ const utstallningar = [
   slut: "åååå-mm-dd",
   lokal: "Wahlbomska huset",
   kommentar: "Nu visar vi även dräktsilver, som är en särpräglad och viktig del av den skånska dräkten." 
-  }
+  },
+{
+  id: "1030",
+  namn: "Nära till naturlig färg",
+  typ: "Tillfällig",
+  start: "2025-09-05",
+  slut: "2026-09-21",
+  lokal: "Allmogehallen",
+  kommentar: ""
+},
+{
+  id: "1031",
+  namn: "Madicken – en lekutställning",
+  typ: "Tillfällig",
+  start: "2026-02-14",
+  slut: "2027-08-22",
+  lokal: "Allmogehallen",
+  kommentar: ""
+},
+{
+  id: "1032",
+  namn: "Eko av 1920-talet – drömmar, dekadens och förändring",
+  typ: "Tillfällig",
+  start: "2026-03-26",
+  slut: "2026-08-23",
+  lokal: "Vita huset",
+  kommentar: ""
+},
+{
+  id: "1033",
+  namn: "Dioramat – Slaget vid Lützen 1632",
+  typ: "Tillfällig",
+  start: "2026-03-28",
+  slut: "2028-09-03",
+  lokal: "Textilhallen",
+  kommentar: ""
+},
+{
+  id: "1034",
+  namn: "Skånsk allmoge – med konstnärens blick",
+  typ: "Basutställning",
+  start: "2026-03-28",
+  slut: "åååå-mm-dd",
+  lokal: "Helsingborg-Halmstadhuset",
+  kommentar: ""
+},
+{
+  id: "1035",
+  namn: "Ett sekel mellan oss",
+  typ: "Tillfällig",
+  start: "2026-05-22",
+  slut: "2026-08-23",
+  lokal: "Vita huset",
+  kommentar: ""
+},
+{
+  id: "1036",
+  namn: "Lunds försvunna kyrkor – byggnadsdetaljer och gravmonument",
+  typ: "Basutställning",
+  start: "2026-09-26",
+  slut: "åååå-mm-dd",
+  lokal: "Dekanhuset",
+  kommentar: ""
+}  
 ];
