@@ -3304,6 +3304,14 @@ function refreshComparison() {
 function resetComparison() { comparison.active = false; comparison.values = []; refreshComparison(); }
 const comparisonDialog = document.getElementById('comparisonDialog');
 let comparisonInstruction = false;
+// Minns instruktionen för denna sida under flikens session, även efter omladdning.
+const comparisonInstructionSessionKey = `comparisonInstructionSeen:${location.pathname}`;
+let comparisonInstructionSeen = false;
+try {
+    comparisonInstructionSeen = sessionStorage.getItem(comparisonInstructionSessionKey) === '1';
+} catch {
+    // Utan tillgång till sessionStorage används minnet under sidans livstid.
+}
 let comparisonReturnFocus;
 function openComparisonDialog(instruction) {
     comparisonInstruction = instruction;
@@ -3340,7 +3348,21 @@ function closeComparisonDialog() {
     
     if (comparisonReturnFocus?.isConnected) comparisonReturnFocus.focus();
 }
-document.getElementById('startComparison').onclick = () => { resetComparison(); openComparisonDialog(true); };
+document.getElementById('startComparison').onclick = () => {
+    resetComparison();
+    if (comparisonInstructionSeen) {
+        comparison.active = true;
+        refreshComparison();
+        return;
+    }
+    openComparisonDialog(true);
+    comparisonInstructionSeen = true;
+    try {
+        sessionStorage.setItem(comparisonInstructionSessionKey, '1');
+    } catch {
+        // Flaggan i minnet gör att senare klick ändå går direkt till val av värden.
+    }
+};
 document.getElementById('resetComparison').onclick = resetComparison;
 document.getElementById('comparisonContinue').onclick = () => {
     if (comparisonInstruction) { comparison.active = true; refreshComparison(); }
