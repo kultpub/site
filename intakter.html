@@ -536,6 +536,15 @@ h1 {
   min-width: 80px;
 }
 
+/* Samma rubrikhöjd med och utan kaféets informationsikoner. */
+#statsTable .year-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 20px;
+  line-height: 1.15;
+}
+
 #statsTable td {
   border-bottom: 1px solid #eee;
   color: #222;
@@ -573,6 +582,7 @@ h1 {
 #statsTable tbody tr:not(.total-row) td:first-child {
   padding: 8px 6px 8px 10px !important;
   text-align: left !important;
+  vertical-align: middle;
   cursor: pointer;
 }
 
@@ -1127,21 +1137,29 @@ h1 {
   font-size: 12px;
   font-weight: 700;
   line-height: 1;
-  cursor: help;
+  cursor: default;
 }
 .year-info:hover, .year-info:focus-visible { background: #d5eaff; }
 .year-info:focus-visible { outline: 2px solid #74b5e5; outline-offset: 3px; }
 .year-info-tooltip {
   position: fixed;
+}
+.year-info-tooltip,
+.revenue-source-tooltip {
   z-index: 1100;
   max-width: min(270px, calc(100vw - 24px));
   padding: 10px 13px;
+  border: 1px solid #14212b;
   border-radius: 8px;
   background: #263746;
   color: #fff;
   font-size: 13px;
+  font-weight: 400;
   line-height: 1.5;
-  box-shadow: 0 5px 18px rgba(0, 0, 0, .2);
+  box-shadow:
+    inset 0 0 0 1px #263746,
+    inset 0 0 0 2px #b8c7d2,
+    0 5px 18px rgba(0, 0, 0, .2);
   white-space: normal;
 }
 .year-info-tooltip[hidden] { display: none; }
@@ -1339,6 +1357,18 @@ html:has(body.economy-locked) { scrollbar-gutter: stable; }
 .revenue-source-toggle input { display: block; position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; }
 .revenue-source-toggle input:focus-visible + .toggle-track { outline: 2px solid #385a80; outline-offset: 3px; }
 .revenue-source-toggle:has(input:disabled) { cursor: not-allowed; }
+.revenue-source-tooltip {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: max-content;
+  pointer-events: none;
+}
+.revenue-source-toggle:has(input:disabled):hover .revenue-source-tooltip,
+.revenue-source-toggle:has(input:disabled):focus-visible .revenue-source-tooltip {
+  display: block;
+}
 /* Informationsruta när innevarande månad ingår i den aktuella visningen */
 .current-month-notice {
   display: none;
@@ -2552,7 +2582,7 @@ function updateTable() {
         const info = year < 2023 && selectedRevenueSources.has("cafe")
             ? `<button type="button" class="year-info" aria-label="Information om ${year}" aria-describedby="yearInfoTooltip">i</button>`
             : "";
-        headerHtml += `<th>${info}${year}</th>`;
+        headerHtml += `<th><div class="year-header-inner">${info}<span>${year}</span></div></th>`;
     });
 
     headerHtml += `</tr>`;
@@ -3766,7 +3796,27 @@ function syncRevenueSourceControls() {
         const input = document.getElementById(`source-${source.type}`);
         input.checked = selectedRevenueSources.has(source.type);
         input.disabled = input.checked && selectedRevenueSources.size === 1;
-        input.title = input.disabled ? "Minst en intäktskälla måste vara aktiv." : "";
+        const label = input.closest(".revenue-source-toggle");
+        input.removeAttribute("title");
+        label.removeAttribute("title");
+        let tooltip = label.querySelector(".revenue-source-tooltip");
+        if (!tooltip) {
+            tooltip = document.createElement("span");
+            tooltip.className = "revenue-source-tooltip";
+            tooltip.id = `source-${source.type}-tooltip`;
+            tooltip.setAttribute("role", "tooltip");
+            tooltip.textContent = "Minst en intäktskälla måste vara aktiv.";
+            label.appendChild(tooltip);
+        }
+        if (input.disabled) {
+            label.tabIndex = 0;
+            label.setAttribute("aria-describedby", tooltip.id);
+            input.setAttribute("aria-describedby", tooltip.id);
+        } else {
+            label.removeAttribute("tabindex");
+            label.removeAttribute("aria-describedby");
+            input.removeAttribute("aria-describedby");
+        }
     });
     document.getElementById("revenuePageTitle").textContent = "Intäkter";
     document.title = "Intäkter";
@@ -4097,6 +4147,14 @@ function refreshComparison() {
 function resetComparison() { comparison.active = false; comparison.values = []; refreshComparison(); }
 const comparisonDialog = document.getElementById('comparisonDialog');
 let comparisonInstruction = false;
+// Minns instruktionen för denna sida under flikens session, även efter omladdning.
+const comparisonInstructionSessionKey = `comparisonInstructionSeen:${location.pathname}`;
+let comparisonInstructionSeen = false;
+try {
+    comparisonInstructionSeen = sessionStorage.getItem(comparisonInstructionSessionKey) === '1';
+} catch {
+    // Utan tillgång till sessionStorage används minnet under sidans livstid.
+}
 let comparisonReturnFocus;
 function openComparisonDialog(instruction) {
     comparisonInstruction = instruction;
@@ -4133,7 +4191,21 @@ function closeComparisonDialog() {
     
     if (comparisonReturnFocus?.isConnected) comparisonReturnFocus.focus();
 }
-document.getElementById('startComparison').onclick = () => { resetComparison(); openComparisonDialog(true); };
+document.getElementById('startComparison').onclick = () => {
+    resetComparison();
+    if (comparisonInstructionSeen) {
+        comparison.active = true;
+        refreshComparison();
+        return;
+    }
+    openComparisonDialog(true);
+    comparisonInstructionSeen = true;
+    try {
+        sessionStorage.setItem(comparisonInstructionSessionKey, '1');
+    } catch {
+        // Flaggan i minnet gör att senare klick ändå går direkt till val av värden.
+    }
+};
 document.getElementById('resetComparison').onclick = resetComparison;
 document.getElementById('comparisonContinue').onclick = () => {
     if (comparisonInstruction) { comparison.active = true; refreshComparison(); }
