@@ -1139,6 +1139,8 @@ h1 {
   line-height: 1;
   cursor: default;
 }
+.month-info { position: relative; top: 0; left: 5px; }
+.revenue-breakdown-amount { display: flex; align-items: center; justify-content: space-between; }
 .year-info:hover, .year-info:focus-visible { background: #d5eaff; }
 .year-info:focus-visible { outline: 2px solid #74b5e5; outline-offset: 3px; }
 .year-info-tooltip {
@@ -1162,6 +1164,7 @@ h1 {
     0 5px 18px rgba(0, 0, 0, .2);
   white-space: normal;
 }
+.year-info-tooltip { z-index: 2100; }
 .year-info-tooltip[hidden] { display: none; }
 
 /* Datakällornas status. */
@@ -2469,6 +2472,7 @@ function showYearInfoTooltip(button) {
     clearTimeout(yearInfoHideTimer);
     activeYearInfoButton = button;
     const tooltip = document.getElementById("yearInfoTooltip");
+    tooltip.textContent = button.dataset.tooltip || "Detta år inkluderar ej kaféförsäljning";
     tooltip.hidden = false;
     const rect = button.getBoundingClientRect();
     const width = tooltip.offsetWidth;
@@ -2481,8 +2485,8 @@ function scheduleYearInfoTooltipHide() {
     yearInfoHideTimer = setTimeout(hideYearInfoTooltip, 120);
 }
 
-function bindYearInfoTooltips() {
-    document.querySelectorAll("#statsTable .year-info").forEach(button => {
+function bindYearInfoTooltips(root = document.getElementById("statsTable")) {
+    root.querySelectorAll(".year-info").forEach(button => {
         button.addEventListener("mouseenter", () => showYearInfoTooltip(button));
         button.addEventListener("mouseleave", scheduleYearInfoTooltipHide);
         button.addEventListener("focus", () => showYearInfoTooltip(button));
@@ -4297,17 +4301,20 @@ function showRevenueBreakdown(year, months, monthIndex = null) {
         }
     });
     const breakdown = REVENUE_SOURCES.filter(source => selectedRevenueSources.has(source.type))
-        .map(source => ({ kat: source.label, antal: totals[source.type] }))
+        .map(source => ({ type: source.type, kat: source.label, antal: totals[source.type] }))
         .sort((a, b) => b.antal - a.antal);
     const total = breakdown.reduce((sum, row) => sum + row.antal, 0);
     const rows = breakdown.map(r => {
         const pct = total === 0 ? "—" : ((r.antal / total) * 100).toFixed(1).replace(".", ",");
+        const info = year < 2023 && monthIndex !== null && r.type === "cafe" && r.antal === 0
+            ? `<button type="button" class="year-info month-info" data-tooltip="Data saknas." aria-label="Information om ${year}" aria-describedby="yearInfoTooltip">i</button>`
+            : "";
         return `
             <tr>
                 <td style="padding:7px 0; font-weight:500; border-bottom:1px solid #eee; text-align:left;">${r.kat}</td>
                 <td style="padding:7px 0; text-align:right; border-bottom:1px solid #eee;
                            font-variant-numeric:tabular-nums; color:#f28c28; font-weight:700;">
-                    ${formatSEK(r.antal)}
+                    ${info ? `<span class="revenue-breakdown-amount">${info}<span>${formatSEK(r.antal)}</span></span>` : formatSEK(r.antal)}
                 </td>
                 <td style="padding:7px 0 7px 16px; text-align:right; border-bottom:1px solid #eee;
                            font-variant-numeric:tabular-nums; color:#999; font-size:13px;">
@@ -4341,6 +4348,7 @@ function showRevenueBreakdown(year, months, monthIndex = null) {
         : `Totalt ${year} (${months.map(month => monthNamesShort[month]).join(", ")}): Intäkter`;
     const message = document.getElementById("revenueBreakdownMessage");
     message.innerHTML = html;
+    bindYearInfoTooltips(message);
     const warnings = revenueDataWarnings(year, months);
     if (warnings.length) {
         const notice = document.createElement("span");
@@ -4352,6 +4360,7 @@ function showRevenueBreakdown(year, months, monthIndex = null) {
     document.getElementById("revenueBreakdownClose").focus();
 }
 function closeRevenueBreakdown(restoreFocus = true) {
+    hideYearInfoTooltip();
     document.getElementById("revenueBreakdownModal").style.display = "none";
     activeRevenueBreakdown = null;
     if (restoreFocus && revenueBreakdownReturnFocus?.isConnected) revenueBreakdownReturnFocus.focus();
@@ -4375,7 +4384,13 @@ document.getElementById("revenueBreakdownModal").addEventListener("click", event
 });
 document.getElementById("revenueBreakdownModal").addEventListener("keydown", event => {
     if (event.key === "Escape") { event.preventDefault(); closeRevenueBreakdown(); }
-    if (event.key === "Tab") { event.preventDefault(); document.getElementById("revenueBreakdownClose").focus(); }
+    if (event.key === "Tab") {
+        const buttons = [...document.getElementById("revenueBreakdownModal").querySelectorAll("button")];
+        const index = buttons.indexOf(document.activeElement);
+        const next = (index + (event.shiftKey ? -1 : 1) + buttons.length) % buttons.length;
+        event.preventDefault();
+        buttons[next].focus();
+    }
 });
 
 /* =========================================================
