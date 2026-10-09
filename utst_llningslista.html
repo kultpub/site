@@ -3,89 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kulturens utställningar 1882–</title>
-    <!-- jQuery & DataTables -->
+    <title>Kulturens utställningar</title>
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <!-- Google Fonts: Inter & Outfit -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
 
 <style>
+/* ====== BASSTILAR & DESIGN ====== */
 :root {
-    --bg-primary: #f8f9fa;
-    --bg-surface: #ffffff;
-    --text-primary: #1f2937;
-    --text-secondary: #4b5563;
-    --text-muted: #9ca3af;
-    --border-color: #e5e7eb;
-    --accent: #2563eb;
-    --accent-hover: #1d4ed8;
-    --danger: #dc2626;
-    --danger-hover: #b91c1c;
-    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-    --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --bg-color: #f7f8fa;
+    --card-bg: #ffffff;
+    --text-color: #2c3e50;
+    --text-muted: #64748b;
+    --primary: #0284c7;
+    --primary-hover: #0369a1;
+    --accent: #e2e8f0;
+    --border-color: #e2e8f0;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
 }
 
 body.dark-mode {
-    --bg-primary: #0f172a;
-    --bg-surface: #1e293b;
-    --text-primary: #f8fafc;
-    --text-secondary: #94a3b8;
-    --text-muted: #64748b;
+    --bg-color: #0f172a;
+    --card-bg: #1e293b;
+    --text-color: #f8fafc;
+    --text-muted: #94a3b8;
+    --primary: #38bdf8;
+    --primary-hover: #0ea5e9;
+    --accent: #334155;
     --border-color: #334155;
-    --accent: #3b82f6;
-    --accent-hover: #2563eb;
-    --danger: #ef4444;
-    --danger-hover: #dc2626;
-    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.15);
-}
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
 }
 
 body {
-    font-family: 'Inter', sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
-    line-height: 1.6;
-    padding: 2rem 1.5rem;
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 2rem 1rem;
+    background-color: var(--bg-color);
+    color: var(--text-color);
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Header / Hero Section */
-header {
+.container {
     max-width: 1200px;
-    margin: 0 auto 2.5rem auto;
+    margin: 0 auto;
+}
+
+header {
     text-align: center;
-    position: relative;
-    padding-top: 1rem;
+    margin-bottom: 2.5rem;
 }
 
 h1 {
     font-family: 'Outfit', sans-serif;
     font-size: 2.25rem;
     font-weight: 700;
-    letter-spacing: -0.025em;
-    color: var(--text-primary);
     margin-bottom: 0.5rem;
+    color: var(--text-color);
 }
 
-.subtitle {
-    font-size: 1rem;
-    color: var(--text-secondary);
+h4 {
     font-weight: 400;
+    color: var(--text-muted);
+    font-size: 1rem;
+    margin-top: 0;
 }
 
-/* Top Floating Actions */
-.top-actions {
+/* ====== FLYTANDE KONTROLLER (ÖVERST TILL HÖGER) ====== */
+.top-controls {
     position: fixed;
     top: 1.5rem;
     right: 1.5rem;
@@ -93,459 +79,318 @@ h1 {
     align-items: center;
     gap: 0.75rem;
     z-index: 1100;
+    background: var(--card-bg);
+    padding: 0.5rem 0.75rem;
+    border-radius: 9999px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
 }
 
-.icon-btn {
-    background-color: var(--bg-surface);
-    color: var(--text-primary);
-    border: 1px solid var(--border-color);
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    font-size: 0.875rem;
+.control-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 0.9rem;
     font-weight: 500;
-    cursor: pointer;
-    box-shadow: var(--card-shadow);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: var(--transition-smooth);
+    padding: 0.35rem 0.75rem;
+    border-radius: 9999px;
+    transition: all 0.2s ease;
 }
 
-.icon-btn:hover {
-    background-color: var(--border-color);
-    transform: translateY(-1px);
-}
-
-/* Dark Mode Switch Styling */
-.dark-mode-toggle {
-    background-color: var(--bg-surface);
-    border: 1px solid var(--border-color);
-    padding: 0.4rem 0.75rem;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    box-shadow: var(--card-shadow);
-    font-size: 0.875rem;
-    color: var(--text-primary);
-}
-
-.switch {
-    position: relative;
-    width: 44px;
-    height: 24px;
-    display: inline-block;
-}
-
-.switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background-color: #cbd5e1;
-    transition: 0.3s;
-    border-radius: 24px;
-}
-
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 18px;
-    width: 18px;
-    left: 3px;
-    bottom: 3px;
-    background-color: white;
-    transition: 0.3s;
-    border-radius: 50%;
-}
-
-input:checked + .slider {
+.control-btn:hover {
     background-color: var(--accent);
 }
 
-input:checked + .slider:before {
-    transform: translateX(20px);
+.control-divider {
+    width: 1px;
+    height: 1.25rem;
+    background-color: var(--border-color);
 }
 
-/* Main Container */
-.main-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    background-color: var(--bg-surface);
+/* Dark mode toggle switch i kontrollpanelen */
+.dark-mode-toggle {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.35rem 0.5rem;
+    border-radius: 9999px;
+    transition: background-color 0.2s;
+}
+
+.dark-mode-toggle:hover {
+    background-color: var(--accent);
+}
+
+.dark-mode-toggle input {
+    display: none;
+}
+
+/* ====== TABELLKORT ====== */
+#table-container {
+    display: none;
+    background-color: var(--card-bg);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
     border: 1px solid var(--border-color);
-    border-radius: 16px;
-    padding: 2rem;
-    box-shadow: var(--card-shadow);
-    display: none; /* Hidden until loaded */
 }
 
-/* Datatable Customization */
 table.dataTable {
     width: 100% !important;
     border-collapse: separate !important;
     border-spacing: 0;
-    margin-top: 1rem !important;
-    margin-bottom: 1rem !important;
 }
 
-table.dataTable thead th {
-    background-color: var(--bg-surface);
-    color: var(--text-primary);
+table.dataTable th {
+    background-color: var(--accent) !important;
+    color: var(--text-color) !important;
+    font-family: 'Outfit', sans-serif;
     font-weight: 600;
-    font-size: 0.875rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    padding: 1rem 0.75rem !important;
     border-bottom: 2px solid var(--border-color) !important;
-    padding: 1rem 0.75rem;
+    border-top: none !important;
 }
 
-table.dataTable tbody td {
-    padding: 1rem 0.75rem;
-    border-bottom: 1px solid var(--border-color);
-    font-size: 0.925rem;
-    color: var(--text-secondary);
-    vertical-align: middle;
+table.dataTable td {
+    padding: 1rem 0.75rem !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    color: var(--text-color) !important;
+    background-color: var(--card-bg);
 }
 
-table.dataTable tbody tr {
-    transition: background-color 0.15s ease;
+table.dataTable tr.odd td, table.dataTable tr.even td {
+    background-color: var(--card-bg) !important;
 }
 
-table.dataTable tbody tr:hover {
-    background-color: rgba(37, 99, 235, 0.03);
+table.dataTable tr:hover td {
+    background-color: var(--accent) !important;
 }
 
-body.dark-mode table.dataTable tbody tr:hover {
-    background-color: rgba(59, 130, 246, 0.06);
-}
-
-/* DataTables Controls Layout Styling */
-.dataTables_wrapper {
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-}
-
-.dataTables_filter input, .dataTables_length select {
-    background-color: var(--bg-surface);
-    color: var(--text-primary);
+/* DataTables Sök & Paginering anpassning */
+.dataTables_wrapper .dataTables_filter input,
+.dataTables_wrapper .dataTables_length select {
+    background-color: var(--card-bg);
+    color: var(--text-color);
     border: 1px solid var(--border-color);
-    padding: 0.4rem 0.75rem;
     border-radius: 6px;
+    padding: 0.4rem 0.75rem;
     outline: none;
-    transition: var(--transition-smooth);
 }
 
-.dataTables_filter input:focus, .dataTables_length select:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+.dataTables_wrapper .dataTables_filter input:focus {
+    border-color: var(--primary);
 }
 
-.dataTables_paginate .paginate_button {
-    color: var(--text-primary) !important;
+.dataTables_wrapper .dataTables_info, 
+.dataTables_wrapper .dataTables_paginate {
+    color: var(--text-muted) !important;
+    margin-top: 1rem;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    color: var(--text-color) !important;
     border: 1px solid var(--border-color) !important;
-    background: var(--bg-surface) !important;
+    background: var(--card-bg) !important;
     border-radius: 6px !important;
-    margin: 0 2px !important;
+    margin: 0 2px;
 }
 
-.dataTables_paginate .paginate_button.current, 
-.dataTables_paginate .paginate_button.current:hover {
-    background: var(--accent) !important;
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    background: var(--primary) !important;
     color: white !important;
-    border-color: var(--accent) !important;
+    border-color: var(--primary) !important;
 }
 
-.dataTables_paginate .paginate_button:hover {
-    background: var(--border-color) !important;
-    color: var(--text-primary) !important;
-}
-
-/* Table Buttons & Badges */
-.badge-typ {
-    display: inline-block;
-    padding: 0.25rem 0.6rem;
-    font-size: 0.75rem;
-    font-weight: 500;
-    border-radius: 20px;
-    background-color: rgba(37, 99, 235, 0.1);
-    color: var(--accent);
-}
-
-body.dark-mode .badge-typ {
-    background-color: rgba(59, 130, 246, 0.15);
-    color: #60a5fa;
-}
-
+/* ====== ELEGANT KNAPP FÖR KOMMENTARER ====== */
 .btn-kommentar {
     background-color: transparent;
-    color: var(--accent);
-    border: 1px solid var(--accent);
+    color: var(--primary);
+    border: 1px solid var(--primary);
     padding: 0.35rem 0.75rem;
-    font-size: 0.825rem;
-    font-weight: 500;
     border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
     cursor: pointer;
-    transition: var(--transition-smooth);
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
 }
 
 .btn-kommentar:hover {
-    background-color: var(--accent);
+    background-color: var(--primary);
     color: white;
 }
 
-/* Buttons inside Modal */
-button {
-    font-family: 'Inter', sans-serif;
-}
-
-.btn-edit {
-    background-color: var(--accent);
-    color: white;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 6px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: var(--transition-smooth);
-}
-
-.btn-edit:hover {
-    background-color: var(--accent-hover);
-}
-
-.btn-report {
-    background-color: var(--danger);
-    color: white;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 6px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: var(--transition-smooth);
-}
-
-.btn-report:hover {
-    background-color: var(--danger-hover);
-}
-
-#reportButtonContainer {
-    display: flex;
-    gap: 0.75rem;
-    justify-content: flex-end;
-    margin-top: 1.5rem;
-}
-
-/* Modals & Overlays */
-#modal-overlay {
-    position: fixed;
-    top: 0; left: 0; width: 100vw; height: 100vh;
-    background-color: rgba(15, 23, 42, 0.6);
-    backdrop-filter: blur(4px);
-    display: none;
-    z-index: 1000;
-    transition: opacity 0.3s ease;
-}
-
+/* ====== MODALER & ANIMERAT STÄNGNINGSKRYSS ====== */
 .modal {
     display: none;
     position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    z-index: 1100;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1200;
     overflow: auto;
-    padding: 1rem;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+}
+
+#modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: none;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 1150;
 }
 
 .modal-content {
-    background-color: var(--bg-surface);
-    color: var(--text-primary);
-    margin: 8vh auto;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    margin: 8% auto;
     padding: 2.5rem;
     border-radius: 16px;
-    width: 100%;
+    width: 90%;
     max-width: 650px;
     position: relative;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     border: 1px solid var(--border-color);
 }
 
+/* Animerat stängningskryss med egen bakgrund */
 .close {
     position: absolute;
     top: 1.25rem;
-    right: 1.5rem;
-    color: var(--text-muted);
-    font-size: 1.5rem;
+    right: 1.25rem;
+    width: 36px;
+    height: 36px;
+    background-color: var(--accent);
+    color: var(--text-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
     font-weight: 600;
     cursor: pointer;
-    transition: color 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .close:hover {
-    color: var(--text-primary);
+    background-color: var(--primary);
+    color: white;
+    transform: rotate(45deg) scale(1.05);
 }
 
-/* Modal Typography / Textblocks */
+/* Modal textinnehåll */
 .modal-textblock {
-    font-size: 0.975rem;
+    font-size: 1rem;
     line-height: 1.7;
-    color: var(--text-secondary);
 }
 
 .modal-textblock h3 {
     font-family: 'Outfit', sans-serif;
-    font-size: 1.1rem;
-    margin-top: 1.8em;
-    margin-bottom: 0.6em;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--text-primary);
+    font-size: 1.15rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    color: var(--text-color);
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
 
-.modal-textblock h3:first-child {
-    margin-top: 0;
-}
-
 .modal-textblock h3 i {
-    color: var(--accent);
+    color: var(--primary);
 }
 
 .modal-textblock p {
+    color: var(--text-muted);
     margin-bottom: 1rem;
 }
 
-.modal-textblock strong {
-    color: var(--text-primary);
-    font-weight: 600;
+/* Knappcontainer i kommentar-modal */
+#reportButtonContainer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 2rem;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    body {
-        padding: 1rem 0.5rem;
-    }
-    .top-actions {
-        top: 1rem;
-        right: 1rem;
-    }
-    h1 {
-        font-size: 1.75rem;
-    }
-    .main-container {
-        padding: 1rem;
-    }
+#reportButtonContainer button {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    color: white;
+    transition: opacity 0.2s;
 }
+
+.btn-edit { background-color: var(--primary); }
+.btn-edit:hover { background-color: var(--primary-hover); }
+.btn-report { background-color: #ef4444; }
+.btn-report:hover { background-color: #dc2626; }
 </style>
 </head>
 <body>
 
-  <!-- Overlay -->
+  <!-- Flytande överlagring för modaler -->
   <div id="modal-overlay"></div>
 
-  <!-- Top Actions -->
-  <div class="top-actions">
-    <button id="info-button" class="icon-btn">
-      <i class="fa-solid fa-circle-info"></i> Info
-    </button>
-    <button id="reset-button" class="icon-btn">
-      <i class="fa-solid fa-rotate-left"></i> Återställ
-    </button>
-    <div class="dark-mode-toggle">
-      <span class="dark-mode-label"><i class="fa-solid fa-moon"></i></span>
-      <label class="switch">
-        <input type="checkbox" id="darkModeCheckbox" onchange="toggleDarkMode()">
-        <span class="slider"></span>
-      </label>
-    </div>
+  <!-- Flytande kontrollpanel (Högst upp till höger) -->
+  <div class="top-controls">
+    <button class="control-btn" id="info-button">Info</button>
+    <div class="control-divider"></div>
+    <button class="control-btn" id="reset-button">Återställ</button>
+    <div class="control-divider"></div>
+    <label class="dark-mode-toggle" title="Växla mörkt läge">
+      <i class="fa-solid fa-moon" id="dark-mode-icon"></i>
+      <input type="checkbox" onchange="toggleDarkMode()">
+    </label>
   </div>
 
-  <!-- Header -->
-  <header>
-    <h1>Kulturens utställningar</h1>
-    <div class="subtitle">Historiskt arkiv över utställningar och miljöer 1882–</div>
-  </header>
+  <div class="container">
+    <header>
+      <h1>Kulturens utställningar 1882–</h1>
+      <h4>Sök i alla kolumner – filtrera direkt medan du skriver</h4>
+    </header>
 
-  <!-- Table Container -->
-  <div class="main-container" id="table-container">
-    <table border="0" class="dataframe display">
-      <thead>
-        <tr style="text-align: right;">
-          <th>ID</th>
-          <th>Namn</th>
-          <th>Typ</th>
-          <th>Start</th>
-          <th>Slut</th>
-          <th>Lokal</th>
-          <th>Kommentar</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Data laddas dynamiskt via JS -->
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Informationsmodal -->
-  <div id="infoModal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closeInfoModal()">&times;</span>
-      <div class="modal-body">
-        <div class="modal-textblock">
-          <h3><i class="fa-solid fa-circle-info"></i> Om utställningslistan</h3>  
-          <p>
-            Denna lista omfattar alla utställningar som anordnats av Kulturen <strong>från den första i Huaröd 1882 till idag</strong>. 
-            För de flesta anges start- och slutdatum, lokal samt kommentarer om innehåll, samarbeten och eventuella inlån. Datum av typen 1936-<strong>mm-dd</strong> markerar 
-            att endast året är känt, medan <strong>åååå-mm-dd</strong> används när datum helt saknas eller slutdatum ännu inte fastställts (t.ex. vid pågående utställningar).
-          </p>  
-          <p>
-            <strong>Listan är interaktiv</strong>: du kan söka fritt i alla kolumner och filtreringen sker i realtid medan du skriver; varje kolumn kan också sorteras separat.
-            Klicka på <em>Återställ</em> för att nollställa sökningar och filter.
-          </p>  
-          <p>
-            <strong>Om du upptäcker fel</strong> i en post eller vill göra tillägg, klicka på <strong>Visa kommentar</strong> på aktuell rad och använd
-            knapparna <strong>Ändra kommentar</strong> eller <strong>Rapportera fel</strong>.
-          </p>
-  
-          <h3><i class="fa-solid fa-pen-to-square"></i> Anmärkning</h3>  
-          <p>
-            Ett arrangemang räknas som utställning om det i källorna uttryckligen benämns som ”utställning” – detta är den huvudsakliga principen som ligger
-            till grund för urvalet.
-            I listan ingår även varje byggnad i friluftsmuseet. Dessa betraktas, på grund av sin karaktär och framträdande närvaro, som utställningar i sig
-            själva – oavsett om de rymmer en utställning eller inte.
-            Vidare inkluderas utställningar som har anordnats av Kulturen på annan ort, men inte sådana som enbart har lånats ut till andra museer.
-            Däremot ingår utställningar som lånats in till Kulturen från andra institutioner, eftersom de tillhandahålls av Kulturen precis som våra egna.
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Kommentar-/Rapportmodal -->
-  <div id="myModal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closeKommentarModal()">&times;</span>
-      <div class="modal-body">
-        <div class="modal-textblock">
-          <p id="modalText"></p>
-        </div>
-        <div id="reportButtonContainer">
-          <!-- Knappar skapas dynamiskt -->
-        </div>
-      </div>
+    <!-- Tabellbehållare -->
+    <div id="table-container">
+      <table border="0" class="dataframe display">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Namn</th>
+            <th>Typ</th>
+            <th>Start</th>
+            <th>Slut</th>
+            <th>Lokal</th>
+            <th>Kommentar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Data laddas dynamiskt via JS -->
+        </tbody>
+      </table>
     </div>
   </div>
 
 <script>
-/* ============================   Visa kommentar-modal ============================= */
+/* ============================ 
+   Visa kommentar-modal 
+   ============================ */
 function showKommentar(index) {
   const post = utstallningar[index];
-
   const content = post.kommentar.trim()
     ? post.kommentar
     : `Det saknas närmare uppgifter om denna utställning.`;
@@ -554,7 +399,6 @@ function showKommentar(index) {
   document.getElementById("myModal").style.display = "block";
   document.getElementById("modal-overlay").style.display = "block";
 
-  // Rensa knapprad
   const reportContainer = document.getElementById("reportButtonContainer");
   reportContainer.innerHTML = "";
 
@@ -582,7 +426,9 @@ function showKommentar(index) {
   reportContainer.appendChild(reportButton);
 }
 
-/* ============================   Modalhantering ============================= */
+/* ============================ 
+   Modalhantering 
+   ============================ */
 function closeKommentarModal() {
   document.getElementById("myModal").style.display = "none";
   document.getElementById("modal-overlay").style.display = "none";
@@ -593,33 +439,43 @@ function closeInfoModal() {
   document.getElementById("modal-overlay").style.display = "none";
 }
 
-/* ============================   Dark mode ============================= */
+/* ============================ 
+   Dark mode 
+   ============================ */
 function toggleDarkMode() {
   const isDark = document.body.classList.toggle("dark-mode");
   localStorage.setItem("darkMode", isDark ? "enabled" : "disabled");
-  document.getElementById("darkModeCheckbox").checked = isDark;
+  updateDarkModeIcon(isDark);
 }
 
-/* ============================   När DOM laddats ============================= */
+function updateDarkModeIcon(isDark) {
+  const icon = document.getElementById("dark-mode-icon");
+  if (isDark) {
+    icon.className = "fa-solid fa-sun";
+  } else {
+    icon.className = "fa-solid fa-moon";
+  }
+}
+
+/* ============================ 
+   När DOM laddats 
+   ============================ */
 document.addEventListener("DOMContentLoaded", function () {
-  // Återställ dark mode om aktivt
   if (localStorage.getItem("darkMode") === "enabled") {
     document.body.classList.add("dark-mode");
-    document.getElementById("darkModeCheckbox").checked = true;
+    document.querySelector(".dark-mode-toggle input").checked = true;
+    updateDarkModeIcon(true);
   }
 
-  // Återställ-knapp
   document.getElementById("reset-button").addEventListener("click", () => {
     location.reload();
   });
 
-  // Info-knapp
   document.getElementById("info-button").addEventListener("click", () => {
     document.getElementById("infoModal").style.display = "block";
     document.getElementById("modal-overlay").style.display = "block";
   });
 
-  // Klick utanför modaler
   document.getElementById("modal-overlay").addEventListener("click", function () {
     document.getElementById("myModal").style.display = "none";
     document.getElementById("infoModal").style.display = "none";
@@ -628,30 +484,61 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
-<!-- Data & functions scripts (förutsätter att dessa finns i samma miljö) -->
+<!-- ============================== 
+     Informationsmodal 
+     ============================== -->
+<div id="infoModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeInfoModal()">&times;</span>
+    <div class="modal-body">
+      <div class="modal-textblock">
+        <h3><i class="fa-solid fa-circle-info"></i> Information</h3>
+        <p>
+          Denna lista omfattar alla utställningar som anordnats av Kulturen <strong>från den första i Huaröd 1882 till idag</strong>. 
+          För de flesta anges start- och slutdatum, lokal samt kommentarer om innehåll, samarbeten och eventuella inlån. Datum av typen 1936-<strong>mm-dd</strong> markerar 
+          att endast året är känt, medan <strong>åååå-mm-dd</strong> används när datum helt saknas eller slutdatum ännu inte fastställts (t.ex. vid pågående utställningar).
+        </p>
+        <p>
+          <strong>Listan är interaktiv</strong>: du kan söka fritt i alla kolumner och filtreringen sker i realtid medan du skriver; varje kolumn kan också sorteras separat.
+          Klicka på <em>Återställ</em> för att visa hela listan igen.
+        </p>
+        <p>
+          <strong>Om du upptäcker fel</strong> i en post eller vill göra tillägg, klicka på <strong>Visa kommentar</strong> på aktuell rad och använd
+          knapparna <strong>Ändra kommentar</strong> eller <strong>Rapportera fel</strong>.
+        </p>
+
+        <h3><i class="fa-solid fa-pen-to-square"></i> Anmärkning</h3>
+        <p>
+          Ett arrangemang räknas som utställning om det i källorna uttryckligen benämns som ”utställning” – detta är den huvudsakliga principen som ligger
+          till grund för urvalet.
+          I listan ingår även varje byggnad i friluftsmuseet. Dessa betraktas, på grund av sin karaktär och framträdande närvaro, som utställningar i sig
+          själva – oavsett om de rymmer en utställning eller inte.
+          Vidare inkluderas utställningar som har anordnats av Kulturen på annan ort, men inte sådana som enbart har lånats ut till andra museer.
+          Däremot ingår utställningar som lånats in till Kulturen från andra institutioner, eftersom de tillhandahålls av Kulturen precis som våra egna.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== 
+     Kommentar-/Rapportmodal 
+     ============================== -->
+<div id="myModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeKommentarModal()">&times;</span>
+    <div class="modal-body">
+      <div class="modal-textblock">
+        <p id="modalText"></p>
+      </div>
+      <div id="reportButtonContainer">
+        <!-- Knappar skapas dynamiskt -->
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="utstallningar-data.js"></script>
 <script src="utstallningar-functions.js"></script>
-
-<script>
-/* Initialisera DataTables med omvänd sortering (senast först, kolumn 0 eller 3) */
-$(document).ready(function() {
-    if (typeof utstallningar !== 'undefined' && $.fn.DataTable) {
-        // Om datan laddas via dina externa skript, säkerställ att tabellen visas
-        // Och sätt default sorting till kolumn 0 (ID) eller kolumn 3 (Startdatum) i fallande ordning [desc]
-        setTimeout(() => {
-            if (!$.fn.DataTable.isDataTable('.dataframe')) {
-                $('.dataframe').DataTable({
-                    "language": {
-                        "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/sv-SE.json"
-                    },
-                    "order": [[0, "desc"]] // Sorterar på ID fallande (senast inlagda/senaste först)
-                });
-            }
-            $('#table-container').fadeIn(300);
-        }, 100);
-    }
-});
-</script>
-
 </body>
 </html>
