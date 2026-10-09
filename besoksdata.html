@@ -1136,6 +1136,34 @@ h1 {
 #aiModal::backdrop { background:rgba(0,0,0,.4); backdrop-filter:blur(2px); }
 #aiModal p { line-height:1.6; text-align:left; margin-bottom:20px; }
 #aiModal[hidden] { display:none; }
+
+/* Månadens kategorier och utställningsinvigningar. */
+.modal-content.month-category-modal { width: 420px !important; box-sizing: border-box; max-width: 92vw; max-height: 90vh; overflow-y: auto; }
+.modal-content.month-category-modal.has-openings { width: 800px !important; }
+.month-category-modal .month-columns { display: grid; grid-template-columns: minmax(0,300px) minmax(0,1fr); gap: 28px; text-align: left; }
+.month-category-modal .month-openings { border-left: 1px solid #dfe3e7; padding-left: 28px; }
+.month-category-modal h3 { font-size: 19px; line-height: 1.35; margin-bottom: 16px; text-align: center; }
+.month-category-modal .month-openings ul { list-style: none; margin: 0; padding: 0; }
+.month-category-modal .month-openings li { padding: 13px 0; border-bottom: 1px solid #edf0f2; }
+.month-category-modal .month-openings li:first-child { padding-top: 0; }
+.month-category-modal .month-openings li:last-child { border-bottom: 0; padding-bottom: 0; }
+.month-category-modal .opening-date { display: block; color: #b96412; font-size: 13px; font-weight: 600; margin-bottom: 5px; }
+.month-category-modal .opening-name { display: block; font-size: 16px; font-weight: 650; line-height: 1.45; color: #222; }
+.month-category-modal p.month-opening-status { margin-top: 16px; font-size: 13px; color: #777; line-height: 1.45; }
+.month-category-modal p.month-pandemic-note { margin-top: 20px; padding: 12px 14px; background: #fff7ed; border-left: 3px solid #f28c28; border-radius: 6px; text-align: left; font-size: 14px; line-height: 1.5; }
+@media (max-width: 700px) { .month-category-modal .month-columns { grid-template-columns: 1fr; gap: 24px; } .month-category-modal .month-openings { border-left: 0; border-top: 1px solid #dfe3e7; padding: 24px 0 0; } }
+
+
+.month-category-modal .month-event-entry { padding: 13px 0; border-bottom: 1px solid #edf0f2; }
+.month-category-modal .month-event-entry:first-child { padding-top: 0; }
+.month-category-modal .month-event-entry:last-child { border-bottom: 0; padding-bottom: 0; }
+.month-category-modal a.month-event-name { display: inline-block; color: #222; font-weight: 650; font-size: 16px; text-decoration: none; border-bottom: 1px dotted #b8b8b8; }
+.month-category-modal a.month-event-name:hover { color: #b96412; border-bottom-color: #b96412; }
+.month-category-modal .month-event-dates { display: block; color: #777; font-size: 13px; margin-top: 5px; }
+.month-category-modal p.month-event-value { text-align: left; margin: 6px 0 0; font-size: 17px; font-weight: 650; color: #b96412; line-height: 1.4; }
+.month-category-modal p.month-event-note { text-align: left; font-size: 13px; line-height: 1.5; color: #777; margin: 6px 0 0; }
+.month-category-modal h3.month-openings-after-events { border-top: 1px solid #dfe3e7; padding-top: 20px; margin-top: 22px; }
+
 </style>
 </head>
 
@@ -1153,7 +1181,7 @@ h1 {
     <div class="modal-content">
       <button class="modal-close" id="closeModal">&times;</button>
       <h3>Data saknas</h3>
-      <p id="modalMessage"></p>
+      <div id="modalMessage"></div>
     </div>
   </div>
 
@@ -1210,7 +1238,7 @@ h1 {
     <button class="reset-btn" id="resetFilters" style="margin-bottom: 20px;">Återställ filter</button>
 	
     <div id="kategoriHint" style="display:none; font-size:14px; color:#666; line-height:1.5; margin-top:8px; margin-bottom:12px;">
-      <i class="fa-solid fa-circle-info" style="margin-right:6px; color:#f28c28;"></i>Klicka på ett värde i tabellen för att se månadens fördelning av olika besökskategorier.
+      <i class="fa-solid fa-circle-info" style="margin-right:6px; color:#f28c28;"></i>Klicka på en cell tabellen för att se fördelning av besökskategorier, invigningar och evenemangsdata.
     </div>
 
     <!-- Datumfilter -->
@@ -1697,6 +1725,207 @@ function updateTableCursor() {
     });
 }
 
+
+const MONTH_OPENINGS_URL='https://kultpub.github.io/site/utstallningar-data.js';
+let monthOpeningsPromise=null;
+function loadMonthOpenings() {
+    if(typeof utstallningar!=='undefined'&&Array.isArray(utstallningar))return Promise.resolve(utstallningar);
+    if(monthOpeningsPromise)return monthOpeningsPromise;
+    monthOpeningsPromise=new Promise((resolve,reject)=>{
+        const script=document.createElement('script');
+        script.src=MONTH_OPENINGS_URL;script.async=true;
+        const timeout=setTimeout(()=>fail(),15000);
+        function fail(){clearTimeout(timeout);script.onload=script.onerror=null;script.remove();reject(new Error('Invigningarna kunde inte hämtas.'));}
+        script.onerror=fail;
+        script.onload=()=>{clearTimeout(timeout);if(typeof utstallningar!=='undefined'&&Array.isArray(utstallningar))resolve(utstallningar);else fail();};
+        document.head.appendChild(script);
+    }).catch(error=>{monthOpeningsPromise=null;throw error;});
+    return monthOpeningsPromise;
+}
+function monthOpeningDate(value) {
+    const match=String(value||'').trim().match(/^(\d{4})-(\d{2})(?:-(.*))?$/);
+    if(!match)return null;
+    const year=Number(match[1]),month=Number(match[2])-1;
+    if(month<0||month>11)return null;
+    const day=/^\d{2}$/.test(match[3]||'')?Number(match[3]):null;
+    if(day!==null&&(day<1||day>new Date(Date.UTC(year,month+1,0)).getUTCDate()))return null;
+    return {year,month,day};
+}
+function monthOpeningIsInLund(exhibition) {
+    // Startdatum är invigningsdatum. Andra filialer och digitala utställningar hör inte till huvudmuseets lista.
+    const location=String(exhibition.lokal||'').toLocaleLowerCase('sv-SE');
+    return /kulturen i lund|friluftsmuseet|ystadhuset|schlyterska|vita huset|wahlbomska|brahehuset|textilhallen|borgarhuset|lundahallen|allmogehallen|herrehuset|lindforska|thomanderska|locus virtutum|dekanhuset|helsingborg-halmstadhuset/.test(location)
+        || location===''||location==='uppgift saknas';
+}
+function selectMonthOpenings(data,year,month) {
+    return data.filter(monthOpeningIsInLund).map(exhibition=>({exhibition,date:monthOpeningDate(exhibition.start)}))
+        .filter(item=>item.date&&item.date.year===year&&item.date.month===month)
+        .sort((a,b)=>(a.date.day??32)-(b.date.day??32)||String(a.exhibition.namn).localeCompare(String(b.exhibition.namn),'sv-SE'));
+}
+// Lov och evenemang: totalsiffror från respektive statistiksida, oberoende av kategoriurvalet.
+const MONTH_EVENT_SOURCES=[
+    {key:'sportlov',label:'Sportlovet',page:'statistik-sportlov.html',days:9},
+    {key:'pasklov',label:'Påsklovet',page:'statistik-pasklov.html',days:10},
+    {key:'nationaldag',label:'Nationaldagen',page:'statistik-nationaldag.html',cancelled:[2020,2021]},
+    {key:'midsommarafton',label:'Midsommarafton',page:'statistik-midsommarafton.html',cancelled:[2020,2021]},
+    {key:'kulturnatten',label:'Kulturnatten',page:'statistik-kulturnatten.html',cancelled:[2020]},
+    {key:'hostlov',label:'Höstlovet',page:'statistik-hostlov.html',days:9},
+    {key:'julstok',label:'Julstöket',page:'statistik-julstok.html',days:3,cancelled:[2020]}
+];
+const MONTH_EASTER_ENDS={
+    2011:'04-25',2012:'04-09',2013:'04-01',2014:'04-21',2015:'04-06',2016:'03-28',2017:'04-17',2018:'04-02',2019:'04-22',2020:'04-13',
+    2021:'04-05',2022:'04-18',2023:'04-10',2024:'04-01',2025:'04-21',2026:'04-06',2027:'03-29',2028:'04-17',2029:'04-02',2030:'04-29',
+    2031:'04-14',2032:'04-05',2033:'04-18',2034:'04-03',2035:'04-23',2036:'04-07',2037:'04-20',2038:'04-02',2039:'04-18',2040:'04-09'
+};
+const monthEventCache=new Map();
+function monthEventAddDays(date,days){const result=new Date(date);result.setUTCDate(result.getUTCDate()+days);return result;}
+function monthEventWeekMonday(year,week){const jan4=new Date(Date.UTC(year,0,4));return monthEventAddDays(jan4,(week-1)*7-((jan4.getUTCDay()+6)%7));}
+function monthEventDates(source,year){
+    let start,end;
+    if(source.key==='sportlov'||source.key==='hostlov'){
+        const monday=monthEventWeekMonday(year,source.key==='sportlov'?8:44);start=monthEventAddDays(monday,-2);end=monthEventAddDays(monday,6);
+    }else if(source.key==='pasklov'){
+        if(!MONTH_EASTER_ENDS[year])return [];
+        end=new Date(`${year}-${MONTH_EASTER_ENDS[year]}T12:00:00Z`);start=monthEventAddDays(end,-9);
+    }else if(source.key==='nationaldag')start=end=new Date(Date.UTC(year,5,6));
+    else if(source.key==='midsommarafton'){
+        const first=new Date(Date.UTC(year,5,19));start=end=monthEventAddDays(first,(5-first.getUTCDay()+7)%7);
+    }else if(source.key==='kulturnatten'){
+        const first=new Date(Date.UTC(year,8,1));start=end=monthEventAddDays(first,(6-first.getUTCDay()+7)%7+14);
+    }else if(source.key==='julstok'){
+        const first=new Date(Date.UTC(year,10,27));end=monthEventAddDays(first,(7-first.getUTCDay())%7);start=monthEventAddDays(end,-2);
+    }
+    if(!start||!end)return [];
+    const dates=[];for(let date=start;date<=end;date=monthEventAddDays(date,1))dates.push(date.toISOString().slice(0,10));return dates;
+}
+function monthRelevantEvents(year,month){return MONTH_EVENT_SOURCES.filter(source=>monthEventDates(source,year).some(date=>Number(date.slice(5,7))-1===month));}
+function extractMonthEventArray(html,name){
+    // Endast statiska dataliteraler läses. Statistiksidornas JavaScript körs aldrig här.
+    const doc=new DOMParser().parseFromString(html,'text/html'),pattern=new RegExp('\\b(?:const|let)\\s+'+name+'\\s*=\\s*(\\[[\\s\\S]*?\\])\\s*;');
+    for(const script of doc.querySelectorAll('script:not([src])')){
+        const match=script.textContent.match(pattern);
+        if(match)return JSON.parse(match[1].replace(/([{,]\s*)(label|data)\s*:/g,'$1"$2":'));
+    }
+    return null;
+}
+function parseMonthEventData(html,source){
+    const years=extractMonthEventArray(html,'yearsList'),rows=extractMonthEventArray(html,source.days?'dagData':'katData');
+    if(!Array.isArray(years)||!years.length||!years.every(Number.isInteger)||!Array.isArray(rows)||!rows.length
+        ||rows.some(row=>!Array.isArray(row.data)||row.data.length!==years.length||row.data.some(value=>value!==null&&(!Number.isFinite(value)||value<0)))
+        ||(source.days&&rows.length!==source.days))throw new Error('Statistiksidans data kunde inte läsas.');
+    return {years,rows};
+}
+function loadMonthEventData(source){
+    if(monthEventCache.has(source.key))return monthEventCache.get(source.key);
+    const pending=(async()=>{
+        const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),15000);
+        try{const response=await fetch(`https://kultpub.github.io/site/${source.page}`,{signal:controller.signal});if(!response.ok)throw new Error('Besöksuppgifterna kunde inte hämtas.');return parseMonthEventData(await response.text(),source);}
+        finally{clearTimeout(timeout);}
+    })().catch(error=>{monthEventCache.delete(source.key);throw error;});
+    monthEventCache.set(source.key,pending);return pending;
+}
+function monthEventOutcome(source,year,month,data){
+    const dates=monthEventDates(source,year),monthDates=dates.filter(date=>Number(date.slice(5,7))-1===month);
+    const result={source,year,month,dates,monthDates,status:'missing',value:null,total:null,notes:[]};
+    if(source.cancelled?.includes(year)){result.status='cancelled';return result;}
+    if(!data)return result;
+    const index=data.years.indexOf(year);if(index<0)return result;
+    if(!source.days){
+        const values=data.rows.map(row=>row.data[index]);
+        // Före 2018 omfattade midsommardata endast vuxna och barn.
+        const relevant=source.key==='midsommarafton'&&year<=2017?data.rows.filter(row=>['Vuxen','Barn'].includes(row.label)).map(row=>row.data[index]):values;
+        if(!relevant.length||relevant.some(value=>!Number.isFinite(value)))return result;
+        result.value=result.total=relevant.reduce((sum,value)=>sum+value,0);result.status='complete';return result;
+    }
+    const values=data.rows.map(row=>row.data[index]);
+    const closed=index=>index===2&&year<=2016&&['sportlov','pasklov','hostlov'].includes(source.key);
+    const notHeld=index=>source.key==='julstok'&&index===0&&year<=2017;
+    const known=index=>Number.isFinite(values[index])||values[index]===null&&(closed(index)||notHeld(index));
+    const sum=indices=>indices.every(known)?indices.reduce((total,index)=>total+(Number.isFinite(values[index])?values[index]:0),0):null;
+    const selected=dates.map((date,index)=>({date,index})).filter(item=>monthDates.includes(item.date));
+    result.monthDates=selected.filter(item=>!notHeld(item.index)).map(item=>item.date);
+    if(!result.monthDates.length){result.status='not-held';result.notes.push('Julstöket hölls endast lördag–söndag detta år.');return result;}
+    result.value=sum(selected.map(item=>item.index));result.total=sum(values.map((_,index)=>index));
+    result.status=result.value===null?'missing':'complete';
+    if(selected.some(item=>closed(item.index)&&values[item.index]===null))result.notes.push('Stängt på lovets måndag.');
+    if(source.key==='julstok'&&year<=2017)result.notes.push('Julstöket hölls endast lördag–söndag detta år.');
+    result.dates=dates.filter((_,index)=>!notHeld(index));
+    return result;
+}
+function monthEventDateLabel(dates){
+    if(!dates.length)return '';
+    const first=dates[0],last=dates.at(-1),formatter=new Intl.DateTimeFormat('sv-SE',{day:'numeric',month:'long',timeZone:'UTC'}),format=date=>formatter.format(new Date(date+'T12:00:00Z'));
+    return first===last?format(first):first.slice(0,7)===last.slice(0,7)?`${Number(first.slice(8))}–${format(last)}`:`${format(first)}–${format(last)}`;
+}
+function renderMonthEvents(right,events){
+    const heading=document.createElement('h3');heading.textContent='Lov och evenemang';right.appendChild(heading);
+    const list=document.createElement('div');list.className='month-event-list';
+    for(const event of events){
+        const block=document.createElement('div');block.className='month-event-entry';
+        const name=document.createElement('a');name.className='month-event-name';name.textContent=event.source.label;name.href=`https://kultpub.github.io/site/${event.source.page}`;name.target='_blank';name.rel='noopener noreferrer';block.appendChild(name);
+        const dates=document.createElement('span');dates.className='month-event-dates';dates.textContent=monthEventDateLabel(event.monthDates);block.appendChild(dates);
+        const value=document.createElement('p');value.className='month-event-value';
+        const split=new Set(event.dates.map(date=>date.slice(0,7))).size>1;
+        value.textContent=event.status==='complete'?`${formatSwedishNumber(event.value)} besök${split?` i ${new Intl.DateTimeFormat('sv-SE',{month:'long',timeZone:'UTC'}).format(new Date(Date.UTC(event.year,event.month,1)))}`:''}`
+            :event.status==='cancelled'?'Inställt på grund av coronapandemin.'
+            :event.status==='not-held'?'Ingen julstöksdag denna månad.'
+            :event.status==='error'?'Besöksuppgifterna kunde inte hämtas.'
+            :`Besöksuppgift saknas för ${event.year}.`;
+        block.appendChild(value);
+        if(event.status==='complete'&&split&&event.total!==null){const total=document.createElement('p');total.className='month-event-note';total.textContent=`Hela perioden: ${formatSwedishNumber(event.total)} besök (${monthEventDateLabel(event.dates)}).`;block.appendChild(total);}
+        for(const text of event.notes){const detail=document.createElement('p');detail.className='month-event-note';detail.textContent=text;block.appendChild(detail);}
+        list.appendChild(block);
+    }
+    right.appendChild(list);
+}
+
+function renderMonthCategoryContent(year,month,categoryHtml,openings,statusText='',events=[]) {
+    const modal=document.getElementById('dataModal'),box=modal.querySelector('.modal-content'),message=document.getElementById('modalMessage'),title=box.querySelector('h3');
+    box.classList.remove('tips-modal');box.classList.add('month-category-modal');box.classList.toggle('has-openings',openings.length>0||events.length>0);box.style.width='';
+    const heading=`${monthNamesShort[month]} ${year}: besökskategorier`;
+    title.textContent=heading;title.hidden=openings.length>0||events.length>0;message.replaceChildren();
+    const categories=document.createElement('section');categories.className='month-categories';categories.innerHTML=categoryHtml;
+    if(openings.length||events.length){
+        const columns=document.createElement('div');columns.className='month-columns';
+        const leftHeading=document.createElement('h3');leftHeading.textContent=heading;categories.prepend(leftHeading);columns.appendChild(categories);
+        const right=document.createElement('section');right.className='month-openings';
+        if(events.length)renderMonthEvents(right,events);
+        if(openings.length){const rightHeading=document.createElement('h3');rightHeading.textContent='Månadens invigningar';if(events.length)rightHeading.className='month-openings-after-events';right.appendChild(rightHeading);}
+        const list=document.createElement('ul');
+        for(const {exhibition,date} of openings){
+            const item=document.createElement('li'),dateText=document.createElement('span'),name=document.createElement('span');
+            dateText.className='opening-date';
+            dateText.textContent=date.day===null?`${new Intl.DateTimeFormat('sv-SE',{month:'long',timeZone:'UTC'}).format(new Date(Date.UTC(year,month,1)))} ${year} · Exakt datum saknas`:new Intl.DateTimeFormat('sv-SE',{day:'numeric',month:'long',timeZone:'UTC'}).format(new Date(Date.UTC(year,month,date.day)));
+            name.className='opening-name';name.textContent=String(exhibition.namn||'Namnlös utställning').split('–')[0].trim();item.append(dateText,name);
+            list.appendChild(item);
+        }
+        right.appendChild(list);columns.appendChild(right);message.appendChild(columns);
+    }else message.appendChild(categories);
+    if(statusText){const status=document.createElement('p');status.className='month-opening-status';status.setAttribute('role','status');status.textContent=statusText;message.appendChild(status);}
+    const period=year*12+month;
+    if(period>=2020*12+2&&period<=2021*12+5){const note=document.createElement('p');note.className='month-pandemic-note';note.textContent='Kulturen var under denna månad starkt påverkat av coronapandemin.';message.appendChild(note);}
+    modal.style.display='flex';
+    return message.firstElementChild;
+}
+async function showMonthCategoriesAndOpenings(year,month,categoryHtml) {
+    const anchor=renderMonthCategoryContent(year,month,categoryHtml,[],'Hämtar månadens uppgifter…');
+    const sources=monthRelevantEvents(year,month);
+    const results=await Promise.allSettled([loadMonthOpenings(),...sources.map(loadMonthEventData)]);
+    if(!anchor.isConnected||document.getElementById('dataModal').style.display==='none')return;
+    const openings=results[0].status==='fulfilled'?selectMonthOpenings(results[0].value,year,month):[];
+    const events=sources.map((source,index)=>{
+        const loaded=results[index+1],event=monthEventOutcome(source,year,month,loaded.status==='fulfilled'?loaded.value:null);
+        if(loaded.status==='rejected'&&event.status!=='cancelled')event.status='error';
+        return event;
+    });
+    const status=results[0].status==='rejected'?'Invigningarna kunde inte hämtas. Stäng och öppna månaden igen för att försöka på nytt.':'';
+    renderMonthCategoryContent(year,month,categoryHtml,openings,status,events);
+}
+function resetMonthCategoryLayout() {
+    const box=document.querySelector('#dataModal .modal-content');
+    box.classList.remove('month-category-modal','has-openings');box.querySelector('h3').hidden=false;
+}
+
 function showKategoriBreakdown(year, monthIndex) {
     const monthName = monthNamesShort[monthIndex];
     const isAllaKategorier = selectedKategorier.size === 0;
@@ -1771,15 +2000,7 @@ function showKategoriBreakdown(year, monthIndex) {
             </tbody>
         </table>`;
 
-    const modal = document.getElementById("dataModal");
-    const modalContent = modal.querySelector(".modal-content");
-    modalContent.classList.remove("tips-modal");
-    modalContent.style.width = "360px";
-    modal.querySelector("h3").textContent = isAllaKategorier
-    ? `${monthName} ${year}: Kategorier`
-    : `${monthName} ${year}: Urval`;
-    document.getElementById("modalMessage").innerHTML = html;
-    modal.style.display = "flex";
+    showMonthCategoriesAndOpenings(year,monthIndex,html);
 }
 
 function showÅrsKategoriBreakdown(year) {
@@ -1854,6 +2075,7 @@ function showÅrsKategoriBreakdown(year) {
             </tbody>
         </table>`;
 
+    resetMonthCategoryLayout();
     const modal = document.getElementById("dataModal");
     const modalContent = modal.querySelector(".modal-content");
     modalContent.classList.remove("tips-modal");
@@ -1880,6 +2102,7 @@ function checkTypeToggleBehavior() {
 
         // Vid tredje klicket (och framåt), trigga den pedagogiska förklaringen
         if (typeToggleCount > 2) {
+            resetMonthCategoryLayout();
             const modal = document.getElementById("dataModal");
             const modalContent = modal.querySelector(".modal-content");
             
@@ -2947,6 +3170,7 @@ document.getElementById("saveImage").onclick = async function() {
    ========================================================= */
 
 document.getElementById("closeModal").onclick = function() {
+    resetMonthCategoryLayout();
     document.getElementById("dataModal").style.display = "none";
     document.querySelector(".modal-content").style.width = "";
 };
@@ -2954,6 +3178,7 @@ document.getElementById("closeModal").onclick = function() {
 window.onclick = function(event) {
     const modal = document.getElementById("dataModal");
     if (event.target == modal) {
+        resetMonthCategoryLayout();
         modal.style.display = "none";
         modal.querySelector(".modal-content").style.width = "";
     }
@@ -2984,6 +3209,7 @@ document.getElementById("showTips").onclick = function() {
     const isChart = document.getElementById("chartView").style.display !== "none";
     const content = tipsContent[isChart ? "chart" : "table"];
 
+    resetMonthCategoryLayout();
     const modal = document.getElementById("dataModal");
     const modalContent = modal.querySelector(".modal-content");
 
@@ -3384,6 +3610,7 @@ function selectComparisonCell(event) {
             ? 'Verksamhetsbesök och anläggningsbesök kan inte jämföras med varandra.'
             : 'Månad mot total kräver samma år.';
         
+        resetMonthCategoryLayout();
         const modal = document.getElementById("dataModal");
         const modalContent = modal.querySelector(".modal-content");
         modalContent.className = "modal-content";
