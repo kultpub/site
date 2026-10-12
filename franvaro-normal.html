@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inte på Kulturen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        input:disabled { background-color: #f1f5f9; color: #64748b; cursor: not-allowed; }
+        body { font-family: 'Inter', sans-serif; scrollbar-gutter: stable; }
+        #appBody { --page-accent: #35553e; background-color: #eef3ef; }
+        #appBody.login-theme { --page-accent: #713e55; background-color: #f5edf1; }
+        #appBody.list-theme { --page-accent: #294c70; background-color: #edf2f8; }
+        #pageHeader { background-color: var(--page-accent); }
+        #loginButton { background-color: var(--page-accent); box-shadow: 0 10px 15px -3px #713e5526; }
+        #loginButton:hover { background-color: #5f3448; }
+        #loginWelcome { color: var(--page-accent); }
+        #pageSubtitle { color: #ffffffd9; }
+        #presenceInfoButton[hidden] { display: none; }
+        #navIntranetBtn, #navStartBtn { color: var(--page-accent); }
+        #dateModalClose, #informationTooltipClose {
+            transform: rotate(0deg);
+            transition: transform 200ms ease, background-color 200ms ease;
+        }
+        #dateModalClose:hover, #informationTooltipClose:hover { transform: rotate(90deg); }
+        #informationOverlay { position: fixed; inset: 0; z-index: 100; }
+        #informationOverlay[hidden] { display: none; }
+		#informationTooltip {
+			position: fixed; width: min(320px, calc(100vw - 32px)); box-sizing: border-box;
+			max-height: calc(100dvh - 32px); overflow: visible; background: #000; color: #fff;
+			padding: 16px 48px 16px 16px; border-radius: 12px;
+			box-shadow: 0 8px 28px #0004; font-size: 13px; line-height: 1.55;
+		}
+        .information-blocked { pointer-events: none !important; }
+        #informationText { white-space: pre-line; }
+        #informationTooltip[data-information="offsite"] {
+            width: max-content;
+            max-width: calc(100vw - 32px);
+        }
+        #informationTooltip[data-information="offsite"] #informationText { white-space: pre; }
+        .online-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #22c55e;
+            border-radius: 50%;
+            box-shadow: 0 0 0 3px #dcfce7;
+            vertical-align: middle;
+            margin-right: 6px;
+        }
+        .quarter-time-picker {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+            align-items: center;
+            gap: 4px;
+        }
+        #intranetListContainer {
+            --absence-name-height: 20px;
+            --absence-contact-height: 32px;
+            --absence-return-height: 32px;
+        }
+        #intranetListContainer > .absence-row { align-items: flex-start; }
+        #intranetListContainer .absence-details {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            grid-template-rows: var(--absence-name-height) var(--absence-contact-height) var(--absence-return-height);
+            flex: 1;
+            min-width: 0;
+        }
+        #intranetListContainer .absence-name { grid-row: 1; }
+        #intranetListContainer .absence-contact { grid-row: 2; }
+        #intranetListContainer .absence-return { grid-row: 3; }
+        #intranetListContainer .absence-category {
+            align-self: flex-start;
+            justify-content: center;
+            width: 64px;
+            min-height: 24px;
+        }
+
+        #appShell { transform: translateY(-15px); }
+
+        #appBody[data-view="startView"] #appShell,
+        #appBody[data-view="intranetView"] #appShell {
+            height: 580px;
+            min-height: 580px;
+        }
+        #appContent, #intranetView { min-height: 0; }
+        #pageHeader { flex-shrink: 0; }
+        #intranetListContainer {
+            flex: 1 1 auto;
+            min-height: 0;
+            max-height: none;
+            overflow-y: auto;
+        }
+
+        #appBody[data-view="startView"],
+        #appBody[data-view="intranetView"] {
+            align-items: flex-start;
+        }
+        @media (max-width: 1023px) {
+            #appBody[data-view="startView"],
+            #appBody[data-view="intranetView"] {
+                padding-top: max(4rem, calc(50dvh - 266px));
+            }
+        }
+
+        @media (min-width: 1024px) {
+            #appBody { align-items: flex-start; padding: 80px 32px 48px; }
+            #appShell { max-width: 920px; min-height: 520px; border-radius: 24px; }
+            #appBody[data-view="loginView"] #appShell { max-width: 560px; min-height: 580px; }
+            #appBody[data-view="startView"] #appShell,
+            #appBody[data-view="intranetView"] #appShell { width: 100%; max-width: 920px; }
+            #pageHeader { padding: 28px 36px; }
+            #pageTitle { font-size: 28px; line-height: 1.25; }
+            #pageSubtitle { font-size: 15px; margin-top: 8px; }
+            #appContent { padding: 32px 36px; }
+            #navIntranetBtn, #navStartBtn { top: 24px; min-height: 44px; font-size: 15px; }
+            #navIntranetBtn { right: 32px; }
+            #navStartBtn { left: 32px; }
+
+            #loginView { width: 100%; max-width: 420px; margin: 0 auto; gap: 8px; }
+            #loginView > div:first-child > p { font-size: 15px; line-height: 1.7; }
+            #loginView input { font-size: 15px; }
+            #loginButton { min-height: 48px; }
+
+            #quickActions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+            #quickActions > button { position: relative; min-height: 180px; padding: 24px; justify-content: center; font-size: 17px; }
+            #quickActions > button + button { margin-top: 0; }
+            #quickActions > button > span:first-child { flex-direction: column; gap: 16px; text-align: center; }
+            #quickActions > button > span:first-child > span:first-child { width: 60px; height: 60px; }
+            #quickActions > button > span:last-child { position: absolute; right: 16px; bottom: 12px; }
+
+            #absenceForm { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 24px; max-height: none; overflow: visible; padding-right: 0; }
+            #absenceForm > * { min-width: 0; margin-top: 0; }
+            #absenceForm > div:first-child, #availabilityField { grid-column: 1 / -1; }
+            #dateFields { grid-column: 1 / -1; gap: 24px; }
+            #dateHint { grid-column: 1 / -1; font-size: 13px; }
+            #durationFields { grid-column: 1 / -1; }
+            #timeFields { grid-column: 1 / -1; gap: 24px; }
+            #absenceForm input, #absenceForm select { min-height: 44px; font-size: 15px; }
+            #absenceForm label { font-size: 12px; margin-bottom: 8px; }
+            #otherView > button[type="submit"] { align-self: flex-end; max-width: 300px; min-height: 48px; margin-top: 24px; }
+
+            #intranetControls { flex-direction: row; align-items: center; grid-column: 1 / -1; }
+            #intranetSortSelect { width: auto; }
+            #intranetListContainer {
+                display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; max-height: none; overflow-y: auto;
+                --absence-name-height: 24px; --absence-contact-height: 22px; --absence-return-height: 22px;
+            }
+            #intranetListContainer > * { margin-top: 0; }
+            #intranetListContainer > p { grid-column: 1 / -1; }
+            #intranetListContainer > .absence-row { min-width: 0; min-height: 100px; padding: 18px 20px; gap: 16px; }
+            #intranetListContainer .absence-details { min-width: 0; }
+            #intranetListContainer .absence-name { font-size: 16px; line-height: 1.5; }
+            #intranetListContainer .absence-contact, #intranetListContainer .absence-return { font-size: 13px; line-height: 1.6; }
+            #intranetListContainer .absence-category { font-size: 13px; padding: 6px 10px; width: 80px; min-height: 30px; }
+            #modalCard { max-width: 440px; padding: 28px; }
+            #appBody button:focus-visible { outline: 2px solid var(--page-accent); outline-offset: 3px; }
+            #informationTooltipClose:focus-visible { outline-color: white; }
+        }
+    </style>
+</head>
+<body id="appBody" data-view="loginView" class="login-theme text-slate-800 flex justify-center items-center min-h-screen p-4 pt-16">
+
+    <button id="navIntranetBtn" type="button" hidden onclick="switchToIntranetView()" class="fixed top-4 right-4 z-20 text-sm text-[#2c4a3e] px-3 py-2 rounded-lg font-semibold hover:bg-slate-200 transition">
+        Se listan →
+    </button>
+    <button id="navStartBtn" type="button" hidden onclick="goToView('startView')" class="fixed top-4 left-4 z-20 text-sm text-[#2c4a3e] px-3 py-2 rounded-lg font-semibold hover:bg-slate-200 transition">
+        ← Tillbaka till start
+    </button>
+
+    <div id="appShell" class="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col min-h-[580px] relative border border-slate-200">
+        
+        <!-- HEADER -->
+        <header id="pageHeader" class="text-white p-5 text-center relative shadow-md">
+            <h1 id="pageTitle" class="text-xl font-semibold tracking-wide">Inte på Kulturen</h1>
+            <p id="pageSubtitle" class="text-sm mt-1">
+                <span id="pageSubtitleText">Frånvarohantering och tillgänglighet</span>
+                <button type="button" id="presenceInfoButton" hidden data-information="presence" onclick="openInformationTooltip(this, this.dataset.information)" aria-label="Information om närvaro" aria-expanded="false" aria-controls="informationTooltip" class="inline-flex align-middle items-center justify-center w-4 h-4 ml-0.5 rounded-full border border-current text-white/90 hover:bg-white/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white transition">
+                    <svg aria-hidden="true" class="w-3 h-3" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="4" r="1"/><path d="M7 7h2v5H7z"/></svg>
+                </button>
+            </p>
+        </header>
+
+        <div id="appContent" class="p-6 flex-1 flex flex-col justify-between">
+
+            <!-- VIEW 1: LOGIN -->
+            <div id="loginView" class="view flex flex-col justify-center flex-1 space-y-4">
+                <div>
+                    <h2 id="loginWelcome" class="text-2xl font-bold">Välkommen</h2>
+                    <p class="text-slate-500 text-sm mt-1">
+                        Logga in för att anmäla din frånvaro. Du kan också se vilka kollegor som inte är på plats och om de är tillgängliga.
+                    </p>
+                </div>
+                
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">E-postadress</label>
+                        <input type="email" id="email" value="johan.hofvendahl@kulturen.com" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-[#2c4a3e] text-sm font-medium">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">Lösenord</label>
+                        <input type="password" id="password" value="password123" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-[#2c4a3e] text-sm font-medium">
+                    </div>
+                    <div class="flex items-center gap-2 pt-1">
+                        <input type="checkbox" id="rememberMe" checked class="w-4 h-4 text-[#2c4a3e] rounded border-slate-300 focus:ring-[#2c4a3e]">
+                        <label for="rememberMe" class="text-sm text-slate-600 select-none">Förbli inloggad</label>
+                    </div>
+                </div>
+
+                <button id="loginButton" type="button" onclick="handleLogin()" class="w-full text-white py-3.5 rounded-xl font-semibold transition duration-200">
+                    Logga in
+                </button>
+            </div>
+
+            <!-- VIEW 2: START / QUICK ACTIONS -->
+            <div id="startView" class="view hidden flex-col flex-1 space-y-5">
+                
+                <div id="quickActions" class="space-y-3">
+                    <button onclick="openDateModal('Sjuk')" class="w-full bg-white hover:bg-slate-50 border-2 border-slate-200 hover:border-[#2c4a3e] p-4 rounded-xl text-left font-semibold text-slate-700 flex justify-between items-center transition group shadow-sm">
+                        <span class="flex items-center gap-3">
+                            <span class="w-12 h-12 rounded-xl bg-[#eaf0e9] text-[#315b47] flex items-center justify-center shrink-0">
+                                <svg class="w-6 h-6 fill-none stroke-current stroke-[1.6] stroke-linecap-round stroke-linejoin-round" viewBox="0 0 24 24"><path d="M12 20S3 14.5 3 8.5a4.5 4.5 0 0 1 9-1 4.5 4.5 0 0 1 9 1C21 14.5 12 20 12 20Z"/><path d="M8 12h2l1-3 2 6 1-3h2"/></svg>
+                            </span>
+                            <span>Jag är sjuk</span>
+                        </span>
+                        <span class="text-slate-400 group-hover:text-[#2c4a3e] transition text-xl">›</span>
+                    </button>
+                    
+                    <button onclick="openDateModal('Vab')" class="w-full bg-white hover:bg-slate-50 border-2 border-slate-200 hover:border-[#2c4a3e] p-4 rounded-xl text-left font-semibold text-slate-700 flex justify-between items-center transition group shadow-sm">
+                        <span class="flex items-center gap-3">
+                            <span class="w-12 h-12 rounded-xl bg-[#eaf0e9] text-[#315b47] flex items-center justify-center shrink-0">
+                                <svg class="w-6 h-6 fill-none stroke-current stroke-[1.6] stroke-linecap-round stroke-linejoin-round" viewBox="0 0 24 24"><circle cx="8" cy="6" r="3"/><circle cx="17" cy="11" r="2.5"/><path d="M2 20v-4a6 6 0 0 1 12 0v4m0 0v-3a4 4 0 0 1 8 0v3"/></svg>
+                            </span>
+                            <span>Jag vabbar</span>
+                        </span>
+                        <span class="text-slate-400 group-hover:text-[#2c4a3e] transition text-xl">›</span>
+                    </button>
+                    
+                    <button onclick="goToView('otherView')" class="w-full bg-white hover:bg-slate-50 border-2 border-slate-200 hover:border-[#2c4a3e] p-4 rounded-xl text-left font-semibold text-slate-700 flex justify-between items-center transition group shadow-sm">
+                        <span class="flex items-center gap-3">
+                            <span class="w-12 h-12 rounded-xl bg-[#eaf0e9] text-[#315b47] flex items-center justify-center shrink-0">
+                                <svg class="w-6 h-6 fill-none stroke-current stroke-[1.6] stroke-linecap-round stroke-linejoin-round" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M8 3v4m8-4v4M4 10h16m-11 5 2 2 4-4"/></svg>
+                            </span>
+                            <span>Annan anledning</span>
+                        </span>
+                        <span class="text-slate-400 group-hover:text-[#2c4a3e] transition text-xl">›</span>
+                    </button>
+                </div>
+
+                <div class="mt-auto pt-4 border-t border-slate-100 text-center">
+                    <button onclick="handleLogout()" class="text-sm text-rose-600 hover:text-rose-700 font-semibold">Logga ut</button>
+                </div>
+            </div>
+
+            <!-- VIEW 3: DETAILED ABSENCE FORM -->
+            <div id="otherView" class="view hidden flex-col flex-1 space-y-4">
+                <div>
+                    <button onclick="goToView('startView')" class="text-[#2c4a3e] font-semibold text-sm flex items-center gap-1 mb-2 hover:underline">
+                        ← Tillbaka
+                    </button>
+                    <h2 class="text-xl font-bold text-[#2c4a3e]">Anmäl annan frånvaro</h2>
+                </div>
+
+                <form id="absenceForm" onsubmit="submitDetailedAbsence(event)" class="space-y-3 overflow-y-auto max-h-[360px] pr-1">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-slate-500 mb-1" for="reason">Skäl till frånvaro</label>
+                        <select id="reason" onchange="updateAbsenceForm(true)" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#2c4a3e] text-sm bg-white font-medium">
+                            <option value="Semester">Semester</option>
+                            <option value="Hemarbete">Arbete på annan ort</option>
+                            <option value="Vårdbesök">Vårdbesök</option>
+                            <option value="Kompledighet">Kompledighet</option>
+                            <option value="Tjänstledig">Tjänstledig / Föräldraledig</option>
+                            <option value="Annan privat anledning">Annan privat anledning</option>
+                        </select>
+                    </div>
+
+                    <div id="dateFields" class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-500 mb-1" for="startDate">Från datum</label>
+                            <input type="date" id="startDate" required onchange="updateAbsenceForm()" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-[#2c4a3e] text-xs font-medium">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-slate-500 mb-1" for="endDate">Till datum</label>
+                            <input type="date" id="endDate" required onchange="updateAbsenceForm()" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-[#2c4a3e] text-xs font-medium">
+                        </div>
+                    </div>
+
+                    <p id="dateHint" class="text-xs text-slate-500" aria-live="polite"></p>
+
+                    <div id="durationFields" class="hidden">
+                        <label for="dayExtent" class="block text-xs font-semibold uppercase text-slate-500 mb-1">Frånvarons omfattning</label>
+                        <select id="dayExtent" onchange="updateAbsenceForm()" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#2c4a3e] text-sm bg-white font-medium">
+                            <option value="">Välj heldag eller del av dag</option>
+                            <option value="full">Heldag</option>
+                            <option value="partial">Del av dag</option>
+                        </select>
+                    </div>
+
+                    <div id="timeFields" class="grid grid-cols-2 gap-2 hidden">
+                        <div>
+                            <label for="startTimeHour" class="block text-xs font-semibold uppercase text-slate-500 mb-1">Starttid</label>
+                            <div class="quarter-time-picker">
+                                <select id="startTimeHour" aria-label="Starttid, timme" onchange="validateAbsenceTimes()" class="min-w-0 w-full px-2 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#2c4a3e] text-sm font-medium bg-white shadow-sm"></select>
+                                <span aria-hidden="true" class="text-slate-400 font-semibold">:</span>
+                                <select id="startTimeMinute" aria-label="Starttid, minut" onchange="validateAbsenceTimes()" class="min-w-0 w-full px-2 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#2c4a3e] text-sm font-medium bg-white shadow-sm"></select>
+                            </div>
+                            <input type="hidden" id="startTime" name="startTime">
+                        </div>
+                        <div>
+                            <label for="endTimeHour" class="block text-xs font-semibold uppercase text-slate-500 mb-1">Sluttid</label>
+                            <div class="quarter-time-picker">
+                                <select id="endTimeHour" aria-label="Sluttid, timme" onchange="validateAbsenceTimes()" class="min-w-0 w-full px-2 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#2c4a3e] text-sm font-medium bg-white shadow-sm"></select>
+                                <span aria-hidden="true" class="text-slate-400 font-semibold">:</span>
+                                <select id="endTimeMinute" aria-label="Sluttid, minut" onchange="validateAbsenceTimes()" class="min-w-0 w-full px-2 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#2c4a3e] text-sm font-medium bg-white shadow-sm"></select>
+                            </div>
+                            <input type="hidden" id="endTime" name="endTime">
+                        </div>
+                    </div>
+
+                    <div id="availabilityField">
+                        <label class="block text-xs font-semibold uppercase text-slate-500 mb-1" for="availability">Tillgänglighet</label>
+                        <select id="availability" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#2c4a3e] text-sm bg-white font-medium shadow-sm">
+                            <option value="Tillgänglig (mail/telefon)">Tillgänglig (mail/telefon)</option>
+                            <option value="Nås sporadiskt (mail/telefon)">Nås sporadiskt (mail/telefon)</option>
+                            <option value="Ej tillgänglig">Ej tillgänglig</option>
+                        </select>
+                    </div>
+                </form>
+
+                <button type="submit" form="absenceForm" class="w-full bg-[#2c4a3e] hover:bg-[#1f342b] text-white py-3.5 rounded-xl font-semibold shadow-lg shadow-[#2c4a3e]/15 transition duration-200 mt-auto">
+                    Skicka anmälan
+                </button>
+            </div>
+
+            <!-- VIEW 4: INTRANET LIST VIEW -->
+            <div id="intranetView" class="view hidden flex-col flex-1 space-y-4">
+                <div id="intranetControls" class="flex flex-col gap-2 justify-between bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    <label for="intranetSortSelect" class="text-xs font-semibold uppercase text-slate-500">Sortera lista</label>
+                    <select id="intranetSortSelect" onchange="changeIntranetSort(this.value)" class="w-full min-w-0 px-3 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#2c4a3e] text-sm bg-white font-medium shadow-sm">
+                        <option value="firstname">Förnamn</option>
+                        <option value="lastname" selected>Efternamn</option>
+                        <option value="availability">Tillgänglighet</option>
+                    </select>
+                </div>
+                <div class="space-y-2 overflow-y-auto max-h-[380px]" id="intranetListContainer" aria-live="polite"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- DATE SELECTION MODAL (Sjuk / Vab) -->
+    <div id="dateModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center p-4 z-50 transition-opacity duration-300">
+        <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl p-6 relative transform scale-95 transition-transform duration-300" id="modalCard">
+            
+            <button id="dateModalClose" type="button" onclick="closeDateModal()" aria-label="Stäng" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600">
+                <svg aria-hidden="true" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+            </button>
+
+            <h3 id="modalTitle" class="text-lg font-bold text-[#2c4a3e] mb-1">Från vilken dag?</h3>
+            <p id="modalSubtitle" class="text-slate-500 text-xs mb-4">Välj när frånvaron börjar gälla.</p>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">Gäller från</label>
+                    <select id="quickDateSelect" class="w-full px-3 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-[#2c4a3e] text-sm bg-white font-medium shadow-sm">
+                        <!-- Populated via JS -->
+                    </select>
+                </div>
+
+                <div class="space-y-2 pt-2">
+                    <button onclick="confirmQuickAbsence()" class="w-full bg-[#2c4a3e] hover:bg-[#1f342b] text-white py-3 rounded-xl font-semibold text-sm shadow-md transition">
+                        Bekräfta och skicka
+                    </button>
+                    <button onclick="closeDateModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl font-semibold text-sm transition">
+                        Avbryt
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Blocking information tooltip shared by the information buttons. -->
+    <div id="informationOverlay" hidden onclick="if (event.target === this) closeInformationTooltip()">
+        <div id="informationTooltip" role="dialog" aria-modal="true" aria-label="Information" aria-describedby="informationText">
+            <button id="informationTooltipClose" type="button" onclick="closeInformationTooltip()" aria-label="Stäng information" class="absolute top-2 right-2 w-8 h-8 rounded-full text-white hover:bg-white/10 flex items-center justify-center">
+                <svg aria-hidden="true" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+            </button>
+            <p id="informationText"></p>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl text-sm font-medium hidden z-50 transition-all duration-300 flex items-center gap-2">
+        <span class="text-emerald-400 font-bold">✓</span> <span id="toastText">Anmälan sparad!</span>
+    </div>
+
+    <script>
+        function localDateValue(date) {
+            return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+        }
+
+        function nextDateValue(value) {
+            const [year, month, day] = value.split('-').map(Number);
+            return localDateValue(new Date(year, month - 1, day + 1, 12));
+        }
+
+        const unavailableReasons = new Set(['Semester', 'Vårdbesök', 'Kompledighet', 'Tjänstledig', 'Annan privat anledning']);
+        const availabilityStatuses = new Set(['Tillgänglig (mail/telefon)', 'Nås sporadiskt (mail/telefon)', 'Ej tillgänglig']);
+        const informationMessages = {
+            presence: 'Om du inte anmäler frånvaro, antas du vara i tjänst på din ordinarie arbetsplats. Detta inkluderar arbete på Diabasen, på något av våra besöksmål eller tillfälliga ärenden i tjänsten.',
+            list: 'Listan visar vilka kollegor som inte är på plats just idag och i vilken mån de är tillgängliga. När uppgift finns visas också när de är tillbaka.',
+            offsite: 'Arbete Annan Ort\n- hemifrån\n- tjänsteresa\n- konferens\n- motsvarande'
+        };
+        const exampleDate = localDateValue(new Date());
+        const exampleDay = (offset) => {
+            const [year, month, day] = exampleDate.split('-').map(Number);
+            return localDateValue(new Date(year, month - 1, day + offset, 12));
+        };
+        const absenceRecords = [
+            { name: 'Anna Andersson', type: 'Semester', startDate: exampleDate, endDate: exampleDate,
+                availability: 'Nås sporadiskt (mail/telefon)', returnInfo: { date: nextDateValue(exampleDate) }, example: true },
+            { name: 'Per Persson', type: 'Hemarbete', startDate: exampleDate, endDate: exampleDate,
+                availability: 'Tillgänglig (mail/telefon)', returnInfo: { date: nextDateValue(exampleDate) }, example: true },
+            { name: 'Maria Nilsson', type: 'Sjuk', startDate: exampleDate, endDate: null,
+                availability: 'Ej tillgänglig', example: true },
+            { name: 'Erik Svensson', type: 'Vab', startDate: exampleDay(-1), endDate: null,
+                availability: 'Ej tillgänglig', example: true },
+            { name: 'Sara Lindgren', type: 'Vårdbesök', startDate: exampleDate, endDate: exampleDate,
+                startTime: '13:00', endTime: '15:30', availability: 'Ej tillgänglig',
+                returnInfo: { date: exampleDate, time: '15:30' }, example: true },
+            { name: 'Lars Johansson', type: 'Annan privat anledning', startDate: exampleDate, endDate: exampleDate,
+                startTime: '09:00', endTime: '12:00', availability: 'Nås sporadiskt (mail/telefon)',
+                returnInfo: { date: exampleDate, time: '12:00' }, example: true },
+            { name: 'Eva Karlsson', type: 'Kompledighet', startDate: exampleDate, endDate: exampleDay(2),
+                availability: 'Ej tillgänglig', returnInfo: { date: exampleDay(3) }, example: true },
+            { name: 'Oskar Berg', type: 'Tjänstledig', startDate: exampleDay(-2), endDate: exampleDay(7),
+                availability: 'Ej tillgänglig', returnInfo: { date: exampleDay(8) }, example: true },
+            { name: 'Karin Holm', type: 'Hemarbete', startDate: exampleDay(-1), endDate: exampleDay(1),
+                startTime: '15:00', endTime: '09:00', availability: 'Tillgänglig (mail/telefon)',
+                returnInfo: { date: exampleDay(1), time: '09:00' }, example: true },
+            { name: 'Nils Ekström', type: 'Hemarbete', startDate: exampleDate, endDate: exampleDate,
+                startTime: '10:00', endTime: '16:30', availability: 'Nås sporadiskt (mail/telefon)',
+                returnInfo: { date: exampleDate, time: '16:30' }, example: true }
+        ];
+        let renderedListDate = '';
+        let currentIntranetSort = 'lastname';
+        const intranetNameCollator = new Intl.Collator('sv', { sensitivity: 'base' });
+
+        function updateAbsenceForm(reasonChanged = false) {
+            const reason = document.getElementById('reason').value;
+            const start = document.getElementById('startDate');
+            const end = document.getElementById('endDate');
+            const extent = document.getElementById('dayExtent');
+            const medical = reason === 'Vårdbesök';
+            const leave = reason === 'Tjänstledig';
+            const travel = reason === 'Hemarbete';
+            end.disabled = medical || !start.value;
+            end.min = start.value ? (leave ? nextDateValue(start.value) : start.value) : '';
+            if (medical) {
+                end.value = start.value;
+            } else if (start.value && (!end.value || end.value < end.min)) {
+                end.value = end.min;
+            }
+            end.setCustomValidity('');
+            if (reasonChanged) {
+                document.getElementById('availability').value = unavailableReasons.has(reason)
+                    ? 'Ej tillgänglig' : 'Tillgänglig (mail/telefon)';
+                extent.value = '';
+            }
+            const sameDay = Boolean(start.value && end.value && start.value === end.value);
+            const chooseExtent = Boolean(start.value && end.value)
+                && (sameDay || travel) && reason !== 'Semester' && !leave;
+            extent.options[0].textContent = travel && !sameDay
+                ? 'Välj hela dagar eller ange tider' : 'Välj heldag eller del av dag';
+            extent.options[1].textContent = sameDay ? 'Heldag' : 'Hela dagar';
+            extent.options[2].textContent = travel && !sameDay ? 'Ange start- och sluttid' : 'Del av dag';
+            document.getElementById('durationFields').classList.toggle('hidden', !chooseExtent);
+            extent.disabled = !chooseExtent;
+            extent.required = chooseExtent;
+            const partial = chooseExtent && extent.value === 'partial';
+            document.getElementById('timeFields').classList.toggle('hidden', !partial);
+            for (const id of ['startTime', 'endTime']) {
+                const field = document.getElementById(id);
+                field.disabled = !partial;
+                for (const suffix of ['Hour', 'Minute']) {
+                    const select = document.getElementById(id + suffix);
+                    select.disabled = !partial;
+                    select.required = partial;
+                }
+            }
+            document.getElementById('dateHint').textContent = medical
+                ? 'Till datum följer Från datum och kan inte ändras.'
+                : leave ? 'Frånvaron gäller hela dagar. Till datum måste vara efter Från datum.'
+                : reason === 'Semester' ? 'Semestern gäller hela dagar, inklusive från- och tilldatum.'
+                : travel ? 'Välj hela dagar eller ange starttid på Från datum och sluttid på Till datum.'
+                : start.value && end.value && !sameDay ? 'Frånvaron gäller hela dagar, inklusive från- och tilldatum.'
+                : 'Välj heldag eller ange starttid och sluttid för del av dag.';
+            validateAbsenceTimes();
+        }
+
+        const quarterMinutes = ['00', '15', '30', '45'];
+
+        function initializeTimePickers() {
+            for (const id of ['startTime', 'endTime']) {
+                document.getElementById(id + 'Hour').innerHTML = '<option value="">--</option>'
+                    + Array.from({ length: 24 }, (_, hour) => {
+                        const value = String(hour).padStart(2, '0');
+                        return `<option value="${value}">${value}</option>`;
+                    }).join('');
+                document.getElementById(id + 'Minute').innerHTML = quarterMinutes
+                    .map(value => `<option value="${value}">${value}</option>`).join('');
+            }
+        }
+
+        function validateAbsenceTimes() {
+            const start = document.getElementById('startTime');
+            const end = document.getElementById('endTime');
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            for (const field of [start, end]) {
+                const hour = document.getElementById(field.id + 'Hour');
+                const minute = document.getElementById(field.id + 'Minute');
+                hour.setCustomValidity('');
+                minute.setCustomValidity(!minute.disabled && minute.value && !quarterMinutes.includes(minute.value)
+                    ? 'Välj minuterna 00, 15, 30 eller 45.' : '');
+                field.value = hour.value && quarterMinutes.includes(minute.value)
+                    ? `${hour.value}:${minute.value}` : '';
+            }
+            const endMinute = document.getElementById('endTimeMinute');
+            if (endMinute.validationMessage) return;
+            endMinute.setCustomValidity(!end.disabled && startDate && endDate && start.value && end.value
+                && `${endDate}T${end.value}` <= `${startDate}T${start.value}`
+                ? 'Slutdatum och sluttid måste vara efter startdatum och starttid.' : '');
+        }
+
+        initializeTimePickers();
+        document.getElementById('startDate').value = localDateValue(new Date());
+        document.getElementById('endDate').value = localDateValue(new Date());
+        updateAbsenceForm(true);
+        renderIntranetList();
+
+        let activeQuickType = '';
+        let isLoggedIn = false;
+
+        let informationTrigger = null;
+        let blockedInformationElements = [];
+
+        function positionInformationTooltip() {
+            if (!informationTrigger) return;
+            const tooltip = document.getElementById('informationTooltip');
+            const rect = informationTrigger.getBoundingClientRect();
+            const padding = 16;
+            const left = Math.max(padding, Math.min(rect.left, window.innerWidth - tooltip.offsetWidth - padding));
+            const below = rect.bottom + 8;
+            const top = below + tooltip.offsetHeight <= window.innerHeight - padding
+                ? below : rect.top - tooltip.offsetHeight - 8;
+            tooltip.style.left = `${left}px`;
+            tooltip.style.top = `${Math.max(padding, Math.min(top, window.innerHeight - tooltip.offsetHeight - padding))}px`;
+        }
+
+        function openInformationTooltip(trigger, messageKey) {
+            const overlay = document.getElementById('informationOverlay');
+            if (!overlay.hidden) closeInformationTooltip();
+            informationTrigger = trigger;
+            document.getElementById('informationTooltip').dataset.information = messageKey;
+            document.getElementById('informationText').textContent = informationMessages[messageKey];
+            trigger.setAttribute('aria-expanded', 'true');
+            blockedInformationElements = Array.from(document.body.children)
+                .filter(element => element !== overlay && !['SCRIPT', 'STYLE'].includes(element.tagName))
+                .map(element => ({ element, wasInert: Boolean(element.inert) }));
+            for (const { element } of blockedInformationElements) {
+                element.inert = true;
+                element.classList.add('information-blocked');
+            }
+            overlay.hidden = false;
+            positionInformationTooltip();
+            document.getElementById('informationTooltipClose').focus({ preventScroll: true });
+        }
+
+        function closeInformationTooltip() {
+            const overlay = document.getElementById('informationOverlay');
+            if (overlay.hidden) return;
+            overlay.hidden = true;
+            for (const { element, wasInert } of blockedInformationElements) {
+                element.inert = wasInert;
+                element.classList.remove('information-blocked');
+            }
+            blockedInformationElements = [];
+            if (informationTrigger) {
+                informationTrigger.setAttribute('aria-expanded', 'false');
+                if (informationTrigger.isConnected) informationTrigger.focus({ preventScroll: true });
+            }
+            informationTrigger = null;
+        }
+
+        document.addEventListener('click', event => {
+            const overlay = document.getElementById('informationOverlay');
+            if (!overlay.hidden && !overlay.contains(event.target)) {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+            }
+        }, true);
+        document.addEventListener('keydown', event => {
+            if (document.getElementById('informationOverlay').hidden) return;
+            if (event.key === 'Escape') {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                closeInformationTooltip();
+            } else if (event.key === 'Tab') {
+                event.preventDefault();
+                document.getElementById('informationTooltipClose').focus();
+            }
+        }, true);
+        window.addEventListener('resize', positionInformationTooltip);
+
+        function handleLogin() {
+            const email = document.getElementById('email').value.trim();
+            if(!email) {
+                showToast("Vänligen ange e-postadress", true);
+                return;
+            }
+            isLoggedIn = true;
+            goToView('startView');
+            showToast("Inloggningen lyckades!");
+        }
+
+        function handleLogout() {
+            isLoggedIn = false;
+            goToView('loginView');
+            showToast("Du har loggat ut.");
+        }
+
+        function goToView(viewId) {
+            document.body.dataset.view = viewId;
+            document.querySelectorAll('.view').forEach(v => {
+                v.classList.add('hidden');
+                v.classList.remove('flex');
+            });
+            const target = document.getElementById(viewId);
+            target.classList.remove('hidden');
+            target.classList.add('flex');
+            const listView = viewId === 'intranetView';
+            document.body.classList.toggle('list-theme', listView);
+            document.body.classList.toggle('login-theme', viewId === 'loginView');
+            const title = document.getElementById('pageTitle');
+            const subtitle = document.getElementById('pageSubtitle');
+            title.textContent = viewId === 'loginView' ? 'Inte på Kulturen'
+                : listView ? 'Ej på Kulturen idag!' : 'På Kulturen idag?';
+            document.getElementById('pageSubtitleText').textContent = viewId === 'loginView'
+                ? 'Frånvarohantering och tillgänglighet'
+                : listView ? 'Frånvaro och tillgänglighet idag' : 'Om inte, registrera här';
+            subtitle.hidden = false;
+            const infoButton = document.getElementById('presenceInfoButton');
+            infoButton.hidden = viewId === 'loginView';
+            infoButton.dataset.information = listView ? 'list' : 'presence';
+            infoButton.setAttribute('aria-label', listView ? 'Information om listan' : 'Information om närvaro');
+            document.getElementById('navIntranetBtn').hidden = !isLoggedIn || viewId === 'intranetView' || viewId === 'loginView';
+            document.getElementById('navStartBtn').hidden = !isLoggedIn || viewId !== 'intranetView';
+            
+
+            if (viewId === 'intranetView') {
+                currentIntranetSort = 'lastname';
+                document.getElementById('intranetSortSelect').value = 'lastname';
+                renderIntranetList();
+            }
+        }
+
+        function switchToIntranetView() {
+            goToView('intranetView');
+        }
+
+        function changeIntranetSort(value) {
+            currentIntranetSort = value;
+            renderIntranetList();
+        }
+
+        function compareIntranetLastNames(a, b) {
+            const lastName = record => String(record.lastName || record.name || '').trim().split(/\s+/).pop();
+            return intranetNameCollator.compare(lastName(a), lastName(b))
+                || intranetNameCollator.compare(a.name || '', b.name || '');
+        }
+
+        function intranetAvailabilityPriority(record) {
+            if (record.type === 'Sjuk' || record.type === 'Vab') return 3;
+            if (record.availability === 'Tillgänglig (mail/telefon)') return 1;
+            if (record.availability === 'Nås sporadiskt (mail/telefon)') return 2;
+            return 3;
+        }
+
+        function openDateModal(type) {
+            activeQuickType = type;
+            const titleEl = document.getElementById('modalTitle');
+            const subTitleEl = document.getElementById('modalSubtitle');
+            const selectEl = document.getElementById('quickDateSelect');
+
+            titleEl.innerText = type === 'Sjuk' ? 'Sjukanmälan' : 'Vab-anmälan';
+
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(today.getDate() + 1);
+
+            const formatSwedishDate = (date) => date.toLocaleDateString('sv-SE', {
+                weekday: 'long', month: 'long', day: 'numeric'
+            });
+            const hour = today.getHours();
+            const startTime = hour >= 8 && hour < 15
+                ? `${String(Math.round(hour + today.getMinutes() / 60)).padStart(2, '0')}:00` : '';
+            const todayLabel = startTime ? `Från kl. ${startTime} idag` : `Idag [${formatSwedishDate(today)}]`;
+            subTitleEl.innerText = startTime
+                ? `Gäller anmälan från kl. ${startTime} idag eller imorgon?`
+                : 'Gäller anmälan från idag eller imorgon?';
+            selectEl.innerHTML = `
+                <option value="${localDateValue(today)}" data-start-time="${startTime}">${todayLabel}</option>
+                <option value="${localDateValue(tomorrow)}">Imorgon [${formatSwedishDate(tomorrow)}]</option>
+            `;
+
+            const modal = document.getElementById('dateModal');
+            const card = document.getElementById('modalCard');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                card.classList.remove('scale-95');
+                card.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeDateModal() {
+            const modal = document.getElementById('dateModal');
+            const card = document.getElementById('modalCard');
+            card.classList.remove('scale-100');
+            card.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        function confirmQuickAbsence() {
+            const select = document.getElementById('quickDateSelect');
+            const selectedDate = select.value;
+            const time = select.selectedOptions[0].dataset.startTime;
+            const period = selectedDate + (time ? ` från kl. ${time}` : '');
+            closeDateModal();
+            showToast(`Anmälan (${activeQuickType}) från ${period} registrerad!`);
+            
+            addToIntranetList({ type: activeQuickType, startDate: selectedDate, endDate: null,
+                startTime: time || '', period });
+        }
+
+        function submitDetailedAbsence(event) {
+            if (event) event.preventDefault();
+            const form = document.getElementById('absenceForm');
+            const reason = document.getElementById('reason').value;
+            const start = document.getElementById('startDate').value;
+            const endField = document.getElementById('endDate');
+            const end = endField.value;
+            if (start && end && (end < start || (reason === 'Tjänstledig' && end === start))) {
+                endField.setCustomValidity(reason === 'Tjänstledig'
+                    ? 'Till datum måste vara efter Från datum.' : 'Till datum kan inte vara före Från datum.');
+            }
+            validateAbsenceTimes();
+            if (!form.reportValidity()) return;
+            const partial = !document.getElementById('dayExtent').disabled
+                && document.getElementById('dayExtent').value === 'partial';
+            const period = start === end ? start : `${start} – ${end}`;
+            const duration = partial
+                ? `kl. ${document.getElementById('startTime').value}–${document.getElementById('endTime').value}`
+                : start === end ? 'Heldag' : 'Hela dagar';
+            const absencePeriod = partial && start !== end
+                ? `${start} kl. ${document.getElementById('startTime').value} – ${end} kl. ${document.getElementById('endTime').value}`
+                : `${period}, ${duration}`;
+            const availability = document.getElementById('availability').value;
+            showToast(`Anmälan avseende "${reason}" skickades!`);
+            goToView('startView');
+            const returnInfo = {
+                date: partial ? end : nextDateValue(end),
+                time: partial ? document.getElementById('endTime').value : ''
+            };
+            addToIntranetList({ type: reason, startDate: start, endDate: end, availability, returnInfo,
+                startTime: partial ? document.getElementById('startTime').value : '',
+                endTime: partial ? document.getElementById('endTime').value : '', period: absencePeriod });
+        }
+
+        function formatReturnInfo(returnInfo) {
+            if (!returnInfo || !returnInfo.date) return '';
+            const [year, month, day] = returnInfo.date.split('-').map(Number);
+            const date = new Date(year, month - 1, day, 12);
+            if (Number.isNaN(date.getTime())) return '';
+            const options = { weekday: 'long', day: 'numeric', month: 'long' };
+            if (year !== new Date().getFullYear()) options.year = 'numeric';
+            return `Åter ${date.toLocaleDateString('sv-SE', options)}${returnInfo.time ? ` kl. ${returnInfo.time}` : ''}`;
+        }
+
+        function absenceAppliesToDate(record, date) {
+            return Boolean(record.startDate && record.startDate <= date
+                && (!record.endDate || record.endDate >= date));
+        }
+
+        function addToIntranetList(record) {
+            absenceRecords.unshift({ ...record, name: record.name || 'Johan Hofvendahl' });
+            renderIntranetList();
+        }
+
+        function renderIntranetList() {
+            const today = localDateValue(new Date());
+            const container = document.getElementById('intranetListContainer');
+            container.replaceChildren();
+            let currentRecords = absenceRecords.filter(record => absenceAppliesToDate(record, today));
+
+            if (currentIntranetSort === 'firstname') {
+                currentRecords.sort((a, b) => intranetNameCollator.compare(a.name || '', b.name || ''));
+            } else if (currentIntranetSort === 'lastname') {
+                currentRecords.sort(compareIntranetLastNames);
+            } else if (currentIntranetSort === 'availability') {
+                currentRecords.sort((a, b) => intranetAvailabilityPriority(a) - intranetAvailabilityPriority(b)
+                    || compareIntranetLastNames(a, b));
+            }
+
+            for (const record of currentRecords) container.append(createIntranetListItem(record));
+            if (currentRecords.length === 0) {
+                const empty = document.createElement('p');
+                empty.className = 'text-sm text-slate-500 p-3';
+                empty.textContent = 'Ingen frånvaro anmäld för idag.';
+                container.append(empty);
+            }
+            synchronizeListAlignment();
+            renderedListDate = today;
+        }
+
+        function synchronizeListAlignment() {
+            const container = document.getElementById('intranetListContainer');
+            if (!container.getClientRects().length) return;
+            const slots = [
+                ['--absence-name-height', '.absence-name'],
+                ['--absence-contact-height', '.absence-contact'],
+                ['--absence-return-height', '.absence-return']
+            ];
+            for (const [property] of slots) container.style.removeProperty(property);
+            const defaults = getComputedStyle(container);
+            const heights = slots.map(([property, selector]) => {
+                const minimum = parseFloat(defaults.getPropertyValue(property));
+                return Math.max(minimum, ...Array.from(container.querySelectorAll(selector), element => element.scrollHeight));
+            });
+            slots.forEach(([property], index) => container.style.setProperty(property, `${Math.ceil(heights[index])}px`));
+        }
+
+        function createIntranetListItem(record) {
+            const { type, availability = '', returnInfo = null } = record;
+            const quickAbsence = type === 'Sjuk' || type === 'Vab';
+            const category = ['Semester', 'Kompledighet', 'Tjänstledig'].includes(type)
+                ? 'Ledig' : type === 'Hemarbete' ? 'AAO' : 'Frånvaro';
+            const item = document.createElement('div');
+            item.className = record.example
+                ? 'p-3 bg-slate-50 rounded-xl border border-slate-200 flex justify-between items-center gap-2 text-sm'
+                : 'p-3 bg-emerald-50/50 rounded-xl border border-emerald-100 flex justify-between items-center gap-2 text-sm animate-fade-in';
+            item.classList.add('absence-row');
+            const details = document.createElement('div');
+            details.className = 'absence-details';
+            const name = document.createElement('p');
+            name.className = 'absence-name font-semibold text-slate-700';
+            name.textContent = record.name;
+            item.dataset.period = record.period || '';
+            item.dataset.startDate = record.startDate;
+            if (record.endDate) item.dataset.endDate = record.endDate;
+            details.append(name);
+            if (!quickAbsence && availabilityStatuses.has(availability) && availability !== 'Ej tillgänglig') {
+                const contact = document.createElement('p');
+                contact.className = 'absence-contact text-xs text-slate-500';
+                const dot = document.createElement('span');
+                dot.className = 'online-dot';
+                dot.setAttribute('aria-hidden', 'true');
+                const availabilityLabel = availability === 'Tillgänglig (mail/telefon)' ? 'Tillgänglig' : 'Nås sporadiskt';
+                contact.append(dot, document.createTextNode(availabilityLabel));
+                details.append(contact);
+            }
+            const returnText = quickAbsence ? '' : formatReturnInfo(returnInfo);
+            if (returnText) {
+                const returnLine = document.createElement('p');
+                returnLine.className = 'absence-return text-xs text-slate-500';
+                returnLine.textContent = returnText;
+                details.append(returnLine);
+                item.dataset.returnDate = returnInfo.date;
+                if (returnInfo.time) item.dataset.returnTime = returnInfo.time;
+            }
+            const badge = document.createElement('span');
+            const categoryColors = {
+                Ledig: 'bg-emerald-100 text-emerald-800',
+                AAO: 'bg-blue-100 text-blue-800',
+                Frånvaro: 'bg-amber-100 text-amber-800'
+            };
+            badge.className = `absence-category text-xs px-2 py-1 rounded-md font-medium inline-flex items-center gap-1 shrink-0 ${categoryColors[category]}`;
+            badge.textContent = category;
+            if (type === 'Hemarbete') {
+                const info = document.createElement('button');
+                info.type = 'button';
+                info.className = 'inline-flex items-center justify-center w-4 h-4 rounded-full border border-current hover:bg-white/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2';
+                info.setAttribute('aria-label', 'Vad betyder AAO?');
+                info.setAttribute('aria-expanded', 'false');
+                info.setAttribute('aria-controls', 'informationTooltip');
+                info.innerHTML = '<svg aria-hidden="true" class="w-3 h-3" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="4" r="1"/><path d="M7 7h2v5H7z"/></svg>';
+                info.addEventListener('click', () => openInformationTooltip(info, 'offsite'));
+                badge.append(info);
+            }
+            item.append(details, badge);
+            return item;
+        }
+
+        function refreshDailyList() {
+            if (renderedListDate !== localDateValue(new Date())) renderIntranetList();
+        }
+
+        setInterval(refreshDailyList, 60000);
+        window.addEventListener('focus', refreshDailyList);
+        window.addEventListener('resize', synchronizeListAlignment);
+        if (document.fonts) document.fonts.ready.then(synchronizeListAlignment);
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) refreshDailyList();
+        });
+
+        function showToast(text, isError = false) {
+            const toast = document.getElementById('toast');
+            const toastText = document.getElementById('toastText');
+            toastText.innerText = text;
+            toast.classList.remove('hidden', 'opacity-0');
+            toast.classList.add('opacity-100');
+            if(isError) {
+                toast.classList.add('bg-rose-900');
+            } else {
+                toast.classList.remove('bg-rose-900');
+            }
+            setTimeout(() => {
+                toast.classList.add('opacity-0');
+                setTimeout(() => toast.classList.add('hidden'), 300);
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
