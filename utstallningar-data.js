@@ -8246,7 +8246,7 @@ const utstallningar = [
   start: "2025-09-05",
   slut: "2026-09-21",
   lokal: "Allmogehallen",
-  kommentar: ""
+  kommentar: "Utforskar naturlig färgning och processer. Skapad i samarbete mellan sex konsthantverkare, slöjdare och designers med stöd från Nämnden för hemslöjdsfrågor."
 },
 {
   id: "1031",
@@ -8255,7 +8255,7 @@ const utstallningar = [
   start: "2026-02-14",
   slut: "2027-08-22",
   lokal: "Allmogehallen",
-  kommentar: ""
+  kommentar: "Interaktiv utställning med miljöer, kläder och lekar för barn i åldern 3–9 år."
 },
 {
   id: "1032",
@@ -8264,7 +8264,7 @@ const utstallningar = [
   start: "2026-03-26",
   slut: "2026-08-23",
   lokal: "Vita huset",
-  kommentar: ""
+  kommentar: "Elevutställning om 1920-talets estetik, sociala sammanhang och politiska strömningar. Skapad i samarbete med elever från Spykens gymnasieskola."
 },
 {
   id: "1033",
@@ -8273,7 +8273,7 @@ const utstallningar = [
   start: "2026-03-28",
   slut: "2028-09-03",
   lokal: "Textilhallen",
-  kommentar: ""
+  kommentar: "Visar ett diorama med 3 600 handmålade tennfigurer av Ove Rützou som skildrar kungens fall."
 },
 {
   id: "1034",
@@ -8282,7 +8282,7 @@ const utstallningar = [
   start: "2026-03-28",
   slut: "åååå-mm-dd",
   lokal: "Helsingborg-Halmstadhuset",
-  kommentar: ""
+  kommentar: "Visar ett urval målningar med skånska landskap och interiörer ur Kulturens samling."
 },
 {
   id: "1035",
@@ -8291,7 +8291,7 @@ const utstallningar = [
   start: "2026-05-22",
   slut: "2026-08-23",
   lokal: "Vita huset",
-  kommentar: ""
+  kommentar: "Elevutställning om 1920-talets kvinnliga frigörelse, normer och jämställdhet. Skapad i samarbete mellan estetiska programmet samt frisör- och stylistprogrammet på Drottning Blankas gymnasieskola."
 },
 {
   id: "1036",
@@ -8300,6 +8300,6 @@ const utstallningar = [
   start: "2026-09-26",
   slut: "åååå-mm-dd",
   lokal: "Dekanhuset",
-  kommentar: ""
+  kommentar: "Visar byggnadsdetaljer och ett omdiskuterat gravmonument."
 }  
 ];
