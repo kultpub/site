@@ -8241,12 +8241,12 @@ const utstallningar = [
   kommentar: "Utforskar naturlig färgning och processer. Skapad i samarbete mellan sex konsthantverkare, slöjdare och designers med stöd från Nämnden för hemslöjdsfrågor."
   },  
 { id: "1030",
-  namn: "Återinvigning av Dräktmod",
+  namn: "Dräktmod – folkliga kläder från Skåne",
   typ: "Basutställning",
   start: "2025-09-27",
   slut: "åååå-mm-dd",
   lokal: "Wahlbomska huset",
-  kommentar: "Nu visar vi även dräktsilver, som är en särpräglad och viktig del av den skånska dräkten." 
+  kommentar: "Om skånskt folkligt dräktskick, traditionella plagg och dräktsilver fram till 1800-talets förändringar, med nutida inslag som Fredy Samuel Lundhs könsinkluderande Bäckadräkten." 
   },
 {
   id: "1031",
