@@ -7388,7 +7388,7 @@ const utstallningar = [
   typ: "Tillfällig",
   start: "2012-03-18",
   slut: "2012-04-22",
-  lokal: "Uppgift saknas",
+  lokal: "Lundahallen",
   kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "924",
@@ -7524,7 +7524,7 @@ const utstallningar = [
   typ: "Tillfällig",
   start: "2014-01-21",
   slut: "2014-02-28",
-  lokal: "Uppgift saknas",
+  lokal: "Allmogehallen",
   kommentar: "En inlånad utställning om de bulgariska judarna som helt undkom förintelsen" 
   },
 { id: "941",
