@@ -7341,7 +7341,7 @@ const utstallningar = [
   start: "2011-10-30",
   slut: "2013-01-13",
   lokal: "Vita huset (andra våningen)",
-  kommentar: "Projektet Popstad Lund startade på Facebook med insamling bilder och berättelser kring Lunds musikliv under åren 1971–1996; utställningen bestod av över tusen föremål som privatpersoner lånat ut" 
+  kommentar: "Projektet Popstad Lund startade på Facebook med insamling bilder och berättelser kring Lunds musikliv under åren 1971–1996; utställningen bestod av över tusen föremål som privatpersoner lånat ut. Utställningen tog sin naturliga utgångspunkt i att Sveriges Radio P3 år 1996 utnämnde Lund till landets allra första \"Popstad\"." 
   },
 { id: "918",
   namn: "Kulturen ReMix",
