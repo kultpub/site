@@ -1250,10 +1250,10 @@ const utstallningar = [
 { id: "156",
   namn: "Fem fordømte aar",
   typ: "Tillfällig",
-  start: "1946-mm-dd",
-  slut: "1946-mm-dd",
-  lokal: "Uppgift saknas",
-  kommentar: "Av Bymuseet i Köpemhamn" 
+  start: "1946-09-dd",
+  slut: "1946-11-dd",
+  lokal: "Allmogehallen",
+  kommentar: "Den korta men intensiva utställningsperioden lockade en stor publik på över 15 000 besökare till Allmogehallen. Materialet hade lånats från Københavns Bymuseum." 
   },
 { id: "157",
   namn: "Skånska skisser av Anders Montan",
