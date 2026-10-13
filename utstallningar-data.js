@@ -7187,25 +7187,25 @@ const utstallningar = [
   namn: "Anne Frank & jag",
   typ: "Tillfällig",
   start: "2010-01-27",
-  slut: "åååå-mm-dd",
-  lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning." 
+  slut: "2010-05-16",
+  lokal: "Allmogehallen",
+  kommentar: "Producerad av Forum för levande historia." 
   },
 { id: "899",
   namn: "Bengt Böckman – bilder från ett liv",
   typ: "Tillfällig",
   start: "2010-01-31",
   slut: "2010-04-18",
-  lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning." 
+  lokal: "Lundahallen",
+  kommentar: "Utställningen pågick delvis parallellt med museets stora visning av Albrecht Dürers grafiska blad." 
   },
 { id: "900",
   namn: "Albrecht Dürer och den stora passionen",
   typ: "Tillfällig",
   start: "2010-02-14",
   slut: "2010-06-27",
-  lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning." 
+  lokal: "Lundahallen",
+  kommentar: "Detta var en historisk händelse för museet, då det var första gången sedan 1920 som vi visade upp våra unika och värdefulla samling av den tyska renässansmästaren." 
   },
 { id: "901",
   namn: "Påsktraditioner",
@@ -7220,8 +7220,8 @@ const utstallningar = [
   typ: "Tillfällig",
   start: "2010-05-08",
   slut: "2010-06-27",
-  lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning." 
+  lokal: "Borgarhuset",
+  kommentar: "Föregicks av en tävlingen som avgjordes i maj 2010, där Karin Albinsson vann förstapriset med sitt humoristiska Barbie och Ken-par \"Hon och han\". Ett urval av de över 60 kreativa och färgstarka inskickade bidragen ställdes ut i Borgarhusets utställningssalar. De visades som ett pop up-inslag för att visa hur levande, lekfull och modern folkkonsten kan vara." 
   },
 { id: "903",
   namn: "Karnevalsfilm 100 år",
@@ -7236,8 +7236,8 @@ const utstallningar = [
   typ: "Tillfällig",
   start: "2010-05-30",
   slut: "2010-09-01",
-  lokal: "Uppgift saknas",
-  kommentar: "Fotoutställning" 
+  lokal: "Allmogehallen",
+  kommentar: "Denna stora sommarutställning visade bilder av ett 40-tal av landets främsta fotografer (bland annat Lars Tunbjörk) och skildrade det svenska vardagslivet och ett land i förändring." 
   },
 { id: "905",
   namn: "Lengertz kulturpris",
@@ -7260,23 +7260,23 @@ const utstallningar = [
   typ: "Tillfällig",
   start: "2010-10-03",
   slut: "2011-01-30",
-  lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning." 
+  lokal: "Textilhallen, Lundahallen",
+  kommentar: "Visade över ett halvt sekels omfattande arbete – allt från det allra första gesällskåpet till hans ikoniska och funktionella stolar (som Gästis och den Anshelm-inspirerade stolen Anshelm)." 
   },
 { id: "908",
   namn: "Stefan Castas gröna tråd",
   typ: "Tillfällig",
   start: "2010-10-12",
   slut: "2011-01-09",
-  lokal: "Uppgift saknas",
-  kommentar: "Det saknas kommentar till denna utställning." 
+  lokal: "Borgarhuset (bottenplan)",
+  kommentar: "En lekfull och scenografisk utställning som gjordes i samarbete med barnboksfestivalen Litteralund. Istället för att bara visa platta bilder på väggarna var rummen förvandlade till en fysisk upplevelsevärld för barn." 
   },
 { id: "909",
   namn: "Parkskulpturer",
   typ: "Tillfällig",
-  start: "2010-mm-dd",
-  slut: "åååå-mm-dd",
-  lokal: "Uppgift saknas",
+  start: "2010-05-22",
+  slut: "2010-09-19",
+  lokal: "Friluftsmuseet",
   kommentar: "Det saknas kommentar till denna utställning." 
   },
 { id: "910",
@@ -7284,16 +7284,16 @@ const utstallningar = [
   typ: "Tillfällig",
   start: "2011-01-23",
   slut: "2011-02-27",
-  lokal: "Uppgift saknas",
-  kommentar: "Av Fotoskolan Skåne" 
+  lokal: "Allmogehallen",
+  kommentar: "Utställningen var ett återkommande samarbete där elever från Fotoskolan Skåne fick i uppgift att tolka ett specifikt ämne fritt. Detta år var temat just hållbart, och eleverna (bland annat den då 20-åriga Paulina Borg) utforskade begreppet genom sina kameralinser." 
   },
 { id: "911",
   namn: "Förbisett – när vardagen glimrar till",
   typ: "Tillfällig",
   start: "2011-04-03",
   slut: "2011-08-28",
-  lokal: "Uppgift saknas",
-  kommentar: "Bygger på fotoboken \"Förbisett\" och visar det som tillfälligt glimrar till i vardagen, det tillfälligt stämningsfulla" 
+  lokal: "Lundahallen",
+  kommentar: "Bygger på fotoboken \"Förbisett\" och visar det som tillfälligt glimrar till i vardagen, det tillfälligt stämningsfulla. Utställningen baserades på det gemensamma projektet av Niklas Ingmarsson, Robert Willim och fotografen Martin Magntorn." 
   },
 { id: "912",
   namn: "Rapporter från ett tält",
@@ -7336,11 +7336,11 @@ const utstallningar = [
   kommentar: "Kim Halle och Barbro Lomakkas gemensamma produktion" 
   },
 { id: "917",
-  namn: "Popstad Lund",
+  namn: "Popstad Lund 1971–1996",
   typ: "Tillfällig",
   start: "2011-10-30",
   slut: "2013-01-13",
-  lokal: "Uppgift saknas",
+  lokal: "Vita huset (andra våningen)",
   kommentar: "Projektet Popstad Lund startade på Facebook med insamling bilder och berättelser kring Lunds musikliv under åren 1971–1996; utställningen bestod av över tusen föremål som privatpersoner lånat ut" 
   },
 { id: "918",
