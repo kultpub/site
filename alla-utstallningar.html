@@ -574,6 +574,84 @@ body.dark-mode .modal-textblock h3 i {
     top: 18px;
     right: 20px;
 }
+
+/* Periodfilter: egen kompakt dialog och tydlig markering när filtret är aktivt. */
+#period-button { background: #2563eb; flex-shrink: 0; }
+.dataTables_wrapper .dataTables_filter { gap: 12px; }
+.dataTables_wrapper .dataTables_filter label { flex: 0 1 500px; min-width: 0; }
+.dataTables_wrapper .dataTables_filter input[type="search"] { box-sizing: border-box; margin-left: 0; height: 38px; }
+#period-button:hover { background: #1d4ed8; }
+#period-button[aria-pressed="true"] { background: #0f766e; }
+#period-button[aria-pressed="true"]::after {
+    content: ''; width: 7px; height: 7px; border-radius: 50%; background: #fff;
+}
+#periodModal .modal-content {
+    box-sizing: border-box;
+    width: calc(100% - 32px);
+    max-width: 540px;
+    margin: 0;
+    padding: 26px 28px;
+    max-height: calc(100dvh - 32px);
+    overflow-y: auto;
+}
+#periodModal { box-sizing: border-box; padding: 16px; align-items: center; justify-content: center; }
+#periodModal .close {
+    top: 18px; right: 18px; width: 32px; height: 32px;
+    box-shadow: none; border-radius: 6px;
+}
+#period-title { margin: 0 36px 10px 0; font-size: 1.2rem; font-weight: 600; }
+#period-title i { color: #2563eb; margin-right: 6px; }
+.period-intro { margin: 0 0 22px; font-size: .92rem; line-height: 1.55; color: #475569; }
+.period-range { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.period-range fieldset { margin: 0; padding: 14px; min-width: 0; border: 1px solid #cbd5e1; border-radius: 10px; }
+.period-range legend { padding: 0 5px; font-size: .9rem; font-weight: 600; }
+.period-field { display: flex; flex-direction: column; gap: 6px; }
+.period-field + .period-field { margin-top: 12px; }
+.period-field label { font-size: .82rem; color: #475569; }
+.period-field select {
+    box-sizing: border-box; width: 100%; height: 42px; padding: 0 10px;
+    border: 1px solid #cbd5e1; border-radius: 7px;
+    font: inherit; font-size: .95rem; background: #fff; color: #1e293b; color-scheme: light;
+}
+#periodModal :is(select, button, input):focus-visible, #period-button:focus-visible {
+    outline: 3px solid #60a5fa; outline-offset: 3px;
+}
+.period-whole {
+    display: flex; align-items: flex-start; gap: 10px; padding: 14px;
+    margin-top: 18px; border-radius: 10px; background: #eff6ff; cursor: pointer;
+}
+.period-whole input { flex-shrink: 0; width: 18px; height: 18px; margin: 2px 0 0; accent-color: #2563eb; }
+.period-whole strong { display: block; font-size: .91rem; font-weight: 500; }
+.period-whole small { display: block; margin-top: 5px; line-height: 1.5; color: #475569; }
+.period-uncertain:has(input:disabled) { opacity: .55; cursor: default; }
+.period-note { font-size: .78rem; line-height: 1.5; color: #64748b; margin: 14px 0 0; }
+#period-error { margin: 14px 0 0; color: #b91c1c; font-size: .86rem; }
+.period-actions { display: flex; justify-content: space-between; gap: 12px; margin-top: 22px; }
+#period-clear { background: #e2e8f0; color: #334155; box-shadow: none; }
+#period-clear:hover { background: #cbd5e1; }
+#period-apply { background: #2563eb; }
+#period-apply:hover { background: #1d4ed8; }
+#period-summary {
+    align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px;
+    margin: 0 0 18px; padding: 10px 14px; border: 1px solid #bfdbfe;
+    border-radius: 8px; background: #eff6ff; color: #1e40af; font-size: .87rem;
+}
+#period-summary:not([hidden]) { display: flex; }
+#period-summary button { height: 28px; padding: 0 8px; color: inherit; background: transparent; box-shadow: none; font-size: .82rem; text-decoration: underline; }
+body.dark-mode #period-title i { color: #60a5fa; }
+body.dark-mode :is(.period-intro, .period-field label, .period-whole small) { color: #cbd5e1; }
+body.dark-mode .period-range fieldset { border-color: #475569; }
+body.dark-mode .period-field select { background: #0f172a; color: #f1f5f9; border-color: #64748b; color-scheme: dark; }
+body.dark-mode :is(.period-whole, #period-summary) { background: #172b46; color: #dbeafe; border-color: #334e75; }
+body.dark-mode .period-note { color: #94a3b8; }
+body.dark-mode #period-clear { background: #334155; color: #f1f5f9; }
+body.dark-mode #period-error { color: #fca5a5; }
+@media (max-width: 480px) {
+    #periodModal .modal-content { width: 100%; padding: 22px 18px; }
+    .period-range { gap: 10px; }
+    .period-range fieldset { padding: 10px; }
+}
+
 </style>
 </head>
 <body>
@@ -599,6 +677,12 @@ body.dark-mode .modal-textblock h3 i {
 
   <!-- Tabellbehållare -->
   <div id="table-container">
+    <div id="period-summary" hidden role="status" aria-live="polite">
+      <i class="fa-solid fa-calendar-days" aria-hidden="true"></i>
+      <span id="period-summary-text"></span>
+      <button id="period-summary-clear" type="button">Ta bort filter</button>
+    </div>
+    <button id="period-button" type="button" aria-haspopup="dialog" aria-controls="periodModal" aria-pressed="false"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i> Period</button>
     <table class="dataframe display">
       <thead>
         <tr style="text-align: right;">
@@ -690,11 +774,192 @@ body.dark-mode .modal-textblock h3 i {
   </div>
 </div>
 
+<!-- Periodfilter -->
+<div id="periodModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="period-title" aria-describedby="period-intro">
+  <div class="modal-content">
+    <button class="close" type="button" aria-label="Stäng periodfilter" onclick="closePeriodModal()"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+    <h2 id="period-title"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i> Välj period</h2>
+    <p id="period-intro" class="period-intro">Visa utställningar som visades under någon del av perioden, inklusive utställningar som invigdes under perioden.</p>
+    <form id="period-form">
+      <div class="period-range">
+        <fieldset>
+          <legend>Från och med</legend>
+          <div class="period-field"><label for="period-start-year">Startår</label><select id="period-start-year" required></select></div>
+          <div class="period-field"><label for="period-start-month">Startmånad</label><select id="period-start-month" required></select></div>
+        </fieldset>
+        <fieldset>
+          <legend>Till och med</legend>
+          <div class="period-field"><label for="period-end-year">Slutår</label><select id="period-end-year" required></select></div>
+          <div class="period-field"><label for="period-end-month">Slutmånad</label><select id="period-end-month" required></select></div>
+        </fieldset>
+      </div>
+      <label class="period-whole" for="period-whole">
+        <input type="checkbox" id="period-whole">
+        <span><strong>Visades under hela perioden</strong><small>Utställningen måste ha pågått från första dagen i startmånaden till sista dagen i slutmånaden.</small></span>
+      </label>
+      <label class="period-whole period-uncertain" for="period-uncertain">
+        <input type="checkbox" id="period-uncertain" aria-describedby="period-date-note">
+        <span><strong>Ta med osäkra träffar</strong><small id="period-date-note">I data finns ett antal utställningar som saknar säkra start- och slutuppgifter. Detta val inkluderar även möjliga träffar. Helt okända datum utesluts dock.</small></span>
+      </label>
+      <p id="period-error" role="alert" hidden></p>
+      <div class="period-actions">
+        <button id="period-clear" type="button">Ta bort filter</button>
+        <button id="period-apply" type="submit">Visa utställningar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <!-- Extern datakälla -->
 <script src="utstallningar-data.js"></script>
 
 <script>
 let table; // Global referens till tabellen
+
+let activePeriod = null;
+let periodDateRanges = [];
+const periodMonths = ["Januari", "Februari", "Mars", "April", "Maj", "Juni", "Juli", "Augusti", "September", "Oktober", "November", "December"];
+
+// Datum anges som ett intervall när månad eller dag saknas, t.ex. [1936-mm-dd].
+function exhibitionDateRange(value) {
+  const text = String(value ?? "").trim().replace(/[\[\]]/g, "");
+  const match = text.match(/^(\d{4})(?:-(\d{1,2}|mm|00|\?{1,2}))?(?:-(\d{1,2}|dd|00|\?{1,2}))?$/i);
+  if (!match) return null;
+  const year = Number(match[1]);
+  if (!year) return null;
+  const month = Number(match[2]) || null;
+  const day = Number(match[3]) || null;
+  if ((month !== null && (month < 1 || month > 12)) || (day !== null && !month)) return null;
+  const firstMonth = month || 1;
+  const lastMonth = month || 12;
+  const lastDay = new Date(year, lastMonth, 0).getDate();
+  if (day !== null && (day < 1 || day > lastDay)) return null;
+  return {
+    earliest: new Date(year, firstMonth - 1, day || 1).getTime(),
+    latest: new Date(year, lastMonth - 1, day || lastDay).getTime(),
+    year
+  };
+}
+
+function exhibitionMatchesPeriod(dates, period) {
+  if (!period) return true;
+  const {start, end} = dates;
+  if (!start && !end) return false;
+  if (start && end && start.earliest > end.latest) return false;
+  if (period.whole) {
+    // Helt okänt slutdatum betyder inte automatiskt att utställningen är pågående.
+    return !!start && !!end && start.latest <= period.start && end.earliest >= period.end;
+  }
+  const possiblyOverlaps = (!start || start.earliest <= period.end) && (!end || end.latest >= period.start);
+  if (!possiblyOverlaps) return false;
+  if (period.uncertain) return true;
+  const definitelyOverlaps = start && end && start.latest <= period.end && end.earliest >= period.start;
+  const openingWithinPeriod = start && start.earliest >= period.start && start.latest <= period.end;
+  const closingWithinPeriod = end && end.earliest >= period.start && end.latest <= period.end;
+  return !!(definitelyOverlaps || openingWithinPeriod || closingWithinPeriod);
+}
+
+function updatePeriodSummary() {
+  const button = document.getElementById("period-button");
+  button.setAttribute("aria-pressed", String(!!activePeriod));
+  const summary = document.getElementById("period-summary");
+  summary.hidden = !activePeriod;
+  if (activePeriod) {
+    const from = `${periodMonths[activePeriod.startMonth - 1].toLowerCase()} ${activePeriod.startYear}`;
+    const to = `${periodMonths[activePeriod.endMonth - 1].toLowerCase()} ${activePeriod.endYear}`;
+    document.getElementById("period-summary-text").textContent = `${from} – ${to} · ${activePeriod.whole ? "Visades under hela perioden" : "Visades under någon del av perioden"}${activePeriod.uncertain && !activePeriod.whole ? " · Osäkra träffar ingår" : ""}`;
+  }
+}
+
+function clearPeriodFilter() {
+  activePeriod = null;
+  updatePeriodSummary();
+  if (table) table.draw();
+}
+
+function openPeriodModal() {
+  const now = new Date();
+  const values = activePeriod || {startYear: now.getFullYear(), startMonth: 1, endYear: now.getFullYear(), endMonth: now.getMonth() + 1, whole: false, uncertain: false};
+  document.getElementById("period-start-year").value = values.startYear;
+  document.getElementById("period-start-month").value = values.startMonth;
+  document.getElementById("period-end-year").value = values.endYear;
+  document.getElementById("period-end-month").value = values.endMonth;
+  document.getElementById("period-whole").checked = values.whole;
+  document.getElementById("period-uncertain").checked = values.uncertain;
+  document.getElementById("period-uncertain").disabled = values.whole;
+  document.getElementById("period-error").hidden = true;
+  document.getElementById("periodModal").style.display = "flex";
+  document.getElementById("modal-overlay").style.display = "block";
+  document.getElementById("period-start-year").focus();
+}
+
+function closePeriodModal() {
+  document.getElementById("periodModal").style.display = "none";
+  document.getElementById("modal-overlay").style.display = "none";
+  document.getElementById("period-button").focus();
+}
+
+function initializePeriodFilter() {
+  periodDateRanges = utstallningar.map(post => ({start: exhibitionDateRange(post.start), end: exhibitionDateRange(post.slut)}));
+  const years = periodDateRanges.flatMap(dates => [dates.start?.year, dates.end?.year]).filter(Number.isFinite);
+  const currentYear = new Date().getFullYear();
+  const firstYear = Math.min(currentYear, ...(years.length ? years : [1882]));
+  const lastYear = Math.max(currentYear, ...years);
+  for (const id of ["period-start-year", "period-end-year"]) {
+    const select = document.getElementById(id);
+    for (let year = lastYear; year >= firstYear; year--) select.add(new Option(year, year));
+  }
+  for (const id of ["period-start-month", "period-end-month"]) {
+    const select = document.getElementById(id);
+    periodMonths.forEach((month, index) => select.add(new Option(month, index + 1)));
+  }
+  // DataTables indexerar raderna i samma ordning som datakällan, även efter sortering.
+  $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+    if (settings.nTable !== document.querySelector("table.display") || !activePeriod) return true;
+    return exhibitionMatchesPeriod(periodDateRanges[dataIndex], activePeriod);
+  });
+  document.getElementById("period-button").addEventListener("click", openPeriodModal);
+  document.getElementById("period-clear").addEventListener("click", () => {
+    clearPeriodFilter();
+    closePeriodModal();
+  });
+  document.getElementById("period-summary-clear").addEventListener("click", clearPeriodFilter);
+  document.getElementById("period-whole").addEventListener("change", event => {
+    document.getElementById("period-uncertain").disabled = event.target.checked;
+  });
+  document.getElementById("period-form").addEventListener("submit", event => {
+    event.preventDefault();
+    const startYear = Number(document.getElementById("period-start-year").value);
+    const startMonth = Number(document.getElementById("period-start-month").value);
+    const endYear = Number(document.getElementById("period-end-year").value);
+    const endMonth = Number(document.getElementById("period-end-month").value);
+    const start = new Date(startYear, startMonth - 1, 1).getTime();
+    const end = new Date(endYear, endMonth, 0).getTime();
+    const error = document.getElementById("period-error");
+    if (!Number.isFinite(start) || !Number.isFinite(end) || start > end) {
+      error.textContent = "Slutperioden måste vara samma som eller senare än startperioden.";
+      error.hidden = false;
+      document.getElementById("period-end-year").focus();
+      return;
+    }
+    activePeriod = {startYear, startMonth, endYear, endMonth, start, end, whole: document.getElementById("period-whole").checked, uncertain: document.getElementById("period-uncertain").checked};
+    updatePeriodSummary();
+    table.draw();
+    closePeriodModal();
+  });
+  const modal = document.getElementById("periodModal");
+  modal.addEventListener("click", event => { if (event.target === modal) closePeriodModal(); });
+  modal.addEventListener("keydown", event => {
+    if (event.key === "Escape") { event.preventDefault(); closePeriodModal(); }
+    if (event.key !== "Tab") return;
+    const controls = modal.querySelectorAll("button, select, input");
+    const first = controls[0];
+    const last = controls[controls.length - 1];
+    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+  });
+}
+
 
 window.addEventListener("load", function () {
   // Kontrollera att datan är laddad
@@ -827,6 +1092,8 @@ window.addEventListener("load", function () {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
   }
 
+  initializePeriodFilter();
+
   // Initiera DataTable med omvänd sortering (senaste först)
   table = $('table.display').DataTable({
     autoWidth: false,
@@ -860,7 +1127,7 @@ window.addEventListener("load", function () {
   // Anpassad infotext
   function updateInfo() {
     const info = table.page.info();
-    const start = info.start + 1;
+    const start = info.recordsDisplay ? info.start + 1 : 0;
     const end = info.end;
     const total = formatNumber(info.recordsTotal);
     const filtered = formatNumber(info.recordsDisplay);
@@ -885,6 +1152,9 @@ window.addEventListener("load", function () {
     'padding-top': '1.5em'
   });
 
+  // Flytta samma knapp till höger om sökfältet; händelselyssnarna följer med.
+  document.querySelector('div.dataTables_filter').appendChild(document.getElementById("period-button"));
+
   $('div.dataTables_filter').css({
     'width': '100%',
     'display': 'flex',
@@ -896,8 +1166,8 @@ window.addEventListener("load", function () {
   $('input[type="search"]')
     .attr("placeholder", "Filtrera medan du skriver...")
     .css({
-      'width': '500px',
-      'min-width': '300px',
+      'width': '100%',
+      'min-width': '0',
       'padding': '0.5rem 1rem',
       'font-size': '1rem',
       'border': '1px solid var(--border-color, #ccc)',
@@ -987,6 +1257,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const resetButton = document.getElementById("reset-button");
   if (resetButton) {
     resetButton.addEventListener("click", () => {
+      activePeriod = null;
+      updatePeriodSummary();
       if (table) {
         table.search("").order([[0, "desc"]]).draw();
         const searchInput = document.querySelector('input[type="search"]');
@@ -1017,6 +1289,7 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById("myModal").style.display = "none";
       document.getElementById("infoModal").style.display = "none";
       document.getElementById("remarkModal").style.display = "none";
+      if (document.getElementById("periodModal").style.display === "flex") closePeriodModal();
       this.style.display = "none";
     });
   }
