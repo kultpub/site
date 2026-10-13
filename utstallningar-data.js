@@ -1221,7 +1221,7 @@ const utstallningar = [
   start: "1945-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "\"I samband med domkyrkans 800-årsjubileum…\"" 
+  kommentar: "\"I samband med domkyrkans 800-årsjubileum.\"" 
   },
 { id: "153",
   namn: "Riksdalermynt från Gustav Vasa fram till 1875",
@@ -1277,7 +1277,7 @@ const utstallningar = [
   start: "1947-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "\"I samband med Lunds Befälsutbildningsförenings 35-årsjubileum …\"" 
+  kommentar: "\"I samband med Lunds Befälsutbildningsförenings 35-årsjubileum.\"" 
   },
 { id: "160",
   namn: "Häradsskrivare Hans Collins testamentariska gåva",
@@ -1333,7 +1333,7 @@ const utstallningar = [
   start: "1948-mm-dd",
   slut: "åååå-mm-dd",
   lokal: "Uppgift saknas",
-  kommentar: "\"I början av året anordnade Svenska Duvavelsföreningens Lundaavdelning en utställning av duvor…\"" 
+  kommentar: "\"I början av året anordnade Svenska Duvavelsföreningens Lundaavdelning en utställning av duvor.\"" 
   },
 { id: "167",
   namn: "Stickningsutställning",
@@ -1773,7 +1773,7 @@ const utstallningar = [
   start: "1962-11-24",
   slut: "1962-11-26",
   lokal: "Vita huset (Auditoriet)",
-  kommentar: "Anordnad av \"10 akademikerfruar … till förmån för Inomeuropeiska missionsverksamhet\"" 
+  kommentar: "Anordnad av \"10 akademikerfruar till förmån för Inomeuropeiska missionsverksamhet\"" 
   },
 { id: "222",
   namn: "Från knävling till hålkort, Håkan Ohlssons boktryckeri 100 år 1962",
@@ -3464,7 +3464,7 @@ const utstallningar = [
   kommentar: "En utställning om allmogemöbler" 
   },
 { id: "433",
-  namn: "Bostad och bohag från senmedeltid, renässans och barock (jubileumsutställning)",
+  namn: "Bostad och bohag från senmedeltid, renässans och barock",
   typ: "Basutställning",
   start: "1982-06-06",
   slut: "åååå-mm-dd",
@@ -3472,7 +3472,7 @@ const utstallningar = [
   kommentar: "Borgarhusets nyordnade stilhistoriska utställning invigs av H. M. Konungen. Carl XVI Gustav" 
   },
 { id: "434",
-  namn: "Lund – kyrkornas stad (jubileumsutställning)",
+  namn: "Lund – kyrkornas stad",
   typ: "Basutställning",
   start: "1982-06-06",
   slut: "åååå-mm-dd",
@@ -3480,7 +3480,7 @@ const utstallningar = [
   kommentar: "En utställning om Lunds andliga liv under medeltiden, kyrkor och kloster, präster och lekmän" 
   },
 { id: "435",
-  namn: "Förr och framöver (jubileumsutställning)",
+  namn: "Förr och framöver",
   typ: "Tillfällig",
   start: "1982-10-24",
   slut: "1983-10-03",
@@ -5804,8 +5804,8 @@ const utstallningar = [
   typ: "Tillfällig",
   start: "2001-10-20",
   slut: "2001-10-21",
-  lokal: "I samarbete med Amprorail och Lundarallarna",
-  kommentar: "Det saknas kommentar till denna utställning." 
+  lokal: "Uppgift saknas",
+  kommentar: "I samarbete med Amprorail och Lundarallarna." 
   },
 { id: "726",
   namn: "Att överleva – Alice berättelse och barns reaktioner i bild",
