@@ -8231,7 +8231,16 @@ const utstallningar = [
   lokal: "Vita huset",
   kommentar: "Om människor som vågade protestera mot nazisternas hat och förtryck under Förintelsen." 
   },
-{ id: "1029",
+{
+  id: "1029",
+  namn: "Nära till naturlig färg",
+  typ: "Tillfällig",
+  start: "2025-09-05",
+  slut: "2026-09-21",
+  lokal: "Allmogehallen",
+  kommentar: "Utforskar naturlig färgning och processer. Skapad i samarbete mellan sex konsthantverkare, slöjdare och designers med stöd från Nämnden för hemslöjdsfrågor."
+  },  
+{ id: "1030",
   namn: "Återinvigning av Dräktmod",
   typ: "Basutställning",
   start: "2025-09-27",
@@ -8239,15 +8248,6 @@ const utstallningar = [
   lokal: "Wahlbomska huset",
   kommentar: "Nu visar vi även dräktsilver, som är en särpräglad och viktig del av den skånska dräkten." 
   },
-{
-  id: "1030",
-  namn: "Nära till naturlig färg",
-  typ: "Tillfällig",
-  start: "2025-09-05",
-  slut: "2026-09-21",
-  lokal: "Allmogehallen",
-  kommentar: "Utforskar naturlig färgning och processer. Skapad i samarbete mellan sex konsthantverkare, slöjdare och designers med stöd från Nämnden för hemslöjdsfrågor."
-},
 {
   id: "1031",
   namn: "Madicken – en lekutställning",
