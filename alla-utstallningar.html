@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Utställningslista</title>
+    <!-- Google Fonts: Work Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
@@ -11,105 +16,333 @@
 <style>
 /* ====== BASSTILAR ====== */
 body {
-    font-family: Arial, sans-serif;
-    margin: 2rem;
-    background-color: #f9f9f9;
+    font-family: 'Work Sans', sans-serif;
+    margin: 1.5rem 2rem 2rem;
+    background-color: #f8fafc;
+    color: #1e293b;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-h1, h4 {
+h1 {
     text-align: center;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    margin: 0;
+    line-height: 38px;
 }
 
 #table-container {
     display: none;
+    max-width: 100%;
+    overflow-x: auto;
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    border: 1px solid #cbd5e1;
 }
 
-table.dataTable {
-    width: 100%;
-    border-collapse: collapse;
+table.dataTable,
+table.dataTable.no-footer {
+    width: 100% !important;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 table.dataTable th,
 table.dataTable td {
-    padding: 0.75em;
-    border: 1px solid #ddd;
+    padding: 0.85rem 1rem;
+    border: 0;
+    border-right: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0;
     text-align: left;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 table.dataTable th {
-    background-color: #333;
-    color: white;
+    background-color: #f1f5f9;
+    color: #334155;
+    font-weight: 600;
+    border-bottom: 2px solid #cbd5e1;
 }
 
-/* ====== KNAPPAR ====== */
-button {
-    padding: 5px 10px;
-    border: none;
+/* Ytterramen ger samma linje runt hela tabellen. */
+table.dataTable tr > :last-child {
+    border-right: 0;
+}
+
+table.dataTable tbody > tr:last-child > td {
+    border-bottom: 0;
+}
+
+/* Fasta kolumnbredder */
+table.dataTable th:nth-child(1), table.dataTable td:nth-child(1) { width: 3.25%; padding-left: 2px; padding-right: 12px; text-align: right; }   /* ID */
+
+table.dataTable td:nth-child(1) .cell-content-wrapper {
+    justify-content: flex-end;
+}
+
+table.dataTable td:nth-child(1) .cell-text {
+    font-variant-numeric: tabular-nums;
+}
+table.dataTable th:nth-child(2), table.dataTable td:nth-child(2) { width: 35.75%; } /* Namn */
+table.dataTable th:nth-child(3), table.dataTable td:nth-child(3) { width: 12%; }    /* Typ */
+table.dataTable th:nth-child(4), table.dataTable td:nth-child(4) { width: 8%; }    /* Start */
+table.dataTable th:nth-child(5), table.dataTable td:nth-child(5) { width: 8%; }    /* Slut */
+table.dataTable th:nth-child(6), table.dataTable td:nth-child(6) { width: 23%; }   /* Lokal */
+table.dataTable th:nth-child(7), table.dataTable td:nth-child(7) { width: 10%; text-align: center; }  /* Kommentar */
+
+/* Cell-innehåll */
+.cell-content-wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    overflow: hidden;
+    gap: 0.5rem;
+}
+
+.cell-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.95rem;
+}
+
+/* Dokumentikon i namn- och lokalcellerna. Tooltipen ligger utanför tabellens klippning. */
+.cell-info-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    flex: 0 0 22px;
+    height: 24px;
+    color: #3b82f6;
+    cursor: help;
+    transition: color 0.2s ease;
+}
+
+.cell-info-icon:hover,
+.cell-info-icon:focus-visible {
+    color: #1d4ed8;
+}
+
+.cell-info-icon:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: -2px;
     border-radius: 4px;
-    cursor: pointer;
-    color: white;
-    background-color: #007BFF;
-    transition: background-color 0.3s ease;
 }
 
-button:hover {
-    background-color: #0056b3;
+.exhibition-name-tooltip {
+    position: fixed;
+    left: 0;
+    top: 0;
+    transform: translate(-50%, calc(-100% + 4px));
+    background: #000;
+    color: #fff;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font: 400 0.85rem/1.4 'Work Sans', sans-serif;
+    text-align: center;
+    white-space: nowrap;
+    width: max-content;
+    max-width: none;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.16s ease, transform 0.16s ease, visibility 0.16s ease;
+    z-index: 10000;
+}
+
+.exhibition-name-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: #000;
+}
+
+.exhibition-name-tooltip.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .exhibition-name-tooltip { transition: none; }
+}
+
+/* ====== GEMENSAM KNAPPSTIL & ÖVERSTA KNAPPAR ====== */
+button,
+.top-action-btn {
+    box-sizing: border-box;
+    height: 38px;
+    padding: 0 1em;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    font-family: 'Work Sans', sans-serif;
+    font-weight: 500;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    text-decoration: none;
+}
+
+button:hover,
+.top-action-btn:hover {
+    transform: translateY(-1px);
+}
+
+/* Rubrik och knappar på samma rad. */
+.page-header {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 1rem;
+    min-height: 38px;
+    margin-bottom: 2rem;
+}
+
+.page-header h1 {
+    grid-column: 2;
+}
+
+.top-right-buttons {
+    display: flex;
+    justify-self: end;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.top-right-buttons > * {
+    flex-shrink: 0;
+}
+
+@media (max-width: 1250px) {
+    .page-header {
+        grid-template-columns: 1fr auto;
+    }
+    .page-header h1 {
+        grid-column: 1;
+        text-align: left;
+    }
+}
+
+@media (max-width: 850px) {
+    .page-header {
+        display: flex;
+        flex-direction: column;
+    }
+    .page-header h1 {
+        text-align: center;
+    }
+    .top-right-buttons {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+#reset-button {
+    background-color: #ef4444;
+}
+#reset-button:hover {
+    background-color: #dc2626;
+}
+
+#info-button,
+#remark-button {
+    background-color: #64748b;
+}
+#info-button:hover,
+#remark-button:hover {
+    background-color: #475569;
+}
+
+/* Tema-knapp efter Anmärkning */
+.dark-mode-wrapper {
+    box-sizing: border-box;
+    height: 38px;
+    background-color: #64748b;
+    color: white;
+    padding: 0 1em;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    user-select: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.dark-mode-wrapper:hover {
+    background-color: #475569;
+    transform: translateY(-1px);
+}
+
+.theme-toggle-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #f59e0b;
+    padding: 0;
+    width: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+/* Tabellknapp för kommentar */
+.btn-kommentar {
+    background-color: #3b82f6;
+    font-size: 0.85rem;
+    height: auto;
+    padding: 5px 8px;
+    white-space: nowrap;
+    display: inline-block;
+    margin: 0 auto;
+}
+
+.btn-kommentar:hover {
+    background-color: #2563eb;
 }
 
 .btn-edit {
-    background-color: #007BFF;
+    background-color: #3b82f6;
 }
-
 .btn-edit:hover {
-    background-color: #0056b3;
+    background-color: #2563eb;
 }
 
 .btn-report {
-    background-color: #dc3545;
+    background-color: #ef4444;
 }
-
 .btn-report:hover {
-    background-color: #a71d2a;
+    background-color: #dc2626;
 }
 
 #reportButtonContainer button:not(:last-child) {
     margin-right: 0.75em;
 }
 
-/* ====== ÖVERSTA KNAPPAR ====== */
-#reset-button,
-#info-button {
-    position: fixed;
-    right: 1rem;
-    width: 100px;
-    padding: 0.5em 1em;
-    border: none;
-    border-radius: 5px;
-    color: white;
-    cursor: pointer;
-    z-index: 1100;
-    transition: background-color 0.3s ease;
-}
-
-#reset-button {
-    top: 1rem;
-    background-color: #dc3545;
-}
-
-#reset-button:hover {
-    background-color: #a71d2a;
-}
-
-#info-button {
-    top: 3.5rem; /* Viktig för placering */
-    background-color: #dc3545;
-}
-
-#info-button:hover {
-    background-color: #a71d2a;
-}
-
-/* ====== MODAL ====== */
+/* ====== MODAL & LAYOUT B ====== */
 .modal {
     display: none;
     position: fixed;
@@ -119,7 +352,8 @@ button:hover {
     height: 100%;
     z-index: 1100;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
 }
 
 #modal-overlay {
@@ -135,133 +369,132 @@ button:hover {
 
 .modal-content {
     background-color: white;
-    margin: 10% auto;
-    padding: 20px 40px;
-    border-radius: 5px;
+    margin: 8% auto;
+    padding: 32px 36px 28px 36px;
+    border-radius: 12px;
     width: 80%;
     max-width: 600px;
     position: relative;
     z-index: 1000;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
 }
 
 .modal-body {
     text-align: left !important;
 }
 
+.modal-body-content {
+    padding-top: 1.2rem;
+    padding-bottom: 0.5rem;
+}
+
+.modal-body-content p {
+    margin-bottom: 2.2rem;
+    line-height: 1.6;
+}
+
 .close {
     position: absolute;
-    top: 10px;
-    right: 15px;
-    color: #aaa;
-    font-size: 28px;
-    font-weight: bold;
+    top: 20px;
+    right: 24px;
+    background: none;
+    border: none;
+    color: #94a3b8;
+    font-size: 22px;
     cursor: pointer;
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-}
-
-/* ====== DARK MODE-SWITCH ====== */
-.dark-mode-wrapper {
-    position: fixed;
-    top: 6rem;
-    right: 2rem;
-    z-index: 1100;
+    padding: 4px;
+    line-height: 1;
     display: flex;
-    flex-direction: column;
     align-items: center;
+    justify-content: center;
+    transition: color 0.15s ease, transform 0.2s ease;
+    z-index: 10;
 }
 
-.dark-mode-label {
-    font-size: 0.9rem;
-    margin-bottom: 0.3rem;
-    color: #333;
-}
-
-body.dark-mode .dark-mode-label {
-    color: #eee;
-}
-
-.switch {
-    position: relative;
-    width: 60px;
-    height: 34px;
-    display: inline-block;
-}
-
-.switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: 0.4s;
-    border-radius: 34px;
-}
-
-.slider:before {
-    content: "";
-    position: absolute;
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    transition: 0.4s;
-    border-radius: 50%;
-}
-
-input:checked + .slider {
-    background-color: #2196F3;
-}
-
-input:checked + .slider:before {
-    transform: translateX(26px);
+.close:hover {
+    color: #ef4444;
+    transform: rotate(90deg) scale(1.15);
 }
 
 /* ====== DARK MODE OVERRIDES ====== */
 body.dark-mode {
-    background-color: #121212;
-    color: #f1f1f1;
+    background-color: #0f172a;
+    color: #f1f5f9;
+}
+
+body.dark-mode #table-container {
+    background: #1e293b;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+    border-color: #334155;
+}
+
+body.dark-mode table.dataTable {
+    border-color: #334155;
+}
+
+body.dark-mode table.dataTable th,
+body.dark-mode table.dataTable td {
+    border-right-color: #334155;
 }
 
 body.dark-mode table.dataTable th {
-    background-color: #222;
-    color: #fff;
+    background-color: #1e293b;
+    color: #f8fafc;
+    border-bottom: 2px solid #334155;
 }
 
 body.dark-mode table.dataTable td {
-    background-color: #1e1e1e;
-    color: #e0e0e0;
+    background-color: #1e293b;
+    color: #cbd5e1;
+    border-bottom: 1px solid #334155;
+}
+
+/* Läsbara antal även i den öppna dropdownmenyn. */
+.dataTables_wrapper .dataTables_length select,
+.dataTables_wrapper .dataTables_length select option {
+    background-color: #ffffff;
+    color: #1e293b;
+    color-scheme: light;
+}
+
+body.dark-mode .dataTables_wrapper .dataTables_length {
+    color: #cbd5e1;
+}
+
+body.dark-mode .dataTables_wrapper .dataTables_length select,
+body.dark-mode .dataTables_wrapper .dataTables_length select option {
+    background-color: #1e293b;
+    color: #f1f5f9;
+    border-color: #64748b;
+    color-scheme: dark;
 }
 
 body.dark-mode .modal-content {
-    background-color: #2a2a2a;
-    color: white;
+    background-color: #1e293b;
+    color: #f1f5f9;
 }
 
 body.dark-mode .modal-content a {
-    color: white;
+    color: #60a5fa;
 }
 
 body.dark-mode .close {
-    color: white;
+    color: #94a3b8;
 }
 
-body.dark-mode .close:hover,
-body.dark-mode .close:focus {
-    color: #ccc;
+body.dark-mode .close:hover {
+    color: #f87171;
+}
+
+body.dark-mode .dark-mode-wrapper {
+    background-color: #334155;
+}
+body.dark-mode .dark-mode-wrapper:hover {
+    background-color: #475569;
+}
+
+body.dark-mode .theme-toggle-btn {
+    color: #38bdf8;
 }
 
 .modal-textblock {
@@ -269,15 +502,15 @@ body.dark-mode .close:focus {
   margin: 0 auto;
   font-size: 1rem;
   line-height: 1.7;
-  color: #222;
+  color: #334155;
 }
 
 .modal-textblock h3 {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   margin-top: 1.8em;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: #444;
+  color: #475569;
   display: flex;
   align-items: center;
   gap: 0.5em;
@@ -285,7 +518,7 @@ body.dark-mode .close:focus {
 
 .modal-textblock h3 i {
   font-size: 1rem;
-  color: #007BFF;
+  color: #3b82f6;
 }
 
 .modal-textblock p {
@@ -293,48 +526,80 @@ body.dark-mode .close:focus {
 }
 
 body.dark-mode .modal-textblock {
-  color: #eee;
+  color: #cbd5e1;
 }
 
 body.dark-mode .modal-textblock h3 {
-  color: #ccc;
+  color: #94a3b8;
 }
 
 body.dark-mode .modal-textblock h3 i {
-  color: #66b2ff;
+  color: #60a5fa;
 }
 
+/* Kompakt speciallayout enbart för Information och Anmärkning. */
+:is(#infoModal, #remarkModal) .modal-content {
+    box-sizing: border-box;
+    width: calc(100% - 32px);
+    max-width: 640px;
+    padding: 24px 28px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0 !important;
+    max-height: calc(100% - 32px);
+    overflow-y: auto;
+}
+
+:is(#infoModal, #remarkModal) .modal-body-content {
+    padding: 0;
+}
+
+:is(#infoModal, #remarkModal) .modal-textblock h3 {
+    margin: 0 0 14px;
+    padding-right: 32px;
+}
+
+:is(#infoModal, #remarkModal) .modal-body-content p {
+    margin: 0 0 14px;
+    line-height: 1.6;
+}
+
+:is(#infoModal, #remarkModal) .modal-body-content p:last-child {
+    margin-bottom: 0;
+}
+
+:is(#infoModal, #remarkModal) .close {
+    top: 18px;
+    right: 20px;
+}
 </style>
-
-
 </head>
 <body>
 
-  <!-- Överlägg som används för att dölja bakgrund vid modaler -->
+  <!-- Överlägg för modaler -->
   <div id="modal-overlay"></div>
 
-  <!-- Fast knapp: Återställ -->
-  <button id="reset-button" onclick="location.reload()">Återställ</button>
+  <!-- Rubrik och knappar -->
+  <header class="page-header">
+    <h1>Kulturens utställningar</h1>
+    <div class="top-right-buttons">
+      <button id="reset-button">Återställ</button>
+      <button id="info-button">Information</button>
+      <button id="remark-button">Anmärkning</button>
+      <div class="dark-mode-wrapper" onclick="toggleDarkMode()" title="Växla mellan mörkt och ljust läge">
+        <span>Tema</span>
+        <div class="theme-toggle-btn">
+          <i id="theme-icon" class="fa-solid fa-sun"></i>
+        </div>
+      </div>
+    </div>
+  </header>
 
-  <!-- Fast knapp: Info -->
-  <button id="info-button">Info</button>
-
-  <!-- Dark mode-toggle -->
-  <div class="dark-mode-wrapper">
-    <div class="dark-mode-label">Mörkt läge</div>
-    <label class="switch">
-      <input type="checkbox" onchange="toggleDarkMode()">
-      <span class="slider round"></span>
-    </label>
-  </div>
-
-  <!-- Rubriker -->
-  <h1>Kulturens utställningar 1882–</h1>
-  <h4>Sök i alla kolumner – filtrera "medan du skriver"</h4>
-
-  <!-- Tabellbehållare (döljs initialt) -->
+  <!-- Tabellbehållare -->
   <div id="table-container">
-    <table border="1" class="dataframe display">
+    <table class="dataframe display">
       <thead>
         <tr style="text-align: right;">
           <th>ID</th>
@@ -352,19 +617,299 @@ body.dark-mode .modal-textblock h3 i {
     </table>
   </div>
 
+<!-- ==============================
+     Information-modal
+============================== -->
+<div id="infoModal" class="modal">
+  <div class="modal-content" style="margin: 3% auto;">
+    <span class="close" onclick="closeInfoModal()"><i class="fa-solid fa-xmark"></i></span>
+    <div class="modal-body">
+      <div class="modal-textblock modal-body-content">
+        <h3><i class="fa-solid fa-circle-info"></i> Information</h3>
+        <p>
+          Denna lista omfattar alla utställningar som anordnats av Kulturen från den första i Huaröd 1882 till idag. 
+        </p>
+        <p>		  
+          De flesta posterna har både start- och slutdatum, uppgifter om lokal samt kommentarer om innehåll, samarbeten och eventuella inlån. 
+        </p>
+        <p>		  
+		  Datum av typen [1936-mm-dd] markerar 
+          att endast året är känt, medan [åååå-mm-dd] används när datum helt saknas eller slutdatum ännu inte har fastställts (t.ex. vid pågående utställningar).
+        </p>
+        <p>
+          Listan är interaktiv: du kan söka fritt i alla kolumner och filtreringen sker i realtid medan du skriver; varje kolumn kan också sorteras separat. 
+          Klicka på <strong>Återställ</strong> för att visa hela listan igen.
+        </p>
+        <p>
+          Om du upptäcker fel i en post eller vill göra tillägg, klicka på <strong>Kommentar</strong> och använd knapparna 
+          <strong style="color: #3b82f6;">Ändra kommentar</strong> eller <strong style="color: #ef4444;">Rapportera fel</strong>.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==============================
+     Anmärkning-modal
+============================== -->
+<div id="remarkModal" class="modal">
+  <div class="modal-content" style="margin: 3% auto;">
+    <span class="close" onclick="closeRemarkModal()"><i class="fa-solid fa-xmark"></i></span>
+    <div class="modal-body">
+      <div class="modal-textblock modal-body-content">
+        <h3><i class="fa-solid fa-pen-to-square"></i> Anmärkning</h3>
+        <p>
+          Ett arrangemang räknas som utställning om det i källorna uttryckligen benämns som ”utställning”. Detta är den huvudsakliga principen som ligger till grund för urvalet.
+        </p>
+        <p>		  
+          I listan ingår även varje byggnad i friluftsmuseet. Dessa betraktas på grund av sin karaktär och framträdande närvaro som utställningar i sig själva, oavsett om de rymmer en utställning eller ej. 
+        </p>
+        <p>		  
+          Vidare inkluderas utställningar som har anordnats av Kulturen på annan ort, men inte sådana som enbart har lånats ut till andra museer. 
+          Däremot ingår utställningar som lånats in till Kulturen från andra institutioner, eftersom de tillhandahålls av Kulturen precis som våra egna.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==============================
+     Kommentar-/Rapportmodal (Layout B)
+============================== -->
+<div id="myModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeKommentarModal()"><i class="fa-solid fa-xmark"></i></span>
+    <div class="modal-body">
+      <div class="modal-body-content">
+        <p id="modalText"></p>
+      </div>
+      <div id="reportButtonContainer" style="display: flex; justify-content: flex-end; margin-top: 0.5em;">
+        <!-- Knappar skapas dynamiskt -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Extern datakälla -->
+<script src="utstallningar-data.js"></script>
+
 <script>
-/* ============================
-   Visa kommentar-modal
-============================= */
+let table; // Global referens till tabellen
+
+window.addEventListener("load", function () {
+  // Kontrollera att datan är laddad
+  if (typeof utstallningar === "undefined") {
+    console.error("utstallningar-data.js har inte laddats ännu.");
+    return;
+  }
+
+  // Fyll tabellen med data
+  const tableBody = document.querySelector("table.display tbody");
+
+  utstallningar.forEach((post, index) => {
+    const row = document.createElement("tr");
+
+    const fullName = String(post.namn || "");
+    const nameCharacters = Array.from(fullName);
+    const isLongName = nameCharacters.length > 60;
+    const displayName = isLongName
+      ? nameCharacters.slice(0, 58).join("") + "..."
+      : fullName;
+    const iconHtml = isLongName
+      ? '<span class="cell-info-icon" tabindex="0"><i class="fa-regular fa-file-lines" aria-hidden="true"></i></span>'
+      : "";
+
+    const fullLocation = String(post.lokal || "");
+    const locationCharacters = Array.from(fullLocation);
+    const isLongLocation = locationCharacters.length > 40;
+    const displayLocation = isLongLocation
+      ? locationCharacters.slice(0, 38).join("") + "..."
+      : fullLocation;
+    const locationIconHtml = isLongLocation
+      ? '<span class="cell-info-icon" tabindex="0"><i class="fa-regular fa-file-lines" aria-hidden="true"></i></span>'
+      : "";
+
+    row.innerHTML = `
+      <td><div class="cell-content-wrapper"><span class="cell-text">${post.id}</span></div></td>
+      <td>
+        <div class="cell-content-wrapper">
+          <span class="cell-text exhibition-name"></span>
+          ${iconHtml}
+        </div>
+      </td>
+      <td><div class="cell-content-wrapper"><span class="cell-text">${post.typ}</span></div></td>
+      <td><div class="cell-content-wrapper"><span class="cell-text">${post.start}</span></div></td>
+      <td><div class="cell-content-wrapper"><span class="cell-text">${post.slut}</span></div></td>
+      <td>
+        <div class="cell-content-wrapper">
+          <span class="cell-text exhibition-location"></span>
+          ${locationIconHtml}
+        </div>
+      </td>
+      <td style="text-align: center;">
+        <button class="btn-kommentar" onclick="showKommentar(${index})">
+          <i class="fa-regular fa-comment" style="margin-right: 4px;"></i> Kommentar
+        </button>
+      </td>
+    `;
+    const nameCell = row.cells[1];
+    nameCell.querySelector(".exhibition-name").textContent = displayName;
+    // Behåll hela namnet vid sökning och sortering, även när det är förkortat.
+    nameCell.dataset.search = fullName;
+    nameCell.dataset.order = fullName;
+    const nameIcon = nameCell.querySelector(".cell-info-icon");
+    if (nameIcon) {
+      nameIcon.dataset.tooltip = fullName;
+      nameIcon.setAttribute("aria-label", fullName);
+    }
+    const locationCell = row.cells[5];
+    locationCell.querySelector(".exhibition-location").textContent = displayLocation;
+    locationCell.dataset.search = fullLocation;
+    locationCell.dataset.order = fullLocation;
+    const locationIcon = locationCell.querySelector(".cell-info-icon");
+    if (locationIcon) {
+      locationIcon.dataset.tooltip = fullLocation;
+      locationIcon.setAttribute("aria-label", fullLocation);
+    }
+    tableBody.appendChild(row);
+  });
+
+  // Ett gemensamt tooltip-lager direkt i body klipps inte av overflow: hidden/auto.
+  const nameTooltip = document.createElement("div");
+  nameTooltip.id = "exhibition-name-tooltip";
+  nameTooltip.className = "exhibition-name-tooltip";
+  nameTooltip.setAttribute("role", "tooltip");
+  nameTooltip.setAttribute("aria-hidden", "true");
+  document.body.appendChild(nameTooltip);
+  let activeNameIcon = null;
+
+  function hideNameTooltip() {
+    nameTooltip.classList.remove("is-visible");
+    nameTooltip.setAttribute("aria-hidden", "true");
+    if (activeNameIcon) activeNameIcon.removeAttribute("aria-describedby");
+    activeNameIcon = null;
+  }
+
+  function showNameTooltip(icon) {
+    if (activeNameIcon !== icon) hideNameTooltip();
+    activeNameIcon = icon;
+    nameTooltip.textContent = icon.dataset.tooltip;
+    const rect = icon.getBoundingClientRect();
+    nameTooltip.style.left = `${rect.left + rect.width / 2}px`;
+    nameTooltip.style.top = `${rect.top - 10}px`;
+    nameTooltip.setAttribute("aria-hidden", "false");
+    icon.setAttribute("aria-describedby", nameTooltip.id);
+    nameTooltip.classList.add("is-visible");
+  }
+
+  // Delegerade händelser fungerar även efter filtrering, sortering och sidbyte.
+  tableBody.addEventListener("pointerover", (event) => {
+    const icon = event.target.closest(".cell-info-icon");
+    if (icon) showNameTooltip(icon);
+  });
+  tableBody.addEventListener("pointerout", (event) => {
+    const icon = event.target.closest(".cell-info-icon");
+    if (icon && !icon.contains(event.relatedTarget)) hideNameTooltip();
+  });
+  tableBody.addEventListener("focusin", (event) => {
+    const icon = event.target.closest(".cell-info-icon");
+    if (icon) showNameTooltip(icon);
+  });
+  tableBody.addEventListener("focusout", hideNameTooltip);
+  document.addEventListener("scroll", hideNameTooltip, true);
+  window.addEventListener("resize", hideNameTooltip);
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") hideNameTooltip();
+  });
+
+  // Funktion för tusentalsavgränsning
+  function formatNumber(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  }
+
+  // Initiera DataTable med omvänd sortering (senaste först)
+  table = $('table.display').DataTable({
+    autoWidth: false,
+    order: [[0, "desc"]],
+    columnDefs: [
+      { targets: 0, width: "3.25%" },
+      { targets: 1, width: "35.75%" },
+      { targets: 2, width: "12%" },
+      { targets: 3, width: "8%" },
+      { targets: 4, width: "8%" },
+      { targets: 5, width: "23%" },
+      { targets: 6, width: "10%", orderable: false }
+    ],
+    dom: '<"top"f>rt<"bottom"lip><"clear">',
+    language: {
+      zeroRecords: "Inga matchande poster hittades",
+      emptyTable: "Tabellen innehåller inga data",
+      search: "",
+      lengthMenu: "Visa _MENU_ rader",
+      info: "",
+      infoFiltered: "",
+      paginate: {
+        first: "Första",
+        last: "Sista",
+        next: "Nästa",
+        previous: "Föregående"
+      }
+    }
+  });
+
+  // Anpassad infotext
+  function updateInfo() {
+    const info = table.page.info();
+    const start = info.start + 1;
+    const end = info.end;
+    const total = formatNumber(info.recordsTotal);
+    const filtered = formatNumber(info.recordsDisplay);
+
+    let output = `Visar ${start} till ${end} av totalt ${filtered} rader`;
+    if (info.recordsDisplay !== info.recordsTotal) {
+      output += ` (filtrerad från totalt ${total} rader)`;
+    }
+
+    $('div.dataTables_info').html(output);
+  }
+
+  updateInfo();               
+  table.on('draw', updateInfo);
+  table.on('draw', hideNameTooltip); 
+
+  // Visa tabellen när den är redo
+  document.getElementById("table-container").style.display = "block";
+
+  // Stiljusteringar för sökfält och dropdown
+  $('div.dataTables_length').css({
+    'padding-top': '1.5em'
+  });
+
+  $('div.dataTables_filter').css({
+    'width': '100%',
+    'display': 'flex',
+    'justify-content': 'center',
+    'align-items': 'center',
+    'margin-bottom': '1.5em'
+  });
+
+  $('input[type="search"]')
+    .attr("placeholder", "Filtrera medan du skriver...")
+    .css({
+      'width': '500px',
+      'min-width': '300px',
+      'padding': '0.5rem 1rem',
+      'font-size': '1rem',
+      'border': '1px solid var(--border-color, #ccc)',
+      'border-radius': '8px',
+      'outline': 'none'
+    });
+});
+
+// Visa kommentar-modal
 function showKommentar(index) {
   const post = utstallningar[index];
-
-  // Förbered e-postlänk (används i fallback)
-  const subject = encodeURIComponent(`Kommentar till utställning id-nummer ${post.id}: ${post.namn}`);
-  const mailLink = `mailto:johan.hofvendahl@kulturen.com?subject=${subject}`;
-
-  // Innehåll i modal
-  const content = post.kommentar.trim()
+  const content = post.kommentar && post.kommentar.trim()
     ? post.kommentar
     : `Det saknas närmare uppgifter om denna utställning.`;
 
@@ -372,40 +917,34 @@ function showKommentar(index) {
   document.getElementById("myModal").style.display = "block";
   document.getElementById("modal-overlay").style.display = "block";
 
-  // Rensa knapprad
   const reportContainer = document.getElementById("reportButtonContainer");
   reportContainer.innerHTML = "";
 
-  // ⬅️ Knapp: Ändra kommentar
+  // Knapp: Ändra kommentar
   const editButton = document.createElement("button");
   editButton.classList.add("btn-edit");
   editButton.innerHTML = '<i class="fa-solid fa-envelope" style="margin-right: 6px;"></i>Ändra kommentar';
   editButton.onclick = (event) => {
     event.stopPropagation();
     const editSubject = encodeURIComponent(`Utställningslista - ändra kommentar: id ${post.id}, utställning: ${post.namn}`);
-    const mailtoLink = `mailto:johan.hofvendahl@kulturen.com?subject=${editSubject}`;
-    window.location.href = mailtoLink;
+    window.location.href = `mailto:johan.hofvendahl@kulturen.com?subject=${editSubject}`;
   };
 
-  // ➡️ Knapp: Rapportera fel
+  // Knapp: Rapportera fel
   const reportButton = document.createElement("button");
   reportButton.classList.add("btn-report");
   reportButton.innerHTML = '<i class="fa-solid fa-envelope" style="margin-right: 6px;"></i>Rapportera fel';
   reportButton.onclick = (event) => {
     event.stopPropagation();
     const reportSubject = encodeURIComponent(`Felrapport utställningslista: id ${post.id}, utställning: ${post.namn}`);
-    const mailtoLink = `mailto:johan.hofvendahl@kulturen.com?subject=${reportSubject}`;
-    window.location.href = mailtoLink;
+    window.location.href = `mailto:johan.hofvendahl@kulturen.com?subject=${reportSubject}`;
   };
 
-  // Lägg till knappar i rätt ordning
   reportContainer.appendChild(editButton);
   reportContainer.appendChild(reportButton);
 }
 
-/* ============================
-   Modalhantering
-============================= */
+// Modalhantering
 function closeKommentarModal() {
   document.getElementById("myModal").style.display = "none";
   document.getElementById("modal-overlay").style.display = "none";
@@ -416,103 +955,72 @@ function closeInfoModal() {
   document.getElementById("modal-overlay").style.display = "none";
 }
 
-/* ============================
-   Dark mode
-============================= */
+function closeRemarkModal() {
+  document.getElementById("remarkModal").style.display = "none";
+  document.getElementById("modal-overlay").style.display = "none";
+}
+
+// Dark mode-funktion
 function toggleDarkMode() {
   const isDark = document.body.classList.toggle("dark-mode");
   localStorage.setItem("darkMode", isDark ? "enabled" : "disabled");
+  updateDarkModeIcon(isDark);
 }
 
-/* ============================
-   När DOM laddats
-============================= */
+function updateDarkModeIcon(isDark) {
+  const icon = document.getElementById("theme-icon");
+  if (icon) {
+    icon.className = isDark ? "fa-solid fa-moon" : "fa-solid fa-sun";
+  }
+}
+
+// Global DOM-lyssnare för knappar och overlay
 document.addEventListener("DOMContentLoaded", function () {
-  // Återställ dark mode om aktivt
   if (localStorage.getItem("darkMode") === "enabled") {
     document.body.classList.add("dark-mode");
-    document.querySelector(".switch input").checked = true;
+    updateDarkModeIcon(true);
+  } else {
+    updateDarkModeIcon(false);
   }
 
-  // Återställ-knapp
-  document.getElementById("reset-button").addEventListener("click", () => {
-    location.reload();
-  });
+  // Återställ-knapp (nollställer sökning och sortering mjukt utan sidomladdning)
+  const resetButton = document.getElementById("reset-button");
+  if (resetButton) {
+    resetButton.addEventListener("click", () => {
+      if (table) {
+        table.search("").order([[0, "desc"]]).draw();
+        const searchInput = document.querySelector('input[type="search"]');
+        if (searchInput) searchInput.value = "";
+      }
+    });
+  }
 
-  // Info-knapp
-  document.getElementById("info-button").addEventListener("click", () => {
-    document.getElementById("infoModal").style.display = "block";
-    document.getElementById("modal-overlay").style.display = "block";
-  });
+  const infoButton = document.getElementById("info-button");
+  if (infoButton) {
+    infoButton.addEventListener("click", () => {
+      document.getElementById("infoModal").style.display = "block";
+      document.getElementById("modal-overlay").style.display = "block";
+    });
+  }
 
-  // Klick utanför modaler
-  document.getElementById("modal-overlay").addEventListener("click", function () {
-    document.getElementById("myModal").style.display = "none";
-    document.getElementById("infoModal").style.display = "none";
-    this.style.display = "none";
-  });
+  const remarkButton = document.getElementById("remark-button");
+  if (remarkButton) {
+    remarkButton.addEventListener("click", () => {
+      document.getElementById("remarkModal").style.display = "block";
+      document.getElementById("modal-overlay").style.display = "block";
+    });
+  }
+
+  const modalOverlay = document.getElementById("modal-overlay");
+  if (modalOverlay) {
+    modalOverlay.addEventListener("click", function () {
+      document.getElementById("myModal").style.display = "none";
+      document.getElementById("infoModal").style.display = "none";
+      document.getElementById("remarkModal").style.display = "none";
+      this.style.display = "none";
+    });
+  }
 });
 </script>
-
-<!-- ==============================
-     Informationsmodal
-============================== -->
-<div id="infoModal" class="modal">
-  <div class="modal-content" style="margin: 3% auto;">
-    <span class="close" onclick="closeInfoModal()">&times;</span>
-    <div class="modal-body">
-
-<div class="modal-textblock">
-
-  <h3><i class="fa-solid fa-circle-info"></i> Information</h3>
-  <p>
-    Denna lista omfattar alla utställningar som anordnats av Kulturen <strong>från den första i Huaröd 1882 till idag</strong>. 
-    För de flesta anges start- och slutdatum, lokal samt kommentarer om innehåll, samarbeten och eventuella inlån. Datum av typen 1936-<strong>mm-dd</strong> markerar 
-    att endast året är känt, medan <strong>åååå-mm-dd</strong> används när datum helt saknas eller slutdatum ännu inte fastställts (t.ex. vid pågående utställningar).
-  </p>
-  <p>
-    <strong>Listan är interaktiv</strong>: du kan söka fritt i alla kolumner och filtreringen sker i realtid medan du skriver; varje kolumn kan också sorteras separat.
-    Klicka på <em>Återställ</em> för att visa hela listan igen.
-  </p>
-  <p>
-    <strong>Om du upptäcker fel</strong> i en post eller vill göra tillägg, klicka på <strong>Visa kommentar</strong> på aktuell rad och använd
-    knapparna <strong>Ändra kommentar</strong> eller <strong>Rapportera fel</strong>.
-  </p>
-
-  <h3><i class="fa-solid fa-pen-to-square"></i> Anmärkning</h3>
-  <p>
-    Ett arrangemang räknas som utställning om det i källorna uttryckligen benämns som ”utställning” – detta är den huvudsakliga principen som ligger
-    till grund för urvalet.
-    I listan ingår även varje byggnad i friluftsmuseet. Dessa betraktas, på grund av sin karaktär och framträdande närvaro, som utställningar i sig
-    själva – oavsett om de rymmer en utställning eller inte.
-    Vidare inkluderas utställningar som har anordnats av Kulturen på annan ort, men inte sådana som enbart har lånats ut till andra museer.
-    Däremot ingår utställningar som lånats in till Kulturen från andra institutioner, eftersom de tillhandahålls av Kulturen precis som våra egna.
-  </p>
-
-</div>
-
-
-    </div>
-  </div>
-</div>
-
-<!-- ==============================
-     Kommentar-/Rapportmodal
-============================== -->
-<div id="myModal" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeKommentarModal()">&times;</span>
-    <div class="modal-body">
-      <p id="modalText"></p>
-      <div id="reportButtonContainer" style="display: flex; justify-content: flex-end; margin-top: 1.5em;">
-        <!-- Knappar skapas dynamiskt -->
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<script src="utstallningar-data.js"></script>
-<script src="utstallningar-functions.js"></script>
 </body>
 </html>
