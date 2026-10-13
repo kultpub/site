@@ -7348,7 +7348,7 @@ const utstallningar = [
   typ: "Tillfällig",
   start: "2011-mm-dd",
   slut: "2011-03-11",
-  lokal: "Uppgift saknas",
+  lokal: "Lundahallen",
   kommentar: "Av elever från tre folkhögskolor" 
   },
 { id: "919",
@@ -7380,7 +7380,7 @@ const utstallningar = [
   typ: "Tillfällig",
   start: "2012-01-22",
   slut: "2012-03-22",
-  lokal: "Uppgift saknas",
+  lokal: "Allmogehallen",
   kommentar: "Producerad av Strindbergsmuseet i Stockholm" 
   },
 { id: "923",
@@ -7396,7 +7396,7 @@ const utstallningar = [
   typ: "Tillfällig",
   start: "2012-04-15",
   slut: "2013-01-06",
-  lokal: "Uppgift saknas",
+  lokal: "Allmogehallen",
   kommentar: "Lekutställning med anledning av att barnboksfiguren Alfons Åberg fyllde 40 år" 
   },
 { id: "925",
@@ -7436,7 +7436,7 @@ const utstallningar = [
   typ: "Tillfällig",
   start: "2013-02-16",
   slut: "2013-04-28",
-  lokal: "Uppgift saknas",
+  lokal: "Lundahallen",
   kommentar: "Fotoutställning med den skånske fotografen Martin Bogren" 
   },
 { id: "930",
@@ -7444,7 +7444,7 @@ const utstallningar = [
   typ: "Tillfällig",
   start: "2013-02-17",
   slut: "2013-09-01",
-  lokal: "Uppgift saknas",
+  lokal: "Textilhallen",
   kommentar: "Skiljer sig barns självporträtt uttrycksmässigt från konstnärernas?" 
   },
 { id: "931",
@@ -7468,7 +7468,7 @@ const utstallningar = [
   typ: "Tillfällig",
   start: "2013-04-21",
   slut: "2013-09-15",
-  lokal: "Uppgift saknas",
+  lokal: "Textilhallen",
   kommentar: "Skånske Lars Håkansson hör till de mest uppmärksammade silversmederna i Sverige" 
   },
 { id: "934",
@@ -7572,7 +7572,7 @@ const utstallningar = [
   typ: "Tillfällig",
   start: "2014-09-12",
   slut: "2015-01-11",
-  lokal: "Uppgift saknas",
+  lokal: "Vita huset (andra våningen)",
   kommentar: "Om civilkurage och att våga ta ställning; från Forum för levande historia" 
   },
 { id: "947",
