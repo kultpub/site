@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="sv"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Programvisningar och aktiviteter</title><style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg: #f8f9fa;
+  --surface: #fff;
+  --surface2: #f1f3f5;
+  --text: #1a1a1a;
+  --muted: #6c757d;
+  --border: #e9ecef;
+  --border2: #dee2e6;
+  --accent: #7c4b2a;
+  --accent-light: #fdf1e8;
+  --green: #2b8a3e;
+  --green-bg: #ebfbee;
+  --orange: #c56a00;
+  --orange-bg: #fff4e6;
+  --blue: #1971c2;
+  --blue-bg: #e7f5ff;
+  --danger: #c92a2a;
+  --radius: 14px;
+  --shadow: 0 4px 12px rgba(0,0,0,.055);
+}
+
+* { box-sizing: border-box; }
+html { scrollbar-gutter: stable; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+button, input, select { font: inherit; }
+
+.page {
+  width: min(1540px, calc(100vw - 40px));
+  margin: 0 auto;
+  padding: 34px 0 64px;
+}
+
+.topbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 22px;
+}
+.kicker {
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin-bottom: 7px;
+}
+h1 {
+  margin: 0;
+  font-size: clamp(30px, 3.4vw, 44px);
+  line-height: 1;
+  letter-spacing: -.04em;
+}
+.subtitle {
+  margin-top: 9px;
+  color: var(--muted);
+  font-size: 14px;
+}
+.top-actions { display: flex; gap: 10px; align-items: center; }
+.btn {
+  border: 1px solid var(--border2);
+  border-radius: 30px;
+  background: var(--surface);
+  color: var(--text);
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,.035);
+}
+.btn:hover { border-color: #adb5bd; background: #f8f9fa; }
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(150px, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.summary-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 17px 18px;
+  box-shadow: var(--shadow);
+}
+.summary-label {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .055em;
+  text-transform: uppercase;
+  margin-bottom: 7px;
+}
+.summary-value { font-size: 26px; line-height: 1; font-weight: 700; letter-spacing: -.03em; }
+.summary-note { margin-top: 6px; color: var(--muted); font-size: 12px; }
+
+.filters {
+  display: grid;
+  grid-template-columns: minmax(260px, 1.5fr) 150px 150px minmax(230px, 1fr) 170px auto;
+  gap: 10px;
+  align-items: end;
+  padding: 16px;
+  margin-bottom: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.field { min-width: 0; }
+.field > label {
+  display: block;
+  margin: 0 0 6px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.field input,
+.field select {
+  width: 100%;
+  height: 40px;
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  background: #f8f9fa;
+  color: var(--text);
+  padding: 0 11px;
+  outline: none;
+}
+.field input:focus,
+.field select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); background: #fff; }
+.toggle-wrap { height: 40px; display: flex; align-items: center; }
+.field .toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #444;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.toggle input { display: none; }
+.toggle-track {
+  display: inline-block;
+  flex: 0 0 42px;
+  width: 42px;
+  height: 24px;
+  border: 1px solid #b9c0c7;
+  border-radius: 999px;
+  background: #ced4da;
+  position: relative;
+  transition: background .16s, border-color .16s;
+}
+.toggle-track::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,.22);
+  transition: transform .16s;
+}
+.toggle input:checked + .toggle-track {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.toggle input:checked + .toggle-track::after { transform: translateX(18px); }
+
+.table-shell {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.table-scroller { overflow: auto; max-height: calc(100vh - 345px); min-height: 360px; }
+.table {
+  min-width: 1280px;
+  width: 100%;
+}
+.table-head,
+.data-row {
+  display: grid;
+  grid-template-columns: 112px minmax(220px, 1.25fr) minmax(260px, 1.35fr) 78px minmax(175px, .9fr) minmax(175px, .9fr) minmax(260px, 1.45fr);
+  align-items: center;
+}
+.table-head {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: #f1f3f5;
+  border-bottom: 1px solid var(--border2);
+  color: #555;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+.table-head > div { padding: 12px 14px; }
+.data-row {
+  min-height: 72px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background .12s ease;
+}
+.data-row:last-child { border-bottom: 0; }
+.data-row:hover { background: #fff9db; }
+.cell { padding: 12px 14px; min-width: 0; }
+.date-main { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600; }
+.date-sub { margin-top: 3px; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .04em; }
+.group-title { font-size: 14px; font-weight: 700; line-height: 1.35; }
+.count-badges { display: flex; flex-wrap: wrap; gap: 5px; }
+.badge {
+  display: inline-flex; align-items: center; gap: 4px; min-height: 25px; padding: 4px 8px; border-radius: 999px; background: var(--surface2); color: #495057; font-size: 11px; font-weight: 700; white-space: nowrap;
+}
+.badge strong { color: #111; }
+.badge.invoice { background: var(--orange-bg); color: var(--orange); }
+.badge.direct { background: var(--green-bg); color: var(--green); }
+.badge.viewing { background: var(--blue-bg); color: var(--blue); }
+.total { text-align: right; font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.payment-lines { display: grid; gap: 4px; }
+.payment-line { font-size: 12px; line-height: 1.35; }
+.payment-line .label { color: var(--muted); }
+.note {
+  color: #343a40;
+  font-size: 13px;
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.muted { color: #adb5bd; }
+.empty {
+  min-height: 330px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 30px;
+  color: var(--muted);
+  font-size: 15px;
+}
+.statusbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 4px 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* Login */
+.auth-overlay {
+  position: fixed; inset: 0; z-index: 1200; display: none; align-items: center; justify-content: center; padding: 20px; background: rgba(20,20,20,.52); backdrop-filter: blur(7px);
+}
+.auth-overlay.open { display: flex; }
+.auth-modal {
+  width: min(430px, 96vw); background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 30px; box-shadow: 0 25px 60px rgba(0,0,0,.25);
+}
+.auth-kicker { color: var(--accent); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 7px; }
+.auth-modal h2 { margin: 0 0 6px; font-size: 24px; letter-spacing: -.02em; }
+.auth-intro { margin: 0 0 20px; color: var(--muted); font-size: 14px; line-height: 1.5; }
+.auth-modal label { display: block; margin: 13px 0 6px; color: var(--muted); font-size: 11px; font-weight: 700; text-transform: uppercase; }
+.auth-modal input { width: 100%; height: 42px; border: 1px solid var(--border2); border-radius: 7px; padding: 0 11px; }
+.auth-actions { display: flex; justify-content: flex-end; margin-top: 20px; }
+.auth-status { min-height: 18px; margin-top: 10px; color: var(--danger); font-size: 12px; }
+
+/* Detail modal */
+.detail-overlay {
+  position: fixed; inset: 0; z-index: 1000; display: none; align-items: center; justify-content: center; padding: 22px; background: rgba(20,20,20,.42); backdrop-filter: blur(4px);
+}
+.detail-overlay.open { display: flex; }
+.detail-modal {
+  width: min(760px, 96vw); max-height: 88vh; overflow: auto; background: #fff; border-radius: 16px; padding: 28px; box-shadow: 0 25px 60px rgba(0,0,0,.24); position: relative;
+}
+/* Samma stängningsknapp som i övriga interna sidor */
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font-size: 0;
+  line-height: 1;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modal-close::before,
+.modal-close::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 2px;
+  background-color: var(--text);
+  border-radius: 2px;
+}
+
+.modal-close::before { transform: rotate(45deg); }
+.modal-close::after  { transform: rotate(-45deg); }
+
+.modal-close:hover {
+  background-color: var(--danger);
+  border-color: var(--danger);
+  transform: rotate(90deg);
+}
+
+.modal-close:hover::before,
+.modal-close:hover::after {
+  background-color: #fff;
+}
+.detail-date { color: var(--accent); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
+.detail-modal h2 { margin: 0 44px 20px 0; font-size: 25px; letter-spacing: -.025em; }
+.detail-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+.detail-box { background: #f8f9fa; border: 1px solid var(--border); border-radius: 10px; padding: 13px 14px; }
+.detail-box.full { grid-column: 1 / -1; }
+.detail-label { color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; margin-bottom: 5px; }
+.detail-value { font-size: 14px; line-height: 1.55; }
+
+@media (max-width: 1050px) {
+  .filters { grid-template-columns: 1fr 1fr 1fr; }
+  .summary-grid { grid-template-columns: 1fr 1fr; }
+  .table-scroller { max-height: none; }
+}
+@media (max-width: 650px) {
+  .page { width: min(100% - 24px, 1540px); padding-top: 20px; }
+  .topbar { align-items: flex-start; flex-direction: column; }
+  .filters { grid-template-columns: 1fr; }
+  .summary-grid { grid-template-columns: 1fr 1fr; }
+  .detail-grid { grid-template-columns: 1fr; }
+  .detail-box.full { grid-column: auto; }
+}
+
+.filters {grid-template-columns:minmax(220px,2fr) 150px 170px 220px;}
+.table {min-width:700px; border-collapse:collapse;}
+.table th {background:var(--surface2); padding:14px; text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.04em; position:sticky;top:0;}
+.table td {padding:17px 14px;border-bottom:1px solid var(--border);font-size:14px;vertical-align:top;}
+.table tbody tr:hover {background:#fff9db;}
+.table .number {text-align:right;font-variant-numeric:tabular-nums;width:100px;}
+.table .activity {width:55%;white-space:pre-wrap;overflow-wrap:anywhere;}
+.context-note {font-size:13px;color:var(--muted);line-height:1.6;margin:0 0 20px;max-width:1000px;}
+.legacy-note {padding:12px 16px;margin-bottom:14px;border:1px solid #ffe0b2;border-radius:10px;background:var(--orange-bg);font-size:13px;line-height:1.5;}
+.demo-banner {padding:12px 16px;margin-bottom:18px;background:var(--blue-bg);color:var(--blue);border-radius:10px;font-size:13px;}
+[hidden] {display:none!important;}
+.table-scroller {max-height:65vh;}
+@media(max-width:1050px){.filters{grid-template-columns:1fr 1fr;}}
+@media(max-width:650px){.filters{grid-template-columns:1fr;}h1{line-height:1.1}.top-actions{flex-wrap:wrap;}}
+</style></head><body><main class="page" id="programPage" hidden>
+<header class="topbar"><div><div class="kicker">Kulturen i Lund</div><h1>Programvisningar och aktiviteter</h1><div class="subtitle">Registrerade antal vuxna och barn</div></div>
+<div class="top-actions"><button class="btn" id="logoutBtn">Logga ut</button><button class="btn" id="resetBtn">Återställ filter</button></div></header>
+<div class="demo-banner" id="demoBanner" hidden>Förhandsvisning med påhittade exempeldata. Dessa uppgifter sparas inte.</div>
+<p class="context-note">Deltagande i Kulturens programverksamhet, registrerat i dagsrapporterna. Deltagarna ingår redan i besöksstatistiken och ska inte läggas till där. Antalen avser deltagande per aktivitet, inte unika museibesökare.</p>
+<section class="summary-grid" aria-label="Sammanfattning av filtrerat urval">
+<div class="summary-card"><div class="summary-label">Programpunkter</div><div class="summary-value" id="sumRecords">—</div><div class="summary-note" id="sumRecordsNote">alla registrerade poster</div></div><div class="summary-card"><div class="summary-label">Vuxna</div><div class="summary-value" id="sumAdults">—</div><div class="summary-note">i visade poster</div></div><div class="summary-card"><div class="summary-label">Barn</div><div class="summary-value" id="sumChildren">—</div><div class="summary-note">i visade poster</div></div><div class="summary-card"><div class="summary-label">Totalt deltagande</div><div class="summary-value" id="sumTotal">—</div><div class="summary-note">i visade poster</div></div></section><section class="filters" aria-label="Filter">
+<div class="field"><label for="searchInput">Sök</label><input id="searchInput" type="search" placeholder="Aktivitet, visningsledare eller datum…"></div>
+<div class="field"><label for="yearFilter">År</label><select id="yearFilter"><option value="">Alla år</option></select></div>
+<div class="field"><label for="monthFilter">Månad</label><select id="monthFilter"><option value="">Alla månader</option><option value="1">Januari</option><option value="2">Februari</option><option value="3">Mars</option><option value="4">April</option><option value="5">Maj</option><option value="6">Juni</option><option value="7">Juli</option><option value="8">Augusti</option><option value="9">September</option><option value="10">Oktober</option><option value="11">November</option><option value="12">December</option></select></div><div class="field"><label for="sortFilter">Sortering</label><select id="sortFilter"><option value="newest">Nyast först</option><option value="oldest">Äldst först</option></select></div></section>
+<div class="legacy-note" id="legacyNote" hidden></div>
+<section class="table-shell" aria-label="Registrerade programvisningar och aktiviteter"><div class="table-scroller"><table class="table"><thead><tr><th scope="col">Datum</th><th scope="col" class="activity">Programvisning / aktivitet</th><th scope="col" class="number">Vuxna</th><th scope="col" class="number">Barn</th><th scope="col" class="number">Totalt</th></tr></thead><tbody id="rows"></tbody></table><div class="empty" id="emptyState" role="status">Hämtar aktiviteter…</div></div></section>
+<div class="statusbar" aria-live="polite"><span id="statusText">Hämtar data…</span><span id="liveText"></span></div>
+</main><div class="auth-overlay open" id="authOverlay" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+<form class="auth-modal" id="authForm">
+<div class="auth-kicker">Kulturen i Lund</div><h2 id="authTitle">Programvisningar och aktiviteter</h2>
+<p class="auth-intro">Logga in med ditt konto för programvisningar och aktiviteter.</p>
+<label for="authEmail">E-postadress</label><input id="authEmail" type="email" autocomplete="username" required>
+<label for="authPassword">Lösenord</label><input id="authPassword" type="password" autocomplete="current-password" required>
+<div class="auth-status" id="authStatus" role="status" aria-live="polite">Kontrollerar inloggning…</div>
+<div class="auth-actions"><button class="btn" id="loginBtn" type="submit" disabled>Logga in</button></div>
+</form></div>
+
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBxGc4jxkayGoOWDjeVwJqCJJm-536FUkI",
+  authDomain: "kulturen-dagsdata.firebaseapp.com",
+  projectId: "kulturen-dagsdata",
+  storageBucket: "kulturen-dagsdata.firebasestorage.app",
+  messagingSenderId: "306416395027",
+  appId: "1:306416395027:web:0211f420e2ec773d8970e6"
+};
+const VENUE = 'kulturenilund';
+const $ = id => document.getElementById(id);
+const fmt = new Intl.NumberFormat('sv-SE');
+let activities = [], unsubscribe = null, authorized = false, accessUnsubscribe = null, authEpoch = 0;
+function esc(value) {
+  return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function isCount(value) { return Number.isSafeInteger(value) && value >= 0; }
+function mapReport(doc) {
+  const r = doc.data();
+  if (r.venue !== VENUE || r.sourceType !== 'dailyReport' || !/^\d{4}-\d{2}-\d{2}$/.test(r.date || '')) return [];
+  if (!Array.isArray(r.details?.viewings)) return [];
+  return r.details.viewings.flatMap((v, index) => {
+    if (!v || typeof v.name !== 'string' || !v.name.trim()) return [];
+    const split = isCount(v.adults) && isCount(v.children);
+    const total = split ? v.adults + v.children : v.participants;
+    if (!isCount(total) || total === 0) return [];
+    return [{id:doc.id + ':' + index, date:r.date, name:v.name.trim(),
+      adults:split ? v.adults : null, children:split ? v.children : null, total, split}];
+  });
+}
+function summarize(items) {
+  return items.reduce((s, v) => ({records:s.records+1, adults:s.adults+(v.adults??0),
+    children:s.children+(v.children??0), total:s.total+v.total,
+    unknown:s.unknown+(v.split?0:v.total), legacy:s.legacy+(v.split?0:1)}),
+    {records:0, adults:0, children:0, total:0, unknown:0, legacy:0});
+}
+function selectActivities(items, query, year, month, sort) {
+  return items.filter(v => (!query || `${v.name} ${v.date}`.toLocaleLowerCase('sv').includes(query.toLocaleLowerCase('sv')))
+    && (!year || v.date.slice(0,4) === year)
+    && (!month || Number(v.date.slice(5,7)) === Number(month)))
+    .sort((a,b) => (sort === 'oldest' ? 1 : -1)*a.date.localeCompare(b.date) || a.id.localeCompare(b.id));
+}
+function buildYears() {
+  const previous = $('yearFilter').value;
+  const years = [...new Set(activities.map(v=>v.date.slice(0,4)))].sort().reverse();
+  $('yearFilter').innerHTML = '<option value="">Alla år</option>'+years.map(y=>`<option value="${y}">${y}</option>`).join('');
+  if(years.includes(previous)) $('yearFilter').value=previous;
+}
+function render() {
+  const visible = selectActivities(activities, $('searchInput').value.trim(),$('yearFilter').value, $('monthFilter').value, $('sortFilter').value);
+  const s = summarize(visible);
+  for(const [id,key] of [['sumRecords','records'],['sumAdults','adults'],['sumChildren','children'],['sumTotal','total']]) $(id).textContent=fmt.format(s[key]);$('rows').innerHTML=visible.map(v=>`<tr><td class="date-main">${esc(v.date)}</td><td class="activity"><strong>${esc(v.name)}</strong>${v.split?'':''}</td><td class="number">${v.split?fmt.format(v.adults):'—'}</td><td class="number">${v.split?fmt.format(v.children):'—'}</td><td class="number"><strong>${fmt.format(v.total)}</strong></td></tr>`).join('');
+  $('emptyState').hidden=visible.length>0;
+  $('emptyState').textContent=activities.length?'Inga aktiviteter matchar dina filter.':'Inga programvisningar eller aktiviteter finns registrerade ännu.';
+  $('legacyNote').hidden=!s.legacy;
+  $('legacyNote').textContent=`${fmt.format(s.unknown)} deltaganden i ${fmt.format(s.legacy)} äldre eller ofullständiga poster saknar åldersfördelning. De ingår i totalen, men inte i summorna för vuxna och barn. Streck betyder att uppgift saknas.`;
+  $('sumRecordsNote').textContent = visible.length === activities.length ? "alla registrerade poster" : `av ${fmt.format(activities.length)} totalt`;
+  $('statusText').textContent=`${fmt.format(s.records)} av ${fmt.format(activities.length)} aktiviteter · ${fmt.format(s.total)} deltaganden`;
+}
+function showError() {
+  activities=[];buildYears();render();
+  for(const id of ['sumRecords','sumAdults','sumChildren','sumTotal']) $(id).textContent='—';$('emptyState').hidden=false;
+  $('emptyState').textContent='Kunde inte hämta aktiviteter. Kontrollera anslutningen och försök ladda om sidan.';
+  $('statusText').textContent='Data kunde inte hämtas';$('liveText').textContent='Anslutningsfel';
+}
+function startLive() {
+  if (!authorized) return;
+  const epoch = authEpoch;
+  if(unsubscribe) {unsubscribe();unsubscribe=null;}
+  activities=[];buildYears();render();
+  for(const id of ['sumRecords','sumAdults','sumChildren','sumTotal']) $(id).textContent='—';$('emptyState').textContent='Hämtar aktiviteter…';$('statusText').textContent='Hämtar data…';$('liveText').textContent='';
+  try {
+    if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    // Läs enbart publika dagsrapporter. Sidan skriver aldrig till någon samling.
+    unsubscribe=firebase.firestore().collection('dailyReports').where('venue','==',VENUE).onSnapshot(snapshot=>{
+      if(!authorized || epoch !== authEpoch) return;
+      activities=snapshot.docs.flatMap(mapReport);buildYears();render();$('liveText').textContent='Uppdateras från dagsrapporterna';
+    },error=>{if(authorized && epoch === authEpoch) {console.error(error);showError();}});
+  } catch(error) {console.error(error);showError();}
+}
+for(const id of ['searchInput','yearFilter','monthFilter','sortFilter']) $(id).addEventListener(id==='searchInput'?'input':'change',render);$('resetBtn').addEventListener('click',()=>{for(const id of ['searchInput','yearFilter','monthFilter']) $(id).value='';$('sortFilter').value='newest';render();});
+function lockPage(message = '') {
+  authorized = false;
+  if (unsubscribe) {unsubscribe();unsubscribe=null;}
+  activities=[];buildYears();render();
+  $('programPage').hidden=true;
+  $('authOverlay').classList.add('open');$('authStatus').textContent=message;
+  $('liveText').textContent='';
+}
+function loginError(error) {
+  const code = error?.code || 'okänt fel';
+  if (code === 'auth/operation-not-allowed') return 'E-post och lösenord är inte aktiverat för projektet i Firebase Authentication. (' + code + ')';
+  if (code === 'auth/web-storage-unsupported') return 'Webbläsaren tillåter inte lagring av inloggningen. (' + code + ')';
+  if (code === 'auth/unauthorized-domain') return 'Webbplatsens domän är inte tillåten i Firebase Authentication. (' + code + ')';
+  if (error?.code === 'auth/too-many-requests') return 'För många försök. Försök igen senare.';
+  if (error?.code === 'auth/network-request-failed') return 'Nätverksfel. Kontrollera anslutningen.';
+  return 'Inloggningen misslyckades. Kontrollera e-postadress och lösenord. (' + code + ')';
+}
+$('authForm').addEventListener('submit', event => event.preventDefault());
+try {
+  if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+  const auth=firebase.auth();
+  function checkAccess(user) {
+    const epoch=++authEpoch;
+    if(accessUnsubscribe) {accessUnsubscribe();accessUnsubscribe=null;}
+    lockPage(user ? 'Kontrollerar behörighet…' : '');
+    $('loginBtn').disabled=false;
+    if(!user) return;
+    accessUnsubscribe=firebase.firestore().collection('programAccess').doc(user.uid).onSnapshot(doc=>{
+      if(epoch!==authEpoch) return;
+      if(!doc.exists || doc.data().active!==true) {
+        lockPage(!doc.exists
+          ? 'Inloggningen lyckades, men kontot saknar ett behörighetsdokument i programAccess. Kontots UID: ' + user.uid
+          : 'Inloggningen lyckades, men active måste vara boolean-värdet true i programAccess/' + user.uid + '.');
+        return;
+      }
+      if(authorized) return;
+      authorized=true;
+      $('authPassword').value='';
+      $('authOverlay').classList.remove('open');$('programPage').hidden=false;
+      startLive();
+    },error=>{
+      if(epoch!==authEpoch) return;
+      console.error(error);
+      lockPage('Inloggningen lyckades, men behörigheten kunde inte läsas. Felkod: ' + (error.code || 'okänd') + '. Kontots UID: ' + user.uid);
+    });
+  }
+  auth.onAuthStateChanged(checkAccess, error=>{
+    $('loginBtn').disabled=false;
+    lockPage('Inloggningen kunde inte kontrolleras. ' + loginError(error));
+  });
+  $('authForm').addEventListener('submit',async event=>{
+    event.preventDefault();
+    $('loginBtn').disabled=true;$('loginBtn').textContent='Loggar in…';$('authStatus').textContent='';
+    try {
+      try {
+        await auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
+      } catch (error) {
+        if (error.code !== 'auth/web-storage-unsupported') throw error;
+        await auth.setPersistence(firebase.auth.Auth.Persistence.NONE);
+      }
+      const credential = await auth.signInWithEmailAndPassword($('authEmail').value.trim(),$('authPassword').value);
+      // Kontrollera även när Firebase redan har samma inloggade användare.
+      checkAccess(credential.user);
+    } catch(error) {$('authStatus').textContent=loginError(error);}
+    finally {$('loginBtn').disabled=false;$('loginBtn').textContent='Logga in';}
+  });
+  $('logoutBtn').addEventListener('click',async()=>{
+    ++authEpoch;
+    if(accessUnsubscribe) {accessUnsubscribe();accessUnsubscribe=null;}
+    lockPage();
+    try {await auth.signOut();} catch(error) {$('authStatus').textContent='Utloggningen kunde inte slutföras. Försök igen genom att ladda om sidan.';}
+  });
+} catch(error) {
+  console.error(error);lockPage('Inloggningstjänsten kunde inte laddas. Kontrollera anslutningen och ladda om sidan. (' + (error.code || error.message || 'okänt fel') + ')');
+}
+
+
+</script></body></html>
