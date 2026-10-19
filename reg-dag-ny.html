@@ -826,7 +826,7 @@ input[type="date"] {
 }
 
 .daily-viewings-title {
-  margin-bottom: 12px;
+  margin-bottom: 0;
   font-size: 16px;
   font-weight: 700;
 }
@@ -836,14 +836,18 @@ input[type="date"] {
   gap: 10px;
 }
 
+.daily-viewings-header,
 .daily-viewing-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 100px 36px;
+  grid-template-columns: minmax(0, 76fr) minmax(58px, 12fr) minmax(58px, 12fr) 36px;
   align-items: center;
   gap: 10px;
 }
 
-.daily-viewing-count { text-align: right; }
+.daily-viewings-header { margin-bottom: 12px; }
+.daily-viewings-header > span { font-size: 13px; font-weight: 700; text-align: center; }
+.daily-viewing-count { text-align: right; min-width: 0; padding-left: 6px; padding-right: 6px; }
+.daily-viewing-legacy { grid-column: 1 / -1; color: var(--muted); font-size: 12px; }
 .daily-viewing-count::placeholder { font-style: normal; }
 
 .daily-viewing-remove,
@@ -1031,8 +1035,9 @@ img.badge-icon {
     width: 100%;
   }
 
+  .daily-viewings-header,
   .daily-viewing-row {
-    grid-template-columns: minmax(0, 1fr) 82px 36px;
+    grid-template-columns: minmax(0, 1fr) 58px 58px 36px;
   }
 
 .dropdown-cols-2-r5 {
@@ -2010,11 +2015,14 @@ function buildDailyForm(e) {
     ${buildDateField(e ? e.ts.split('T')[0] : null)}
     <label class="field-label">Rapport</label>
     <textarea id="fReport"
-              placeholder="Beskriv dagen – vad hände, vad fungerade bra och mindre bra, och finns det något annat som organisationen bör känna till?&#10;&#10;Hade vi programvisningar idag? Skriv gärna något även om dessa, men vänligen lista dem separat under &quot;Dagens programvisningar och antal personer&quot;."
+              placeholder="Beskriv dagen – vad hände, vad fungerade bra och mindre bra, och finns det något annat som organisationen bör känna till?&#10;&#10;Hade vi programvisningar eller programaktiviteter idag? Skriv gärna något även om dessa. Du ska även lista dem nedan under &quot;Dagens programvisningar och aktiviteter&quot;."
               spellcheck="false">${e ? esc(e.report) : ""}</textarea>
 
     <section class="daily-viewings-section">
-      <h3 class="daily-viewings-title">Dagens programvisningar och antal personer</h3>
+      <div class="daily-viewings-header">
+        <h3 class="daily-viewings-title">Dagens programvisningar och aktiviteter ${groupInfo("Här listas fördelningen av de vuxna och barn som kom till Kulturen idag för att vara med i en programpunkt. Detta har inget med besöksstatistik att göra – det är ett sätt att räkna deltagande i Kulturens programverksamhet.")}</h3>
+        <span>Vuxna</span><span>Barn</span><span aria-hidden="true"></span>
+      </div>
       <div class="daily-viewings-rows" id="dailyViewingsRows">
         ${viewings.map(buildDailyViewingRow).join("")}
       </div>
@@ -2026,16 +2034,21 @@ function buildDailyForm(e) {
 
 function buildDailyViewingRow(viewing = {}) {
   const rowId = `dailyViewing_${dailyViewingRowId++}`;
+  const legacyTotal = viewing.adults == null && viewing.children == null && Number.isInteger(viewing.participants) && viewing.participants > 0 ? viewing.participants : 0;
   return `
-    <div class="daily-viewing-row" data-viewing-row>
+    <div class="daily-viewing-row" data-viewing-row data-legacy-total="${legacyTotal}">
       <input type="text" id="${rowId}_name" class="daily-viewing-name"
              placeholder="T.ex. visningens namn och vem som höll i den"
              value="${esc(viewing.name || "")}" />
-      <input type="number" id="${rowId}_count" class="daily-viewing-count"
-             min="1" step="1" inputmode="numeric" placeholder="Antal"
-             aria-label="Antal deltagare" value="${viewing.participants || ""}" />
+      <input type="number" id="${rowId}_adults" class="daily-viewing-count daily-viewing-adults"
+             min="0" step="1" inputmode="numeric" placeholder="0"
+             aria-label="Antal vuxna" value="${esc(String(viewing.adults ?? ""))}" />
+      <input type="number" id="${rowId}_children" class="daily-viewing-count daily-viewing-children"
+             min="0" step="1" inputmode="numeric" placeholder="0"
+             aria-label="Antal barn" value="${esc(String(viewing.children ?? ""))}" />
       <button class="daily-viewing-remove" type="button" onclick="removeDailyViewingRow(this)"
               aria-label="Ta bort visning" title="Ta bort visning">×</button>
+      ${legacyTotal ? `<small class="daily-viewing-legacy">Tidigare registrerat: ${legacyTotal} deltagare utan åldersfördelning. Lämna båda antalsfälten tomma för att behålla totalen, eller ange vuxna och barn.</small>` : ""}
     </div>`;
 }
 
@@ -2677,7 +2690,9 @@ function buildDailyReportPublicRecord(record) {
     ? record.details.viewings
         .map(viewing => ({
           name: String(viewing?.name || "").trim(),
-          participants: Number(viewing?.participants || 0)
+          participants: Number(viewing?.participants || 0),
+          ...(Number.isInteger(viewing?.adults) && Number.isInteger(viewing?.children)
+            ? { adults: viewing.adults, children: viewing.children } : {})
         }))
         .filter(viewing => viewing.name && Number.isInteger(viewing.participants) && viewing.participants > 0)
     : [];
@@ -3067,27 +3082,34 @@ async function saveEntry() {
     let hasInvalidViewing = false;
     viewingRows.forEach(row => {
       const nameInput = row.querySelector(".daily-viewing-name");
-      const countInput = row.querySelector(".daily-viewing-count");
+      const adultsInput = row.querySelector(".daily-viewing-adults");
+      const childrenInput = row.querySelector(".daily-viewing-children");
       const name = nameInput.value.trim();
-      const rawCount = countInput.value.trim();
-      if (!name && !rawCount) return;
-      const participants = Number(rawCount);
-      if (!name) {
-        nameInput.style.borderColor = "var(--danger)";
-        nameInput.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
-        hasInvalidViewing = true;
+      const rawAdults = adultsInput.value.trim();
+      const rawChildren = childrenInput.value.trim();
+      const legacyTotal = Number(row.dataset.legacyTotal || 0);
+      if (!name && !rawAdults && !rawChildren && !legacyTotal) return;
+      if (name && legacyTotal && !rawAdults && !rawChildren) {
+        viewings.push({ name, participants: legacyTotal });
+        return;
       }
-      if (!rawCount || !Number.isInteger(participants) || participants < 1) {
-        countInput.style.borderColor = "var(--danger)";
-        countInput.style.boxShadow = "0 0 0 3px rgba(201,42,42,0.15)";
-        hasInvalidViewing = true;
-      }
-      if (name && rawCount && Number.isInteger(participants) && participants >= 1) {
-        viewings.push({ name, participants });
+      const adults = Number(rawAdults);
+      const children = Number(rawChildren);
+      const validAdults = rawAdults !== "" && Number.isSafeInteger(adults) && adults >= 0;
+      const validChildren = rawChildren !== "" && Number.isSafeInteger(children) && children >= 0;
+      const validTotal = Number.isSafeInteger(adults + children) && adults + children > 0;
+      [[nameInput, !!name], [adultsInput, validAdults && validTotal], [childrenInput, validChildren && validTotal]].forEach(([input, valid]) => {
+        input.style.borderColor = valid ? "" : "var(--danger)";
+        input.style.boxShadow = valid ? "" : "0 0 0 3px rgba(201,42,42,0.15)";
+        if (!valid) hasInvalidViewing = true;
+      });
+      if (name && validAdults && validChildren && validTotal) {
+        // Programdeltagande är en delmängd och ska aldrig läggas till besöksstatistik.
+        viewings.push({ name, adults, children, participants: adults + children });
       }
     });
     if (hasInvalidViewing) {
-      setStatus("Fyll i både visning och ett giltigt antal deltagare.", "error");
+      setStatus("Fyll i aktivitet samt antal vuxna och barn (ange 0 om inga). Totalt krävs minst en deltagare.", "error");
       return;
     }
     entry.viewings = viewings;
