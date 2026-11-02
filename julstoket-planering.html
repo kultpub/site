@@ -7018,6 +7018,18 @@
   .directory-person label { display: flex; align-items: center; gap: 12px; flex: 1; cursor: pointer; }
   .directory-person small { display: block; margin-top: 3px; color: var(--muted); }
   .directory-person:has(input:disabled) { opacity: .65; }
+  /* Avlösningsfrågor och valbarhet i personlistor. */
+  .new-person-annual { display:flex; align-items:center; gap:8px; margin:16px 0 18px; line-height:1.5; }
+  .new-person-annual input { margin:0; flex:0 0 auto; }
+  .pause-question { border:1px solid var(--gold); border-radius:8px; padding:12px; margin-top:12px; background:#fffaf0; }
+  .pause-question p { margin:0 0 8px; }
+  .pause-review-modal { width:min(480px,calc(100vw - 32px)); }
+  .suggestion-item { display:block; width:100%; text-align:left; border:0; border-bottom:1px solid var(--line); padding:9px 10px; background:white; color:var(--ink); cursor:pointer; }
+  .suggestion-item small { display:block; margin-top:3px; font-size:11px; line-height:1.4; }
+  .suggestion-item:disabled { background:#f4f1ec; color:#71645b; cursor:not-allowed; opacity:1; }
+  .suggestion-heading { padding:6px 10px; font-size:11px; font-weight:700; background:var(--soft); }
+  #bulkPeople, #importPeople { max-height:250px; overflow:auto; margin:12px 0; }
+  [data-bulk-name][hidden] { display:none; }
 </style>
 
 </head>
@@ -7083,7 +7095,10 @@ const safeId = id => typeof id === "string" && /^[a-zA-Z0-9-]{1,100}$/.test(id);
 const minute = value => Number(value.slice(0,2))*60+Number(value.slice(3));
 const time = value => String(Math.floor(value/60)).padStart(2,"0")+":"+String(value%60).padStart(2,"0");
 const duration = (start,end) => minute(end)-minute(start);
-const hours = value => new Intl.NumberFormat("sv-SE",{maximumFractionDigits:1}).format(value/60);
+const hours = value => {
+  const minutes=Math.max(0,Math.round(value)),h=Math.floor(minutes/60),m=minutes%60;
+  return [h?`${h} ${h===1?"timme":"timmar"}`:"",m?`${m} ${m===1?"minut":"minuter"}`:""].filter(Boolean).join(" och ") || "0 minuter";
+};
 const overlaps = (a,b) => a.start < b.end && b.start < a.end;
 
 function formatPhone(value) {
@@ -7274,6 +7289,11 @@ document.addEventListener("focusin",event => {
       !activeClock.trigger.contains(event.target)) closeClockPicker();
 });
 document.addEventListener("keydown",event => {
+  if (event.key==="Enter" && activeClock) {
+    event.preventDefault();event.stopImmediatePropagation();
+    activeClock.panel.querySelector("[data-clock-apply]").click();
+    return;
+  }
   if (event.key==="Escape" && activeClock) {
     event.preventDefault();
     event.stopImmediatePropagation();
@@ -7963,18 +7983,13 @@ function restoreHistoricalPassBoundaries(data) {
   }
 }
 
-// Saknade valfria uppgifter utelämnas, även i den historiska kopian.
-// Undefined i en lista är däremot ett datafel: listans ordning får inte ändras.
 function definedImportFields(value) {
-  if (Array.isArray(value)) return value.map(item => {
+  if (Array.isArray(value)) return value.map(item=>{
     if (item===undefined) throw Error("Importen innehåller en ofullständig lista.");
     return definedImportFields(item);
   });
-  if (value && Object.getPrototypeOf(value)===Object.prototype) {
-    return Object.fromEntries(Object.entries(value)
-      .filter(([,item]) => item!==undefined)
-      .map(([key,item]) => [key,definedImportFields(item)]));
-  }
+  if (value && Object.getPrototypeOf(value)===Object.prototype) return Object.fromEntries(Object.entries(value)
+    .filter(([,item])=>item!==undefined).map(([key,item])=>[key,definedImportFields(item)]));
   return value;
 }
 
@@ -8401,7 +8416,8 @@ function assignPatternActivity(activity) {
         showConflicts();refreshActivityGanttPreview();
       };
       renderSmartPersonInput(id,value.personId,
-        personId => change(personId,plan.people.find(person => person.id===personId)?.name || ""),change);
+        personId => change(personId,plan.people.find(person => person.id===personId)?.name || ""),change,
+        personId=>groupCandidateReason(activity,group,draft,personId));
       const container=$(id),input=container.querySelector(".person-type-input");
       container._setPersonValue(value.personId,value.text);
       input.setAttribute("aria-label",`${DAYS[group.day]}, ${label}, namn`);
@@ -8503,7 +8519,7 @@ function personReason(data,personId,day,start,end,ignoreId="",{allowExistingHand
   if (clash) {
     const pause=(clash.breaks || []).find(pause => overlaps(pause,{start,end}));
     const activity=data.activities.find(activity => activity.id===clash.activityId)?.title || "annat arbete";
-    return `Redan bokad på ${activity} ${DAYS[day].toLocaleLowerCase("sv-SE")} ${clash.start}–${clash.end}. `+
+    return `Redan bokad på ${activity} ${DAYS[day].toLocaleLowerCase("sv-SE")} ${clash.start}–${clash.end}. Krock ${start>clash.start?start:clash.start}–${end<clash.end?end:clash.end}. `+
       (pause?`Pausen ${pause.start}–${pause.end} är också bokad tid. `:"")+"En person kan inte ha två arbeten samtidigt.";
   }
 
@@ -8558,6 +8574,91 @@ function personPlanning(data,personId,day,ignoreId="") {
   };
 }
 
+/* ---------- Pauser: valfritt avlösningsbehov ---------- */
+function coversInterval(ranges,start,end) {
+  let cursor=start;
+  for (const range of ranges.slice().sort((a,b)=>a.start.localeCompare(b.start))) {
+    if (range.start<=cursor && range.end>cursor) cursor=range.end;
+  }
+  return cursor>=end;
+}
+function shiftWorkRanges(shift) {
+  return activeSegments(shift).map(range=>({start:time(range.start),end:time(range.end)}));
+}
+function pauseReliefContext(activity,owner,pause) {
+  const shifts=activity.staffingPattern?.shifts || [];
+  const others=shifts.filter(shift=>shift.day===owner.day && shift.kind!=="relief" &&
+    shift.participantId!==owner.participantId && validRange(shift) && overlaps(shift,pause));
+  const eligible=coversInterval(others.flatMap(shiftWorkRanges),pause.start,pause.end);
+  const relief=shifts.filter(shift=>shift.day===owner.day && shift.kind==="relief");
+  const reliefRanges=relief.flatMap(shift=>{
+    const work=shiftWorkRanges(shift);
+    if (!shift.reliefPeriods?.length) return work;
+    return shift.reliefPeriods.filter(period=>period.breakId===pause.id).flatMap(period=>work.map(range=>({
+      start:range.start>period.start?range.start:period.start,end:range.end<period.end?range.end:period.end
+    })).filter(validRange));
+  });
+  const covered=coversInterval(reliefRanges,pause.start,pause.end);
+  const signature=JSON.stringify([owner.day,owner.start,owner.end,pause.start,pause.end,
+    others.map(shift=>[shift.id,shift.start,shift.end,(shift.breaks || []).map(p=>[p.start,p.end])]).sort((a,b)=>a[0].localeCompare(b[0]))]);
+  const choice=pause.reliefChoice?.signature===signature && typeof pause.reliefChoice.required==="boolean"?pause.reliefChoice.required:null;
+  return {eligible,covered,signature,choice};
+}
+function unansweredPauses(activity) {
+  return (activity.staffingPattern?.shifts || []).filter(shift=>shift.kind!=="relief").flatMap(owner=>
+    owner.breaks.filter(validRange).map(pause=>({owner,pause,...pauseReliefContext(activity,owner,pause)})))
+    .filter(item=>!item.covered && item.choice===null);
+}
+function choosePauseRelief(activity,owner,pause,required) {
+  pause.reliefChoice={signature:pauseReliefContext(activity,owner,pause).signature,required};
+  if (!required) return;
+  const pattern=activity.staffingPattern,participantId=uid();
+  pattern.participants.push({id:participantId,label:"Avlösning"});
+  pattern.shifts.push({id:uid(),participantId,requirementId:owner.requirementId,
+    day:owner.day,start:pause.start,end:pause.end,kind:"relief",breaks:[],
+    reliefPeriods:[{breakId:pause.id,participantId:owner.participantId,start:pause.start,end:pause.end}]});
+}
+function renderPauseQuestions(editor) {
+  const host=$("pauseReliefQuestions");if (!host) return;
+  const activity={staffingPattern:readPassEditorModel(editor)};
+  const pending=unansweredPauses(activity);
+  host.innerHTML=pending.map(({owner,pause})=>`<section class="pause-question">
+    <p><strong>${esc(DAYS[owner.day])} · ${esc(patternPersonLabel(activity,owner.day,owner.participantId))}</strong></p>
+    <p>Behövs avlösare för tiden ${esc(pause.start)}–${esc(pause.end)}?</p>
+    <div class="actions"><button type="button" class="btn small" data-pause-choice="yes" data-owner="${esc(owner.id)}" data-pause="${esc(pause.id)}">Ja</button>
+    <button type="button" class="btn small" data-pause-choice="no" data-owner="${esc(owner.id)}" data-pause="${esc(pause.id)}">Nej</button></div></section>`).join("");
+  host.hidden=!pending.length;
+  host.querySelectorAll("[data-pause-choice]").forEach(button=>button.onclick=()=>{
+    try {
+    const activity=readActivityDraft(editor.original,editor.original.id || uid());
+    const owner=activity.staffingPattern.shifts.find(shift=>shift.id===button.dataset.owner);
+    const pause=owner.breaks.find(item=>item.id===button.dataset.pause);
+    choosePauseRelief(activity,owner,pause,button.dataset.pauseChoice==="yes");
+    editor.model=activity.staffingPattern;renderPassEditor(editor);refreshActivityGanttPreview();
+    } catch(error) {showError(error);}
+  });
+}
+async function reviewPauseRelief(activity) {
+  for (const item of unansweredPauses(activity)) {
+    const required=await new Promise(resolve=>{
+      const dialog=document.createElement("dialog");dialog.className="pause-review-modal";
+      dialog.setAttribute("aria-labelledby","pauseReviewTitle");
+      dialog.innerHTML=`<div class="dialog-head"><h2 id="pauseReviewTitle">Avlösning under paus</h2></div>
+        <div class="dialog-body"><p>${esc(DAYS[item.owner.day])} · ${esc(patternPersonLabel(activity,item.owner.day,item.owner.participantId))}</p>
+        <p>Behövs avlösare för tiden ${esc(item.pause.start)}–${esc(item.pause.end)}?</p></div>
+        <div class="dialog-foot"><button type="button" class="btn" data-answer="cancel">Avbryt</button><button type="button" class="btn" data-answer="no">Nej</button><button type="button" class="btn primary" data-answer="yes">Ja</button></div>`;
+      const finish=value=>{dialog.close();dialog.remove();resolve(value);};
+      dialog.addEventListener("click",event=>{const answer=event.target.closest("[data-answer]")?.dataset.answer;if(answer)finish(answer==="cancel"?null:answer==="yes");});
+      dialog.addEventListener("cancel",event=>{event.preventDefault();finish(null);});
+      document.body.append(dialog);dialog.showModal();dialog.querySelector('[data-answer="yes"]').focus();
+    });
+    if (required===null) return false;
+    choosePauseRelief(activity,item.owner,item.pause,required);
+  }
+  activity.recommendedPeoplePerDay=Math.max(0,...dailyStaffingCounts(activity).map(day=>day.total));
+  return true;
+}
+
 function coverage(activityId,day,data=plan) {
   const activity=data.activities.find(a => a.id===activityId);
   if (!activity) return [];
@@ -8576,12 +8677,29 @@ function coverage(activityId,day,data=plan) {
 
   for (let i=0;i<points.length-1;i++) {
     const start=points[i],end=points[i+1];
-    const need=requirements.find(r =>
+    const baseNeed=requirements.find(r =>
       minute(r.start)<=start && minute(r.end)>=end
     )?.count || 0;
 
-    if (!need) continue;
-
+    if (!baseNeed) continue;
+    // Ett uttryckligt Nej tillåter paus utan ersättare, även vid ensamarbete.
+    // Före svar krävs fortfarande en annan arbetande person för automatisk täckning.
+    const assigned=data.assignments.filter(shift=>shift.activityId===activityId && shift.day===day);
+    const waived=new Set();
+    for (const owner of activity.staffingPattern?.shifts || []) {
+      if (owner.day!==day || owner.kind==="relief") continue;
+      for (const pause of owner.breaks) {
+        if (minute(pause.start)>start || minute(pause.end)<end) continue;
+        const context=pauseReliefContext(activity,owner,pause);
+        if (context.covered || context.choice===true || (context.choice!==false && !context.eligible)) continue;
+        const own=assigned.find(shift=>shift.patternShiftId===owner.id && minute(shift.start)<=start && minute(shift.end)>=end);
+        if (!own) continue;
+        const other=assigned.some(shift=>shift.kind!=="relief" && shift.personId!==own.personId &&
+          activeSegments(shift).some(range=>range.start<=start && range.end>=end));
+        if (context.choice===false || other) waived.add(owner.id);
+      }
+    }
+    const need=Math.max(0,baseNeed-waived.size);
     const staff=new Set(segments.filter(r =>
       r.start<=start && r.end>=end
     ).map(r => r.personId)).size;
@@ -8808,7 +8926,7 @@ let cloud=null;
 let unsubscribe=null;
 let pendingCloud=null;
 
-async function commit(change,message="Ändringen är sparad.") {
+async function commit(change,message="Ändringen är sparad.",{registerPerson=null}={}) {
   if (!cloud || !cloud.auth.currentUser) throw Error("Logga in för att spara.");
   if (saving || switchingYear) throw Error("En ändring pågår redan. Försök igen.");
   const active=cloud,ref=active.ref,revision=plan.revision || 0;
@@ -8823,6 +8941,12 @@ async function commit(change,message="Ändringen är sparad.") {
       const snapshot=await transaction.get(ref);
       if ((!snapshot.exists() && revision!==0) || (snapshot.exists() && (snapshot.data().revision || 0)!==revision)) {
         throw Error("Planen har ändrats av någon annan. Ladda om planen och gör ändringen igen.");
+      }
+      if (registerPerson) {
+        const personRef=active.fs.doc(active.db,"julstokPeople",registerPerson.id);
+        const existing=await transaction.get(personRef);
+        if (existing.exists()) throw Error("Personen finns redan i registret.");
+        transaction.set(personRef,{name:registerPerson.name,phone:registerPerson.phone});
       }
       transaction.set(ref,next);
     });
@@ -9294,13 +9418,14 @@ function renderPassEditor(editor) {
   modal.style.setProperty("--days-width","935px");
   syncPassEditorClocks();
   syncActivityInstruction();
+  renderPauseQuestions(editor);
 }
 
 function bindPassEditor(editor) {
   const form=$("modalForm");
   form._activityEditor=editor;
   const changed=event => {
-    if (event.target.closest("#activityPassEditor")) syncPassEditorClocks();
+    if (event.target.closest("#activityPassEditor")) {syncPassEditorClocks();renderPauseQuestions(editor);}
   };
   form.addEventListener("change",changed);
   form.addEventListener("click",event => {
@@ -9636,12 +9761,13 @@ function editActivity(id) {
       ${activityInstructionField(old?.notes || "",old?.dayNotes || {})}
     </div>${activityGanttPreview()}
     <div class="formsection"><h3>Arbetstider och pauser</h3>
-      <div id="activityPassEditor"></div>
+      <div id="activityPassEditor"></div><div id="pauseReliefQuestions" aria-live="polite" hidden></div>
     </div>`,
     (old?button("Ta bort","delete-activity-options",old.id,"danger push-left"):"")+button("Avbryt","close")+saveButton(old?"Spara ändringar":"Skapa aktivitet"),
     async () => {
       const activity=readActivityDraft(old,draftId);activity.title=$("actTitle").value.trim();
       if (!activity.requirements.length) throw Error("Lägg till minst ett arbete.");
+      if (!await reviewPauseRelief(activity)) return;
       const preview=clone(plan);rebasePassChoices(editor,activity,preview);
       await commit(data => {
         mapEditorAssignments(editor,data);synchronizePatternAssignments(data,activity);
@@ -9757,8 +9883,8 @@ function staffingCoverage(activityId,day,data=plan) {
     covered+=Math.min(segment.staff,segment.need)*length;
   }
   const missing=required-covered;
-  const state=covered===0 ? "empty" : missing===0 ? "full" : "partial";
-  const percent=required ? covered/required*100 : 0;
+  const state=missing===0 ? "full" : covered===0 ? "empty" : "partial";
+  const percent=required ? covered/required*100 : state==="full" ? 100 : 0;
   const displayPercent=state==="partial" ? Math.max(0.1,Math.min(99.9,percent)) : percent;
   return {required,covered,missing,state,percent,
     label:new Intl.NumberFormat("sv-SE",{maximumFractionDigits:1}).format(displayPercent)};
@@ -9791,152 +9917,91 @@ function staffingDay(activity,day) {
   </div>`;
 }
 
-function renderSmartPersonInput(containerId, selectedPersonId, onSelect, onInput) {
-  const container = document.getElementById(containerId);
-  if (!container) return;
-
-  const currentPerson = plan.people.find(p => p.id === selectedPersonId);
-  let inputValue = currentPerson ? currentPerson.name : "";
-  let storedPersonId = selectedPersonId || "";
-
-  container.innerHTML = `
-    <div class="smart-input-wrapper" style="position:relative; width:100%;">
-      <div class="person-input-row">
-        <input type="text" class="dropdown-search-input person-type-input" id="input_${containerId}" placeholder="Skriv personnamn..." value="${esc(inputValue)}" autocomplete="off" style="margin-bottom:0; flex:1;">
-        <button type="button" class="person-clear" aria-label="Ta bort valt namn" title="Ta bort valt namn" ${storedPersonId?"":"hidden"}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3m3 0-1 13H7L6 7m4 4v6m4-6v6"/></svg>
-        </button>
-      </div>
-      <div class="smart-suggestion-box" popover="manual" id="suggestion_${containerId}" style="display:none; position:absolute; top:calc(100% + 4px); left:0; width:100%; background:white; border:1px solid var(--border2); border-radius:var(--radius-sm); z-index:99999; max-height:200px; overflow-y:auto; box-shadow:0 6px 20px rgba(0,0,0,0.15); font-size:13px;">
-      </div>
-      <div class="smart-no-match" id="nomatch_${containerId}" style="display:none; color:var(--red); font-size:12px; padding:6px 2px 0; line-height:1.35;"></div>
-      <input type="hidden" id="val_${containerId}" value="${esc(storedPersonId)}">
-    </div>
-  `;
-
-  const input = container.querySelector(`#input_${containerId}`);
-  const suggestionBox = container.querySelector(`#suggestion_${containerId}`);
-  const noMatchBox = container.querySelector(`#nomatch_${containerId}`);
-  const hiddenVal = container.querySelector(`#val_${containerId}`);
-  const clearButton = container.querySelector(".person-clear");
-  const syncClearButton = () => { clearButton.hidden=!storedPersonId; };
-
-  // Listan läggs i webbläsarens översta lager (popover) med fasta koordinater, så att den visas
-  // ovanför modalen och inte klipps av modalens kanter eller rullningsyta.
-  const popOpen = () => { try { return suggestionBox.matches(":popover-open"); } catch { return false; } };
+function renderSmartPersonInput(containerId, selectedPersonId, onSelect, onInput,reasonFor=()=>"") {
+  const container=$(containerId);if (!container) return;
+  let storedPersonId=selectedPersonId || "";
+  container.innerHTML=`<div class="smart-input-wrapper"><div class="person-input-row">
+    <input type="text" class="dropdown-search-input person-type-input" id="input_${containerId}" placeholder="Sök eller välj person…" autocomplete="off" aria-expanded="false" aria-controls="suggestion_${containerId}">
+    <button type="button" class="person-clear" aria-label="Ta bort valt namn">×</button></div>
+    <div class="smart-suggestion-box" id="suggestion_${containerId}" popover="manual" style="display:none"></div>
+    <div class="smart-no-match" role="status" hidden></div><input type="hidden" id="val_${containerId}"></div>`;
+  const input=container.querySelector('.person-type-input'),box=container.querySelector('.smart-suggestion-box');
+  const hidden=container.querySelector('input[type="hidden"]'),clear=container.querySelector('.person-clear'),message=container.querySelector('.smart-no-match');
+  const popOpen=()=>{try{return box.matches(':popover-open');}catch{return false;}};
   function placeBox() {
-    const r = input.getBoundingClientRect(), s = suggestionBox.style;
-    const width = Math.max(r.width, 220), below = window.innerHeight - r.bottom, above = r.top;
-    s.position = "fixed"; s.margin = "0"; s.inset = "auto"; s.padding = "0"; s.zIndex = "99999";
-    s.width = width + "px"; s.maxHeight = "200px";
-    s.left = Math.max(8, Math.min(r.left, window.innerWidth - width - 8)) + "px";
-    if (below < 210 && above > below) { s.top = "auto"; s.bottom = (window.innerHeight - r.top + 4) + "px"; }
-    else { s.bottom = "auto"; s.top = (r.bottom + 4) + "px"; }
-  }
-  function showBox() {
-    suggestionBox.style.display = "block";
-    placeBox();
-    if (typeof suggestionBox.showPopover === "function" && !popOpen()) suggestionBox.showPopover();
-    window.addEventListener("scroll", placeBox, true);
-    window.addEventListener("resize", placeBox);
+    const rect=input.getBoundingClientRect(),width=Math.min(Math.max(rect.width,300),innerWidth-16);
+    Object.assign(box.style,{position:'fixed',margin:'0',inset:'auto',width:width+'px',maxHeight:'280px',overflowY:'auto',padding:'0',border:'1px solid var(--border2)',borderRadius:'8px',background:'white',boxShadow:'0 6px 20px #0003',zIndex:'99999',left:Math.max(8,Math.min(rect.left,innerWidth-width-8))+'px'});
+    if(innerHeight-rect.bottom<290 && rect.top>innerHeight-rect.bottom){box.style.top='auto';box.style.bottom=(innerHeight-rect.top+4)+'px';}
+    else{box.style.bottom='auto';box.style.top=(rect.bottom+4)+'px';}
   }
   function hideBox() {
-    window.removeEventListener("scroll", placeBox, true);
-    window.removeEventListener("resize", placeBox);
-    if (typeof suggestionBox.hidePopover === "function" && popOpen()) suggestionBox.hidePopover();
-    suggestionBox.style.display = "none";
+    window.removeEventListener('scroll',placeBox,true);window.removeEventListener('resize',placeBox);
+    if(popOpen())box.hidePopover();box.style.display='none';input.setAttribute('aria-expanded','false');
   }
-
-  function updateSuggestions() {
-    const val = input.value;
-    if (!val.trim()) {
-      hideBox();
-      noMatchBox.style.display = "none";
-      storedPersonId = "";
-      hiddenVal.value = "";
-      input.style.borderColor = "";
-      return;
-    }
-
-    const exactMatch = plan.people.find(p => p.name.toLowerCase() === val.trim().toLowerCase());
-    if (exactMatch) {
-      storedPersonId = exactMatch.id;
-      hiddenVal.value = storedPersonId;
-      hideBox();
-      noMatchBox.style.display = "none";
-      input.style.borderColor = "var(--green2)";
-      if (onSelect) onSelect(storedPersonId);
-      return;
-    }
-
-    // Om det inte är en exakt träff nollställs ID:t tills man väljer från listan
-    storedPersonId = "";
-    hiddenVal.value = "";
-
-    const matches = findMatchingPeople(val);
-    if (matches.length > 0) {
-      noMatchBox.style.display = "none";
-      showBox();
-      suggestionBox.innerHTML = `
-        <div style="padding: 6px 10px; color: var(--muted); font-size: 11px; border-bottom: 1px solid var(--line); background: #fafbf7;">Välj person:</div>
-        ${matches.map(p => `
-          <div class="suggestion-item" data-id="${p.id}" data-name="${esc(p.name)}" style="padding: 8px 10px; cursor: pointer; border-bottom: 1px solid #f0f3ed; transition: background 0.1s;">
-            <strong>${esc(p.name)}</strong>
-          </div>
-        `).join("")}
-      `;
-      input.style.borderColor = "var(--gold)";
-
-      suggestionBox.querySelectorAll(".suggestion-item").forEach(item => {
-        item.onmouseover = () => item.style.background = "var(--soft)";
-        item.onmouseout = () => item.style.background = "white";
-        item.onclick = () => {
-          input.value = item.dataset.name;
-          storedPersonId = item.dataset.id;
-          hiddenVal.value = storedPersonId;
-          hideBox();
-          noMatchBox.style.display = "none";
-          input.style.borderColor = "var(--green2)";
-          syncClearButton();
-          if (onSelect) onSelect(storedPersonId);
-        };
-      });
-    } else {
-      storedPersonId = "";
-      hiddenVal.value = "";
-      hideBox();
-      noMatchBox.style.display = "block";
-      noMatchBox.innerHTML = `Det finns ingen person med detta namn – se till att personen finns registrerat i vy <strong>Personal</strong>.`;
-      input.style.borderColor = "var(--red)";
-      // Säkerställ att meddelandet är synligt om modalen behöver skrollas
-      requestAnimationFrame(() => noMatchBox.scrollIntoView({ block: "nearest", behavior: "smooth" }));
-    }
+  function select(id) {
+    const person=plan.people.find(item=>item.id===id),reason=id?reasonFor(id):"";
+    if(reason){message.hidden=false;message.textContent=reason;return;}
+    storedPersonId=id;hidden.value=id;input.value=person?.name || "";clear.hidden=!id;message.hidden=true;
+    input.style.borderColor=id?'var(--green2)':'';hideBox();
+    if(onSelect)onSelect(id);
   }
+  function suggestions() {
+    const query=input.value.trim(),matches=query?findMatchingPeople(query):plan.people.slice().sort((a,b)=>a.name.localeCompare(b.name,'sv'));
+    const values=matches.map(person=>({person,reason:reasonFor(person.id)}));
+    const allowed=values.filter(item=>!item.reason),blocked=values.filter(item=>item.reason);
+    box.innerHTML=[['Kan väljas',allowed],['Kan inte väljas för denna tid',blocked]].filter(([,items])=>items.length).map(([title,items])=>
+      `<div class="suggestion-heading">${title}</div>`+items.map(({person,reason})=>`<button type="button" class="suggestion-item" data-person="${esc(person.id)}" ${reason?'disabled aria-disabled="true"':''}><strong>${esc(person.name)}</strong><small>${esc(reason || 'Tillgänglig för hela arbetet')}</small></button>`).join('')).join('');
+    message.hidden=!!values.length;message.textContent=values.length?'':'Ingen person matchar sökningen.';
+    if(!values.length){hideBox();return;}
+    box.style.display='block';placeBox();if(typeof box.showPopover==='function'&&!popOpen())box.showPopover();
+    input.setAttribute('aria-expanded','true');window.addEventListener('scroll',placeBox,true);window.addEventListener('resize',placeBox);
+    box.querySelectorAll('[data-person]:not(:disabled)').forEach(button=>button.onclick=()=>select(button.dataset.person));
+  }
+  container._setPersonValue=(id,text)=>{storedPersonId=id || '';hidden.value=storedPersonId;input.value=text ?? plan.people.find(person=>person.id===id)?.name ?? '';clear.hidden=!id;hideBox();message.hidden=true;};
+  container._setPersonValue(storedPersonId);
+  input.addEventListener('focus',suggestions);
+  input.addEventListener('input',()=>{
+    storedPersonId='';hidden.value='';clear.hidden=true;
+    const exact=plan.people.find(person=>person.name.toLocaleLowerCase('sv-SE')===input.value.trim().toLocaleLowerCase('sv-SE'));
+    if(exact && !reasonFor(exact.id)){select(exact.id);return;}
+    if(onInput)onInput('',input.value);suggestions();
+  });
+  input.addEventListener('keydown',event=>{
+    if(event.key==='Escape'){event.preventDefault();event.stopPropagation();hideBox();}
+    if(event.key==='ArrowDown'){event.preventDefault();suggestions();box.querySelector('[data-person]:not(:disabled)')?.focus();}
+    if(event.key==='Enter' && !storedPersonId){event.preventDefault();suggestions();}
+  });
+  box.addEventListener('keydown',event=>{
+    const buttons=[...box.querySelectorAll('[data-person]:not(:disabled)')];
+    if(['ArrowDown','ArrowUp'].includes(event.key)){event.preventDefault();const index=buttons.indexOf(document.activeElement);buttons[(index+(event.key==='ArrowDown'?1:-1)+buttons.length)%buttons.length]?.focus();}
+    if(event.key==='Escape'){event.preventDefault();input.focus();hideBox();}
+  });
+  container.addEventListener('focusout',()=>setTimeout(()=>{if(!container.contains(document.activeElement))hideBox();},0));
+  clear.onclick=()=>{select('');if(onInput)onInput('','');input.focus();};
+}
 
-  container._setPersonValue=(personId,text) => {
-    storedPersonId=personId || "";
-    hiddenVal.value=storedPersonId;
-    input.value=text ?? plan.people.find(person => person.id===storedPersonId)?.name ?? "";
-    hideBox();noMatchBox.style.display="none";
-    input.style.borderColor=storedPersonId?"var(--green2)":"";
-    syncClearButton();
-  };
-  clearButton.addEventListener("click", () => {
-    container._setPersonValue("", "");
-    if (onInput) onInput("", "");
-    input.focus();
-  });
-  input.addEventListener("input", () => {
-    updateSuggestions();
-    syncClearButton();
-    if (onInput) onInput(hiddenVal.value,input.value);
-  });
-
-  input.addEventListener("blur", () => {
-    setTimeout(() => {
-      hideBox();
-    }, 250);
-  });
+function groupCandidateReason(activity,group,draft,personId) {
+  const previous=createTimelineDraft(activity);
+  const selected=patternTimelineRows(activity).map(row=>({rowId:row.id,personId:
+    personDayKey(row)===personDayKey(group)?personId:
+    draft.get(personDayKey(row))?.mixed?timelineChoiceValue(previous,row).personId:draft.get(personDayKey(row))?.personId || ""}));
+  const preview={...plan,assignments:patternRowAssignments(activity,selected,plan.assignments)};
+  return preview.assignments.filter(shift=>shift.activityId===activity.id && shift.day===group.day && shift.patternParticipantId===group.participantId)
+    .map(shift=>personReason(preview,personId,shift.day,shift.start,shift.end,shift.id)).find(Boolean) || "";
+}
+function legacyCandidateReason(containerId,personId,activity,requirements) {
+  const containers=[...modal.querySelectorAll('.staff-select-container')],used=new Set();
+  const assignments=plan.assignments.filter(shift=>!containers.some(container=>container.dataset.shiftId===shift.id));
+  let target;
+  for(const container of containers){
+    const old=plan.assignments.find(shift=>shift.id===container.dataset.shiftId);
+    if(old && used.has(old.id))continue;if(old)used.add(old.id);
+    const req=requirements.find(range=>range.id===container.dataset.requirementId);
+    const id=container.id===containerId?personId:slotPerson(container);if(!id)continue;
+    const shift={...clone(old || {}),id:old?.id || container.id,activityId:activity.id,day:req.day,personId:id,start:old?.start || req.start,end:old?.end || req.end,kind:old?.kind || 'ordinary',breaks:clone(old?.breaks || [])};
+    assignments.push(shift);if(container.id===containerId)target=shift;
+  }
+  return target?personReason({...plan,assignments},personId,target.day,target.start,target.end,target.id):"";
 }
 
 document.addEventListener("click", () => {
@@ -9961,9 +10026,8 @@ function peoplePage() {
   return heading(
     "Personal",
     "Registrera arbetsdagar och tider för dem som ska arbeta under Julstöket.",
-    button("Hämta från personalregistret","directory-import","","primary")+
-    button("Personalregister","directory-manage")+
-    button("+ Lägg till person","edit-person")
+    button("Personalregister / importera","directory-import","","primary")+
+    button("+ Ny person","directory-new")+button("Ange arbetstider för flera","bulk-hours")
   )+`
     <div class="filters">
       <input type="search" id="peopleSearch" value="${esc(ui.peopleQuery)}"
@@ -9971,7 +10035,7 @@ function peoplePage() {
     </div>
     <div class="activity-grid people-grid" id="peopleCards">${peopleCards()}</div>
     <p class="hint" style="margin-top:13px">”Ej angivet” betyder att arbetsdagar ännu inte registrerats.
-      Planerat arbete räknas utan registrerade raster.</p>`;
+      Bemannade timmar räknas utan registrerade raster.</p>`;
 }
 
 function peopleCards() {
@@ -9985,7 +10049,7 @@ function peopleCards() {
     return `<article class="activity-card person-card" data-open-person="${esc(person.id)}" role="button" tabindex="0" aria-label="Visa schema för ${esc(person.name)}">
       <div class="card-head"><div class="card-title"><h2 title="${esc(person.name)}">${esc(person.name)}</h2>
         <p class="person-phone" title="${esc(formatPhone(person.phone))}">${esc(formatPhone(person.phone)) || "Telefon ej angiven"}</p></div></div>
-      <div class="person-footer"><p class="person-planned">Planerat arbete: <strong>${hours(planned)} timmar</strong></p></div>
+      <div class="person-footer"><p class="person-planned">Bemannade timmar: <strong>${hours(planned)}</strong></p></div>
       <dl class="person-days">
         ${DAYS.map((name,day) => {
           const ranges=person.availability.filter(r => r.day===day).sort((a,b) => a.start.localeCompare(b.start));
@@ -10279,7 +10343,48 @@ function chooseActivityPlace(value) {
   refreshActivityGanttPreview();
 }
 
+/* ---------- Arbetsdagar för en eller flera personer ---------- */
+function availabilityFields(ranges=[]) {
+  return DAYS.map((name,day)=>{
+    const range=ranges.find(item=>item.day===day);
+    return `<div class="avrow day-tone-${day}" data-availability-day="${day}">
+      <label><input type="checkbox" class="av-check" ${range?"checked":""}>${name}</label>
+      ${clockControl(range?.start || (day===0?"15:30":"10:30"),{className:"av-start",label:name+" från",disabled:!range})}
+      ${clockControl(range?.end || "18:30",{className:"av-end",label:name+" till",disabled:!range})}</div>`;
+  }).join("");
+}
+function bindAvailabilityFields() {
+  const choices=CLOCK_CHOICES.filter(value=>value>="07:00" && value<="21:00");
+  modal.querySelectorAll(".avrow").forEach(row=>bindPassTimeRow(row,".av-start",".av-end",{choices}));
+}
+function readAvailabilityFields() {
+  return [...modal.querySelectorAll("[data-availability-day]")].filter(row=>row.querySelector(".av-check").checked)
+    .map(row=>({day:Number(row.dataset.availabilityDay),start:row.querySelector(".av-start").value,end:row.querySelector(".av-end").value}));
+}
+function editBulkAvailability() {
+  if (!plan.people.length) {toast("Lägg först till personer i årets personal.");return;}
+  showDialog("Arbetstider för flera",`Gemensamma tider för Julstöket ${plan.year}.`,
+    `<label class="field">Sök person<input id="bulkPeopleSearch" type="search" placeholder="Sök namn…"></label>
+    <label><input type="checkbox" id="bulkSelectAll"> Markera alla synliga</label>
+    <div class="directory-list" id="bulkPeople">${plan.people.slice().sort((a,b)=>a.name.localeCompare(b.name,"sv")).map(person=>
+      `<label class="directory-person" data-bulk-name="${esc(person.name.toLocaleLowerCase("sv-SE"))}"><input type="checkbox" data-bulk-person value="${esc(person.id)}">${esc(person.name)}</label>`).join("")}</div>
+    <h3>Arbetsdagar och tider</h3><p class="hint">Markerade dagar ersätter tidigare tider för de valda personerna. Övriga dagar behålls. Bemanningen måste fortfarande rymmas inom arbetstiden.</p>${availabilityFields()}`,
+    button("Avbryt","close")+saveButton("Spara för valda personer"),async()=>{
+      const ids=[...modal.querySelectorAll('[data-bulk-person]:checked')].map(input=>input.value),ranges=readAvailabilityFields();
+      if (!ids.length || !ranges.length) throw Error("Välj minst en person och en arbetsdag.");
+      await commit(data=>{
+        for (const person of data.people.filter(item=>ids.includes(item.id))) {
+          person.availability=person.availability.filter(range=>!ranges.some(next=>next.day===range.day)).concat(clone(ranges)).sort((a,b)=>a.day-b.day);
+        }
+      },"Arbetstiderna är sparade för de valda personerna.");closeDialog();
+    });
+  bindAvailabilityFields();
+  $("bulkPeopleSearch").oninput=()=>{const q=$("bulkPeopleSearch").value.toLocaleLowerCase("sv-SE");modal.querySelectorAll('[data-bulk-name]').forEach(row=>row.hidden=!row.dataset.bulkName.includes(q));};
+  $("bulkSelectAll").onchange=event=>modal.querySelectorAll('[data-bulk-name]:not([hidden]) input').forEach(input=>input.checked=event.target.checked);
+}
+
 function editPerson(id) {
+  if (!id) return editDirectoryPerson();
   const old=plan.people.find(p => p.id===id);
 
   showDialog(
@@ -10294,14 +10399,7 @@ function editPerson(id) {
     <div class="formsection">
       <h3>Arbetsdagar och tider</h3>
       <p class="hint">Markera de dagar personen arbetar och ange tider för årets julstök.</p>
-      ${DAYS.map((name,day) => {
-        const range=old?.availability.find(r => r.day===day);
-        return `<div class="avrow day-tone-${day}" data-availability-day="${day}">
-          <label><input type="checkbox" class="av-check" ${range?"checked":""}>${name}</label>
-          ${clockControl(range?.start || (day===0?"15:30":"10:30"),{className:"av-start",label:name+" från",disabled:!range})}
-          ${clockControl(range?.end || (day===0?"20:30":"17:30"),{className:"av-end",label:name+" till",disabled:!range})}
-        </div>`;
-      }).join("")}
+      ${availabilityFields(old?.availability || [])}
     </div>`,
     (old?button("Ta bort","delete-person",old.id,"danger push-left"):"")+
       button("Avbryt","close")+saveButton(),
@@ -10332,8 +10430,7 @@ function editPerson(id) {
       closeDialog();
     }
   );
-  const personTimeChoices=CLOCK_CHOICES.filter(value => value>="07:00" && value<="21:00");
-  modal.querySelectorAll(".avrow").forEach(row => bindPassTimeRow(row,".av-start",".av-end",{choices:personTimeChoices}));
+  bindAvailabilityFields();
 }
 
 function showPlaceOverview(id, selectedDay=null) {
@@ -10419,7 +10516,7 @@ function findMatchingPeople(inputVal) {
   }
 
   scored.sort((a, b) => a.score - b.score || a.person.name.localeCompare(b.person.name, "sv"));
-  return scored.slice(0, 8).map(s => s.person);
+  return scored.map(s => s.person);
 }
 
 function assignActivity(activityId, day) {
@@ -10566,7 +10663,8 @@ function assignActivity(activityId, day) {
         const currentPersonId = shift ? shift.personId : "";
         const containerId = `smartSelectContainer_${req.id}_${slotIndex}`;
         
-        renderSmartPersonInput(containerId,currentPersonId,refreshActivityGanttPreview,refreshActivityGanttPreview);
+        renderSmartPersonInput(containerId,currentPersonId,refreshActivityGanttPreview,refreshActivityGanttPreview,
+          personId=>legacyCandidateReason(containerId,personId,activity,requirements));
       });
     });
   });
@@ -11217,50 +11315,75 @@ async function switchPlanningYear(year) {
 function personAlreadyAdded(person,data=plan) {
   return data.people.some(item=>item.directoryId===person.id || item.id===person.id || item.name.trim().toLocaleLowerCase("sv-SE")===person.name.trim().toLocaleLowerCase("sv-SE"));
 }
-function showPeopleDirectory(mode="import") {
+function showPeopleDirectory() {
   if (!cloud) return;
   directorySelection=new Set();
-  showDialog(mode==="import"?"Hämta från personalregistret":"Personalregister",
-    mode==="import"?`Välj personer som ska arbeta på Julstöket ${plan.year}. Arbetstider anges efteråt.`:"Gemensamma namn och telefonnummer. Ändringar påverkar inte redan tillagda personer i årsplanerna.",
+  showDialog("Personalregister / importera",`Välj personer till Julstöket ${plan.year}. Du anger arbetstider i nästa steg innan importen sparas.`,
     `<label class="field">Sök person<input id="directorySearch" type="search" placeholder="Namn eller telefonnummer…"></label>
       <div id="directoryList" class="directory-list"></div>`,
-    (mode==="manage"?button("+ Ny person i registret","directory-new","","primary"):"")+
-    button("Stäng","close")+(mode==="import"?saveButton("Lägg till valda personer"):""),
-    mode==="import"?async()=>{
-      const chosen=[...directorySelection].map(id=>peopleDirectory.find(person=>person.id===id)).filter(Boolean);
-      if (!chosen.length) throw Error("Välj minst en person.");
-      await commit(data=>{
-        for (const person of chosen) if (!personAlreadyAdded(person,data)) data.people.push({
-          id:uid(),directoryId:person.id,name:person.name,phone:person.phone,availability:[]
-        });
-      },"Personerna har lagts till i årets personal. Ange deras arbetsdagar och tider.");
-      closeDialog();
-    }:null);
-  modal.dataset.directoryMode=mode;
+    button("+ Ny person","directory-new")+button("Stäng","close")+saveButton("Fortsätt med valda personer"),async()=>{
+      const chosen=[...directorySelection].map(id=>peopleDirectory.find(person=>person.id===id)).filter(person=>person && !personAlreadyAdded(person));
+      if (!chosen.length) throw Error("Välj minst en person som inte redan är tillagd.");
+      editPeopleImport(chosen);
+    });
+  modal.dataset.directoryMode="import";
   $("directorySearch").addEventListener("input",renderDirectoryList);
   $("directoryList").addEventListener("change",event=>{
     if (!event.target.matches('[data-directory-select]')) return;
     if (event.target.checked) directorySelection.add(event.target.value);else directorySelection.delete(event.target.value);
     updateDirectorySelection();
   });
-  renderDirectoryList();
+  renderDirectoryList();$("directorySearch").focus();
 }
 function updateDirectorySelection() {
   if (modal.dataset.directoryMode!=="import") return;
   const submit=modal.querySelector('[type="submit"]');
-  if (submit) {submit.disabled=!directorySelection.size;submit.textContent=directorySelection.size?`Lägg till ${directorySelection.size} personer`:"Lägg till valda personer";}
+  const count=[...directorySelection].filter(id=>peopleDirectory.some(person=>person.id===id && !personAlreadyAdded(person))).length;
+  if (submit) {submit.disabled=!count;submit.textContent=count?`Fortsätt med ${count} ${count===1?"person":"personer"}`:"Fortsätt med valda personer";}
 }
 function renderDirectoryList() {
   const host=$("directoryList");if (!host) return;
-  const mode=modal.dataset.directoryMode,query=($("directorySearch")?.value || "").toLocaleLowerCase("sv-SE");
+  const query=($("directorySearch")?.value || "").toLocaleLowerCase("sv-SE");
   host.innerHTML=peopleDirectory.filter(person=>[person.name,person.phone].join(" ").toLocaleLowerCase("sv-SE").includes(query))
     .sort((a,b)=>a.name.localeCompare(b.name,"sv")).map(person=>{
       const added=personAlreadyAdded(person);
-      return `<div class="directory-person">${mode==="import"?`<label><input type="checkbox" data-directory-select value="${esc(person.id)}" ${added?"disabled":directorySelection.has(person.id)?"checked":""}><span><strong>${esc(person.name)}</strong><small>${esc(person.phone) || "Telefon ej angiven"}${added?" · Redan tillagd":""}</small></span></label>`:
-      `<span><strong>${esc(person.name)}</strong><small>${esc(person.phone) || "Telefon ej angiven"}</small></span>${button("Redigera","directory-edit",person.id,"small")}`}</div>`;
+      return `<div class="directory-person"><label><input type="checkbox" data-directory-select value="${esc(person.id)}" ${added?"disabled":directorySelection.has(person.id)?"checked":""}><span><strong>${esc(person.name)}</strong><small>${esc(person.phone) || "Telefon ej angiven"}${added?" · Redan tillagd":""}</small></span></label>
+      ${button("Redigera","directory-edit",person.id,"small")}</div>`;
     }).join("") || '<p class="hint">Inga personer att visa.</p>';
   updateDirectorySelection();
 }
+function editPeopleImport(chosen) {
+  const ranges=new Map(chosen.map(person=>[person.id,[]]));
+  showDialog("Importera personal",`Arbetsdagar och tider gäller enbart Julstöket ${plan.year}.`,
+    `<p class="hint">Markera vilka personer som ska få tiderna nedan och klicka på ”Tillämpa tider”. Du kan ge olika personer olika tider. Importera utan tider går också bra.</p>
+    <div id="importPeople">${chosen.map(person=>`<div class="directory-person"><label><input type="checkbox" data-import-person value="${esc(person.id)}" checked><strong>${esc(person.name)}</strong></label><small data-import-summary="${esc(person.id)}">Arbetstider ej angivna</small></div>`).join("")}</div>
+    <h3>Arbetsdagar och tider</h3>${availabilityFields()}
+    <button type="button" class="btn" id="applyImportTimes">Tillämpa tider på markerade personer</button><p id="importTimeStatus" role="status"></p>`,
+    button("Tillbaka","directory-import")+saveButton("Importera personer"),async()=>{
+      // Tider i formuläret tillämpas också vid import, så att ett extra klick inte krävs.
+      if (readAvailabilityFields().length && modal.querySelector('[data-import-person]:checked')) apply();
+      await commit(data=>{
+        for (const source of chosen) {
+          const person=peopleDirectory.find(item=>item.id===source.id);
+          if (!person) throw Error(source.name+" har tagits bort ur registret. Öppna registret igen.");
+          if (!personAlreadyAdded(person,data)) data.people.push({id:uid(),directoryId:person.id,name:person.name,phone:person.phone,availability:clone(ranges.get(person.id))});
+        }
+      },"Personerna och deras arbetstider är importerade.");closeDialog();
+    });
+  bindAvailabilityFields();
+  function apply() {
+    const selected=[...modal.querySelectorAll('[data-import-person]:checked')].map(input=>input.value),times=readAvailabilityFields();
+    if (!selected.length || !times.length) throw Error("Markera minst en person och en arbetsdag för tiderna.");
+    if (times.some(range=>!validRange(range))) throw Error("Välj giltiga start- och sluttider innan du tillämpar tiderna.");
+    for (const id of selected) {
+      ranges.set(id,ranges.get(id).filter(range=>!times.some(next=>next.day===range.day)).concat(clone(times)).sort((a,b)=>a.day-b.day));
+      modal.querySelector(`[data-import-summary="${id}"]`).textContent=ranges.get(id).map(range=>`${DAYS[range.day]} ${range.start}–${range.end}`).join(", ");
+    }
+    $("importTimeStatus").textContent="Tiderna är tillämpade på "+selected.length+" personer. Sparas när du importerar.";
+  }
+  $("applyImportTimes").onclick=()=>{try{apply();}catch(error){showError(error);}};
+}
+
 async function writeRegister(collection,id,value,expected=null) {
   if (!cloud) throw Error("Logga in först.");
   const active=cloud,ref=active.fs.doc(active.db,collection,id);
@@ -11274,19 +11397,35 @@ async function writeRegister(collection,id,value,expected=null) {
 }
 function editDirectoryPerson(id) {
   const old=peopleDirectory.find(person=>person.id===id);
-  showDialog(old?"Redigera registerperson":"Ny person i personalregistret","Här sparas enbart namn och telefonnummer, inga arbetstider.",
-    `<div class="formgrid"><label class="field">Namn<input id="directoryName" required maxlength="100" value="${esc(old?.name || "")}"></label><label class="field">Telefon<input id="directoryPhone" type="tel" maxlength="150" value="${esc(old?.phone || "")}"></label></div>`,
+  showDialog(old?"Redigera registerperson":"Ny person","Namn och telefonnummer sparas i personalregistret. Arbetstider hör till årets plan.",
+    `<div class="formgrid"><label class="field">Namn<input id="directoryName" required maxlength="100" value="${esc(old?.name || "")}"></label><label class="field">Telefon<input id="directoryPhone" type="tel" maxlength="150" value="${esc(old?.phone || "")}"></label></div>
+    ${old?"":`<label class="new-person-annual"><input type="checkbox" id="newPersonAnnual" checked> Lägg också till i personalen för ${plan.year}</label><section id="newPersonTimes"><h3>Arbetsdagar och tider</h3>${availabilityFields()}</section>`}`,
     (old?button("Ta bort ur registret","directory-delete",old.id,"danger push-left"):"")+button("Avbryt","directory-manage")+saveButton(),
     async()=>{
       const value={name:$("directoryName").value.trim(),phone:formatPhone($("directoryPhone").value)};
       if (!value.name) throw Error("Ange ett namn.");
       if (peopleDirectory.some(person=>person.id!==id && person.name.toLocaleLowerCase("sv-SE")===value.name.toLocaleLowerCase("sv-SE"))) throw Error("Namnet finns redan i registret.");
       const target=id || uid();
-      await writeRegister("julstokPeople",target,value,old?{name:old.name,phone:old.phone}:null);
+      if (!old && $("newPersonAnnual").checked) {
+        const availability=readAvailabilityFields();
+        if (personAlreadyAdded({id:target,...value})) throw Error("Personen finns redan i årets personal.");
+        await commit(data=>data.people.push({id:uid(),directoryId:target,...value,availability}),"Personen är tillagd i registret och årets personal.",{registerPerson:{id:target,...value}});
+      } else await writeRegister("julstokPeople",target,value,old?{name:old.name,phone:old.phone}:null);
       peopleDirectory=peopleDirectory.filter(person=>person.id!==target).concat({id:target,...value});
-      showPeopleDirectory("manage");toast("Personalregistret är uppdaterat.");
+      showPeopleDirectory();toast("Personalregistret är uppdaterat.");
     });
+  if (!old) {
+    bindAvailabilityFields();$("newPersonAnnual").onchange=event=>{
+      $("newPersonTimes").hidden=!event.target.checked;
+      modal.querySelectorAll(".avrow").forEach(row=>{
+        const enabled=event.target.checked && row.querySelector(".av-check").checked;
+        setClockDisabled(row.querySelector(".av-start"),!enabled);setClockDisabled(row.querySelector(".av-end"),!enabled);
+      });
+    };
+  }
+  $("directoryName").focus();
 }
+
 function deleteDirectoryPerson(id) {
   const old=peopleDirectory.find(person=>person.id===id);if (!old) return;
   confirmAction("Ta bort ur personalregistret?",`${old.name} blir inte längre valbar vid import. Personen och bemanningen finns kvar i redan sparade årsplaner.`,async()=>{
@@ -11837,6 +11976,7 @@ document.addEventListener("click",async event => {
     if (action==="history-import-all") await importHistoricalActivities(Number(target.dataset.year),[...modal.querySelectorAll('.history-activity:not([hidden]) input[name="historySelection"]:not(:disabled)')].map(box => box.value));
     if (action==="edit-activity") editActivity(id);
     if (action==="edit-person") editPerson(id);
+    if (action==="bulk-hours") editBulkAvailability();
     if (action==="edit-place") editPlace(id);
     if (action==="place-overview-day") {
       showPlaceOverview(id,target.dataset.day==="all"?null:Number(target.dataset.day));
