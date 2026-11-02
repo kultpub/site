@@ -7963,6 +7963,21 @@ function restoreHistoricalPassBoundaries(data) {
   }
 }
 
+// Saknade valfria uppgifter utelämnas, även i den historiska kopian.
+// Undefined i en lista är däremot ett datafel: listans ordning får inte ändras.
+function definedImportFields(value) {
+  if (Array.isArray(value)) return value.map(item => {
+    if (item===undefined) throw Error("Importen innehåller en ofullständig lista.");
+    return definedImportFields(item);
+  });
+  if (value && Object.getPrototypeOf(value)===Object.prototype) {
+    return Object.fromEntries(Object.entries(value)
+      .filter(([,item]) => item!==undefined)
+      .map(([key,item]) => [key,definedImportFields(item)]));
+  }
+  return value;
+}
+
 function buildHistoricalImport(data, source, sourceYear, importedAt = new Date().toISOString()) {
   // Försök hämta sourceYear från objektet, eller extrahera från ID:t (t.ex. "hist-2025-61" -> 2025) om det saknas
   let extractedYear = source.sourceYear;
@@ -7981,7 +7996,7 @@ function buildHistoricalImport(data, source, sourceYear, importedAt = new Date()
   const historical = source.historicalOriginal || source;
   const {requirements,staffingPattern:pattern}=historicalPassSetup(source);
 
-  const activity = {
+  const activity = definedImportFields({
     id: uid(),
     activityKey: source.activityKey,
     title: source.title,
@@ -8009,7 +8024,7 @@ function buildHistoricalImport(data, source, sourceYear, importedAt = new Date()
       historicalStaffing: clone(historical.historicalStaffing),
       normalization: clone(historical.normalization || [])
     }
-  };
+  });
 
   data.activities.push(activity);
   return activity;
