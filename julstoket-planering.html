@@ -98,7 +98,7 @@
   .sidebar {
     position: fixed;
     inset: 0 auto 0 0;
-    width: 224px;
+    width: 275px;
     padding: 30px 18px;
     background: var(--green);
     color: white;
@@ -134,6 +134,7 @@
     align-items: center;
     gap: 10px;
     padding: 12px 14px;
+    white-space: nowrap;
     background: transparent;
     color: #d4e0d6;
     border-radius: 7px;
@@ -146,19 +147,44 @@
     color: white;
   }
 
-  .nav button.nav-print {
-    margin-top: 10px;
-    border-top: 1px solid #ffffff29;
-    border-radius: 0 0 7px 7px;
-    padding-top: 17px;
+  /* Fasta kolumner: fliketiketter, siffror och informationsikoner flyttar sig aldrig. */
+  .nav button[data-action="navigate"] {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 18px;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .nav-title-wrap {
+    display: grid;
+    grid-template-columns: 94px 66px;
+    gap: 8px;
+    align-items: center;
+    min-width: 0;
+    white-space: nowrap;
   }
 
   .nav .badge {
-    margin-left: auto;
-    font-size: 10px;
-    padding: 1px 6px;
-    border: 1px solid #ffffff35;
-    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 66px;
+    min-width: 66px;
+    white-space: nowrap;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.3;
+    font-variant-numeric: tabular-nums;
+    padding: 0;
+    border: 0;
+    background: transparent;
+  }
+
+  .nav .badge.is-empty { visibility: hidden; }
+
+  .nav .menu-info-icon {
+    justify-self: end;
+    flex-shrink: 0;
   }
 
   .sidebar-bottom {
@@ -184,7 +210,7 @@
   }
 
   main {
-    margin-left: 224px;
+    margin-left: 275px;
   }
 
   .topbar {
@@ -242,12 +268,13 @@
   }
 
   @media (max-width:1200px) {
+    /* Samma menymått på alla skrivbordsbredder: ingen hoptryckning vid flikbyte. */
     .sidebar {
-      width: 195px;
+      width: 275px;
     }
 
     main {
-      margin-left: 195px;
+      margin-left: 275px;
     }
 
     .content {
@@ -287,13 +314,6 @@
       white-space: nowrap;
       padding: 8px 9px;
       font-size: 11px;
-    }
-
-    .nav button.nav-print {
-      margin-top: 0;
-      border-top: 0;
-      border-radius: 7px;
-      padding: 8px 9px;
     }
 
     .nav .badge {
@@ -2347,6 +2367,11 @@
     color: #a53e2e;
   }
 
+  /* Behåll varje dags gridposition utan att visa dagar utan aktivitet. */
+  .staffing-card[data-open-staffing] .staffing-day.is-not-working {
+    visibility: hidden;
+  }
+
   .staffing-card[data-open-staffing] .staffing-day-name {
     color: inherit;
     font-size: 10px;
@@ -2690,19 +2715,72 @@
     }
   }
   .place-card[data-open-place] {
+    position: relative;
     box-sizing: border-box;
-    height: 148px;
-    min-height: 148px;
-    max-height: 148px;
+    height: 74px;
+    min-height: 74px;
+    max-height: 74px;
     align-self: start;
-    padding: 12px 14px;
+    padding: 9px 14px;
     border: 1px solid var(--line);
     border-radius: 12px;
     overflow: hidden;
   }
 
-  .place-card[data-open-place] .card-head {
+  /* Knapp och kartlänk är separata klickytor: kartan öppnar aldrig platsmodalen. */
+  .place-card-open {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
     display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    border-radius: inherit;
+  }
+
+  .place-card-open:focus-visible {
+    outline: 2px solid var(--green2);
+    outline-offset: -3px;
+  }
+
+  .place-card[data-open-place] .card-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    height: 100%;
+  }
+
+  .place-card[data-open-place] .card-title {
+    min-width: 0;
+  }
+
+  .place-maps-link {
+    position: relative;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    padding: 5px 7px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: white;
+    color: var(--green2);
+    font-size: 11px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .place-maps-link:hover,
+  .place-maps-link:focus-visible {
+    border-color: var(--green2);
+    background: var(--soft);
+    text-decoration: underline;
   }
 
   .place-card[data-open-place] h2 {
@@ -2715,8 +2793,29 @@
   }
 
   .place-card[data-open-place] p {
-    margin-top: 5px;
+    margin-top: 3px;
+    font-size: 11px;
+    line-height: 1.35;
+  }
+
+  .place-maps-preview {
+    margin-top: 9px;
     font-size: 12px;
+  }
+
+  .place-maps-preview a {
+    color: var(--green2);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  /* Samma kartknapp som på platskortet, direkt under platsbeskrivningen. */
+  .place-overview-modal .dialog-head .place-maps-link {
+    margin-top: 12px;
+  }
+
+  .place-maps-preview[hidden] {
+    display: none;
   }
 
   #placeName {
@@ -2724,12 +2823,14 @@
     min-width: 0;
   }
 
-  .place-overview-filter {
-    display: inline-flex;
+  /* Mer luft i platsredigeraren, utan att påverka andra dialoger. */
+  .place-edit-description,
+  .place-edit-maps {
+    margin-top: 17px;
   }
 
   .place-overview-list {
-    margin-top: 16px;
+    margin-top: 0;
   }
 
   .place-overview-day {
@@ -3544,6 +3645,68 @@
     color: var(--muted);
     font-size: 11px;
     margin-top: 4px;
+  }
+
+  /* Personöversikt: klickbara aktiviteter samt tydligt redovisade pauser. */
+  .scheduleitem-main {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .schedule-activity-link {
+    display: inline;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--ink);
+    font: inherit;
+    font-weight: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .schedule-activity-link:hover {
+    color: var(--green2);
+    text-decoration: underline;
+  }
+
+  .schedule-pause-list {
+    display: grid;
+    gap: 4px;
+    margin-top: 7px;
+  }
+
+  .schedule-pause {
+    display: block;
+    color: var(--ink);
+    font-size: 11px;
+    line-height: 1.5;
+  }
+
+  .schedule-pause-reliever {
+    color: var(--muted);
+  }
+
+  /* Personens schema: en avskiljare endast mellan dagar som visas. */
+  .person-schedule-day {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  .person-schedule-day + .person-schedule-day {
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid var(--day-line);
+  }
+
+  /* Inga skiljelinjer mellan arbetspass samma dag: endast luft. */
+  .person-schedule-day .scheduleitem {
+    border-bottom: 0;
+    padding: 8px 0;
+  }
+
+  .person-schedule-day .scheduleitem + .scheduleitem {
+    margin-top: 7px;
   }
 
   @media (max-width:760px) {
@@ -4368,6 +4531,19 @@
     flex: 1 1 auto;
     min-width: 0;
     padding: 4px 0;
+  }
+
+  .staff-assign-modal .activity-pass[data-staffing-person] .activity-pass-name {
+    display: flex;
+    align-items: center;
+    align-self: stretch;
+    padding: 0;
+  }
+
+  .staff-assign-modal .activity-pass[data-staffing-person] .timeline-person-input,
+  .staff-assign-modal .activity-pass[data-staffing-person] .smart-input-wrapper {
+    width: 100%;
+    min-width: 0;
   }
 
   .activity-edit-modal .activity-pass-name input.person-type-input {
@@ -5443,36 +5619,52 @@
       overflow-x: visible;
     }
   }
+  .staff-assign-modal .smart-input-wrapper { width: 100%; min-width: 0; }
+
   .staff-assign-modal .person-input-row {
     display: flex;
     align-items: center;
     gap: 7px;
+    width: 100%;
+    min-height: 40px;
     min-width: 0;
+    margin: 0;
   }
 
+  /* Ta bort den ärvda bottenmarginalen som lyfte namnet över tidsraden. */
   .staff-assign-modal .person-input-row input.person-type-input {
     flex: 0 1 50% !important;
     width: 50% !important;
     min-width: 0;
+    height: 40px;
+    min-height: 40px;
+    margin: 0;
+    padding: 9px 10px;
+    line-height: 20px;
+    align-self: center;
+    box-sizing: border-box;
   }
 
+  /* Samma stora raderingskryss och samma röda hover som i Redigera aktivitet. */
   .staff-assign-modal .person-clear {
     display: grid;
     place-items: center;
-    flex: 0 0 34px;
-    width: 34px;
-    height: 34px;
+    flex: 0 0 32px;
+    width: 32px;
+    height: 32px;
+    margin: 0 0 0 auto;
     padding: 0;
     border: 0;
     border-radius: 7px;
     background: transparent;
-    color: #8c968e;
+    color: #9aa296;
+    line-height: 1;
     cursor: pointer;
   }
 
   .staff-assign-modal .person-clear:hover,
   .staff-assign-modal .person-clear:focus-visible {
-    background: #f9e8e4;
+    background: #f4dfd8;
     color: var(--red);
   }
 
@@ -5483,13 +5675,11 @@
 
   .staff-assign-modal .person-clear svg {
     display: block;
-    width: 17px;
-    height: 17px;
+    width: 15px;
+    height: 15px;
   }
 
-  .staff-assign-modal .person-clear[hidden] {
-    display: none !important;
-  }
+  .staff-assign-modal .person-clear[hidden] { display: none !important; }
 
   @media (max-width:600px) {
     .staff-assign-modal .person-input-row input.person-type-input {
@@ -7106,8 +7296,10 @@
   /* Avlösningsfrågor och valbarhet i personlistor. */
   .new-person-annual { display:flex; align-items:center; gap:8px; margin:16px 0 18px; line-height:1.5; }
   .new-person-annual input { margin:0; flex:0 0 auto; }
-  .pause-question { border:1px solid var(--gold); border-radius:8px; padding:12px; margin-top:12px; background:#fffaf0; }
+  .pause-question { width:fit-content; max-width:100%; border:1px solid var(--gold); border-radius:8px; padding:12px; margin-top:12px; background:#fffaf0; }
   .pause-question p { margin:0 0 8px; }
+  .pause-question .actions { display:grid; grid-template-columns:repeat(2,1fr); width:max-content; max-width:100%; gap:8px; }
+  .pause-question .actions .btn { width:100%; }
   .pause-review-modal { width:min(480px,calc(100vw - 32px)); }
   .suggestion-item { display:block; width:100%; text-align:left; border:0; border-bottom:1px solid var(--line); padding:9px 10px; background:white; color:var(--ink); cursor:pointer; }
   .suggestion-item small { display:block; margin-top:3px; font-size:11px; line-height:1.4; }
@@ -7118,6 +7310,11 @@
   #bulkPeople .directory-person { justify-content:flex-start; gap:8px; padding:3px 10px; line-height:20px; box-sizing:border-box; }
   #bulkPeople input[type="checkbox"] { margin:0; flex:0 0 auto; }
   [data-bulk-name][hidden] { display:none; }
+  /* Mobilnavigeringen fortsätter att vara kompakt och horisontellt rullbar. */
+  @media (max-width:760px) {
+    .nav button[data-action="navigate"] { display: inline-flex; width: auto; gap: 8px; }
+    .nav-title-wrap { display: inline-flex; width: auto; gap: 0; }
+  }
 </style>
 
 </head>
@@ -7272,10 +7469,14 @@ function positionClockPicker() {
 function renderClockChoices(focusPart="") {
   if (!activeClock) return;
   const {panel,input,draft}=activeClock,choices=input._timeChoices || CLOCK_CHOICES;
-  const hours=Array.from({length:24},(_,index) => String(index).padStart(2,"0"));
+  const allHours=Array.from({length:24},(_,index) => String(index).padStart(2,"0"));
   const minutes=Array.from({length:12},(_,index) => String(index*5).padStart(2,"0"));
   const availableHours=new Set(choices.map(value => value.slice(0,2)));
   const availableMinutes=new Set(choices.filter(value => value.startsWith(draft.hour+":")).map(value => value.slice(3)));
+  // När en paus startas visas endast timmar inom det aktuella arbetspasset.
+  // Därmed börjar listan på passets första valbara timme i stället för 00,
+  // utan att timme eller minut förifylls för en ny paus.
+  const hours=input.matches(".pause-start") ? allHours.filter(hour => availableHours.has(hour)) : allHours;
   for (const [part,values,selected,available] of [["hour",hours,draft.hour,availableHours],["minute",minutes,draft.minute,availableMinutes]]) {
     panel.querySelector(`[data-clock-list="${part}"]`).innerHTML=values.map(value => {
       const disabled=!available.has(value),isSelected=!disabled && value===selected;
@@ -7296,10 +7497,12 @@ function openClockPicker(input) {
   closeClockPicker();
   const choices=input._timeChoices || CLOCK_CHOICES;
   if (!choices.length) return;
+  // Nya pauser ska inte få en förvald timme eller minut i tidsväljaren.
+  const emptyPause=!input.value && input.matches(".pause-start,.pause-end");
   const wanted=input.value || choices[0];
   const selected=choices.includes(wanted)?wanted:choices.reduce((best,value) =>
     Math.abs(minute(value)-minute(wanted))<Math.abs(minute(best)-minute(wanted))?value:best);
-  const [hour,minutes]=selected.split(":");
+  const [hour,minutes]=emptyPause?["",""]:selected.split(":");
   const panel=document.createElement("div");
   panel.id="clockTimepicker";
   panel.className="timepicker-popup tw-rounded-xl tw-border tw-border-solid tw-border-slate-200 tw-bg-white tw-p-3 tw-text-slate-700 tw-shadow-xl";
@@ -7347,7 +7550,7 @@ function openClockPicker(input) {
     if (part==="hour") {
       const available=choices.filter(value => value.startsWith(draft.hour+":"));
       const wanted=draft.hour+":"+draft.minute;
-      if (!available.includes(wanted)) draft.minute=available.reduce((best,value) =>
+      if (draft.minute && !available.includes(wanted)) draft.minute=available.reduce((best,value) =>
         Math.abs(minute(value)-minute(wanted))<Math.abs(minute(best)-minute(wanted))?value:best).slice(3);
     }
     renderClockChoices(part);
@@ -7482,6 +7685,43 @@ function placeLabel(id) {
 function isGeneralPlaceName(name) {
   return ["hela området","ej platsspecifik"].includes(name.trim().toLocaleLowerCase("sv-SE"));
 }
+
+// Ett platsregisterfält kan innehålla en Maps-länk, GPS-koordinater eller
+// vanlig platstext. Sparat värde är alltid en säker HTTPS-länk till Google Maps.
+function normalizeGoogleMapsLink(input) {
+  const raw=String(input ?? "").trim();
+  if (!raw) return "";
+  const query=location=>"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(location);
+  const coordinates=raw.match(/^([+-]?(?:\d+(?:\.\d+)?|\.\d+))\s*[,;]\s*([+-]?(?:\d+(?:\.\d+)?|\.\d+))$/);
+  if (coordinates) {
+    const lat=Number(coordinates[1]),lng=Number(coordinates[2]);
+    if (Math.abs(lat)<=90 && Math.abs(lng)<=180) return query(lat+","+lng);
+  }
+  // Acceptera även en inklistrad Google Maps-adress utan https://.
+  const candidate=/^(?:maps\.app\.goo\.gl|goo\.gl\/maps|(?:www\.|maps\.)?google\.[a-z.]+)\//i.test(raw)
+    ? "https://"+raw : raw;
+  try {
+    const parsed=new URL(candidate);
+    const host=parsed.hostname.toLowerCase();
+    const isGoogleHost=/^(?:[a-z0-9-]+\.)*google\.(?:com(?:\.[a-z]{2})?|[a-z]{2,3}(?:\.[a-z]{2})?)$/.test(host);
+    const isGoogleMaps=(isGoogleHost && (host.startsWith("maps.") || parsed.pathname.startsWith("/maps")))
+      || host==="maps.app.goo.gl" || (host==="goo.gl" && parsed.pathname.startsWith("/maps"));
+    if (["http:","https:"].includes(parsed.protocol) && isGoogleMaps) {
+      parsed.protocol="https:";
+      return parsed.href;
+    }
+    // Vanliga externa kartadresser med koordinatparametrar fungerar också.
+    if (["http:","https:"].includes(parsed.protocol)) {
+      const point=parsed.searchParams.get("ll") || parsed.searchParams.get("center")
+        || parsed.searchParams.get("q") || parsed.searchParams.get("query");
+      if (point) return normalizeGoogleMapsLink(point);
+      const match=parsed.href.match(/@(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/);
+      if (match) return normalizeGoogleMapsLink(match[1]+","+match[2]);
+    }
+  } catch { /* Fri adress eller platsnamn fungerar som Google Maps-sökning. */ }
+  return query(raw);
+}
+
 // Kända namnbyten; historikfilen ändras inte.
 const PLACE_ALIASES=new Map([
   ["torget vid caféet","Torget vid kaféet"],
@@ -8607,8 +8847,8 @@ function personReason(data,personId,day,start,end,ignoreId="",{allowExistingHand
   if (clash) {
     const pause=(clash.breaks || []).find(pause => overlaps(pause,{start,end}));
     const activity=data.activities.find(activity => activity.id===clash.activityId)?.title || "annat arbete";
-    return `Redan bokad på ${activity} ${DAYS[day].toLocaleLowerCase("sv-SE")} ${clash.start}–${clash.end}. Krock ${start>clash.start?start:clash.start}–${end<clash.end?end:clash.end}. `+
-      (pause?`Pausen ${pause.start}–${pause.end} är också bokad tid. `:"")+"En person kan inte ha två arbeten samtidigt.";
+    return (`Redan bokad på ${activity} ${DAYS[day].toLocaleLowerCase("sv-SE")} ${clash.start}–${clash.end}. Krock ${start>clash.start?start:clash.start}–${end<clash.end?end:clash.end}. `+
+      (pause?`Pausen ${pause.start}–${pause.end} är också bokad tid.`:"")).trimEnd();
   }
 
   if (!allowExistingHandovers) {
@@ -8694,7 +8934,9 @@ function pauseReliefContext(activity,owner,pause) {
 }
 function unansweredPauses(activity) {
   return (activity.staffingPattern?.shifts || []).filter(shift=>shift.kind!=="relief").flatMap(owner=>
-    owner.breaks.filter(validRange).map(pause=>({owner,pause,...pauseReliefContext(activity,owner,pause)})))
+    owner.breaks.filter(pause=>validRange(pause) && validRange(owner) &&
+      pause.start>=owner.start && pause.end<=owner.end)
+      .map(pause=>({owner,pause,...pauseReliefContext(activity,owner,pause)})))
     .filter(item=>!item.covered && item.choice===null);
 }
 function choosePauseRelief(activity,owner,pause,required) {
@@ -8706,6 +8948,49 @@ function choosePauseRelief(activity,owner,pause,required) {
     day:owner.day,start:pause.start,end:pause.end,kind:"relief",breaks:[],
     reliefPeriods:[{breakId:pause.id,participantId:owner.participantId,start:pause.start,end:pause.end}]});
 }
+// Håll kopplade avlösningspass synkroniserade när en paus ändrar tid.
+// Ändra även fälten i formuläret; annars skriver nästa förhandsvisning
+// tillbaka deras gamla tider i modellen.
+function synchronizePauseReliefTimes(editor,pattern) {
+  const before=editor.model;
+  for (const owner of pattern.shifts.filter(shift=>shift.kind!=="relief")) {
+    const oldOwner=before.shifts.find(shift=>shift.id===owner.id);
+    for (const pause of owner.breaks) {
+      const oldPause=oldOwner?.breaks.find(item=>item.id===pause.id);
+      if (!oldPause || oldPause.start===pause.start && oldPause.end===pause.end) continue;
+      for (const relief of pattern.shifts.filter(shift=>shift.kind==="relief" &&
+        (shift.reliefPeriods || []).some(period=>period.breakId===pause.id))) {
+        for (const period of relief.reliefPeriods) {
+          if (period.breakId===pause.id) { period.start=pause.start;period.end=pause.end; }
+        }
+        if (relief.reliefPeriods.length===1) {
+          relief.start=pause.start;relief.end=pause.end;
+        } else {
+          const starts=relief.reliefPeriods.map(period=>period.start);
+          const ends=relief.reliefPeriods.map(period=>period.end);
+          relief.start=starts.reduce((a,b)=>a<b?a:b);
+          relief.end=ends.reduce((a,b)=>a>b?a:b);
+        }
+        const row=modal.querySelector(`[data-editor-shift="${relief.id}"]`);
+        for (const [selector,value] of [[".pass-start",relief.start],[".pass-end",relief.end]]) {
+          const input=row?.querySelector(selector);
+          if (input) { input.value=value;refreshClockDisplay(input); }
+        }
+      }
+    }
+  }
+  // Ett tidigare Ja/Nej gäller även när pausen finjusteras.
+  const activity={staffingPattern:pattern};
+  for (const owner of pattern.shifts.filter(shift=>shift.kind!=="relief")) {
+    for (const pause of owner.breaks) {
+      if (typeof pause.reliefChoice?.required==="boolean" && validRange(pause)) {
+        pause.reliefChoice.signature=pauseReliefContext(activity,owner,pause).signature;
+      }
+    }
+  }
+  editor.model=pattern;
+}
+
 function renderPauseQuestions(editor) {
   const host=$("pauseReliefQuestions");if (!host) return;
   const activity={staffingPattern:readPassEditorModel(editor)};
@@ -9076,6 +9361,25 @@ function navigate(view) {
 
 
 
+// Bemanningsgraden räknas i personminuter (behov × tid) över valt dagurval.
+// Den ska inte påverkas av textsökning eller filtret ”Bara luckor”.
+function navigationStaffingPercentage() {
+  const selectedDays=ui.staffingDays.length ? ui.staffingDays : [0,1,2];
+  let required=0,covered=0;
+  for (const activity of plan.activities) {
+    for (const day of selectedDays) {
+      for (const segment of coverage(activity.id,day)) {
+        const minutes=duration(segment.start,segment.end);
+        required+=segment.need*minutes;
+        covered+=Math.min(segment.staff,segment.need)*minutes;
+      }
+    }
+  }
+  if (!required || !covered) return "0 %";
+  if (covered>=required) return "100 %";
+  return Math.round(100*covered/required)+" %";
+}
+
 // Flikantalet följer dagvalet, oberoende av textsökning, och visas bara i aktiv vy.
 function navigationCount(view) {
   if (ui.view!==view) return "";
@@ -9083,6 +9387,8 @@ function navigationCount(view) {
     !ui.activityDays.length || activityDays(activity).some(day=>ui.activityDays.includes(day))).length;
   if (view==="people") return plan.people.filter(person=>
     ui.peopleDay===null || person.availability.some(range=>range.day===ui.peopleDay)).length;
+  if (view==="staffing") return navigationStaffingPercentage();
+  if (view==="places") return plan.places.filter(isListedPlace).length;
   return "";
 }
 
@@ -9092,24 +9398,20 @@ function render() {
   hideMenuTooltip();
   const activityCount=navigationCount("activities");
   const items=[
-    ["activities","Aktiviteter",activityCount,"Varje aktivitet räknas en gång. Här anger du aktivitetens plats, samtliga dagar, tider och antal personer samtidigt på plats. Personer och raster planeras under Bemanning."],
-    ["staffing","Bemanning","","Här lägger du in vilka personer som ska göra vad och hur de avlöser varandra"],
-    ["people","Personal",navigationCount("people"),"Här lägger du in vilka personer som ska arbeta under Julstöket – vilka dagar och hur många timmar."],
-    ["places","Platser","","Här anger du samtliga platser där julstökets aktiviteter äger rum."]
+    ["activities","Aktiviteter",activityCount,"Här hanterar du Julstökets arbetsuppgifter – vilka pass, pauser och avlösningar de består av."],
+    ["staffing","Bemanning",navigationCount("staffing"),"Här bemannar du Julstökets arbetsuppgifter – pass och avlösningar kopplas till person."],
+    ["people","Personal",navigationCount("people"),"Här registrerar du de personer som ska arbeta under Julstöket – dagar och arbetstider."],
+    ["places","Platser",navigationCount("places"),"Här registrerar du samtliga platser och lokaler Julstökets arbetsuppgifter."]
   ];
 
 $("navigation").innerHTML=items.map(([view,label,count,tip]) => `
-    <button type="button" data-action="navigate" data-id="${view}" class="${ui.view===view?"active":""}" style="display:flex; align-items:center; justify-content:space-between; width:100%;">
-      <span style="display:flex; align-items:center; gap:10px;">
+    <button type="button" data-action="navigate" data-id="${view}" class="${ui.view===view?"active":""}">
+      <span class="nav-title-wrap">
         <span>${label}</span>
-        ${count!==""?`<span class="badge">${count}</span>`:""}
+        <span class="badge${count===""?" is-empty":""}"${count===""?' aria-hidden="true"':""}>${count}</span>
       </span>
       ${tip ? `<span class="location-info menu-info-icon" data-menu-tip="${esc(tip)}" aria-label="${esc(tip)}">i</span>` : ""}
-    </button>`).join("")+`
- <button type="button" class="nav-print" data-action="view-schedule" style="display:flex; align-items:center; justify-content:space-between; width:100%; border-radius:0;">
-      <span>Visa schema</span>
-      <span class="location-info menu-info-icon" data-menu-tip="Visa schemat" aria-label="Visa schemat">i</span>
-    </button>`;
+    </button>`).join("");
 
   const eventLabel=new Date(eventDates(plan.year)[0]+"T12:00:00").getDate()+"–"+
     dateLabel(2)+" "+plan.year;
@@ -9534,7 +9836,20 @@ function bindPassEditor(editor) {
   const form=$("modalForm");
   form._activityEditor=editor;
   const changed=event => {
-    if (event.target.closest("#activityPassEditor")) {syncPassEditorClocks();renderPauseQuestions(editor);}
+    if (!event.target.closest("#activityPassEditor")) return;
+    if (event.target.matches(".pause-start")) {
+      // Först när användaren har valt ett komplett startklockslag föreslås +30 min.
+      const start=event.target,end=event.target.closest("[data-editor-break]")?.querySelector(".pause-end");
+      if (end && /^([01]\d|2[0-3]):[0-5]\d$/.test(start.value)) {
+        end.value=time(minute(start.value)+30);
+        refreshClockDisplay(end);
+      }
+    }
+    if (event.target.matches(".pause-start,.pause-end")) {
+      synchronizePauseReliefTimes(editor,readPassEditorModel(editor));
+    }
+    syncPassEditorClocks();
+    renderPauseQuestions(editor);
   };
   form.addEventListener("change",changed);
   form.addEventListener("click",event => {
@@ -9622,10 +9937,8 @@ function bindPassEditor(editor) {
         if (!validRange(source)) throw Error("Välj arbetets start- och sluttid innan du lägger till en paus.");
         const windows=timePickerWindows([source],source.breaks.filter(validRange));
         if (!windows.length) throw Error("Det finns ingen ledig tid för en paus under arbetstiden.");
-        const suggested=Math.min(minute(source.end)-5,minute(source.start)+120);
-        const window=windows.find(item => item.start<=suggested && suggested<item.end) || windows[0];
-        const start=Math.max(window.start,Math.min(suggested,window.end-5));
-        const pause={id:uid(),type:"Paus",start:time(start),end:time(Math.min(window.end,start+30))};
+        // Inga påhittade tider: användaren väljer först starttid själv.
+        const pause={id:uid(),type:"Paus",start:"",end:""};
         source.breaks.push(pause);focusSelector=`[data-editor-break="${pause.id}"] .pause-start`;
       }
       if (action==="remove-break") source.breaks=source.breaks.filter(pause => pause.id!==button.closest("[data-editor-break]").dataset.editorBreak);
@@ -10005,9 +10318,8 @@ function staffingCoverage(activityId,day,data=plan) {
   const missing=required-covered;
   const state=missing===0 ? "full" : covered===0 ? "empty" : "partial";
   const percent=required ? covered/required*100 : state==="full" ? 100 : 0;
-  const displayPercent=state==="partial" ? Math.max(0.1,Math.min(99.9,percent)) : percent;
   return {required,covered,missing,state,percent,
-    label:new Intl.NumberFormat("sv-SE",{maximumFractionDigits:1}).format(displayPercent)};
+    label:String(Math.round(percent))};
 }
 
 
@@ -10022,10 +10334,16 @@ function staffingCards() {
   });
   const activities=sortActivities(matches,ui.staffingSort,selected);
   if (!activities.length) return `<div class="empty"><h3>Inga aktiviteter att visa</h3><p>${plan.activities.length?"Ändra sökningen eller urvalet.":"Lägg först till en aktivitet i Aktiviteter."}</p></div>`;
-  return activities.map(activity => `<article class="activity-card staffing-card" data-open-staffing="${esc(activity.id)}" role="button" tabindex="0" aria-label="Öppna bemanning för ${esc(activity.title)}">
+  return activities.map(activity => {
+    // Fredag, lördag och söndag har alltid varsin bestämd position.
+    const activeDays=new Set(activityDays(activity));
+    return `<article class="activity-card staffing-card" data-open-staffing="${esc(activity.id)}" role="button" tabindex="0" aria-label="Öppna bemanning för ${esc(activity.title)}">
     <div class="card-head"><div class="card-title"><h2 title="${esc(activity.title)}">${esc(activity.title)}</h2><p class="activity-place">${placeLabel(activity.placeId)}</p></div>
     </div>
-    <div class="staffing-days">${activityDays(activity).map(day => staffingDay(activity,day)).join("")}</div></article>`).join("");
+    <div class="staffing-days">${DAYS.map((name,day) => activeDays.has(day)
+      ? staffingDay(activity,day)
+      : `<div class="staffing-day is-not-working" aria-hidden="true"></div>`).join("")}</div></article>`;
+  }).join("");
 }
 
 function staffingDay(activity,day) {
@@ -10042,7 +10360,7 @@ function renderSmartPersonInput(containerId, selectedPersonId, onSelect, onInput
   let storedPersonId=selectedPersonId || "";
   container.innerHTML=`<div class="smart-input-wrapper"><div class="person-input-row">
     <input type="text" class="dropdown-search-input person-type-input" id="input_${containerId}" placeholder="Sök eller välj person…" autocomplete="off" aria-expanded="false" aria-controls="suggestion_${containerId}">
-    <button type="button" class="person-clear" aria-label="Ta bort valt namn">×</button></div>
+    <button type="button" class="person-clear" aria-label="Ta bort valt namn"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="m3 3 6 6M9 3 3 9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"/></svg></button></div>
     <div class="smart-suggestion-box" id="suggestion_${containerId}" popover="manual" style="display:none"></div>
     <div class="smart-no-match" role="status" hidden></div><input type="hidden" id="val_${containerId}"></div>`;
   const input=container.querySelector('.person-type-input'),box=container.querySelector('.smart-suggestion-box');
@@ -10307,18 +10625,31 @@ function placesPage() {
     <div class="places-grid" id="placeCards">${placeCards()}</div>`;
 }
 
+function isListedPlace(place) {
+  // ”Allmänt” är en platskategori och får varken platskort eller platssiffra.
+  return place.name.trim().toLocaleLowerCase("sv-SE")!=="allmänt";
+}
+
 function placeCards() {
   const query=ui.placesQuery.toLocaleLowerCase("sv-SE");
   const places=plan.places.filter(place => {
+    if (!isListedPlace(place)) return false;
     const description=typeof PLACE_DESCRIPTIONS[place.name]==="string" ? PLACE_DESCRIPTIONS[place.name] : "";
     return !query || [place.name,description].some(text => text.toLocaleLowerCase("sv-SE").includes(query));
   }).sort((a,b) => a.name.localeCompare(b.name,"sv"));
   return places.map(place => {
     const count=plan.activities.filter(activity => activity.placeId===place.id).length;
-    return `<article class="place-card" data-open-place="${esc(place.id)}" role="button" tabindex="0" aria-label="Visa aktiviteter på ${esc(place.name)}"><div class="card-head">
-      <div class="card-title"><h2 title="${esc(place.name)}">${esc(place.name)}</h2>
-        <p>${count} ${count===1?"aktivitet":"aktiviteter"} under helgen</p></div>
-    </div></article>`;
+    const storedLink=placeDirectory.find(item => item.id===place.id)?.mapsUrl || place.mapsUrl || "";
+    const mapsUrl=normalizeGoogleMapsLink(storedLink);
+    const mapsAction=mapsUrl?`<a class="place-maps-link" href="${esc(mapsUrl)}" target="_blank" rel="noopener noreferrer" aria-label="Visa ${esc(place.name)} i Google Maps (öppnas i ny flik)">Google Maps ↗</a>`:"";
+    return `<article class="place-card" data-open-place="${esc(place.id)}">
+      <button type="button" class="place-card-open" aria-label="Visa aktiviteter på ${esc(place.name)}"></button>
+      <div class="card-head">
+        <div class="card-title"><h2 title="${esc(place.name)}">${esc(place.name)}</h2>
+          <p>${count} ${count===1?"aktivitet":"aktiviteter"} under helgen</p></div>
+        ${mapsAction}
+      </div>
+    </article>`;
   }).join("") || `<div class="empty"><h3>${query?"Ingen plats matchar sökningen":"Inga platser registrerade"}</h3>
     <p>${query?"Prova ett annat platsnamn.":"Lägg till en plats för att börja."}</p></div>`;
 }
@@ -10667,11 +10998,12 @@ function editPerson(id) {
   bindAvailabilityFields();
 }
 
-function showPlaceOverview(id, selectedDay=null) {
+function showPlaceOverview(id) {
   const place=plan.places.find(item => item.id===id);
   if (!place) return;
   const atPlace=plan.activities.filter(activity => activity.placeId===id);
-  const days=selectedDay===null?[0,1,2]:[selectedDay];
+  // Visa endast dagar där platsen faktiskt har en registrerad aktivitet.
+  const days=[0,1,2].filter(day => atPlace.some(activity => activityDays(activity).includes(day)));
   const sections=days.map(day => {
     const activities=sortActivities(atPlace.filter(activity => activityDays(activity).includes(day)),"start",[day]);
     const entries=activities.map(activity => {
@@ -10679,18 +11011,21 @@ function showPlaceOverview(id, selectedDay=null) {
         .filter(range => range.day===day && validRange(range));
       const start=ranges.length?ranges.map(range=>range.start).sort()[0]:"";
       const end=ranges.length?ranges.map(range=>range.end).sort().at(-1):"";
-      return `<li class="place-overview-item"><span class="place-overview-time">${start&&end?esc(start+"–"+end):"Tid saknas"}</span><button type="button" data-action="edit-activity" data-id="${esc(activity.id)}">${esc(activity.title)}</button></li>`;
+      return `<li class="place-overview-item"><span class="place-overview-time">${start&&end?esc(start+"–"+end):"Tid saknas"}</span><button type="button" data-action="edit-activity" data-id="${esc(activity.id)}" data-day="${day}">${esc(activity.title)}</button></li>`;
     }).join("");
-    return `<section class="place-overview-day"><h3>${DAYS[day]} <small>${dateLabel(day)}</small></h3>${entries?`<ul>${entries}</ul>`:'<p class="hint">Inga aktiviteter denna dag.</p>'}</section>`;
+    return `<section class="place-overview-day"><h3>${DAYS[day]} <small>${dateLabel(day)}</small></h3><ul>${entries}</ul></section>`;
   }).join("");
   const description=typeof PLACE_DESCRIPTIONS[place.name]==="string" ? PLACE_DESCRIPTIONS[place.name] : "Aktiviteter på platsen under Julstöket.";
+  const mapsUrl=normalizeGoogleMapsLink(placeDirectory.find(item=>item.id===id)?.mapsUrl || place.mapsUrl || "");
   showDialog(place.name,description,
-    `<div class="day-filter place-overview-filter" role="group" aria-label="Filtrera dagar">
-      <button type="button" data-action="place-overview-day" data-id="${esc(id)}" data-day="all" aria-pressed="${selectedDay===null}">Alla dagar</button>
-      ${DAYS.map((name,day)=>`<button type="button" data-action="place-overview-day" data-id="${esc(id)}" data-day="${day}" aria-pressed="${selectedDay===day}">${name}</button>`).join("")}
-    </div><div class="place-overview-list">${sections}</div>`,
+    `<div class="place-overview-list">${sections || '<p class="hint">Inga aktiviteter är knutna till platsen.</p>'}</div>`,
     button("Redigera plats","edit-place",id)+button("Stäng","close","","primary"));
   modal.classList.add("place-overview-modal");
+  if (mapsUrl) {
+    // Samma knapp, klickbeteende och nytt-flik-inställningar som på platskortet.
+    const mapsButton=`<a class="place-maps-link" href="${esc(mapsUrl)}" target="_blank" rel="noopener noreferrer" aria-label="Visa ${esc(place.name)} i Google Maps (öppnas i ny flik)">Google Maps ↗</a>`;
+    modal.querySelector("#modalSubtitle").insertAdjacentHTML("afterend",mapsButton);
+  }
 }
 
 
@@ -11029,6 +11364,44 @@ function addBreak(id) {
   bindTimeRange("breakStart","breakEnd",windows,time(start),time(end));
 }
 
+// Koppla pauser till deras bemannade avlösningar. För kopplade pass används
+// pausens ID i passmodellen; en obemannad avlösning ger aldrig något namn.
+function personSchedulePauses(activity,shift) {
+  const source=activity?.staffingPattern?.shifts?.find(item=>item.id===shift.patternShiftId);
+  const fromAssignments=shift.breaks || [];
+  const pauses=[...fromAssignments];
+
+  // Kompatibilitet med pass där pausen finns i modellen men ännu inte
+  // kopierats till den faktiska bemanningsposten.
+  for (const pause of source?.breaks || []) {
+    if (!validRange(pause) || pause.start<shift.start || pause.end>shift.end) continue;
+    if (shift.patternRowIds?.length && !shift.patternRowIds.includes(source.id+":pause:"+pause.id)) continue;
+    if (!pauses.some(item=>item.start===pause.start && item.end===pause.end)) pauses.push({...pause});
+  }
+
+  return pauses.filter(validRange).sort((a,b)=>a.start.localeCompare(b.start)).map(pause=>{
+    const sourcePause=source?.breaks.find(item=>item.id===pause.id ||
+      (item.start===pause.start && item.end===pause.end));
+    const linkedReliefs=(activity?.staffingPattern?.shifts || []).filter(item=>
+      item.kind==="relief" && item.day===shift.day &&
+      (item.reliefPeriods || []).some(period=>period.breakId===(sourcePause?.id || pause.id)));
+    const hasExplicitLinks=Boolean(activity?.staffingPattern?.shifts?.some(item=>
+      item.kind==="relief" && item.day===shift.day && (item.reliefPeriods || []).length));
+
+    const assigned=plan.assignments.filter(item=>
+      item.activityId===shift.activityId && item.day===shift.day && item.kind==="relief" &&
+      item.personId && item.personId!==shift.personId && validRange(item) &&
+      item.start<pause.end && item.end>pause.start &&
+      (linkedReliefs.length
+        ? linkedReliefs.some(sourceRelief=>sourceRelief.id===item.patternShiftId)
+        : !hasExplicitLinks && (item.coveragePeriods?.length
+          ? item.coveragePeriods.some(range=>range.start<pause.end && range.end>pause.start)
+          : item.start<=pause.start && item.end>=pause.end)));
+    const names=[...new Set(assigned.map(item=>plan.people.find(person=>person.id===item.personId)?.name).filter(Boolean))];
+    return {pause,names};
+  });
+}
+
 function personSchedule(id) {
   const person=plan.people.find(p => p.id===id);
   if (!person) return;
@@ -11046,14 +11419,22 @@ function personSchedule(id) {
       ? working.map(r => r.start+"–"+r.end).join(", ")
       : "ej registrerad";
 
-    return `<div class="formsection" style="margin-top:0;margin-bottom:24px">
+    return `<div class="formsection person-schedule-day">
       <h3>${name} <span class="hint">${dateLabel(day)}, arbetstid ${workLabel}</span></h3>
-      ${shifts.map(shift => `<div class="scheduleitem"><div>
-        <strong>${shift.start}–${shift.end} · ${esc(activityName(shift.activityId))}</strong>
-        <small>${placeLabel(plan.activities.find(a => a.id===shift.activityId).placeId)}
-          ${shift.breaks.map(b => " · "+esc(b.type)+" "+b.start+"–"+b.end).join("")}</small>
-      </div>${button("Visa pass","shift",shift.id,"small")}</div>`).join("") ||
-        `<p class="hint" style="margin-top:9px">Inga pass tilldelade.</p>`}
+      ${shifts.map(shift => {
+        const activity=plan.activities.find(item=>item.id===shift.activityId);
+        const pauseRows=personSchedulePauses(activity,shift);
+        const place=activity?placeLabel(activity.placeId):"";
+        return `<div class="scheduleitem"><div class="scheduleitem-main">
+          <strong>${esc(shift.start)}–${esc(shift.end)} · ${activity
+            ? `<button type="button" class="schedule-activity-link" data-action="staff-person-activity" data-id="${esc(activity.id)}" data-day="${day}">${esc(activity.title)}</button>`
+            : esc(activityName(shift.activityId))}</strong>
+          ${place?`<small>${place}</small>`:""}
+          ${pauseRows.length?`<div class="schedule-pause-list">${pauseRows.map(({pause,names})=>
+            `<div class="schedule-pause">${esc(pause.type || "Paus")} ${esc(pause.start)}–${esc(pause.end)}${names.length
+              ? ` <span class="schedule-pause-reliever">· Avlösare: ${esc(names.join(", "))}</span>`:""}</div>`).join("")}</div>`:""}
+        </div></div>`;
+      }).join("") || `<p class="hint" style="margin-top:9px">Inga pass tilldelade.</p>`}
     </div>`;
   }).filter(Boolean).join("");
 
@@ -11120,10 +11501,9 @@ function weekendReportHTML(data) {
       }
       const fully=required>0 && covered===required;
       const percent=required?covered/required*100:0;
-      const percentLabel=new Intl.NumberFormat("sv-SE",{maximumFractionDigits:1})
-        .format(covered && !fully?Math.max(0.1,Math.min(99.9,percent)):percent);
+      const percentLabel=String(Math.round(percent));
       const status=fully?"Fullt bemannad – alla timmar i passet är bemannade.":
-        covered?percentLabel+"% av passet är bemannat.":"Obemannad – inga timmar i passet är bemannade.";
+        covered?percentLabel+" % av passet är bemannat.":"Obemannad – inga timmar i passet är bemannade.";
       const shiftItem=shift => {
         const range=clip(shift);
         return `<strong>${range.start}–${range.end} · ${esc(person(shift.personId))}</strong>`+
@@ -11475,7 +11855,7 @@ async function openFirebaseSession(user) {
     if (generation!==sessionGeneration) return;
     if (!archive.exists() || archive.data().year!==2025 || !Array.isArray(archive.data().activities)) throw Error("Årsarkivet 2025 saknas eller har fel format i Firebase.");
     peopleDirectory=people.docs.map(doc=>({id:doc.id,name:doc.data().name,phone:doc.data().phone || ""}));
-    placeDirectory=places.docs.map(doc=>({id:doc.id,name:doc.data().name,description:doc.data().description || ""}));
+    placeDirectory=places.docs.map(doc=>({id:doc.id,name:doc.data().name,description:doc.data().description || "",mapsUrl:doc.data().mapsUrl || ""}));
     refreshPlaceMetadata();
     HISTORICAL_EDITIONS["2025"]=clone(archive.data());
     normalizeHistoricalEditions();
@@ -11505,7 +11885,7 @@ function subscribeRegisters() {
   },fail));
   registerSubscriptions.push(active.fs.onSnapshot(active.fs.collection(active.db,"julstokPlaces"),snapshot=>{
     if (cloud!==active) return;
-    placeDirectory=snapshot.docs.map(doc=>({id:doc.id,name:doc.data().name,description:doc.data().description || ""}));
+    placeDirectory=snapshot.docs.map(doc=>({id:doc.id,name:doc.data().name,description:doc.data().description || "",mapsUrl:doc.data().mapsUrl || ""}));
     refreshPlaceMetadata();reconcilePlaces(plan);
     if (!saving && !switchingYear) render();
   },fail));
@@ -11680,16 +12060,34 @@ function editPlace(id) {
   const old=plan.places.find(place=>place.id===id),registered=placeDirectory.find(place=>place.id===id);
   showDialog(old?"Redigera plats":"Ny plats","Platsregistret är gemensamt för alla planeringsår.",
     `<label class="field">Platsnamn<input id="placeName" required maxlength="150" value="${esc(old?.name || "")}"></label>
-      <label class="field">Beskrivning<textarea id="placeDescription" maxlength="2000">${esc(registered?.description || old?.description || "")}</textarea></label>`,
+      <label class="field place-edit-description">Beskrivning<input id="placeDescription" type="text" maxlength="2000" value="${esc(registered?.description || old?.description || "")}"></label>
+      <label class="field place-edit-maps">Google Maps-länk eller koordinater
+        <input id="placeMapsUrl" type="text" maxlength="3000" autocomplete="off"
+          placeholder="Google Maps-länk, 55.705153, 13.197396 eller adress"
+          value="${esc(registered?.mapsUrl || old?.mapsUrl || "")}">
+      </label>
+      <p class="hint">Klistra in en Maps-länk, GPS-koordinater eller en adress. Allt sparas som en Google Maps-länk.</p>
+      <p class="place-maps-preview" id="placeMapsPreview" hidden><a id="placeMapsPreviewLink" target="_blank" rel="noopener noreferrer">Öppna i Google Maps</a></p>`,
     (registered?button("Ta bort","delete-place",id,"danger push-left"):"")+button("Avbryt","close")+saveButton(),async()=>{
-      const value={name:$("placeName").value.trim(),description:$("placeDescription").value.trim()};
+      const value={name:$("placeName").value.trim(),description:$("placeDescription").value.trim(),
+        mapsUrl:normalizeGoogleMapsLink($("placeMapsUrl").value)};
       if (!value.name || isGeneralPlaceName(value.name)) throw Error("Ange ett platsnamn. Ej platsspecifik väljs på aktiviteten.");
       if (placeDirectory.some(place=>place.id!==id && place.name.toLocaleLowerCase("sv-SE")===value.name.toLocaleLowerCase("sv-SE"))) throw Error("Platsen finns redan.");
       const target=id || uid();
-      await writeRegister("julstokPlaces",target,value,registered?{name:registered.name,description:registered.description}:null);
+      await writeRegister("julstokPlaces",target,value,registered?{name:registered.name,description:registered.description,mapsUrl:registered.mapsUrl || ""}:null);
       placeDirectory=placeDirectory.filter(place=>place.id!==target).concat({id:target,...value});
       refreshPlaceMetadata();reconcilePlaces(plan);closeDialog();render();toast("Platsregistret är uppdaterat.");
     });
+  // Förhandsgranska direkt, men låt användaren behålla sin inklistrade text i fältet.
+  const mapsInput=$("placeMapsUrl"),mapsPreview=$("placeMapsPreview"),mapsPreviewLink=$("placeMapsPreviewLink");
+  const updateMapsPreview=()=>{
+    const url=normalizeGoogleMapsLink(mapsInput.value);
+    mapsPreview.hidden=!url;
+    if (url) mapsPreviewLink.href=url;
+    else mapsPreviewLink.removeAttribute("href");
+  };
+  mapsInput.addEventListener("input",updateMapsPreview);
+  updateMapsPreview();
 }
 function deleteRegisterPlace(id) {
   const old=placeDirectory.find(place=>place.id===id);if (!old) return;
@@ -12151,6 +12549,8 @@ document.addEventListener("click",async event => {
   }
   const target=event.target.closest("button[data-action]");
   if (!target) {
+    // Länken har ett eget beteende; klicket får inte öppna platskortets modal.
+    if (event.target.closest(".place-maps-link")) return;
     const card=event.target.closest("[data-open-activity],[data-open-staffing],[data-open-person],[data-open-place]");
     if (card && !event.target.closest(".location-info")) {
       if (card.dataset.openStaffing) assignActivity(card.dataset.openStaffing);
@@ -12218,6 +12618,8 @@ document.addEventListener("click",async event => {
       ui.staffingDays=id==="all"?[]:[Number(id)];
       document.querySelectorAll('[data-action="staffing-day-filter"]').forEach(item => item.setAttribute("aria-pressed",String(item.dataset.id==="all"?!ui.staffingDays.length:ui.staffingDays.includes(Number(item.dataset.id)))));
       $("staffingCards").innerHTML=staffingCards();
+      const badge=document.querySelector('[data-action="navigate"][data-id="staffing"] .badge');
+      if (badge) badge.textContent=navigationStaffingPercentage();
     }
     if (action==="history-bank") {ui.historyQuery="";await refreshHistoricalSources();showHistoryBank();}
 	if (action==="clear-activities") clearActivities();
@@ -12233,16 +12635,19 @@ document.addEventListener("click",async event => {
       const tab=target.closest(".edit-activity-control")
         ? modal.querySelector('.pass-day-tab[role="tab"][aria-selected="true"]')
         : null;
-      editActivity(id,tab?Number(tab.dataset.day):null);
+      const requestedDay=target.dataset.day;
+      editActivity(id,/^[012]$/.test(requestedDay || "")?Number(requestedDay):
+        (tab?Number(tab.dataset.day):null));
     }
     if (action==="edit-person") editPerson(id);
     if (action==="bulk-hours") editBulkAvailability();
     if (action==="edit-place") editPlace(id);
-    if (action==="place-overview-day") {
-      showPlaceOverview(id,target.dataset.day==="all"?null:Number(target.dataset.day));
-      modal.querySelector(`[data-action="place-overview-day"][data-day="${target.dataset.day}"]`)?.focus();
-    }
     if (action==="person-schedule") personSchedule(id);
+    if (action==="staff-person-activity") {
+      // Behåll arbetsdagen från personöversikten när bemanningsmodalen öppnas.
+      const requestedDay=target.dataset.day;
+      assignActivity(id,/^[012]$/.test(requestedDay || "")?Number(requestedDay):undefined);
+    }
     if (action==="shift") showShift(id);
     if (action==="staff-activity") {
       if (target.disabled) return;
