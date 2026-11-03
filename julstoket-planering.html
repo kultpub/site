@@ -2472,6 +2472,33 @@
     display: none;
   }
 
+  /* Personal: samma rutnät och tidsaxel som aktiviteternas dagsöversikt. */
+  .people-tools #peopleSearch { flex:1 1 220px; max-width:360px; }
+  .people-tools > .sort-control { margin-left:auto; }
+  .people-gantt .people-worktime {
+    position:absolute; top:50%; height:4px; transform:translateY(-50%);
+    background:#587a9c; border-radius:2px;
+  }
+  .people-gantt .people-worktime-end {
+    position:absolute; top:50%; width:12px; height:12px;
+    transform:translate(-50%,-50%); border:1px solid #3f5e7d;
+    border-radius:50%; background:#587a9c; box-sizing:border-box;
+  }
+  .people-gantt .people-activity-block {
+    position:absolute; top:50%; height:20px; transform:translateY(-50%);
+    padding:0; min-width:1px; border:1px solid color-mix(in srgb,var(--people-activity-color),black 23%);
+    border-radius:4px; background:var(--people-activity-color); cursor:pointer; box-sizing:border-box; overflow:hidden;
+  }
+  .people-gantt .people-activity-block:hover { filter:brightness(1.06); }
+  .people-gantt .people-activity-block:focus-visible { outline:2px solid var(--ink); outline-offset:2px; z-index:2; }
+  .people-gantt .people-booking-pause {
+    position:absolute; top:0; bottom:0;
+    background:repeating-linear-gradient(135deg,#fff7df 0 4px,#e6cd8b 4px 6px);
+  }
+  @media (max-width:650px) {
+    .people-tools #peopleSearch { flex-basis:100%; max-width:none; }
+  }
+
   .activity-card[data-open-person] {
     cursor: pointer;
     transition: border-color .15s, box-shadow .15s;
@@ -2817,6 +2844,22 @@
   .dialog-head,
   .dialog-foot {
     flex-shrink: 0;
+  }
+
+  /* Lås bakgrunden för alla modaler, även när flera ligger ovanpå varandra. */
+  html {
+    scrollbar-gutter: stable;
+  }
+
+  html:has(dialog[open]),
+  body:has(dialog[open]) {
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+
+  dialog,
+  dialog .dialog-body {
+    overscroll-behavior: contain;
   }
 
   .dialog-body {
@@ -7029,6 +7072,9 @@
   .suggestion-item:disabled { background:#f4f1ec; color:#71645b; cursor:not-allowed; opacity:1; }
   .suggestion-heading { padding:6px 10px; font-size:11px; font-weight:700; background:var(--soft); }
   #bulkPeople, #importPeople { max-height:250px; overflow:auto; margin:12px 0; }
+  #bulkPeople { max-height:160px; grid-auto-rows:28px; gap:5px; align-content:start; }
+  #bulkPeople .directory-person { justify-content:flex-start; gap:8px; padding:3px 10px; line-height:20px; box-sizing:border-box; }
+  #bulkPeople input[type="checkbox"] { margin:0; flex:0 0 auto; }
   [data-bulk-name][hidden] { display:none; }
 </style>
 
@@ -8910,6 +8956,9 @@ const ui={
   query:"",
   onlyGaps:false,
   peopleQuery:"",
+  peopleDay:null,
+  showPeopleGantt:false,
+  peopleSort:"start",
   placesQuery:"",
   bankYear:null,
   activitySort:"start",
@@ -8985,15 +9034,25 @@ function navigate(view) {
 
 
 
+// Flikantalet följer dagvalet, oberoende av textsökning, och visas bara i aktiv vy.
+function navigationCount(view) {
+  if (ui.view!==view) return "";
+  if (view==="activities") return plan.activities.filter(activity=>
+    !ui.activityDays.length || activityDays(activity).some(day=>ui.activityDays.includes(day))).length;
+  if (view==="people") return plan.people.filter(person=>
+    ui.peopleDay===null || person.availability.some(range=>range.day===ui.peopleDay)).length;
+  return "";
+}
+
 function render() {
   if (!cloud || authLoading) {renderLogin();return;}
   document.body.classList.remove("signed-out");
   hideMenuTooltip();
-  const activityCount=plan.activities.length;
+  const activityCount=navigationCount("activities");
   const items=[
     ["activities","Aktiviteter",activityCount,"Varje aktivitet räknas en gång. Här anger du aktivitetens plats, samtliga dagar, tider och antal personer samtidigt på plats. Personer och raster planeras under Bemanning."],
     ["staffing","Bemanning","","Här lägger du in vilka personer som ska göra vad och hur de avlöser varandra"],
-    ["people","Personal","","Här lägger du in vilka personer som ska arbeta under Julstöket – vilka dagar och hur många timmar."],
+    ["people","Personal",navigationCount("people"),"Här lägger du in vilka personer som ska arbeta under Julstöket – vilka dagar och hur många timmar."],
     ["places","Platser","","Här anger du samtliga platser där julstökets aktiviteter äger rum."]
   ];
 
@@ -10012,30 +10071,143 @@ document.addEventListener("click", () => {
   });
 });
 
+function sortPeople(people,order=ui.peopleSort,day=ui.peopleDay) {
+  const compareNames=(a,b)=>a.name.localeCompare(b.name,"sv-SE") || a.id.localeCompare(b.id);
+  const bound=(person,field)=>{
+    const ranges=person.availability.filter(range=>day===null || range.day===day);
+    const values=ranges.map(range=>range[field]).filter(Boolean).sort();
+    return values.length?(field==="end"?values.at(-1):values[0]):null;
+  };
+  return people.slice().sort((a,b)=>{
+    if (order==="az") return compareNames(a,b);
+    if (order==="za") return -compareNames(a,b);
+    const field=order==="end"?"end":"start",left=bound(a,field),right=bound(b,field);
+    if (left===null || right===null) return left===right?compareNames(a,b):left===null?1:-1;
+    return (field==="end"?right.localeCompare(left):left.localeCompare(right)) || compareNames(a,b);
+  });
+}
 function selectedPeople() {
   const query=ui.peopleQuery.toLocaleLowerCase("sv-SE");
-  return plan.people.filter(person =>
+  return sortPeople(plan.people.filter(person =>
+    (ui.peopleDay===null || person.availability.some(range=>range.day===ui.peopleDay)) &&
     (!query || [person.name,person.phone,formatPhone(person.phone)]
       .join(" ").toLocaleLowerCase("sv-SE").includes(query))
-  ).sort((a,b) => a.name.localeCompare(b.name,"sv"));
+  ));
 }
 
-
-
 function peoplePage() {
+  const singleDay=ui.peopleDay!==null;
   return heading(
     "Personal",
     "Registrera arbetsdagar och tider för dem som ska arbeta under Julstöket.",
     button("Personalregister / importera","directory-import","","primary")+
     button("+ Ny person","directory-new")+button("Ange arbetstider för flera","bulk-hours")
   )+`
-    <div class="filters">
+    <div class="filters activity-tools people-tools">
       <input type="search" id="peopleSearch" value="${esc(ui.peopleQuery)}"
-        placeholder="Sök namn..." aria-label="Sök personal">
+        placeholder="Sök namn eller telefonnummer…" aria-label="Sök personal">
+      <div class="day-filter" role="group" aria-label="Filtrera personal efter arbetsdag">
+        <button type="button" data-action="people-day-filter" data-id="all" aria-pressed="${!singleDay}">Alla dagar</button>
+        ${DAYS.map((name,day)=>`<button type="button" data-action="people-day-filter" data-id="${day}" aria-pressed="${ui.peopleDay===day}">${name}</button>`).join("")}
+      </div>
+      <div class="activity-view-slot" ${singleDay?"":'title="Välj en enskild dag för att byta vy"'}>
+        <div class="day-filter activity-view-choice" role="group" aria-label="Välj personalvy">
+          <button type="button" data-action="people-view" data-id="cards" aria-pressed="${!singleDay || !ui.showPeopleGantt}" ${singleDay?"":"disabled"}>Personalkort</button>
+          <button type="button" data-action="people-view" data-id="gantt" aria-pressed="${singleDay && ui.showPeopleGantt}" ${singleDay?"":"disabled"}>Gantt-schema</button>
+        </div>
+      </div>
+      ${sortSelect("peopleSort",ui.peopleSort)}
     </div>
-    <div class="activity-grid people-grid" id="peopleCards">${peopleCards()}</div>
+    <div id="peopleResults">${peopleResults()}</div>`;
+}
+
+function peopleResults() {
+  hideGanttTooltip();
+  if (ui.peopleDay!==null && ui.showPeopleGantt) return peopleGantt(selectedPeople(),ui.peopleDay);
+  return `<div class="activity-grid people-grid" id="peopleCards">${peopleCards()}</div>
     <p class="hint" style="margin-top:13px">”Ej angivet” betyder att arbetsdagar ännu inte registrerats.
       Bemannade timmar räknas utan registrerade raster.</p>`;
+}
+
+function peopleEmpty() {
+  const title=!plan.people.length?"Ingen personal tillagd för "+plan.year:
+    ui.peopleDay!==null?"Ingen personal att visa för "+dayLower(ui.peopleDay):"Ingen person matchar sökningen";
+  return `<div class="empty"><h3>${esc(title)}</h3><p>${plan.people.length?
+    "Ändra sökningen eller välj en annan dag.":"Hämta personer från personalregistret och ange deras arbetsdagar och tider."}</p></div>`;
+}
+
+/* ---------- Personalens Gantt-schema: arbetstid och tilldelade aktiviteter ---------- */
+// En liten, tydlig palett återanvänds på varje persons rad.
+// Återkommande pass på samma aktivitet behåller färgen inom raden.
+function peopleActivityColors(shifts) {
+  const palette=["#bea15e","#6486a2","#b5766d","#73967e","#9580a5","#ac885d"];
+  const colors=new Map();
+  for (const shift of shifts) {
+    if (colors.has(shift.activityId)) continue;
+    const usedByNeighbours=new Set();
+    for (let index=0;index<shifts.length;index++) {
+      if (shifts[index].activityId!==shift.activityId) continue;
+      for (const other of [shifts[index-1],shifts[index+1]]) {
+        if (other && other.activityId!==shift.activityId && colors.has(other.activityId)) usedByNeighbours.add(colors.get(other.activityId));
+      }
+    }
+    const unused=palette.find(color=>![...colors.values()].includes(color));
+    colors.set(shift.activityId,unused || palette.find(color=>!usedByNeighbours.has(color)) || palette[colors.size%palette.length]);
+  }
+  return colors;
+}
+function peopleGantt(people,day) {
+  if (!people.length) return peopleEmpty();
+  const start=7*60,end=22*60,span=end-start;
+  const assignments=plan.assignments.filter(shift=>shift.day===day && people.some(person=>person.id===shift.personId));
+  const allRanges=people.flatMap(person=>person.availability.filter(range=>range.day===day)).concat(assignments);
+  const outside=allRanges.some(range=>minute(range.start)<start || minute(range.end)>end);
+  const clip=range=>({start:Math.max(start,minute(range.start)),end:Math.min(end,minute(range.end))});
+  const position=range=>`left:${(range.start-start)/span*100}%;width:${(range.end-range.start)/span*100}%;`;
+  const tip=(event,heading,name,start,end,details="")=>`data-people-gantt-tip data-gantt-kind="work"
+    data-gantt-event="${esc(event)}" data-gantt-person="${esc(heading)}" data-gantt-name="${esc(name)}"
+    data-gantt-start="${esc(start)}" data-gantt-end="${esc(end)}" data-gantt-day="${esc(DAYS[day])}" data-gantt-details="${esc(details)}"`;
+  const ticks=[];for(let value=start;value<=end;value+=60) ticks.push(value);
+  return `<section class="overview-gantt people-gantt" aria-labelledby="peopleGanttTitle">
+    <div class="overview-heading"><h2 id="peopleGanttTitle">${esc(DAYS[day])} ${esc(dateLabel(day))}</h2>${outside?'<p class="gantt-outside-note" role="note">Tider före 07:00 eller efter 22:00 visas inte fullt ut i schemat.</p>':""}</div>
+    <div class="overview-scroll" role="region" aria-label="Gantt-schema för dagens personal">
+      <div class="overview-chart" style="--overview-hour-width:${60/span*100}%">
+        <div class="overview-row overview-axis-row"><div class="overview-label">Personal</div><div class="overview-plot"><div class="overview-axis">${ticks.map((value,index)=>{
+          const edge=index===0 || index===ticks.length-1;
+          const visibleAt=step=>edge || (value%step===0 && value-start>=step && end-value>=step);
+          return `<span class="overview-tick" data-edge="${edge}" data-medium="${visibleAt(120)}" data-narrow="${visibleAt(240)}" style="left:${(value-start)/span*100}%"><span>${time(value)}</span></span>`;
+        }).join("")}</div></div></div>
+        ${people.map(person=>{
+          const working=person.availability.filter(range=>range.day===day).sort((a,b)=>a.start.localeCompare(b.start));
+          const shifts=assignments.filter(shift=>shift.personId===person.id).sort((a,b)=>a.start.localeCompare(b.start) || a.end.localeCompare(b.end) || a.id.localeCompare(b.id));
+          const colors=peopleActivityColors(shifts);
+          const boundaryBooked=value=>shifts.some(shift=>shift.start===value || shift.end===value);
+          const lines=working.map(range=>{
+            const clipped=clip(range);if(clipped.end<=clipped.start) return "";
+            const label=`${person.name}: arbetstid ${range.start}–${range.end}`;
+            const endpoints=[range.start,range.end].filter(value=>minute(value)>=start && minute(value)<=end && !boundaryBooked(value));
+            return `<span class="people-worktime" role="img" ${tip("Arbetstid",person.name,"",range.start,range.end)} aria-label="${esc(label)}" style="${position(clipped)}"></span>`+
+              endpoints.map(value=>`<span class="people-worktime-end" data-time="${esc(value)}" ${tip("Arbetstid",person.name,"",range.start,range.end)} aria-hidden="true" style="left:${(minute(value)-start)/span*100}%"></span>`).join("");
+          }).join("");
+          const blocks=shifts.map(shift=>{
+            const clipped=clip(shift);if(clipped.end<=clipped.start) return "";
+            const name=activityName(shift.activityId),color=colors.get(shift.activityId) || "#888888";
+            const label=`${person.name}: ${name}${shift.kind==="relief"?", avlösning":""}, ${shift.start}–${shift.end}`;
+            const pauses=(shift.breaks || []).map(pause=>{
+              const segment={start:Math.max(clipped.start,minute(pause.start)),end:Math.min(clipped.end,minute(pause.end))};
+              if(segment.end<=segment.start) return "";
+              const description=`${person.name}: ${pause.type || "Paus"} ${pause.start}–${pause.end} (${name})`;
+              return `<span class="people-booking-pause" role="img" ${tip(pause.type || "Paus",name,person.name,pause.start,pause.end)} aria-label="${esc(description)}" style="left:${(segment.start-clipped.start)/(clipped.end-clipped.start)*100}%;width:${(segment.end-segment.start)/(clipped.end-clipped.start)*100}%"></span>`;
+            }).join("");
+            return `<button type="button" class="people-activity-block" data-action="shift" data-id="${esc(shift.id)}" data-activity-id="${esc(shift.activityId)}"
+              ${tip(shift.kind==="relief"?"Avlösning":"Arbete",name,person.name,shift.start,shift.end)} aria-label="${esc(label)}" style="${position(clipped)}--people-activity-color:${color};">${pauses}</button>`;
+          }).join("");
+          return `<div class="overview-row" data-person-gantt="${esc(person.id)}"><div class="overview-label overview-activity-label"><button type="button" class="overview-activity-name" data-action="person-schedule" data-id="${esc(person.id)}">${esc(person.name)}</button></div>
+            <div class="overview-plot"><div class="overview-track" aria-label="${esc(person.name+", "+DAYS[day])}">${lines}${blocks}</div></div></div>`;
+        }).join("")}
+      </div>
+    </div>
+  </section>`;
 }
 
 function peopleCards() {
@@ -10059,8 +10231,7 @@ function peopleCards() {
         }).join("")}
       </dl>
     </article>`;
-  }).join("") || `<div class="empty"><h3>${plan.people.length?"Ingen person matchar sökningen":"Ingen personal tillagd för "+plan.year}</h3>
-    <p>${plan.people.length?"Prova ett annat namn eller telefonnummer.":"Hämta personer från personalregistret och ange deras arbetsdagar och tider."}</p></div>`;
+  }).join("") || peopleEmpty();
 }
 
 function placesPage() {
@@ -10365,10 +10536,10 @@ function editBulkAvailability() {
   if (!plan.people.length) {toast("Lägg först till personer i årets personal.");return;}
   showDialog("Arbetstider för flera",`Gemensamma tider för Julstöket ${plan.year}.`,
     `<label class="field">Sök person<input id="bulkPeopleSearch" type="search" placeholder="Sök namn…"></label>
-    <label><input type="checkbox" id="bulkSelectAll"> Markera alla synliga</label>
+    <label class="new-person-annual"><input type="checkbox" id="bulkSelectAll"> Markera alla synliga</label>
     <div class="directory-list" id="bulkPeople">${plan.people.slice().sort((a,b)=>a.name.localeCompare(b.name,"sv")).map(person=>
-      `<label class="directory-person" data-bulk-name="${esc(person.name.toLocaleLowerCase("sv-SE"))}"><input type="checkbox" data-bulk-person value="${esc(person.id)}">${esc(person.name)}</label>`).join("")}</div>
-    <h3>Arbetsdagar och tider</h3><p class="hint">Markerade dagar ersätter tidigare tider för de valda personerna. Övriga dagar behålls. Bemanningen måste fortfarande rymmas inom arbetstiden.</p>${availabilityFields()}`,
+      `<label class="directory-person" data-bulk-name="${esc(person.name.toLocaleLowerCase("sv-SE"))}"><input type="checkbox" data-bulk-person value="${esc(person.id)}"><span>${esc(person.name)}</span></label>`).join("")}</div>
+    <h3>Arbetsdagar och tider</h3>${availabilityFields()}`,
     button("Avbryt","close")+saveButton("Spara för valda personer"),async()=>{
       const ids=[...modal.querySelectorAll('[data-bulk-person]:checked')].map(input=>input.value),ranges=readAvailabilityFields();
       if (!ids.length || !ranges.length) throw Error("Välj minst en person och en arbetsdag.");
@@ -11160,7 +11331,7 @@ function resetSession() {
   for (const key of Object.keys(HISTORICAL_EDITIONS)) delete HISTORICAL_EDITIONS[key];
   for (const key of Object.keys(PLAN_EDITIONS)) delete PLAN_EDITIONS[key];
   plan=seedPlan(selectedYear());
-  ui.view="activities";ui.query="";ui.peopleQuery="";ui.placesQuery="";
+  ui.view="activities";ui.query="";ui.peopleQuery="";ui.placesQuery="";ui.peopleDay=null;ui.showPeopleGantt=false;
 }
 function renderLogin() {
   document.body.classList.add("signed-out");
@@ -11307,7 +11478,7 @@ async function switchPlanningYear(year) {
     if (loaded.year!==year) throw Error("Årtalet i den sparade planen stämmer inte.");
     plan=reconcilePlaces(loaded);cloud.ref=ref;pendingCloud=null;rememberYear(year);
     for (const key of Object.keys(PLAN_EDITIONS)) delete PLAN_EDITIONS[key];
-    ui.bankYear=null;ui.activityDays=[];ui.staffingDays=[];ui.showActivityGantt=false;
+    ui.bankYear=null;ui.activityDays=[];ui.staffingDays=[];ui.showActivityGantt=false;ui.peopleDay=null;ui.showPeopleGantt=false;
     subscribeCloudPlan(ref);render();
   } finally {switchingYear=false;}
 }
@@ -11397,7 +11568,7 @@ async function writeRegister(collection,id,value,expected=null) {
 }
 function editDirectoryPerson(id) {
   const old=peopleDirectory.find(person=>person.id===id);
-  showDialog(old?"Redigera registerperson":"Ny person","Namn och telefonnummer sparas i personalregistret. Arbetstider hör till årets plan.",
+  showDialog(old?"Redigera registerperson":"Ny person","",
     `<div class="formgrid"><label class="field">Namn<input id="directoryName" required maxlength="100" value="${esc(old?.name || "")}"></label><label class="field">Telefon<input id="directoryPhone" type="tel" maxlength="150" value="${esc(old?.phone || "")}"></label></div>
     ${old?"":`<label class="new-person-annual"><input type="checkbox" id="newPersonAnnual" checked> Lägg också till i personalen för ${plan.year}</label><section id="newPersonTimes"><h3>Arbetsdagar och tider</h3>${availabilityFields()}</section>`}`,
     (old?button("Ta bort ur registret","directory-delete",old.id,"danger push-left"):"")+button("Avbryt","directory-manage")+saveButton(),
@@ -11756,15 +11927,15 @@ function showGanttTooltip(target,pointerX) {
 
 document.addEventListener("pointerover",event => {
   if (event.pointerType==="touch") return;
-  const target=event.target.closest(".gantt-bar[data-gantt-event]");
-  if (target && !target.contains(event.relatedTarget)) showGanttTooltip(target,event.clientX);
+  const target=event.target.closest(".gantt-bar[data-gantt-event], [data-people-gantt-tip]");
+  if (target && target!==ganttTooltipTarget) showGanttTooltip(target,event.clientX);
 });
 document.addEventListener("pointerout",event => {
-  const target=event.target.closest(".gantt-bar[data-gantt-event]");
-  if (target && target===ganttTooltipTarget && !target.contains(event.relatedTarget)) hideGanttTooltip();
+  const target=event.target.closest(".gantt-bar[data-gantt-event], [data-people-gantt-tip]");
+  if (target && target===ganttTooltipTarget && event.relatedTarget?.closest?.(".gantt-bar[data-gantt-event], [data-people-gantt-tip]")!==target) hideGanttTooltip();
 });
 document.addEventListener("focusin",event => {
-  const target=event.target.closest(".gantt-bar[data-gantt-event]");
+  const target=event.target.closest(".gantt-bar[data-gantt-event], [data-people-gantt-tip]");
   if (target) showGanttTooltip(target);
 });
 document.addEventListener("focusout",event => {
@@ -11944,6 +12115,18 @@ document.addEventListener("click",async event => {
     if (action==="copy-report") await copyWeekendReport();
     if (action==="select-report") selectWeekendReport();
 	
+    if (action==="people-day-filter") {
+      ui.peopleDay=id==="all"?null:Number(id);
+      if (ui.peopleDay===null) ui.showPeopleGantt=false;
+      render();
+      document.querySelector(`[data-action="people-day-filter"][data-id="${id}"]`)?.focus();
+    }
+    if (action==="people-view") {
+      if (ui.peopleDay===null) return;
+      ui.showPeopleGantt=id==="gantt";
+      render();
+      document.querySelector(`[data-action="people-view"][data-id="${id}"]`)?.focus();
+    }
     if (action==="activity-day-filter") {
       ui.activityDays=id==="all"?[]:[Number(id)];
       render();
@@ -12077,7 +12260,7 @@ document.addEventListener("input",event => {
   }
   if (target.id==="peopleSearch") {
     ui.peopleQuery=target.value;
-    $("peopleCards").innerHTML=peopleCards();
+    $("peopleResults").innerHTML=peopleResults();
   }
   if (target.id==="placesSearch") {
     ui.placesQuery=target.value;
@@ -12098,6 +12281,10 @@ document.addEventListener("change",async event => {
   if (target.id==="activitySort") {
     ui.activitySort=target.value;
     $("activityResults").innerHTML=activityResults();
+  }
+  if (target.id==="peopleSort") {
+    ui.peopleSort=target.value;
+    $("peopleResults").innerHTML=peopleResults();
   }
   if (target.id==="staffingSort") {
     ui.staffingSort=target.value;
