@@ -1055,12 +1055,10 @@
     align-items: start;
   }
 
-  .activity-card[data-open-activity] .activity-day-summary {
-    white-space: normal;
-  }
-
   .activity-card[data-open-activity] {
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
     height: 148px;
     min-height: 148px;
     max-height: 148px;
@@ -1094,9 +1092,48 @@
     text-overflow: ellipsis;
   }
 
-  .activity-card[data-open-activity] .activity-day-summary {
-    margin-top: auto;
-    padding-top: 12px;
+  .activity-card[data-open-activity] .activity-staffing-summary {
+    margin-top: 10px;
+  }
+
+  .activity-days-compact {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 5px;
+    margin: auto 0 0;
+    padding-top: 8px;
+  }
+
+  .activity-day-chip {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 4px 5px;
+    margin: 0;
+    border: 1px solid var(--day-line);
+    border-radius: 6px;
+    font-size: 10px;
+    line-height: 1.15;
+    background: var(--day-bg);
+    color: var(--day-ink);
+  }
+
+  .activity-day-chip dt {
+    font-weight: 600;
+    color: var(--day-ink);
+  }
+
+  .activity-day-chip dd {
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .activity-day-chip.is-not-working {
+    visibility: hidden;
   }
 
   /* ==========================================================================
@@ -2558,6 +2595,11 @@
     border-radius: 6px;
     font-size: 10px;
     line-height: 1.15;
+  }
+
+  /* De tre dagkolumnerna ligger kvar, men "Ej på plats" visas inte. */
+  .activity-card[data-open-person] .person-day.is-not-working {
+    visibility: hidden;
   }
 
   .activity-card[data-open-person] .person-day dt {
@@ -8382,10 +8424,10 @@ function serializePersonDayDraft(activity,draft) {
     rowId:row.id,personId:draft.get(personDayKey(row))?.personId || ""}))};
 }
 
-function assignPatternActivity(activity) {
+function assignPatternActivity(activity, preferredDay=null) {
   const groups=patternGroups(activity),days=[...new Set(groups.map(group => group.day))];
   const draft=createPersonDayDraft(activity),previous=createTimelineDraft(activity);
-  const activeDay=days[0];
+  const activeDay=days.includes(preferredDay)?preferredDay:days[0];
   showDialog("Bemanna " + activity.title, activityDialogSubtitle(activity),
     activityGanttPreview()+`<div class="formsection"><h3>Bemanning</h3>
     <div class="pass-day-tabs" role="tablist" aria-label="Dagar">${days.map(day =>
@@ -9091,6 +9133,14 @@ function visibleRequirements(activity) {
 
 function activityDays(activity) {
   return [...new Set(visibleRequirements(activity).map(r => r.day))];
+}
+
+function activityDayTimeLabel(activity, day) {
+  const source = activity.staffingPattern?.shifts?.length ? activity.staffingPattern.shifts : visibleRequirements(activity);
+  const ranges = source.filter(item => item.day===day && item.start && item.end)
+    .sort((a,b) => a.start.localeCompare(b.start) || a.end.localeCompare(b.end));
+  if (!ranges.length) return "";
+  return `${ranges[0].start}–${ranges[ranges.length-1].end}`;
 }
 
 function sortActivities(activities, order="start", selectedDays=[]) {
@@ -9810,8 +9860,12 @@ function editActivityInstructions() {
   field.focus({preventScroll:true});field.setSelectionRange(field.value.length,field.value.length);
 }
 
-function editActivity(id) {
+function editActivity(id, preferredDay=null) {
   const old=plan.activities.find(activity => activity.id===id),draftId=old?.id || uid(),editor=createActivityPassEditor(old);
+  // Behåll aktiv dag när redigeringen öppnas från bemanningsmodalen.
+  if (Number.isInteger(preferredDay) && editor.model.shifts.some(shift => shift.day===preferredDay)) {
+    editor.activeDay=preferredDay;
+  }
   editingActivity=old || null;
   showDialog(old ? "Redigera " + old.title : "Ny aktivitet", activityDialogSubtitle(old),
     `<div class="formgrid activity-form">
@@ -9907,8 +9961,15 @@ function activityCards() {
     return `<article class="activity-card" data-open-activity="${esc(activity.id)}">
       <h2 title="${esc(activity.title)}"><button type="button" class="activity-title-button" data-action="edit-activity" data-id="${esc(activity.id)}">${esc(activity.title)}</button></h2>
       <p class="activity-place">${placeLabel(activity.placeId)}</p>
-      <p class="activity-day-summary">${activityDays(activity).map(day => DAYS[day]).join(" + ")}</p>
       ${staffing?`<p class="activity-staffing-summary" title="${esc(staffing)}">${esc(staffing)}</p>`:'<p class="activity-staffing-summary" aria-hidden="true"></p>'}
+      <dl class="activity-days-compact">
+        ${DAYS.map((name,day) => {
+          const text=activityDayTimeLabel(activity, day);
+          const hiddenClass=text?"":" is-not-working";
+          const title=text?`${name}: ${text}`:`${name}: ingen aktivitet`;
+          return `<div class="activity-day-chip day-tone-${day}${hiddenClass}" title="${esc(title)}"><dt>${name}</dt><dd>${esc(text)}</dd></div>`;
+        }).join("")}
+      </dl>
     </article>`;
   }).join("");
 }
@@ -10227,7 +10288,9 @@ function peopleCards() {
           const ranges=person.availability.filter(r => r.day===day).sort((a,b) => a.start.localeCompare(b.start));
           const text=ranges.length?ranges.map(r => r.start+"–"+r.end).join(", "):
             (person.availability.length?"Ej på plats":"Ej angivet");
-          return `<div class="person-day day-tone-${day}" title="${esc(name+": "+text)}"><dt>${name}</dt><dd>${esc(text)}</dd></div>`;
+          // Det osynliga dagfältet behåller sin fasta position i rutnätet.
+          const hiddenClass=text==="Ej på plats"?" is-not-working":"";
+          return `<div class="person-day day-tone-${day}${hiddenClass}" title="${esc(name+": "+text)}"><dt>${name}</dt><dd>${esc(text)}</dd></div>`;
         }).join("")}
       </dl>
     </article>`;
@@ -10693,7 +10756,7 @@ function findMatchingPeople(inputVal) {
 function assignActivity(activityId, day) {
   const activity = plan.activities.find(a => a.id === activityId);
   if (!activity) return;
-  if (activity.staffingPattern) return assignPatternActivity(activity);
+  if (activity.staffingPattern) return assignPatternActivity(activity, day);
 
   const requirements = (activity.requirements || []).slice().sort((a, b) => {
     if (a.day !== b.day) return a.day - b.day;
@@ -10970,26 +11033,34 @@ function personSchedule(id) {
   const person=plan.people.find(p => p.id===id);
   if (!person) return;
 
+  const scheduleHTML=DAYS.map((name,day) => {
+    const working=person.availability.filter(r => r.day===day)
+      .sort((a,b) => a.start.localeCompare(b.start));
+    const shifts=plan.assignments.filter(s => s.personId===id && s.day===day)
+      .sort((a,b) => a.start.localeCompare(b.start));
+
+    // Visa inte dagar där personen varken har arbetstid eller tilldelade pass.
+    if (!working.length && !shifts.length) return "";
+
+    const workLabel=working.length
+      ? working.map(r => r.start+"–"+r.end).join(", ")
+      : "ej registrerad";
+
+    return `<div class="formsection" style="margin-top:0;margin-bottom:24px">
+      <h3>${name} <span class="hint">${dateLabel(day)}, arbetstid ${workLabel}</span></h3>
+      ${shifts.map(shift => `<div class="scheduleitem"><div>
+        <strong>${shift.start}–${shift.end} · ${esc(activityName(shift.activityId))}</strong>
+        <small>${placeLabel(plan.activities.find(a => a.id===shift.activityId).placeId)}
+          ${shift.breaks.map(b => " · "+esc(b.type)+" "+b.start+"–"+b.end).join("")}</small>
+      </div>${button("Visa pass","shift",shift.id,"small")}</div>`).join("") ||
+        `<p class="hint" style="margin-top:9px">Inga pass tilldelade.</p>`}
+    </div>`;
+  }).filter(Boolean).join("");
+
   showDialog(
     person.name,
     "Arbetstider, uppgifter och pauser under hela helgen.",
-    DAYS.map((name,day) => {
-      const working=person.availability.filter(r => r.day===day);
-      const shifts=plan.assignments.filter(s => s.personId===id && s.day===day)
-        .sort((a,b) => a.start.localeCompare(b.start));
-
-      return `<div class="formsection" style="margin-top:0;margin-bottom:24px">
-        <h3>${name} <span class="hint">${dateLabel(day)}</span></h3>
-        <p class="hint">Arbetstid: ${working.map(r => r.start+"–"+r.end).join(", ") ||
-          (person.availability.length?"Ej på plats":"Ej registrerad")}</p>
-        ${shifts.map(shift => `<div class="scheduleitem"><div>
-          <strong>${shift.start}–${shift.end} · ${esc(activityName(shift.activityId))}</strong>
-          <small>${placeLabel(plan.activities.find(a => a.id===shift.activityId).placeId)}
-            ${shift.breaks.map(b => " · "+esc(b.type)+" "+b.start+"–"+b.end).join("")}</small>
-        </div>${button("Visa pass","shift",shift.id,"small")}</div>`).join("") ||
-          `<p class="hint" style="margin-top:9px">Inga pass tilldelade.</p>`}
-      </div>`;
-    }).join(""),
+    scheduleHTML || '<p class="hint">Inga arbetstider eller pass registrerade.</p>',
     button("Redigera person","edit-person",id)+button("Klart","close","","primary")
   );
 }
@@ -12157,7 +12228,13 @@ document.addEventListener("click",async event => {
     }
     if (action==="history-import-one") await importHistoricalActivities(Number(target.dataset.year),[id]);
     if (action==="history-import-all") await importHistoricalActivities(Number(target.dataset.year),[...modal.querySelectorAll('.history-activity:not([hidden]) input[name="historySelection"]:not(:disabled)')].map(box => box.value));
-    if (action==="edit-activity") editActivity(id);
+    if (action==="edit-activity") {
+      // Läs vald dag innan den gamla modalen ersätts.
+      const tab=target.closest(".edit-activity-control")
+        ? modal.querySelector('.pass-day-tab[role="tab"][aria-selected="true"]')
+        : null;
+      editActivity(id,tab?Number(tab.dataset.day):null);
+    }
     if (action==="edit-person") editPerson(id);
     if (action==="bulk-hours") editBulkAvailability();
     if (action==="edit-place") editPlace(id);
@@ -12169,8 +12246,10 @@ document.addEventListener("click",async event => {
     if (action==="shift") showShift(id);
     if (action==="staff-activity") {
       if (target.disabled) return;
+      // I redigeringsmodalen hålls aktiv dag i passredigerarens tillstånd.
+      const day=$("modalForm")?._activityEditor?.activeDay;
       closeDialog();
-      assignActivity(id);
+      assignActivity(id,day);
     }
     if (action==="delete-activity-options") deleteActivityOptions(id);
     if (action==="delete-activity-day") await deleteActivityDay(id,Number(target.dataset.day));
