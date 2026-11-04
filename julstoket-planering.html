@@ -7378,8 +7378,12 @@
 const LEGACY_KEY = "kulturen-julstoket-grundmall-v2";
 const SELECTED_YEAR_KEY = LEGACY_KEY + "-selected-year";
 const yearKey = year => LEGACY_KEY + "-year-" + year;
-const currentPlanningYear = () => Number(new Intl.DateTimeFormat("en",{timeZone:"Europe/Stockholm",year:"numeric"}).format(new Date()));
-const selectablePlanningYears = () => { const year=currentPlanningYear(); return [year,year+1,year+2]; };
+/* Planeringsåret byter på post-måndagen (dagen efter första advent), inte på nyårsdagen.
+   Se firstAdventDate/isEditionLocked längre ned. */
+const calendarYear = () => Number(new Intl.DateTimeFormat("en",{timeZone:"Europe/Stockholm",year:"numeric"}).format(new Date()));
+const currentPlanningYear = () => selectablePlanningYears()[0];
+// De tre kommande upplagorna: första året vars post-måndag ännu inte har passerat, och de två följande.
+const selectablePlanningYears = () => { let year=calendarYear(); while (isEditionLocked(year)) year++; return [year,year+1,year+2]; };
 let KEY = LEGACY_KEY;
 const DAYS = ["Fredag","Lördag","Söndag"];
 
@@ -7985,9 +7989,31 @@ normalizeHistoricalEditions();
 
 // Tillgängliga tidigare årsplaner fylls när historikvyn öppnas.
 const PLAN_EDITIONS={};
+/* ---------- Upplagornas kalender: första advent, julstök och post-måndag ---------- */
+// Första advent = söndagen mellan 27 november och 3 december.
+function firstAdventDate(year) {
+  const d=new Date(Date.UTC(year,10,27));
+  d.setUTCDate(27+((7-d.getUTCDay())%7));
+  return d;
+}
+const isoDate = d => d.toISOString().slice(0,10);
+// Julstöket är fredag–söndag (första advent och de två föregående dagarna).
+function julstokDates(year) {
+  const sunday=firstAdventDate(year),day=n=>{const d=new Date(sunday);d.setUTCDate(d.getUTCDate()+n);return isoDate(d);};
+  return {start:day(-2),end:day(0),postMonday:day(1)};
+}
+const todayStockholm = () => new Intl.DateTimeFormat("sv-SE",{timeZone:"Europe/Stockholm",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
+// En upplaga är genomförd och låst från och med post-måndagen.
+const isEditionLocked = (year,today=todayStockholm()) => today>=julstokDates(year).postMonday;
+// Källor för import: de tre senaste låsta upplagorna, tidigast 2025.
+function lockedHistoryYears(today=todayStockholm()) {
+  const years=[];
+  for (let year=2025;year<=Number(today.slice(0,4));year++) if (isEditionLocked(year,today)) years.push(year);
+  return years.slice(-3);
+}
 function historicalYears() {
-  return Array.from({length:2},(_,index)=>plan.year-2+index)
-    .filter(year=>year>=2025 && historicalEdition(year).activities.length>0);
+  return lockedHistoryYears()
+    .filter(year=>year<plan.year && historicalEdition(year).activities.length>0);
 }
 function historicalEdition(year) {
   return HISTORICAL_EDITIONS[String(year)] || PLAN_EDITIONS[String(year)] || {schemaVersion:1,year,coverage:"not-loaded",activities:[]};
@@ -8007,7 +8033,7 @@ async function refreshHistoricalSources() {
   if (!cloud) throw Error("Logga in för att hämta tidigare årsplaner.");
   for (const key of Object.keys(PLAN_EDITIONS)) delete PLAN_EDITIONS[key];
   const active=cloud,year=plan.year;
-  const years=Array.from({length:2},(_,index)=>year-2+index).filter(value=>value>=2025 && !HISTORICAL_EDITIONS[String(value)]);
+  const years=lockedHistoryYears().filter(value=>value<year && !HISTORICAL_EDITIONS[String(value)]);
   const snapshots=await Promise.all(years.map(value=>active.fs.getDoc(active.fs.doc(active.db,"julstokPlans",String(value)))));
   if (cloud!==active || plan.year!==year) throw Error("Planeringsåret har ändrats. Öppna importen igen.");
   years.forEach((value,index)=>{
@@ -8169,11 +8195,23 @@ function historicalDaySummary(activity) {
   }).join(" · ");
 }
 
+// Introtexten anpassas efter hur många tidigare upplagor som faktiskt finns att hämta från:
+// ett år (2026), två år (2027) eller tre år (därefter). Årtalen skrivs ut automatiskt.
+function historyIntroText(years) {
+  const list=[...years].sort((a,b)=>a-b);
+  const details="med instruktioner, arbetstider, bemanningsbehov och avlösning.";
+  const partial="Du kan också importera valfria delar.";
+  if (list.length===1) return `Här hittar du alla arbetsuppgifter och aktiviteter som utfördes under Julstöket ${list[0]} – ${details} Om du vill, kan du importera hela upplägget. ${partial}`;
+  if (list.length===2) return `Här hittar du alla arbetsuppgifter och aktiviteter som utfördes under upplagorna ${list[0]} och ${list[1]} av Julstöket – ${details} Om du vill, kan du importera hela föregående års upplägg. ${partial}`;
+  const last=list.at(-1),head=list.slice(0,-1).join(", ");
+  return `Här hittar du alla arbetsuppgifter och aktiviteter som utfördes under de tre föregående årens upplagor av Julstöket (${head} och ${last}) – ${details} Om du vill, kan du importera hela föregående års upplägg. ${partial}`;
+}
+
 function showHistoryBank(requestedYear) {
   const years=historicalYears();
   if (!years.length) {
     showDialog("Aktiviteter från tidigare Julstök",`Hämta aktiviteter till Julstöket ${plan.year}.`,
-      `<p>Det finns inga aktiviteter från de tre föregående upplagorna att hämta ännu.</p>`);
+      `<p>Det finns inga aktiviteter från tidigare upplagor att hämta ännu.</p>`);
     modal.classList.add("history-modal");
     return;
   }
@@ -8182,7 +8220,7 @@ function showHistoryBank(requestedYear) {
   const edition=historicalEdition(selected),available=availableHistoricalActivities(selected);
   showDialog("Aktiviteter från tidigare Julstök",
     `Hämta aktiviteter till Julstöket ${plan.year}.`,
-    `<div class="history-bank-header"><p class="history-intro">Här hittar du alla arbetsuppgifter och aktiviteter som utfördes under de tre föregående årens upplagor av Julstöket – med instruktioner, arbetstider, bemanningsbehov och avlösning. Om du vill, kan du importera hela föregående års upplägg. Du kan också importera valfria delar.</p>
+    `<div class="history-bank-header"><p class="history-intro">${historyIntroText(years)}</p>
     <div class="history-tabs" role="tablist" aria-label="Tidigare upplagor">${years.map(year =>
       `<button type="button" role="tab" data-action="history-year" data-id="${year}" id="history-tab-${year}" aria-selected="${selected===year}" aria-controls="history-year-panel" tabindex="${selected===year?0:-1}">${year}<span>${historicalEdition(year).activities.length}</span></button>`).join("")}</div>
       <div class="history-year-heading"><h3>Julstöket ${selected}</h3><span>${edition.activities.length} ${edition.activities.length===1?"aktivitet inlagd":"aktiviteter inlagda"}</span></div>
@@ -9338,6 +9376,7 @@ async function commit(change,message="Ändringen är sparad.",{registerPerson=nu
     const next=clone(plan);
     change(next);
     if (next.year!==plan.year || next.year<2026) throw Error("Historiska årsoriginal kan inte redigeras.");
+    if (!selectablePlanningYears().includes(next.year)) throw Error(`Julstöket ${next.year} är genomfört och låst. Det kan inte längre planeras.`);
     next.revision=revision+1;
     validatePlan(next,{allowedHandovers:new Set(staffingHandovers(plan).map(handover=>handover.key))});
     await active.fs.runTransaction(active.db,async transaction=>{
@@ -11755,7 +11794,7 @@ function importJSON() {
     try {
       if (file.size>900000) throw Error("Filen är för stor.");
       const data=validatePlan(JSON.parse(await file.text()),{normalizeRequirements:true});
-      if (!selectablePlanningYears().includes(data.year)) throw Error("Säkerhetskopians år kan inte väljas som planeringsår.");
+      if (!selectablePlanningYears().includes(data.year)) throw Error("Säkerhetskopians år kan inte väljas som planeringsår. Bara de tre kommande upplagorna kan planeras.");
       if (!cloud && data.year!==plan.year) throw Error("Välj säkerhetskopians år i listan innan du läser in den.");
       if (cloud && data.year!==plan.year) {
         throw Error("Byt till lokal plan för att läsa in ett annat år.");
@@ -11964,7 +12003,7 @@ function subscribeCloudPlan(ref) {
 let switchingYear=false;
 async function switchPlanningYear(year) {
   if (!cloud) throw Error("Logga in först.");
-  if (!selectablePlanningYears().includes(year)) throw Error("Välj innevarande år eller ett av de två följande åren.");
+  if (!selectablePlanningYears().includes(year)) throw Error("Välj en av de tre kommande upplagorna.");
   if (year===plan.year) return;
   if (saving || switchingYear) throw Error("Vänta tills den pågående ändringen är klar.");
   switchingYear=true;
@@ -11981,6 +12020,24 @@ async function switchPlanningYear(year) {
     subscribeCloudPlan(ref);render();
   } finally {switchingYear=false;}
 }
+
+// Om post-måndagen passerar medan en genomförd upplaga är öppen flyttas planeringen
+// till första valbara år, så att den inte kan fortsätta redigeras.
+let enforcingYear=false;
+async function enforcePlanningYear() {
+  if (!cloud || enforcingYear || switchingYear || saving) return;
+  const years=selectablePlanningYears();
+  if (years.includes(plan.year)) return;
+  enforcingYear=true;
+  const locked=plan.year;
+  try {
+    await switchPlanningYear(years[0]);
+    toast(`Julstöket ${locked} är genomfört och låst. Planeringen har flyttats till ${years[0]}.`);
+  } catch {} finally {enforcingYear=false;}
+}
+setInterval(enforcePlanningYear,60000);
+document.addEventListener("visibilitychange",()=>{ if (!document.hidden) enforcePlanningYear(); });
+window.addEventListener("focus",enforcePlanningYear);
 
 function personAlreadyAdded(person,data=plan) {
   return data.people.some(item=>item.directoryId===person.id || item.id===person.id || item.name.trim().toLocaleLowerCase("sv-SE")===person.name.trim().toLocaleLowerCase("sv-SE"));
