@@ -134,7 +134,29 @@ function renderStatus(){if(state.demo)return `<span class="statusline warning">$
 function shell(body){const p=currentPerson();return `<main class="shell"><header class="top"><div class="topbar"><div><h1 class="brand">Mitt Julstök</h1><button class="who" type="button" data-action="choose" style="border:0;padding:0;background:transparent">${icon("user","sm")} ${esc(p?.name||"Välj namn")} ${icon("chevron","sm")}</button></div><div class="top-actions"><button class="top-icon" aria-label="Sök kollega" title="Sök kollega" data-action="view" data-view="people">${icon("search","lg")}</button><button class="top-icon" aria-label="Dela appen" title="Dela appen" data-action="view" data-view="share">${icon("share","lg")}</button></div></div>${renderStatus()}</header><div class="content">${body}</div></main><nav class="bottom-nav" aria-label="Huvudmeny"><div class="nav-inner">${[["home","calendar","Min dag"],["people","users","Kollegor"],["places","pin","Platser"],["share","share","Dela"]].map(([v,i,l])=>`<button type="button" data-action="view" data-view="${v}" class="nav-btn ${state.view===v?"selected":""}" ${state.view===v?'aria-current="page"':""}>${icon(i)}<span>${l}</span></button>`).join("")}</div></nav>`;}
 function renderNameSelect(){const everyone=planPeople(),list=everyone.filter(p=>norm(p.name).includes(norm(state.nameSearch))||norm(phoneOf(p)).includes(norm(state.nameSearch)));return `<div class="overlay"><section class="overlay-inner"><div class="overlay-head"><div class="overlay-mark">J</div><h1>Mitt Julstök</h1><p>Välj ditt namn för att se dina arbetspass, pauser och kollegor. Du behöver normalt bara välja en gång på den här telefonen.</p></div>${state.error&&!state.cached?`<div class="notice">${esc(state.error)}</div>`:""}<label for="nameInput" class="sr-only">Sök ditt namn</label><div class="search">${icon("search")}<input id="nameInput" autocomplete="off" type="search" placeholder="Skriv ditt namn…" value="${esc(state.nameSearch)}" autofocus></div><div class="list-title">${everyone.length?`${list.length} av ${everyone.length} medarbetare`:"Personal"}</div><div class="rows" id="nameResults">${list.length?list.slice(0,100).map(p=>`<button type="button" class="rowlink" data-action="set-person" data-id="${esc(p.id)}"><strong>${esc(p.name)}</strong>${icon("chevron")}</button>`).join(""): `<div class="empty"><p>${everyone.length?"Inget namn matchar din sökning.":state.status==="loading"?"Hämtar personalregistret…":"Det finns ännu ingen personal inlagd för årets Julstök."}</p></div>`}</div><p class="system-notice">Ditt namnval sparas lokalt i den här webbläsaren. Det är inte en inloggning.</p>${state.status==="error"?`<button class="action-btn outline block" data-action="retry">Försök ansluta igen</button>`:""}<div class="system-notice">${state.demo?"Exempelläget visar ingen riktig personal eller bemanning.":""}</div></section></div>`;}
 function renderDays(){const dates=eventDates(state.year),today=dayIndexNow();return `<div class="days" role="group" aria-label="Välj dag">${dates.map((d,i)=>`<button type="button" class="day ${state.day===i?"selected":""} ${i===today?"today":""}" data-action="day" data-day="${i}" aria-pressed="${state.day===i}"><strong>${DAY_NAMES[i]}</strong><small>${compactDate(d)}</small></button>`).join("")}</div>`;}
-function renderAlert(){if(state.error&&!state.cached&&!state.demo)return `<div class="notice"><strong>Ingen anslutning till årsplanen.</strong><br>${esc(state.error)}<div class="actions" style="margin-top:11px"><button class="action-btn outline" data-action="retry">Försök igen</button><button class="action-btn secondary" data-action="demo">Visa exempel</button></div></div>`;if(state.cached&&state.status!=="live")return `<div class="notice">Visar senast sparade schema. Uppgifter kan ha ändrats sedan dess.</div>`;return "";}
+function renderAlert() {
+  const hasError = Boolean(state.error);
+  const showConnectionError = hasError && !state.cached && !state.demo;
+  const showCachedWarning = hasError && state.cached && state.status !== "live";
+
+  if (showConnectionError) {
+    return `
+      <div class="notice">
+        <strong>Ingen anslutning till årsplanen.</strong><br>
+        ${esc(state.error)}
+        <div class="actions" style="margin-top:11px">
+          <button class="action-btn outline" data-action="retry">Försök igen</button>
+          <button class="action-btn secondary" data-action="demo">Visa exempel</button>
+        </div>
+      </div>`;
+  }
+
+  if (showCachedWarning) {
+    return `<div class="notice">Visar senast sparade schema. Uppgifter kan ha ändrats sedan dess.</div>`;
+  }
+
+  return "";
+}
 function workingSummary(p,day){const av=availableRanges(p,day);return av.length?av.map(x=>`${x.start}–${x.end}`).join(", "):"Arbetstid ej registrerad";}
 function renderHome(){const p=currentPerson();if(!p)return "";const shifts=assignments(p.id,state.day),today=dayIndexNow();const count=shifts.length;
   return `${renderAlert()}${renderDays()}<div class="heading"><h2>${esc(datesHeading(state.day))}</h2>${state.day===today?`<span class="today-tag">Idag</span>`:today>=0?`<button class="today-return" data-action="day" data-day="${today}">Till idag</button>`:""}</div><p class="summary">${esc(workingSummary(p,state.day))} · ${count} ${count===1?"pass":"pass"}</p>${count?`<div class="cards">${shifts.map((s,i)=>passCard(s,i)).join("")}</div>`:`<div class="empty">${icon("calendar","lg")}<h3>Inga arbetspass ${state.day===today?"idag":"den här dagen"}</h3><p>${availableRanges(p,state.day).length?"Du har arbetstid registrerad, men inga uppgifter tilldelade.":"Välj en annan dag för att se ditt schema."}</p></div>`}<p class="legend">${icon("clock","sm")} Tiderna och placeringarna är hämtade ur Julstökets planering.</p>`;}
