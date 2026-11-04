@@ -10414,7 +10414,16 @@ function renderSmartPersonInput(containerId, selectedPersonId, onSelect, onInput
     if(['ArrowDown','ArrowUp'].includes(event.key)){event.preventDefault();const index=buttons.indexOf(document.activeElement);buttons[(index+(event.key==='ArrowDown'?1:-1)+buttons.length)%buttons.length]?.focus();}
     if(event.key==='Escape'){event.preventDefault();input.focus();hideBox();}
   });
-  container.addEventListener('focusout',()=>setTimeout(()=>{if(!container.contains(document.activeElement))hideBox();},0));
+  let pointerInBox=false;
+  box.addEventListener('mousedown',event=>{
+    pointerInBox=true;
+    event.preventDefault(); // fokus stannar i input, klick på namn fungerar ändå
+  });
+  document.addEventListener('mouseup',()=>{ setTimeout(()=>{pointerInBox=false;},0); },true);
+  container.addEventListener('focusout',()=>setTimeout(()=>{
+    if(pointerInBox)return;
+    if(!container.contains(document.activeElement))hideBox();
+  },0));
   clear.onclick=()=>{select('');if(onInput)onInput('','');input.focus();};
 }
 
