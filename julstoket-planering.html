@@ -182,6 +182,16 @@
 
   .nav .badge.is-empty { visibility: hidden; }
 
+  .nav-separator {
+    height: 1px;
+    margin: 10px 4px 6px;
+    background: #ffffff29;
+  }
+
+  .nav button[data-action="open-mobile"] {
+    font-size: 13px;
+  }
+
   .nav .menu-info-icon {
     justify-self: end;
     flex-shrink: 0;
@@ -317,6 +327,11 @@
     }
 
     .nav .badge {
+      display: none;
+    }
+
+    .nav-separator,
+    .nav button[data-action="open-mobile"] {
       display: none;
     }
 
@@ -962,12 +977,14 @@
   }
   .activity-card[data-open-activity] {
     cursor: pointer;
-    transition: border-color .15s, box-shadow .15s;
+    transition: border-color .18s, box-shadow .18s, transform .18s;
   }
 
-  .activity-card[data-open-activity]:hover {
+  .activity-card[data-open-activity]:hover,
+  .activity-card[data-open-activity]:focus-visible {
     border-color: var(--green2);
-    box-shadow: 0 3px 12px #173d350d;
+    box-shadow: 0 0 0 1px var(--green2), 0 10px 24px #173d3530;
+    transform: translateY(-3px);
   }
 
   .activity-card[data-open-activity] .activity-description {
@@ -1824,13 +1841,14 @@
 
   .staffing-card[data-open-staffing] {
     cursor: pointer;
-    transition: border-color .15s, box-shadow .15s;
+    transition: border-color .18s, box-shadow .18s, transform .18s;
   }
 
   .staffing-card[data-open-staffing]:hover,
   .staffing-card[data-open-staffing]:focus-visible {
     border-color: var(--green2);
-    box-shadow: 0 3px 12px #173d350d;
+    box-shadow: 0 0 0 1px var(--green2), 0 10px 24px #173d3530;
+    transform: translateY(-3px);
   }
 
   .staffing-card.is-full {
@@ -2347,12 +2365,16 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 2px;
     margin: 0;
-    padding: 5px 6px;
-    border: 0;
+    /* Exakt samma mått som .activity-day-chip (ram 1px + padding 4/5px,
+       samma radhöjd) så att dagtexterna inte hoppar mellan Aktivitets- och Bemanningsvyn. */
+    padding: 4px 5px;
+    border: 1px solid transparent;
     border-radius: 6px;
+    font-size: 10px;
+    line-height: 1.15;
     background: #f7f1e4;
     color: #825c19;
   }
@@ -2375,7 +2397,7 @@
   .staffing-card[data-open-staffing] .staffing-day-name {
     color: inherit;
     font-size: 10px;
-    line-height: 1.1;
+    line-height: 1.15;
   }
 
   .staffing-card[data-open-staffing] .staffing-day-status {
@@ -2563,13 +2585,14 @@
 
   .activity-card[data-open-person] {
     cursor: pointer;
-    transition: border-color .15s, box-shadow .15s;
+    transition: border-color .18s, box-shadow .18s, transform .18s;
   }
 
   .activity-card[data-open-person]:hover,
   .activity-card[data-open-person]:focus-visible {
     border-color: var(--green2);
-    box-shadow: 0 3px 12px #173d350d;
+    box-shadow: 0 0 0 1px var(--green2), 0 10px 24px #173d3530;
+    transform: translateY(-3px);
   }
 
   .activity-card[data-open-person] {
@@ -2676,13 +2699,14 @@
 
   .place-card[data-open-place] {
     cursor: pointer;
-    transition: border-color .15s, box-shadow .15s;
+    transition: border-color .18s, box-shadow .18s, transform .18s;
   }
 
   .place-card[data-open-place]:hover,
   .place-card[data-open-place]:focus-visible {
     border-color: var(--green2);
-    box-shadow: 0 3px 12px #173d350d;
+    box-shadow: 0 0 0 1px var(--green2), 0 10px 24px #173d3530;
+    transform: translateY(-3px);
   }
 
   .place-card h2 {
@@ -2721,7 +2745,9 @@
     min-height: 74px;
     max-height: 74px;
     align-self: start;
-    padding: 9px 14px;
+    /* Samma toppadding som aktivitets-, bemannings- och personalkorten (12px),
+       så att rubriken hamnar på exakt samma ställe i alla vyer. */
+    padding: 12px 14px;
     border: 1px solid var(--line);
     border-radius: 12px;
     overflow: hidden;
@@ -2749,7 +2775,7 @@
   .place-card[data-open-place] .card-head {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
+    align-items: start;
     gap: 10px;
     height: 100%;
   }
@@ -2759,6 +2785,7 @@
   }
 
   .place-maps-link {
+    align-self: center;
     position: relative;
     z-index: 2;
     display: inline-flex;
@@ -9392,6 +9419,16 @@ function navigationCount(view) {
   return "";
 }
 
+const MOBILE_VERSION_URL = "https://kultpub.github.io/site/mitt-julstok/index.html";
+
+function openMobileVersion() {
+  // Öppnas i ett eget, smalt fönster i mobilformat (ca 390 × 844 px, som en iPhone).
+  const features = "popup=yes,width=390,height=844,left=80,top=40,resizable=yes,scrollbars=yes";
+  const win = window.open(MOBILE_VERSION_URL, "julstoketMobil", features);
+  if (win) win.focus();
+  else alert("Webbläsaren blockerade det nya fönstret. Tillåt popup-fönster för sidan och försök igen.");
+}
+
 function render() {
   if (!cloud || authLoading) {renderLogin();return;}
   document.body.classList.remove("signed-out");
@@ -9411,7 +9448,9 @@ $("navigation").innerHTML=items.map(([view,label,count,tip]) => `
         <span class="badge${count===""?" is-empty":""}"${count===""?' aria-hidden="true"':""}>${count}</span>
       </span>
       ${tip ? `<span class="location-info menu-info-icon" data-menu-tip="${esc(tip)}" aria-label="${esc(tip)}">i</span>` : ""}
-    </button>`).join("");
+    </button>`).join("") + `
+    <div class="nav-separator" role="separator"></div>
+    <button type="button" data-action="open-mobile">Se mobilversion ↗</button>`;
 
   const eventLabel=new Date(eventDates(plan.year)[0]+"T12:00:00").getDate()+"–"+
     dateLabel(2)+" "+plan.year;
@@ -12589,6 +12628,7 @@ document.addEventListener("click",async event => {
     if (action==="choose-place") chooseActivityPlace(id);
     if (action==="edit-instructions") editActivityInstructions();
     if (action==="navigate") navigate(id);
+    if (action==="open-mobile") {openMobileVersion();return;}
     
     if (action==="close") closeDialog();
     if (action==="help") showHelp();
