@@ -7335,7 +7335,7 @@
 </aside>
 
 <main>
-  <div class="content" id="content"><p role="status">Öppnar Planera julstök…</p><noscript>Aktivera JavaScript för att använda verktyget.</noscript></div>
+  <div class="content" id="content"><p role="status">Öppnar Planera Julstöket…</p><noscript>Aktivera JavaScript för att använda verktyget.</noscript></div>
 </main>
 
 <div id="menuTooltip" class="menu-tooltip" role="tooltip" popover="manual" hidden></div>
@@ -8145,7 +8145,7 @@ function historicalDaySummary(activity) {
 function showHistoryBank(requestedYear) {
   const years=historicalYears();
   if (!years.length) {
-    showDialog("Aktiviteter från tidigare julstök",`Hämta aktiviteter till Julstöket ${plan.year}.`,
+    showDialog("Aktiviteter från tidigare Julstök",`Hämta aktiviteter till Julstöket ${plan.year}.`,
       `<p>Det finns inga aktiviteter från de tre föregående upplagorna att hämta ännu.</p>`);
     modal.classList.add("history-modal");
     return;
@@ -8153,9 +8153,9 @@ function showHistoryBank(requestedYear) {
   const selected=years.includes(requestedYear)?requestedYear:years.includes(ui.bankYear)?ui.bankYear:years.at(-1);
   ui.bankYear=selected;
   const edition=historicalEdition(selected),available=availableHistoricalActivities(selected);
-  showDialog("Aktiviteter från tidigare julstök",
+  showDialog("Aktiviteter från tidigare Julstök",
     `Hämta aktiviteter till Julstöket ${plan.year}.`,
-    `<div class="history-bank-header"><p class="history-intro">Här hittar du alla arbetsuppgifter och aktiviteter som utfördes under de tre föregående årens upplagor av julstöket – med instruktioner, arbetstider, bemanningsbehov och avlösning. Om du vill, kan du importera hela föregående års upplägg. Du kan också importera valfria delar.</p>
+    `<div class="history-bank-header"><p class="history-intro">Här hittar du alla arbetsuppgifter och aktiviteter som utfördes under de tre föregående årens upplagor av Julstöket – med instruktioner, arbetstider, bemanningsbehov och avlösning. Om du vill, kan du importera hela föregående års upplägg. Du kan också importera valfria delar.</p>
     <div class="history-tabs" role="tablist" aria-label="Tidigare upplagor">${years.map(year =>
       `<button type="button" role="tab" data-action="history-year" data-id="${year}" id="history-tab-${year}" aria-selected="${selected===year}" aria-controls="history-year-panel" tabindex="${selected===year?0:-1}">${year}<span>${historicalEdition(year).activities.length}</span></button>`).join("")}</div>
       <div class="history-year-heading"><h3>Julstöket ${selected}</h3><span>${edition.activities.length} ${edition.activities.length===1?"aktivitet inlagd":"aktiviteter inlagda"}</span></div>
@@ -8177,7 +8177,7 @@ function showHistoryBank(requestedYear) {
   const scroller=modal.querySelector(".dialog-body");
   scroller.tabIndex=0;
   scroller.setAttribute("role","region");
-  scroller.setAttribute("aria-label","Aktiviteter från tidigare julstök");
+  scroller.setAttribute("aria-label","Aktiviteter från tidigare Julstök");
   filterHistoryActivities();
   if (requestedYear!==undefined) modal.querySelector(`[data-action="history-year"][data-id="${selected}"]`)?.focus();
 }
@@ -9491,7 +9491,7 @@ function planningYearSelect(id) {
 
 function activitiesPage() {
   return heading("Aktiviteter",
-    "Varje aktivitet visas en gång, med samtliga dagar och tider samlade.",
+    "Hantera Julstökets aktiviteter – pass, pauser och avlösningar.",
     planningYearSelect("activityPlanningYear")+
     button("Hämta från tidigare år","history-bank")+
     button("Rensa","clear-activities","","danger")+
@@ -10290,7 +10290,7 @@ function activityCards() {
 function staffingPage() {
   return heading(
     "Bemanning",
-    "Bemanna varje aktivitet över samtliga dagar. Planera arbetstider, pauser och avlösning."
+    "Koppla pass och avlösningar till person."
   )+notice()+`
     <div class="filters activity-tools">
       <input type="search" id="staffingSearch" value="${esc(ui.query)}"
@@ -10487,7 +10487,7 @@ function peoplePage() {
   const singleDay=ui.peopleDay!==null;
   return heading(
     "Personal",
-    "Registrera arbetsdagar och tider för dem som ska arbeta under Julstöket.",
+    "Registrera arbetsdagar och tider för personal som arbetar under Julstöket.",
     button("Personalregister / importera","directory-import","","primary")+
     button("+ Ny person","directory-new")+button("Ange arbetstider för flera","bulk-hours")
   )+`
@@ -10627,7 +10627,7 @@ function peopleCards() {
 function placesPage() {
   return heading(
     "Platser",
-    "Använd fasta platsnamn så att alla hittar rätt.",
+    "Använd tydliga platsnamn så att alla hittar rätt, använd gärna Google Maps-länkar.",
     button("+ Ny plats","edit-place","","primary")
   )+`<div class="filters"><input type="search" id="placesSearch" value="${esc(ui.placesQuery)}"
       placeholder="Sök plats…" aria-label="Sök platser"></div>
@@ -10972,7 +10972,7 @@ function editPerson(id) {
     </div>
     <div class="formsection">
       <h3>Arbetsdagar och tider</h3>
-      <p class="hint">Markera de dagar personen arbetar och ange tider för årets julstök.</p>
+      <p class="hint">Markera de dagar personen arbetar och ange tider för årets Julstök.</p>
       ${availabilityFields(old?.availability || [])}
     </div>`,
     (old?button("Ta bort","delete-person",old.id,"danger push-left"):"")+
@@ -11797,7 +11797,7 @@ function renderLogin() {
   document.body.classList.add("signed-out");
   $("navigation").innerHTML="";
   $("content").innerHTML=`<section class="login-panel" aria-labelledby="loginTitle">
-    <h1 id="loginTitle">Planera julstök</h1>
+    <h1 id="loginTitle">Planera Julstöket</h1>
     <p>Logga in för att öppna Kulturens planeringsverktyg.</p>
     ${authLoading?'<p role="status">Ansluter…</p>':`<form id="loginForm">
       <label class="field">E-post<input id="loginEmail" type="email" autocomplete="username" required></label>
@@ -12112,12 +12112,12 @@ function deleteRegisterPlace(id) {
 /* ---------- Hjälp och borttagning ---------- */
 
 const GUIDE_STEPS=[
-  {text:"Detta är ett verktyg för att planera Kulturens julstök. Du kan börja planeringen med en helt tom plan eller genom att importera hela upplägget eller valda delar av ett tidigare julstök. När alla aktiviteter är på plats, kan du bemanna allting utan att det uppstår krockar."},
+  {text:"Detta är ett verktyg för att planera Kulturens Julstök. Du kan börja planeringen med en helt tom plan eller genom att importera hela upplägget eller valda delar av ett tidigare Julstök. När alla aktiviteter är på plats, kan du bemanna allting utan att det uppstår krockar."},
   {target:'[data-action="navigate"][data-id="activities"]',view:"activities",text:"På denna flik ser du de aktiviteter som hittills finns i planen."},
   {target:'.pagehead [data-action="edit-activity"]',view:"activities",text:"Klicka på denna knapp för att lägga in en ny aktivitet."},
-  {target:'[data-action="history-bank"]',view:"activities",text:"Du kan också importera alla eller ett urval aktiviteter som användes i en tidigare upplaga av julstöket."},
+  {target:'[data-action="history-bank"]',view:"activities",text:"Du kan också importera alla eller ett urval aktiviteter som användes i en tidigare upplaga av Julstöket."},
   {target:'[data-action="navigate"][data-id="staffing"]',view:"staffing",text:"På denna flik hanterar du hur aktiviteterna ska bemannas. Du ser enkelt vilka aktiviteter som är fullt bemannade eller där bemanning fortfarande saknas."},
-  {target:'[data-action="navigate"][data-id="people"]',view:"people",text:"På denna flik hanterar du de personer som arbetar under julstöket – vilka dagar de arbetar och deras arbetstider."},
+  {target:'[data-action="navigate"][data-id="people"]',view:"people",text:"På denna flik hanterar du de personer som arbetar under Julstöket – vilka dagar de arbetar och deras arbetstider."},
   {target:'[data-action="navigate"][data-id="places"]',view:"places",text:"På denna flik hanterar du de platsnamn som används för olika aktiviteter, till exempel Gröna grinden, Korvtältet etc."},
   {target:'[data-action="activity-view"][data-id="gantt"]',view:"activities",text:"När du har aktiviteter i din plan, kan du välja att titta på en enskild dag (t.ex. Fredag) och då kan du även välja att se ett Gantt-schema för just den dagen."}
 ];
