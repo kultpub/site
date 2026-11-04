@@ -1,5 +1,5 @@
 /* Lokal cache för appens skal. Firestore-data cachas separat i localStorage av app.js. */
-const CACHE_NAME="mitt-julstok-app-v4";
+const CACHE_NAME="mitt-julstok-app-v5";
 const SHELL=["./","./index.html","./styles.css","./app.js","./qr.js","./manifest.webmanifest","./icon-192.png","./icon-512.png"];
 self.addEventListener("install",event=>{event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()));});
 self.addEventListener("activate",event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE_NAME).map(key=>caches.delete(key)))).then(()=>self.clients.claim()));});
