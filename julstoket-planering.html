@@ -7141,6 +7141,7 @@
     box-shadow: 0 0 0 100vmax #10291f88;
   }
 
+  #guide:not(:has(.guide-highlight))::backdrop,
   #guide:has(.guide-highlight[hidden])::backdrop {
     background: #10291f88;
   }
@@ -7342,6 +7343,36 @@
     .nav button[data-action="navigate"] { display: inline-flex; width: auto; gap: 8px; }
     .nav-title-wrap { display: inline-flex; width: auto; gap: 0; }
   }
+
+.nav-stage{border:1px solid #ffffff45;border-radius:10px;padding:8px;min-width:0}
+.nav-stage-heading{display:flex;align-items:center;gap:8px;padding:2px 4px 9px;color:#d4e0d6;font-size:11px;letter-spacing:.4px}
+.nav-stage-heading>span{display:grid;place-items:center;width:21px;height:21px;border:1px solid #ffffff55;border-radius:6px;color:#fff;font-size:12px}
+.nav-stage-arrow{text-align:center;color:#a7c2b2;font-size:22px;line-height:1;padding:6px}
+.nav .nav-stage button{width:100%}
+.history-staffing-option{display:flex;align-items:flex-start;gap:8px;margin:12px 0;font-size:13px}
+.history-staffing-option input{margin-top:3px;flex:none}
+.history-staffing-option small{display:block;color:var(--muted);font-size:12px;margin-top:3px}
+.activity-place-heading{display:flex;align-items:baseline;justify-content:space-between;gap:8px;min-width:0}
+.activity-place-heading .btn{padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;min-height:0;font:inherit;font-size:11px;line-height:inherit;color:var(--green2);text-decoration:underline;text-underline-offset:2px;white-space:nowrap}
+.activity-place-heading .btn:hover{background:transparent;text-decoration-thickness:2px}
+.place-manager-list{display:grid;gap:8px}
+.place-manager-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.nav-stage-heading{line-height:1.4;letter-spacing:0}
+.nav-stage-heading>span{flex-shrink:0}
+
+/* Placera platsnamn och informationssymbol på samma mittlinje på korten. */
+.activity-card .activity-place,
+.staffing-card .activity-place {
+  display:flex;
+  align-items:center;
+  gap:4px;
+  line-height:18px;
+}
+.activity-card .activity-place .location-info,
+.staffing-card .activity-place .location-info {
+  flex:0 0 18px;
+  margin:0;
+}
 </style>
 
 </head>
@@ -8025,7 +8056,10 @@ function editionFromPlan(data,year) {
     if (!place) throw Error(`Platsen för ${activity.title} i ${year} kunde inte hittas.`);
     return {...clone(activity),sourceYear:year,sourceKind:activity.sourceKind || "historical",type:activity.type || "event",version:activity.version || 1,
       activityKey:activity.activityKey || activity.id,place:{name:place},notes:activity.notes || "",dayNotes:clone(activity.dayNotes || {}),
-      staffingPattern:clone(activity.staffingPattern || {schemaVersion:1,layout:"linked-shifts",participants:[],shifts:[]}),historicalStaffing:[]};
+      staffingPattern:clone(activity.staffingPattern || {schemaVersion:1,layout:"linked-shifts",participants:[],shifts:[]}),historicalStaffing:clone((data.assignments || []).filter(shift=>shift.activityId===activity.id).map(shift=>{
+        const person=(data.people || []).find(person=>person.id===shift.personId);
+        return {...shift,personDirectoryId:person?.directoryId || person?.id || ""};
+      }))};
   });
   return {schemaVersion:1,year,coverage:"plan",activities};
 }
@@ -8225,6 +8259,7 @@ function showHistoryBank(requestedYear) {
       `<button type="button" role="tab" data-action="history-year" data-id="${year}" id="history-tab-${year}" aria-selected="${selected===year}" aria-controls="history-year-panel" tabindex="${selected===year?0:-1}">${year}<span>${historicalEdition(year).activities.length}</span></button>`).join("")}</div>
       <div class="history-year-heading"><h3>Julstöket ${selected}</h3><span>${edition.activities.length} ${edition.activities.length===1?"aktivitet":"aktiviteter"} i Julstöket ${selected}</span></div>
       ${edition.activities.length?`<div class="history-search"><input type="search" id="historySearch" value="${esc(ui.historyQuery)}" placeholder="Sök aktivitet eller plats…" aria-label="Sök tidigare aktiviteter"><span id="historySearchCount" aria-live="polite"></span></div>
+        <label class="history-staffing-option"><input type="checkbox" id="historyIncludeStaffing"> <span>Ta även med tidigare bemanning<small>Endast personer i årets Personal med giltiga arbetstider och utan krockar följer med.</small></span></label>
         <div class="history-actions">${button("Markera samtliga","history-select-all","","small",available.length?"":"disabled")}
         ${button("Avmarkera samtliga","history-deselect-all","","small")}
         ${button("Importera samtliga","history-import-all","","small",`data-year="${selected}" ${available.length?"":"disabled"}`)}
@@ -8441,15 +8476,53 @@ function buildHistoricalImport(data, source, sourceYear, importedAt = new Date()
   return activity;
 }
 
+function importPreviousStaffing(data,source,activity,report) {
+  const previous=source.historicalStaffing || [];
+  if (!previous.length) {report.withoutHistory++;return;}
+  const oldRows=patternTimelineRows(source),newRows=patternTimelineRows(activity);
+  const oldShifts=source.staffingPattern?.shifts || [],newShifts=activity.staffingPattern.shifts;
+  const rowMap=new Map();
+  oldShifts.forEach((shift,index)=>{
+    const before=oldRows.filter(row=>row.shiftId===shift.id);
+    const after=newRows.filter(row=>row.shiftId===newShifts[index]?.id);
+    before.forEach((row,i)=>{if(after[i] && row.day===after[i].day && row.start===after[i].start && row.end===after[i].end && row.kind===after[i].kind) rowMap.set(row.id,after[i].id);});
+  });
+  let choices=[];
+  for (const old of previous) {
+    const key=old.personDirectoryId || old.directoryId || old.personId;
+    const matches=key?data.people.filter(person=>(person.directoryId || person.id)===key || person.id===key):[];
+    if (matches.length!==1) {report.missing++;continue;}
+    const person=matches[0];
+    const selected=oldRows.filter(row=>row.shiftId===old.patternShiftId && row.day===old.day &&
+      (old.patternRowIds?.length?old.patternRowIds.includes(row.id):row.start>=old.start && row.end<=old.end));
+    if (!selected.length || selected.some(row=>!rowMap.has(row.id))) {report.unmapped++;continue;}
+    const next=choices.concat(selected.map(row=>({rowId:rowMap.get(row.id),personId:person.id})));
+    const candidate=patternRowAssignments(activity,next,data.assignments);
+    const trial={...data,assignments:candidate};
+    try {
+      validatePlan(clone(trial),{allowedHandovers:new Set(staffingHandovers(data).map(item=>item.key))});
+    } catch(error) {report.conflicts++;continue;}
+    choices=next;data.assignments=candidate;report.imported++;
+  }
+}
+
 async function importHistoricalActivities(year,ids) {
   if (!historicalYears().includes(year)) throw Error("Välj en av de tre föregående upplagorna.");
   const sources=historicalEdition(year).activities;
   const selected=[...new Set(ids)].map(id => sources.find(a => a.id===id));
   if (!selected.length || selected.some(a => !a)) throw Error("Välj minst en aktivitet att importera.");
-  await commit(data => { selected.forEach(source => buildHistoricalImport(data,source,year)); },
-    selected.length===1?"Aktiviteten är importerad och kan redigeras.":`${selected.length} aktiviteter är importerade.`);
-  closeDialog();
-  navigate("activities");
+  const includeStaffing=Boolean(modal.querySelector("#historyIncludeStaffing")?.checked);
+  const report={imported:0,missing:0,conflicts:0,unmapped:0,withoutHistory:0};
+  await commit(data => {
+    const imported=selected.map(source=>({source,activity:buildHistoricalImport(data,source,year)}));
+    if (includeStaffing) for (const {source,activity} of imported) importPreviousStaffing(data,source,activity,report);
+  },selected.length===1?"Aktiviteten är importerad och kan redigeras.":`${selected.length} aktiviteter är importerade.`);
+  closeDialog();navigate("activities");
+  if (includeStaffing) showDialog("Importen är klar","",
+    `<p>${selected.length} aktiviteter importerades. ${report.imported} tidigare personbemanningar följde med.</p>
+     <p>Utelämnad bemanning: ${report.missing} saknar en entydig personkoppling i årets Personal, ${report.conflicts} bryter mot arbetstider eller bemanningsregler och ${report.unmapped} kunde inte kopplas till ett pass.</p>
+     ${report.withoutHistory?`<p>${report.withoutHistory} aktiviteter saknar sparad tidigare bemanning. Deras pass har importerats utan bemanning.</p>`:""}`,
+    button("Stäng","close"));
 }
 
 function validateStaffingPattern(activity) {
@@ -9483,14 +9556,15 @@ function render() {
     ["places","Platser",navigationCount("places"),"Här registrerar du samtliga platser och lokaler Julstökets arbetsuppgifter."]
   ];
 
-$("navigation").innerHTML=items.map(([view,label,count,tip]) => `
+const navButton=([view,label,count,tip]) => `
     <button type="button" data-action="navigate" data-id="${view}" class="${ui.view===view?"active":""}">
       <span class="nav-title-wrap">
         <span>${label}</span>
         <span class="badge${count===""?" is-empty":""}"${count===""?' aria-hidden="true"':""}>${count}</span>
       </span>
       ${tip ? `<span class="location-info menu-info-icon" data-menu-tip="${esc(tip)}" aria-label="${esc(tip)}">i</span>` : ""}
-    </button>`).join("") + `
+    </button>`;
+$("navigation").innerHTML=`<section class="nav-stage" aria-label="Steg 1: Vad ska göras? Vem jobbar?"><div class="nav-stage-heading"><span>1</span> Vad ska göras? Vem jobbar?</div>${["activities","people"].map(view=>navButton(items.find(item=>item[0]===view))).join("")}</section><div class="nav-stage-arrow" aria-hidden="true">↓</div><section class="nav-stage" aria-label="Steg 2: Vem gör vad?"><div class="nav-stage-heading"><span>2</span> Vem gör vad?</div>${navButton(items.find(item=>item[0]==="staffing"))}</section>` + `
     <div class="nav-separator" role="separator"></div>
     <button type="button" data-action="open-mobile">Se mobilversion ↗</button>`;
 
@@ -10752,7 +10826,46 @@ function placeCards() {
 
 const modal=$("modal");
 
+let activityPlaceContext=null;
+let activityPlaceScreen="";
+
+function manageActivityPlaces() {
+  if (!activityPlaceContext) {
+    closePlaceOptions();closeClockPicker();releaseGanttTooltip();hideMenuTooltip();
+    activityPlaceContext={nodes:[...modal.childNodes],className:modal.className,style:modal.getAttribute("style"),scroll:modal.querySelector(".dialog-body")?.scrollTop || 0};
+    modal.replaceChildren();
+  }
+  activityPlaceScreen="list";
+  const places=plan.places.filter(isListedPlace).sort((a,b)=>a.name.localeCompare(b.name,"sv"));
+  showDialog("Redigera platser","Platsregistret är gemensamt för alla planeringsår.",
+    `<div class="place-manager-list">${places.map(place=>`<div class="place-manager-row"><span>${esc(place.name)}</span>${button("Redigera","manage-edit-place",place.id,"small")}</div>`).join("") || '<p>Inga platser registrerade.</p>'}</div>`,
+    button("+ Ny plats","manage-edit-place","","primary")+button("Tillbaka till aktiviteten","return-activity"));
+}
+
+function returnToActivityPlaces() {
+  if (!activityPlaceContext) return;
+  releaseGanttTooltip();closeClockPicker();hideMenuTooltip();document.body.append($("menuTooltip"));
+  const saved=activityPlaceContext;activityPlaceContext=null;activityPlaceScreen="";
+  modal.replaceChildren(...saved.nodes);modal.className=saved.className;
+  if (saved.style===null) modal.removeAttribute("style");else modal.setAttribute("style",saved.style);
+  const location=modal.querySelector(".activity-location"),selected=modal.querySelector("#actPlace")?.value || "";
+  if (location) location.outerHTML=activityPlaceSelector(plan.places.some(place=>place.id===selected)?selected:null);
+  modal.querySelector(".dialog-body").scrollTop=saved.scroll;
+  if (!modal.open) modal.showModal();
+  modal.querySelector('[data-action="manage-activity-places"]')?.focus({preventScroll:true});
+}
+
+modal.addEventListener("cancel",event=>{
+  if (!activityPlaceContext) return;
+  event.preventDefault();closeDialog();
+});
+
 function closeDialog() {
+  if (activityPlaceContext) {
+    if (activityPlaceScreen==="list") returnToActivityPlaces();
+    else manageActivityPlaces();
+    return;
+  }
   releaseGanttTooltip();
   closeClockPicker();
   hideMenuTooltip();
@@ -10949,7 +11062,7 @@ function activityPlaceSelector(value=null) {
   const choices=[{id:"",name:"Allmänt"},
     ...plan.places.filter(place=>!isGeneralPlaceName(place.name)).sort((a,b) => a.name.localeCompare(b.name,"sv-SE"))];
   return `<div class="field activity-location">
-    <span id="actPlaceLabel">Välj plats</span>
+    <div class="activity-place-heading"><span id="actPlaceLabel">Välj plats</span>${button("Redigera platser","manage-activity-places","","small")}</div>
     <div class="place-picker" id="actPlacePicker">
       <input type="hidden" id="actPlace" value="${esc(selected)}">
       <button type="button" id="actPlaceTrigger" class="place-trigger" role="combobox"
@@ -11866,6 +11979,7 @@ function refreshPlaceMetadata() {
   PLACE_DESCRIPTIONS=Object.fromEntries(placeDirectory.map(place=>[place.name,place.description || ""]));
 }
 function resetSession() {
+  activityPlaceContext=null;activityPlaceScreen="";
   if (typeof guideState!=="undefined" && guideState) endGuide();
   if (unsubscribe) unsubscribe();
   unsubscribe=null;
@@ -12206,7 +12320,7 @@ function editPlace(id) {
 }
 function deleteRegisterPlace(id) {
   const old=placeDirectory.find(place=>place.id===id);if (!old) return;
-  if (plan.activities.some(activity=>activity.placeId===id)) throw Error("Platsen används i årets plan. Flytta aktiviteterna till en annan plats först.");
+  if (plan.activities.some(activity=>activity.placeId===id) || activityPlaceContext?.nodes.some(node=>node.querySelector?.("#actPlace")?.value===id)) throw Error("Platsen används i årets plan eller i aktiviteten som redigeras. Välj en annan plats först.");
   confirmAction("Ta bort platsen ur registret?",`${old.name} tas bort ur det gemensamma registret. Platsuppgifter i andra sparade årsplaner och 2025-arkivet bevaras.`,async()=>{
     await writeRegister("julstokPlaces",id,null,{name:old.name,description:old.description});
     placeDirectory=placeDirectory.filter(place=>place.id!==id);refreshPlaceMetadata();reconcilePlaces(plan);render();
@@ -12218,15 +12332,20 @@ function deleteRegisterPlace(id) {
 /* ---------- Hjälp och borttagning ---------- */
 
 const GUIDE_STEPS=[
-  {text:"Detta är ett verktyg för att planera Kulturens Julstök. Du kan börja planeringen med en helt tom plan eller genom att importera hela upplägget eller valda delar av ett tidigare Julstök. När alla aktiviteter är på plats, kan du bemanna allting utan att det uppstår krockar."},
-  {target:'[data-action="navigate"][data-id="activities"]',view:"activities",text:"På denna flik ser du de aktiviteter som hittills finns i planen."},
-  {target:'.pagehead [data-action="edit-activity"]',view:"activities",text:"Klicka på denna knapp för att lägga in en ny aktivitet."},
-  {target:'[data-action="history-bank"]',view:"activities",text:"Du kan också importera alla eller ett urval aktiviteter som användes i en tidigare upplaga av Julstöket."},
-  {target:'[data-action="navigate"][data-id="staffing"]',view:"staffing",text:"På denna flik hanterar du hur aktiviteterna ska bemannas. Du ser enkelt vilka aktiviteter som är fullt bemannade eller där bemanning fortfarande saknas."},
-  {target:'[data-action="navigate"][data-id="people"]',view:"people",text:"På denna flik hanterar du de personer som arbetar under Julstöket – vilka dagar de arbetar och deras arbetstider."},
-  {target:'[data-action="navigate"][data-id="places"]',view:"places",text:"På denna flik hanterar du de platsnamn som används för olika aktiviteter, till exempel Gröna grinden, Korvtältet etc."},
-  {target:'[data-action="activity-view"][data-id="gantt"]',view:"activities",text:"När du har aktiviteter i din plan, kan du välja att titta på en enskild dag (t.ex. Fredag) och då kan du även välja att se ett Gantt-schema för just den dagen."}
+  {text:"Detta är ett verktyg för att planera Kulturens Julstök. Börja med att skapa eller importera aktiviteter och ange vilka som ska arbeta. Därefter kopplar du personalen till arbetspass och avlösningar."},
+  {target:'.nav-stage:first-child',view:"activities",text:"Det här är grunden i planeringen: <strong>Vad</strong> ska göras och <strong>vilka</strong> kommer att jobba?"},
+  {target:'[data-action="navigate"][data-id="activities"]',view:"activities",text:"Här lägger du in arbetsuppgifter med tillhörande pass, pauser och avlösningar. Du kan även lägga till instruktioner för att stötta genomförandet."},
+  {target:'.pagehead [data-action="edit-activity"]',view:"activities",text:"Klicka här för att lägga till en ny aktivitet."},
+  {target:'.pagehead [data-action="history-bank"]',view:"activities",text:"Du kan spara tid genom att importera ett urval eller samtliga aktiviteter från en tidigare upplaga av Julstöket. Det som inte behövs rensas enkelt bort, och du kan när som helst redigera eller anpassa aktiviteterna efter import."},
+  {target:'[data-action="navigate"][data-id="people"]',view:"people",text:"Här hanterar du vem som jobbar under Julstöket och när. Verktyget hjälper dig att undvika krockar och ser till att ingen schemaläggs utanför sin tillgängliga arbetstid."},
+  {target:'[data-action="navigate"][data-id="staffing"]',view:"staffing",text:"Här kopplar du samman personal med specifika arbetspass och avlösningar. Du får direkt en tydlig överblick över vilka uppgifter som är fullt bemannade och var det fortfarande saknas personal."},
+  {target:'[data-action="activity-view"][data-id="gantt"]',view:"activities",singleDay:true,text:"För en enklare överblick kan du även växla till Gantt-schema när du granskar en specifik dag."},
+  {targets:['#activitySearch','.activity-tools .sort-control'],view:"activities",text:"Hitta snabbt rätt i listan med hjälp av sökfältet (som filtrerar direkt medan du skriver) eller sortera resultatet efter dina behov."},
+  {target:'[data-action="open-mobile"]',text:"Systemet har en separat mobilversion för läsning av den aktuella planeringen. Du kan när som helst förhandsgranska vyn här. Alla uppdateringar som görs i planeringen slår igenom i realtid för användarna i mobilen."}
 ];
+function guideTargets(step) {
+  return (step.targets || (step.target?[step.target]:[])).map(selector=>document.querySelector(selector)).filter(Boolean);
+}
 let guideState=null;
 function showHelp() {
   if (guideState) return;
@@ -12243,7 +12362,7 @@ function showHelp() {
     const action=event.target.closest("[data-guide]")?.dataset.guide;
     if (!action) return;
     event.stopPropagation();
-    if (action==="close" || (action==="next" && guideState.index===7)) endGuide();
+    if (action==="close" || (action==="next" && guideState.index===GUIDE_STEPS.length-1)) endGuide();
     else { guideState.index+=action==="back"?-1:1; renderGuide(); }
   });
   window.addEventListener("resize",positionGuide);
@@ -12268,16 +12387,16 @@ function renderGuide() {
   if (step.view) {
     ui.view=step.view;
     ui.query="";
-    if (index===7) {ui.activityDays=[0];ui.showActivityGantt=false;}
+    ui.activityDays=step.singleDay?[1]:[];ui.showActivityGantt=Boolean(step.singleDay);
     render();
   }
-  dialog.innerHTML=`<div class="guide-highlight" hidden></div>
-    <svg class="guide-arrow" aria-hidden="true"><defs><marker id="guideArrowHead" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#f4d570" stroke-width="2"/></marker></defs><line stroke="#f4d570" stroke-width="3" marker-end="url(#guideArrowHead)"/></svg>
+  dialog.innerHTML=`${guideTargets(step).map(()=>'<div class="guide-highlight" hidden></div>').join("")}
+    <svg class="guide-arrow" aria-hidden="true"><defs><marker id="guideArrowHead" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#f4d570" stroke-width="2"/></marker></defs>${guideTargets(step).map(()=>'<line stroke="#f4d570" stroke-width="3" marker-end="url(#guideArrowHead)"/>').join("")}</svg>
     <section class="guide-card"><button type="button" class="guide-close" data-guide="close" aria-label="Avsluta guiden">×</button>
       <h2 id="guideTitle">Så fungerar det</h2><p id="guideText">${step.text}</p>
-      <div class="guide-progress" role="status">Steg ${index+1} av 8 · ${7-index} steg kvar</div>
-      <div class="guide-controls">${index?'<button type="button" class="btn" data-guide="back">Föregående</button>':""}<button type="button" class="btn primary" data-guide="next">${index===7?"Avsluta":"Nästa"}</button></div></section>`;
-  const target=step.target?document.querySelector(step.target):null;
+      <div class="guide-progress" role="status">Steg ${index+1} av ${GUIDE_STEPS.length} · ${GUIDE_STEPS.length-1-index} steg kvar</div>
+      <div class="guide-controls">${index?'<button type="button" class="btn" data-guide="back">Föregående</button>':""}<button type="button" class="btn primary" data-guide="next">${index===GUIDE_STEPS.length-1?"Avsluta":"Nästa"}</button></div></section>`;
+  const target=guideTargets(step)[0];
   target?.scrollIntoView({block:"nearest",inline:"nearest",behavior:"instant"});
   positionGuide();
   dialog.querySelector('[data-guide="next"]').focus({preventScroll:true});
@@ -12287,25 +12406,35 @@ function positionGuide() {
   const {dialog,index}=guideState,step=GUIDE_STEPS[index];
   const card=dialog.querySelector(".guide-card");
   if (!card) return;
-  const target=step.target?document.querySelector(step.target):null;
-  const ring=dialog.querySelector(".guide-highlight"),arrow=dialog.querySelector(".guide-arrow");
+  const targets=guideTargets(step),target=targets[0];
+  const rings=[...dialog.querySelectorAll(".guide-highlight")],arrow=dialog.querySelector(".guide-arrow");
   const w=window.innerWidth,h=window.innerHeight,cw=card.offsetWidth,ch=card.offsetHeight;
   let x=(w-cw)/2,y=(h-ch)/2;
-  ring.hidden=!target;arrow.style.display=target?"block":"none";
+  rings.forEach((ring,index)=>{
+    const element=targets[index];ring.hidden=!element;
+    if (!element) return;
+    const box=element.getBoundingClientRect();
+    Object.assign(ring.style,{left:(box.left-4)+"px",top:(box.top-4)+"px",width:(box.width+8)+"px",height:(box.height+8)+"px"});
+  });
+  arrow.style.display=target?"block":"none";
   if (target) {
-    const r=target.getBoundingClientRect();
-    Object.assign(ring.style,{left:(r.left-4)+"px",top:(r.top-4)+"px",width:(r.width+8)+"px",height:(r.height+8)+"px"});
+    const boxes=targets.map(element=>element.getBoundingClientRect());
+    const r={left:Math.min(...boxes.map(box=>box.left)),top:Math.min(...boxes.map(box=>box.top)),right:Math.max(...boxes.map(box=>box.right)),bottom:Math.max(...boxes.map(box=>box.bottom))};
+    r.width=r.right-r.left;r.height=r.bottom-r.top;
     if (w-r.right>=cw+56) {x=r.right+48;y=r.top+(r.height-ch)/2;}
     else if (r.left>=cw+56) {x=r.left-cw-48;y=r.top+(r.height-ch)/2;}
     else if (h-r.bottom>=ch+56) {x=r.left+(r.width-cw)/2;y=r.bottom+48;}
     else {x=r.left+(r.width-cw)/2;y=r.top-ch-48;}
     x=Math.max(16,Math.min(w-cw-16,x));y=Math.max(16,Math.min(h-ch-16,y));
-    const cx=x+cw/2,cy=y+ch/2,tx=r.left+r.width/2,ty=r.top+r.height/2;
-    const dx=tx-cx,dy=ty-cy;
-    const startScale=1/Math.max(Math.abs(dx)/(cw/2),Math.abs(dy)/(ch/2),1);
-    const endScale=1/Math.max(Math.abs(dx)/(r.width/2+12),Math.abs(dy)/(r.height/2+12),1);
-    const line=arrow.querySelector("line");
-    for (const [key,value] of Object.entries({x1:cx+dx*startScale,y1:cy+dy*startScale,x2:tx-dx*endScale,y2:ty-dy*endScale})) line.setAttribute(key,value);
+    const lines=[...arrow.querySelectorAll("line")];
+    boxes.forEach((box,index)=>{
+      const line=lines[index];if (!line) return;
+      const cx=x+cw/2,cy=y+ch/2,tx=box.left+box.width/2,ty=box.top+box.height/2;
+      const dx=tx-cx,dy=ty-cy;
+      const startScale=1/Math.max(Math.abs(dx)/(cw/2),Math.abs(dy)/(ch/2),1);
+      const endScale=1/Math.max(Math.abs(dx)/(box.width/2+12),Math.abs(dy)/(box.height/2+12),1);
+      for (const [key,value] of Object.entries({x1:cx+dx*startScale,y1:cy+dy*startScale,x2:tx-dx*endScale,y2:ty-dy*endScale})) line.setAttribute(key,value);
+    });
   }
   card.style.left=x+"px";card.style.top=y+"px";
 }
@@ -12779,6 +12908,9 @@ document.addEventListener("click",async event => {
     }
     if (action==="edit-person") editPerson(id);
     if (action==="bulk-hours") editBulkAvailability();
+    if (action==="manage-activity-places") manageActivityPlaces();
+    if (action==="return-activity") returnToActivityPlaces();
+    if (action==="manage-edit-place") {activityPlaceScreen="edit";editPlace(id);}
     if (action==="edit-place") editPlace(id);
     if (action==="person-schedule") personSchedule(id);
     if (action==="staff-person-activity") {
