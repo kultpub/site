@@ -7392,7 +7392,7 @@ let peopleDirectory=[];
 let placeDirectory=[];
 let PLACE_NAMES=[];
 let PLACE_DESCRIPTIONS={};
-const GENERAL_LOCATION_INFO = "Aktiviteten är ej platsbunden.";
+const GENERAL_LOCATION_INFO = "Aktiviteten är inte knuten till en bestämd plats.";
 
 /* ---------- Hjälpfunktioner ---------- */
 
@@ -7702,7 +7702,7 @@ function toast(message) {
 
 function personName(id) { return plan.people.find(p => p.id===id)?.name || "Okänd person"; }
 function placeName(id) {
-  return id===null ? "Ej platsspecifik" : plan.places.find(p => p.id===id)?.name || "Okänd plats";
+  return id===null ? "Allmänt" : plan.places.find(p => p.id===id)?.name || "Okänd plats";
 }
 function locationInfo(inline=false) {
   const tag=inline ? "span" : "button";
@@ -7714,7 +7714,7 @@ function placeLabel(id) {
   return esc(placeName(id))+(id===null ? " "+locationInfo() : "");
 }
 function isGeneralPlaceName(name) {
-  return ["hela området","ej platsspecifik"].includes(name.trim().toLocaleLowerCase("sv-SE"));
+  return ["allmänt","hela området","ej platsspecifik","ej platsspecifikt"].includes(String(name || "").trim().toLocaleLowerCase("sv-SE"));
 }
 
 // Ett platsregisterfält kan innehålla en Maps-länk, GPS-koordinater eller
@@ -8021,7 +8021,7 @@ function historicalEdition(year) {
 function editionFromPlan(data,year) {
   if (!data || data.year!==year || !Array.isArray(data.activities) || !Array.isArray(data.places)) return null;
   const activities=data.activities.filter(a=>a && typeof a.id==="string" && typeof a.title==="string" && Array.isArray(a.requirements) && a.requirements.length).map(activity=>{
-    const place=activity.placeId===null?"Ej platsspecifik":data.places.find(p=>p.id===activity.placeId)?.name;
+    const place=activity.placeId===null?"Allmänt":data.places.find(p=>p.id===activity.placeId)?.name;
     if (!place) throw Error(`Platsen för ${activity.title} i ${year} kunde inte hittas.`);
     return {...clone(activity),sourceYear:year,sourceKind:activity.sourceKind || "historical",type:activity.type || "event",version:activity.version || 1,
       activityKey:activity.activityKey || activity.id,place:{name:place},notes:activity.notes || "",dayNotes:clone(activity.dayNotes || {}),
@@ -8210,7 +8210,7 @@ function historyIntroText(years) {
 function showHistoryBank(requestedYear) {
   const years=historicalYears();
   if (!years.length) {
-    showDialog("Aktiviteter från tidigare Julstök",`Hämta aktiviteter till Julstöket ${plan.year}.`,
+    showDialog("Aktiviteter i tidigare Julstök",`Hämta aktiviteter till Julstöket ${plan.year}.`,
       `<p>Det finns inga aktiviteter från tidigare upplagor att hämta ännu.</p>`);
     modal.classList.add("history-modal");
     return;
@@ -8218,15 +8218,15 @@ function showHistoryBank(requestedYear) {
   const selected=years.includes(requestedYear)?requestedYear:years.includes(ui.bankYear)?ui.bankYear:years.at(-1);
   ui.bankYear=selected;
   const edition=historicalEdition(selected),available=availableHistoricalActivities(selected);
-  showDialog("Aktiviteter från tidigare Julstök",
+  showDialog("Aktiviteter i tidigare Julstök",
     `Hämta aktiviteter till Julstöket ${plan.year}.`,
     `<div class="history-bank-header"><p class="history-intro">${historyIntroText(years)}</p>
     <div class="history-tabs" role="tablist" aria-label="Tidigare upplagor">${years.map(year =>
       `<button type="button" role="tab" data-action="history-year" data-id="${year}" id="history-tab-${year}" aria-selected="${selected===year}" aria-controls="history-year-panel" tabindex="${selected===year?0:-1}">${year}<span>${historicalEdition(year).activities.length}</span></button>`).join("")}</div>
-      <div class="history-year-heading"><h3>Julstöket ${selected}</h3><span>${edition.activities.length} ${edition.activities.length===1?"aktivitet inlagd":"aktiviteter inlagda"}</span></div>
-      ${edition.activities.length?`<p class="hint history-coverage">Årsbanken fylls på aktivitet för aktivitet.</p>
-        <div class="history-search"><input type="search" id="historySearch" value="${esc(ui.historyQuery)}" placeholder="Sök aktivitet eller plats…" aria-label="Sök tidigare aktiviteter"><span id="historySearchCount" aria-live="polite"></span></div>
+      <div class="history-year-heading"><h3>Julstöket ${selected}</h3><span>${edition.activities.length} ${edition.activities.length===1?"aktivitet":"aktiviteter"} i Julstöket ${selected}</span></div>
+      ${edition.activities.length?`<div class="history-search"><input type="search" id="historySearch" value="${esc(ui.historyQuery)}" placeholder="Sök aktivitet eller plats…" aria-label="Sök tidigare aktiviteter"><span id="historySearchCount" aria-live="polite"></span></div>
         <div class="history-actions">${button("Markera samtliga","history-select-all","","small",available.length?"":"disabled")}
+        ${button("Avmarkera samtliga","history-deselect-all","","small")}
         ${button("Importera samtliga","history-import-all","","small",`data-year="${selected}" ${available.length?"":"disabled"}`)}
         <div class="history-sort">${sortSelect("historySort",ui.historySort)}</div></div>`:""}</div>
     <section id="history-year-panel" class="history-bank-content" role="tabpanel" aria-labelledby="history-tab-${selected}">
@@ -8242,7 +8242,7 @@ function showHistoryBank(requestedYear) {
   const scroller=modal.querySelector(".dialog-body");
   scroller.tabIndex=0;
   scroller.setAttribute("role","region");
-  scroller.setAttribute("aria-label","Aktiviteter från tidigare Julstök");
+  scroller.setAttribute("aria-label","Aktiviteter i tidigare Julstök");
   filterHistoryActivities();
   if (requestedYear!==undefined) modal.querySelector(`[data-action="history-year"][data-id="${selected}"]`)?.focus();
 }
@@ -8398,8 +8398,11 @@ function buildHistoricalImport(data, source, sourceYear, importedAt = new Date()
   if (alreadyImported(source, data)) throw Error(source.title + " finns redan i planen.");
   
   const importedPlaceName=canonicalPlaceName(source.place.name);
-  let place = data.places.find(p => p.name.trim().toLocaleLowerCase("sv-SE") === importedPlaceName.toLocaleLowerCase("sv-SE"));
-  if (!place) { place = { id: uid(), name: importedPlaceName }; data.places.push(place); }
+  let place = null;
+  if (!isGeneralPlaceName(importedPlaceName)) {
+    place = data.places.find(p => p.name.trim().toLocaleLowerCase("sv-SE") === importedPlaceName.toLocaleLowerCase("sv-SE"));
+    if (!place) { place = { id: uid(), name: importedPlaceName }; data.places.push(place); }
+  }
   
   const historical = source.historicalOriginal || source;
   const {requirements,staffingPattern:pattern}=historicalPassSetup(source);
@@ -8410,7 +8413,7 @@ function buildHistoricalImport(data, source, sourceYear, importedAt = new Date()
     title: source.title,
     type: source.type,
     sourceKind: source.sourceKind,
-    placeId: place.id,
+    placeId: place?.id ?? null,
     notes: source.notes,
     dayNotes: clone(source.dayNotes || {}),
     requirements,
@@ -9250,7 +9253,7 @@ function validatePlan(data,{normalizeRequirements=false,allowExistingHandovers=f
     if (typeof activity.title!=="string" || !activity.title.trim() ||
         (activity.placeId!==null && !data.places.some(p => p.id===activity.placeId)) ||
         !Array.isArray(activity.requirements) || !activity.requirements.length) {
-      throw Error("Aktiviteten måste ha namn, tider och en plats eller valet Ej platsspecifik.");
+      throw Error("Aktiviteten måste ha namn, tider och en plats eller valet Allmänt.");
     }
 
     for (const range of activity.requirements) {
@@ -9573,7 +9576,7 @@ function activitiesPage() {
     planningYearSelect("activityPlanningYear")+
     button("Hämta från tidigare år","history-bank")+
     button("Rensa","clear-activities","","danger")+
-    button("+ Ny aktivitet","edit-activity","","primary"))+`
+    button("+ Ny aktivitet","edit-activity","","primary",'style="width:100px;min-width:100px;max-width:100px;flex:none"'))+`
     <div class="filters activity-tools"><input type="search" id="activitySearch" value="${esc(ui.query)}"
       placeholder="Sök aktivitet eller plats…" aria-label="Sök aktiviteter">
       <div class="day-filter" role="group" aria-label="Filtrera dagar">
@@ -10566,8 +10569,10 @@ function peoplePage() {
   return heading(
     "Personal",
     "Registrera arbetsdagar och tider för personal som arbetar under Julstöket.",
-    button("Personalregister / importera","directory-import","","primary")+
-    button("+ Ny person","directory-new")+button("Ange arbetstider för flera","bulk-hours")
+    button("Ange arbetstider","bulk-hours")+
+	button("Hämta från tidigare år","directory-import")+
+    button("Rensa","clear-people","","danger")+
+    button("+ Ny person","directory-new","","primary",'style="width:100px;min-width:100px;max-width:100px;flex:none"')
   )+`
     <div class="filters activity-tools people-tools">
       <input type="search" id="peopleSearch" value="${esc(ui.peopleQuery)}"
@@ -10706,7 +10711,7 @@ function placesPage() {
   return heading(
     "Platser",
     "Använd tydliga platsnamn så att alla hittar rätt, använd gärna Google Maps-länkar.",
-    button("+ Ny plats","edit-place","","primary")
+    button("+ Ny plats","edit-place","","primary",'style="width:100px;min-width:100px;max-width:100px;flex:none"')
   )+`<div class="filters"><input type="search" id="placesSearch" value="${esc(ui.placesQuery)}"
       placeholder="Sök plats…" aria-label="Sök platser"></div>
     <div class="places-grid" id="placeCards">${placeCards()}</div>`;
@@ -10714,7 +10719,7 @@ function placesPage() {
 
 function isListedPlace(place) {
   // ”Allmänt” är en platskategori och får varken platskort eller platssiffra.
-  return place.name.trim().toLocaleLowerCase("sv-SE")!=="allmänt";
+  return !isGeneralPlaceName(place.name);
 }
 
 function placeCards() {
@@ -10939,9 +10944,10 @@ function syncRequirementGroups() {
 }
 
 function activityPlaceSelector(value=null) {
+  value=value && isGeneralPlaceName(plan.places.find(place=>place.id===value)?.name) ? null : value;
   const selected=value || "";
-  const choices=[{id:"",name:"Ej platsspecifik"},
-    ...[...plan.places].sort((a,b) => a.name.localeCompare(b.name,"sv-SE"))];
+  const choices=[{id:"",name:"Allmänt"},
+    ...plan.places.filter(place=>!isGeneralPlaceName(place.name)).sort((a,b) => a.name.localeCompare(b.name,"sv-SE"))];
   return `<div class="field activity-location">
     <span id="actPlaceLabel">Välj plats</span>
     <div class="place-picker" id="actPlacePicker">
@@ -11015,7 +11021,7 @@ function readAvailabilityFields() {
 }
 function editBulkAvailability() {
   if (!plan.people.length) {toast("Lägg först till personer i årets personal.");return;}
-  showDialog("Arbetstider för flera",`Gemensamma tider för Julstöket ${plan.year}.`,
+  showDialog("Hantera arbetstider",`Ange dagar och arbetstider. Du kan lägga till flera personer på samma tider samtidigt.`,
     `<label class="field">Sök person<input id="bulkPeopleSearch" type="search" placeholder="Sök namn…"></label>
     <label class="new-person-annual"><input type="checkbox" id="bulkSelectAll"> Markera alla synliga</label>
     <div class="directory-list" id="bulkPeople">${plan.people.slice().sort((a,b)=>a.name.localeCompare(b.name,"sv")).map(person=>
@@ -11541,7 +11547,7 @@ function weekendReportHTML(data) {
     .toLocaleDateString("sv-SE",{day:"numeric",month:"long"});
   const weekend=new Date(dates[0]+"T12:00:00").getDate()+"–"+dateText(2)+" "+data.year;
   const person=id => data.people.find(p => p.id===id)?.name || "Okänd person";
-  const place=id => id===null ? "Ej platsspecifik" : data.places.find(p => p.id===id)?.name || "Okänd plats";
+  const place=id => id===null ? "Allmänt" : data.places.find(p => p.id===id)?.name || "Okänd plats";
   const prose=text => esc(text).replace(/\r?\n/g,"<br>");
   const paragraph=(label,content,color="#26352b") =>
     `<p style="margin:0 0 6pt;color:${color};"><strong>${label}</strong> ${content}</p>`;
@@ -11600,7 +11606,7 @@ function weekendReportHTML(data) {
       return `<section style="margin:0 0 19pt;">
         <h3 style="margin:12pt 0 7pt;font-family:Calibri,Arial,sans-serif;font-size:14pt;line-height:1.3;color:#173d35;page-break-after:avoid;">
           ${start}–${end} · ${esc(activity.title)}</h3>
-        ${activity.placeId===null ? paragraph("","Ej platsspecifik.") : paragraph("Plats:",esc(place(activity.placeId)))}
+        ${activity.placeId===null ? paragraph("","Allmänt.") : paragraph("Plats:",esc(place(activity.placeId)))}
         ${paragraph("Tider och bemanningsbehov:",ranges.map(r =>
           `${r.start}–${r.end}: ${r.count} ${r.count===1?"person":"personer"}`).join("; ")+".")}
         ${instructionForDay(activity,day)?paragraph("Instruktioner:",prose(instructionForDay(activity,day))):""}
@@ -11849,6 +11855,10 @@ function reconcilePlaces(data) {
   const usedIds=new Set(data.activities.map(activity=>activity.placeId));
   const archived=(data.places || []).filter(place=>!activeIds.has(place.id) && usedIds.has(place.id));
   data.places=[...clone(placeDirectory),...archived];
+  const generalIds=new Set(data.places.filter(place=>isGeneralPlaceName(place.name)).map(place=>place.id));
+  for (const activity of data.activities) {
+    if (generalIds.has(activity.placeId)) activity.placeId=null;
+  }
   return data;
 }
 function refreshPlaceMetadata() {
@@ -12045,7 +12055,7 @@ function personAlreadyAdded(person,data=plan) {
 function showPeopleDirectory() {
   if (!cloud) return;
   directorySelection=new Set();
-  showDialog("Personalregister / importera",`Välj personer till Julstöket ${plan.year}. Du anger arbetstider i nästa steg innan importen sparas.`,
+  showDialog("Personal i tidigare Julstök",`Välj personer till Julstöket ${plan.year}. Arbetstider anges i nästa steg.`,
     `<label class="field">Sök person<input id="directorySearch" type="search" placeholder="Namn eller telefonnummer…"></label>
       <div id="directoryList" class="directory-list"></div>`,
     button("+ Ny person","directory-new")+button("Stäng","close")+saveButton("Fortsätt med valda personer"),async()=>{
@@ -12176,7 +12186,7 @@ function editPlace(id) {
     (registered?button("Ta bort","delete-place",id,"danger push-left"):"")+button("Avbryt","close")+saveButton(),async()=>{
       const value={name:$("placeName").value.trim(),description:$("placeDescription").value.trim(),
         mapsUrl:normalizeGoogleMapsLink($("placeMapsUrl").value)};
-      if (!value.name || isGeneralPlaceName(value.name)) throw Error("Ange ett platsnamn. Ej platsspecifik väljs på aktiviteten.");
+      if (!value.name || isGeneralPlaceName(value.name)) throw Error("Ange ett platsnamn. Allmänt väljs på aktiviteten.");
       if (placeDirectory.some(place=>place.id!==id && place.name.toLocaleLowerCase("sv-SE")===value.name.toLocaleLowerCase("sv-SE"))) throw Error("Platsen finns redan.");
       const target=id || uid();
       await writeRegister("julstokPlaces",target,value,registered?{name:registered.name,description:registered.description,mapsUrl:registered.mapsUrl || ""}:null);
@@ -12423,6 +12433,23 @@ async function deleteActivityDay(id,day) {
     data.assignments=data.assignments.filter(shift => shift.activityId!==id || shift.day!==day);
   },DAYS[day]+" har tagits bort från aktiviteten.");
   closeDialog();
+}
+
+function clearPeople() {
+  if (!plan.people.length) {
+    toast("Det finns inga personer att rensa.");
+    return;
+  }
+  confirmAction(
+    "Rensa all personal?",
+    "Alla personer och deras bemanning tas bort från den aktuella planen. Personalregistret och tidigare års personal finns kvar.",
+    async () => {
+      await commit(data => {
+        data.people = [];
+        data.assignments = [];
+      }, "Alla personer har tagits bort från planeringen.");
+    }
+  );
 }
 
 function clearActivities() {
@@ -12729,7 +12756,12 @@ document.addEventListener("click",async event => {
     }
     if (action==="history-bank") {ui.historyQuery="";await refreshHistoricalSources();showHistoryBank();}
 	if (action==="clear-activities") clearActivities();
+    if (action==="clear-people") clearPeople();
     if (action==="history-year") showHistoryBank(Number(id));
+    if (action==="history-deselect-all") {
+      modal.querySelectorAll('input[name="historySelection"]:checked').forEach(box => { box.checked=false; });
+      updateHistorySelection();
+    }
     if (action==="history-select-all") {
       modal.querySelectorAll('.history-activity:not([hidden]) input[name="historySelection"]:not(:disabled)').forEach(box => { box.checked=true; });
       updateHistorySelection();
