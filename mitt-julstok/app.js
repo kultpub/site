@@ -235,15 +235,21 @@ function staffingEventIcon(event){
 }
 function colleaguesTable(s,prev,next){
   const excluded=new Set([...prev,...next].map(x=>x.slotKey));
-  const colleagues=colocation(s);
   const rows=[];
-  for(const person of colleagues){
-    const matches=assignments(person.id,s.day).filter(x=>
-      placeForShift(x).id===placeForShift(s).id&&
-      (isGeneral(placeForShift(s))?x.activityId===s.activityId:true)&&effectivelyWorkingTogether(x,s));
-    for(const x of matches){
-      if(x.kind==="relief"||excluded.has(x.id))continue;
-      rows.push({...x,person});
+  // Den här tabellen gäller aktiviteten och dagen, inte andra jobb på samma plats.
+  const relevant=(state.plan?.assignments||[]).filter(x=>
+    x.activityId===s.activityId&&x.day===s.day&&x.personId&&x.personId!==s.personId&&
+    validTime(x.start)&&validTime(x.end)&&x.start<s.end&&x.end>s.start);
+  for(const x of relevant){
+    if(excluded.has(x.id)&&x.kind!=="relief")continue;
+    const person=namedPerson(x.personId);
+    if(!person)continue;
+    // Avlösaren ska synas även när du själv har paus.
+    const periods=x.kind==="relief"?realWorkSegments(x):[{start:x.start,end:x.end}];
+    for(const period of periods){
+      if(period.start>=s.end||period.end<=s.start)continue;
+      if(!rows.some(r=>r.personId===x.personId&&r.start===period.start&&r.end===period.end))
+        rows.push({...x,...period,person});
     }
   }
   for(const x of staffingSlots(s).filter(x=>!x.personId&&x.start<s.end&&x.end>s.start&&!excluded.has(x.slotKey)))
