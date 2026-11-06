@@ -121,8 +121,87 @@ function relievedByMe(s){if(s.kind!=="relief")return [];const a=activityFor(s);c
   const sourceIds=(a.staffingPattern?.shifts||[]).filter(owner=>owner.kind!=="relief"&&(owner.breaks||[]).some(p=>(source.reliefPeriods||[]).some(q=>q.breakId===p.id&&intersects(p,s)))).map(x=>x.id);
   return unique((state.plan?.assignments||[]).filter(x=>x.activityId===s.activityId&&x.day===s.day&&x.personId!==s.personId&&sourceIds.includes(x.patternShiftId)).map(x=>x.personId)).map(namedPerson).filter(Boolean);
 }
-function handover(s,edge){const activity=activityFor(s);const others=(state.plan?.assignments||[]).filter(x=>x.day===s.day&&x.activityId===s.activityId&&x.personId!==s.personId&&x.kind==="ordinary"&&s.kind==="ordinary"&&((edge==="before"&&x.end===s.start)||(edge==="after"&&x.start===s.end)));
-  return unique(others.map(x=>x.personId)).map(namedPerson).filter(Boolean);
+// Överlämning gäller ordinarie pass i samma aktivitet och dag; glapp är tillåtna.
+function handoverPeers(s){
+  if(s.kind!=="ordinary")return [];
+  return (state.plan?.assignments||[]).filter(x=>x.day===s.day&&x.activityId===s.activityId&&x.personId&&x.personId!==s.personId&&x.kind==="ordinary"&&validTime(x.start)&&validTime(x.end)&&x.start<x.end&&namedPerson(x.personId));
+}
+// En kort överlappning vid passbyte är tillåten, men inte parallellt arbete.
+function worksAlone(s){
+  return !handoverPeers(s).some(x=>{
+    const overlap=minutes(x.end<s.end?x.end:s.end)-minutes(x.start>s.start?x.start:s.start);
+    if(overlap<=0)return false;
+    const boundary=Math.min(Math.abs(minutes(x.end)-minutes(s.start)),Math.abs(minutes(x.start)-minutes(s.end)));
+    return overlap>30||boundary>30||
+      (x.start===s.start&&x.end===s.end);
+  });
+}
+function handover(s,edge){
+  if(s.kind!=="ordinary"||!worksAlone(s))return [];
+  const before=edge==="before";
+  const candidates=handoverPeers(s).filter(x=>
+    (before?x.start<s.start&&x.end<s.end:x.start>s.start&&x.end>s.end)&&
+    Math.abs(minutes(before?x.end:x.start)-minutes(before?s.start:s.end))<=30&&worksAlone(x));
+  if(!candidates.length)return [];
+  const key=before?"end":"start",boundary=before?s.start:s.end;
+  const nearest=Math.min(...candidates.map(x=>Math.abs(minutes(x[key])-minutes(boundary))));
+  const matches=candidates.filter(x=>Math.abs(minutes(x[key])-minutes(boundary))===nearest);
+  // Flera möjliga ersättare ska inte framställas som ett entydigt personbyte.
+  if(unique(matches.map(x=>x.personId)).length!==1)return [];
+  return [{person:namedPerson(matches[0].personId),time:matches[0][key]}];
+}
+function handoverNames(items,edge){
+  return items.map(item=>nameButton(item.person)+", "+(edge==="before"?"slutar":"börjar")+" kl. "+esc(item.time)).join("; ");
+}
+// Bemanningsförändringar i samma aktivitet; pausavlösningar visas för sig.
+function staffingChanges(s,prev,next){
+  if(s.kind!=="ordinary")return [];
+  const rows=[];
+  const add=(kind,time,personId,end)=>{
+    if(!rows.some(r=>r.kind===kind&&r.time===time&&r.personId===personId&&r.end===end))
+      rows.push({kind,time,personId,end});
+  };
+  const previousIds=new Set(prev.map(x=>x.person.id));
+  const nextIds=new Set(next.map(x=>x.person.id));
+  for(const x of handoverPeers(s)){
+    if(x.start>s.start&&x.start<s.end&&!nextIds.has(x.personId)){
+      add("join",x.start,x.personId,x.end>s.end?x.end:null);
+    }
+    if(x.end>s.start&&x.end<s.end&&!previousIds.has(x.personId)){
+      add("leave",x.end,x.personId,null);
+    }
+    if(x.start<=s.start&&x.end>s.end&&!nextIds.has(x.personId)){
+      add("continue",s.end,x.personId,x.end);
+    }
+  }
+  return rows.sort((a,b)=>a.time.localeCompare(b.time)||a.kind.localeCompare(b.kind)||
+    namedPerson(a.personId).name.localeCompare(namedPerson(b.personId).name,"sv"));
+}
+function staffingChangesHtml(rows){
+  const groups=[];
+  for(const row of rows){
+    let group=groups.find(g=>g.kind===row.kind&&g.time===row.time&&g.end===row.end);
+    if(!group){group={...row,people:[]};groups.push(group);}
+    group.people.push(namedPerson(row.personId));
+  }
+  return groups.map(g=>{
+    const label=g.kind==="join"?"Ansluter kl. "+g.time:
+      g.kind==="leave"?"Slutar kl. "+g.time:"Fortsätter efter dig";
+    return `<div class="info-row">${icon("users","sm")}<span>${esc(label)}: ${g.people.map(nameButton).join(", ")}${g.end?", till kl. "+esc(g.end):""}</span></div>`;
+  }).join("");
+}
+function reliefTimesFor(s,person){
+  const periods=[];
+  for(const owner of assignments(person.id,s.day).filter(x=>x.activityId===s.activityId&&x.kind!=="relief")){
+    for(const pause of breaksOf(owner)){
+      for(const part of realWorkSegments(s)){
+        const start=pause.start>part.start?pause.start:part.start;
+        const end=pause.end<part.end?pause.end:part.end;
+        if(start<end&&!periods.some(p=>p.start===start&&p.end===end))periods.push({start,end});
+      }
+    }
+  }
+  return periods.sort((a,b)=>a.start.localeCompare(b.start)).map(p=>"kl. "+p.start+"–"+p.end).join(", ");
 }
 function timeState(s){if(dayIndexNow()!==state.day)return "planned";const m=stockholmMinute();if(m>=minutes(s.end))return "done";if(m<minutes(s.start))return "next";return onPause(s,m)?"break":"live";}
 function activeNow(personId){const day=dayIndexNow();if(day<0)return [];const m=stockholmMinute();return assignments(personId,day).filter(s=>withinTime(s,m));}
@@ -160,8 +239,8 @@ function renderAlert() {
 function workingSummary(p,day){const av=availableRanges(p,day);return av.length?av.map(x=>`${x.start}–${x.end}`).join(", "):"Arbetstid ej registrerad";}
 function renderHome(){const p=currentPerson();if(!p)return "";const shifts=assignments(p.id,state.day),today=dayIndexNow();const count=shifts.length;
   return `${renderAlert()}${renderDays()}<div class="heading"><h2>${esc(datesHeading(state.day))}</h2>${state.day===today?`<span class="today-tag">Idag</span>`:today>=0?`<button class="today-return" data-action="day" data-day="${today}">Till idag</button>`:""}</div><p class="summary">${esc(workingSummary(p,state.day))} · ${count} ${count===1?"pass":"pass"}</p>${count?`<div class="cards">${shifts.map((s,i)=>passCard(s,i)).join("")}</div>`:`<div class="empty">${icon("calendar","lg")}<h3>Inga arbetspass ${state.day===today?"idag":"den här dagen"}</h3><p>${availableRanges(p,state.day).length?"Du har arbetstid registrerad, men inga uppgifter tilldelade.":"Välj en annan dag för att se ditt schema."}</p></div>`}<p class="legend">${icon("clock","sm")} Tiderna och placeringarna är hämtade ur Julstökets planering.</p>`;}
-function passCard(s,index){const activity=activityFor(s),place=placeForShift(s),isToday=dayIndexNow()===state.day,status=timeState(s),pauses=breaksOf(s),isRelief=s.kind==="relief";const labels={done:"Avslutat",live:"Pågår just nu",break:"Paus pågår",next:"Kommande",planned:"Planerat"};const colleagues=colocation(s);const prev=handover(s,"before"),next=handover(s,"after");const forMe=relievedByMe(s);const returners=forMe.filter(person=>assignments(person.id,s.day).some(x=>x.activityId===s.activityId&&realWorkSegments(x).some(part=>part.start<=s.end&&part.end>s.end)));const instructions=[activity?.notes||"",activity?.dayNotes?.[s.day]||"",s.note||""].filter(x=>String(x).trim()).join("\n\n");
-  return `<article class="pass ${status==="live"||status==="break"?"live":""}" id="pass-${esc(s.id)}" data-pass-day="${s.day}"><div class="pass-head"><span class="pass-time">${esc(s.start)}–${esc(s.end)}</span>${isToday?`<span class="pill ${status}">${labels[status]}</span>`:isRelief?'<span class="pill next">Avlösning</span>':""}</div><div class="pass-body"><h3 class="pass-title">${esc(activity?.title||"Arbetsuppgift")}${isRelief?' <span style="font-size:12px;font-weight:600;color:#587669">· Avlösning</span>':""}</h3><div class="place-line">${icon("pin","sm")} ${esc(place.name)}</div>${mapButton(place)?`<div class="place-actions">${mapButton(place)}</div>`:""}${instructions?`<div class="instructions"><h4>Instruktioner</h4><div class="text">${esc(instructions)}</div></div>`:""}${pauses.length||forMe.length||prev.length||next.length||colleagues.length?`<div class="detail">${pauses.map(p=>{const relief=reliefForPause(s,p);return `<div class="info-row">${icon("coffee","sm")}<span><strong>${esc(p.type||"Paus")}: ${esc(p.start)}–${esc(p.end)}</strong>${relief.length?`<br>Avlösare: ${relief.map(nameButton).join(", ")}`:""}</span></div>`;}).join("")}${forMe.length?`<div class="info-row">${icon("users","sm")}<span><strong>Du avlöser:</strong> ${forMe.map(nameButton).join(", ")}</span></div>`:""}${isRelief&&returners.length?`<div class="info-row">${icon("arrow","sm")}<span>Efter avlösningen återgår: ${returners.map(nameButton).join(", ")}</span></div>`:""}${prev.length?`<div class="info-row">${icon("back","sm")}<span>Före ditt pass: ${prev.map(nameButton).join(", ")}</span></div>`:""}${next.length?`<div class="info-row">${icon("arrow","sm")}<span>Efter ditt pass: ${next.map(nameButton).join(", ")}</span></div>`:""}${colleagues.length?`<div class="info-row">${icon("users","sm")}<div><strong>${isGeneral(place)?"Kollegor i samma aktivitet under passet":"Kollegor på samma plats under passet"}</strong><div class="person-list" style="margin-top:7px">${colleagues.map(p=>`<button class="person-chip" data-action="person" data-id="${esc(p.id)}">${esc(p.name)}</button>`).join("")}</div></div></div>`:""}</div>`:""}</div></article>`;}
+function passCard(s,index){const activity=activityFor(s),place=placeForShift(s),isToday=dayIndexNow()===state.day,status=timeState(s),pauses=breaksOf(s),isRelief=s.kind==="relief";const labels={done:"Avslutat",live:"Pågår just nu",break:"Paus pågår",next:"Kommande",planned:"Planerat"};const colleagues=colocation(s);const prev=handover(s,"before"),next=handover(s,"after");const changes=staffingChanges(s,prev,next);const forMe=relievedByMe(s);const returners=forMe.filter(person=>assignments(person.id,s.day).some(x=>x.activityId===s.activityId&&realWorkSegments(x).some(part=>part.start<=s.end&&part.end>s.end)));const instructions=[activity?.notes||"",activity?.dayNotes?.[s.day]||"",s.note||""].filter(x=>String(x).trim()).join("\n\n");
+  return `<article class="pass ${status==="live"||status==="break"?"live":""}" id="pass-${esc(s.id)}" data-pass-day="${s.day}"><div class="pass-head"><span class="pass-time">${esc(s.start)}–${esc(s.end)}</span>${isToday?`<span class="pill ${status}">${labels[status]}</span>`:isRelief?'<span class="pill next">Avlösning</span>':""}</div><div class="pass-body"><h3 class="pass-title">${esc(activity?.title||"Arbetsuppgift")}${isRelief?' <span style="font-size:12px;font-weight:600;color:#587669">· Avlösning</span>':""}</h3><div class="place-line">${icon("pin","sm")} ${esc(place.name)}</div>${mapButton(place)?`<div class="place-actions">${mapButton(place)}</div>`:""}${instructions?`<div class="instructions"><h4>Instruktioner</h4><div class="text">${esc(instructions)}</div></div>`:""}${pauses.length||forMe.length||prev.length||next.length||changes.length||colleagues.length?`<div class="detail">${pauses.map(p=>{const relief=reliefForPause(s,p);return `<div class="info-row">${icon("coffee","sm")}<span><strong>${esc(p.type||"Paus")}: ${esc(p.start)}–${esc(p.end)}</strong>${relief.length?`<br>Du blir avlöst av: ${relief.map(nameButton).join(", ")}`:""}</span></div>`;}).join("")}${forMe.length?`<div class="info-row">${icon("users","sm")}<span><strong>Du avlöser:</strong> ${forMe.map(p=>nameButton(p)+(reliefTimesFor(s,p)?", "+esc(reliefTimesFor(s,p)):"")).join("; ")}</span></div>`:""}${isRelief&&returners.length?`<div class="info-row">${icon("arrow","sm")}<span>Efter avlösningen återgår: ${returners.map(nameButton).join(", ")}</span></div>`:""}${prev.length?`<div class="info-row">${icon("back","sm")}<span>Du ersätter: ${handoverNames(prev,"before")}</span></div>`:""}${next.length?`<div class="info-row">${icon("arrow","sm")}<span>Du blir ersatt av: ${handoverNames(next,"after")}</span></div>`:""}${staffingChangesHtml(changes)}${colleagues.length?`<div class="info-row">${icon("users","sm")}<div><strong>${isGeneral(place)?"Kollegor i samma aktivitet under passet":"Kollegor på samma plats under passet"}</strong><div class="person-list" style="margin-top:7px">${colleagues.map(p=>`<button class="person-chip" data-action="person" data-id="${esc(p.id)}">${esc(p.name)}</button>`).join("")}</div></div></div>`:""}</div>`:""}</div></article>`;}
 function personNow(person){const now=activeNow(person.id);const dateIndex=dayIndexNow();if(dateIndex<0)return `<p class="smallmuted">Julstöket pågår inte just nu. Se planerade arbetsuppgifter nedan.</p>`;if(!now.length)return `<p class="smallmuted">Inget pass pågår just nu enligt schemat.</p>`;return now.map(s=>{const a=activityFor(s),place=placeForShift(s),onBreak=onPause(s,stockholmMinute());return `<div class="mini-entry"><strong>${onBreak?"Paus":a?.title||"Arbetsuppgift"}</strong><small>${esc(place.name)} · ${esc(s.start)}–${esc(s.end)}</small>${mapButton(place)?`<div class="place-actions">${mapButton(place)}</div>`:""}${onBreak?`<small>Personen har paus enligt schemat – fysisk position är inte känd.</small>`:""}</div>`;}).join("");}
 function renderPeople(){if(state.detailPersonId){const p=namedPerson(state.detailPersonId);if(!p){state.detailPersonId=null;return renderPeople();}const shifts=assignments(p.id),phone=phoneLink(p);return `${renderAlert()}<button class="context-back" data-action="person-back">${icon("back","sm")} Till kollegorna</button><div class="person-hero"><h2>${esc(p.name)}</h2>${phone||'<p class="smallmuted">Inget telefonnummer registrerat.</p>'}<div class="section-divider"></div><h3 class="inline-title">Just nu · enligt schemat</h3>${personNow(p)}</div><h3 class="inline-title" style="margin-top:22px">Arbetspass under Julstöket</h3>${shifts.length?DAY_NAMES.map((name,day)=>{const list=shifts.filter(s=>s.day===day),av=availableRanges(p,day);if(!list.length&&!av.length)return "";return `<div class="person-dayline">${esc(datesHeading(day))} · ${esc(workingSummary(p,day))}</div>${list.map(s=>{const a=activityFor(s),place=placeForShift(s);return `<div class="mini-entry"><strong>${esc(s.start)}–${esc(s.end)} · ${esc(a?.title||"Arbetsuppgift")}</strong><small>${esc(place.name)}${s.kind==="relief"?" · Avlösning":""}</small>${breaksOf(s).map(p=>`<small>Paus ${esc(p.start)}–${esc(p.end)}${reliefForPause(s,p).length?` · Avlösare: ${esc(reliefForPause(s,p).map(x=>x.name).join(", "))}`:""}</small>`).join("")}</div>`;}).join("")}`;}).join(""):`<div class="empty"><p>Inga uppgifter tilldelade.</p></div>`}`;}
   const list=planPeople().filter(p=>norm(p.name).includes(norm(state.search))||norm(phoneOf(p)).includes(norm(state.search)));return `${renderAlert()}<div class="heading"><h2>Hitta kollega</h2></div><label for="peopleSearch" class="sr-only">Sök person</label><div class="search">${icon("search")}<input id="peopleSearch" type="search" autocomplete="off" placeholder="Sök namn eller telefon…" value="${esc(state.search)}"></div><p class="smallmuted search-help">Tryck på en person för att se var personen arbetar enligt schemat. Telefonnummer går att ringa direkt.</p><div class="rows">${list.length?list.map(p=>{const now=activeNow(p.id),place=now[0]?placeForShift(now[0]):null;return `<div class="rowlink"><button type="button" class="rowlink-main" data-action="person" data-id="${esc(p.id)}"><strong>${esc(p.name)}</strong><small>${place?`Just nu: ${esc(place.name)}${onPause(now[0],stockholmMinute())?" · Paus":""}`:"Inget pågående pass"}</small></button>${phoneLink(p)||icon("chevron")}</div>`;}).join(""):`<div class="empty"><p>Ingen person matchar sökningen.</p></div>`}</div>`;}
