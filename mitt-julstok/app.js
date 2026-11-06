@@ -122,9 +122,36 @@ function relievedByMe(s){if(s.kind!=="relief")return [];const a=activityFor(s);c
   return unique((state.plan?.assignments||[]).filter(x=>x.activityId===s.activityId&&x.day===s.day&&x.personId!==s.personId&&sourceIds.includes(x.patternShiftId)).map(x=>x.personId)).map(namedPerson).filter(Boolean);
 }
 // Överlämning gäller ordinarie pass i samma aktivitet och dag; glapp är tillåtna.
+// Kombinera faktiska tilldelningar med de delar av planerade pass som saknar person.
+function staffingSlots(s){
+  const assigned=(state.plan?.assignments||[]).filter(x=>x.day===s.day&&x.activityId===s.activityId&&x.kind==="ordinary"&&x.personId&&validTime(x.start)&&validTime(x.end)&&x.start<x.end);
+  const slots=assigned.map((x,i)=>({...x,slotKey:x.id||"assigned:"+i}));
+  for(const planned of activityFor(s)?.staffingPattern?.shifts||[]){
+    if(planned.day!==s.day||planned.kind!=="ordinary"||!validTime(planned.start)||!validTime(planned.end)||planned.start>=planned.end)continue;
+    const linked=assigned.filter(x=>x.patternShiftId===planned.id||
+      (!x.patternShiftId&&x.start===planned.start&&x.end===planned.end));
+    let gaps=[{start:planned.start,end:planned.end}];
+    for(const covered of [...linked,...(planned.breaks||[])]){
+      if(!validTime(covered.start)||!validTime(covered.end))continue;
+      gaps=gaps.flatMap(g=>covered.start>=g.end||covered.end<=g.start?[g]:
+        [{start:g.start,end:covered.start<g.end?covered.start:g.end},
+         {start:covered.end>g.start?covered.end:g.start,end:g.end}].filter(x=>x.start<x.end));
+    }
+    for(const gap of gaps)slots.push({...gap,day:s.day,activityId:s.activityId,kind:"ordinary",
+      patternShiftId:planned.id,personId:null,slotKey:"vacant:"+planned.id+":"+gap.start});
+  }
+  return slots;
+}
+function staffingPerson(slot){
+  return slot.personId?namedPerson(slot.personId):{id:null,name:"Ännu ej bemannad"};
+}
+function staffingName(person){
+  return person?.id?nameButton(person):esc("Ännu ej bemannad");
+}
 function handoverPeers(s){
   if(s.kind!=="ordinary")return [];
-  return (state.plan?.assignments||[]).filter(x=>x.day===s.day&&x.activityId===s.activityId&&x.personId&&x.personId!==s.personId&&x.kind==="ordinary"&&validTime(x.start)&&validTime(x.end)&&x.start<x.end&&namedPerson(x.personId));
+  return staffingSlots(s).filter(x=>s.slotKey?x.slotKey!==s.slotKey&&
+    (!s.personId||x.personId!==s.personId):!s.personId||x.personId!==s.personId);
 }
 // En kort överlappning vid passbyte är tillåten, men inte parallellt arbete.
 function worksAlone(s){
@@ -147,47 +174,49 @@ function handover(s,edge){
   const nearest=Math.min(...candidates.map(x=>Math.abs(minutes(x[key])-minutes(boundary))));
   const matches=candidates.filter(x=>Math.abs(minutes(x[key])-minutes(boundary))===nearest);
   // Flera möjliga ersättare ska inte framställas som ett entydigt personbyte.
-  if(unique(matches.map(x=>x.personId)).length!==1)return [];
-  return [{person:namedPerson(matches[0].personId),time:matches[0][key]}];
+  if(unique(matches.map(x=>x.personId||x.slotKey)).length!==1)return [];
+  return [{person:staffingPerson(matches[0]),slotKey:matches[0].slotKey,time:matches[0][key]}];
 }
 function handoverNames(items,edge){
-  return items.map(item=>nameButton(item.person)+", "+(edge==="before"?"slutar":"börjar")+" kl. "+esc(item.time)).join("; ");
+  return items.map(item=>staffingName(item.person)+", "+(edge==="before"?"slutar":"börjar")+" kl. "+esc(item.time)).join("; ");
 }
 // Bemanningsförändringar i samma aktivitet; pausavlösningar visas för sig.
 function staffingChanges(s,prev,next){
   if(s.kind!=="ordinary")return [];
   const rows=[];
-  const add=(kind,time,personId,end)=>{
-    if(!rows.some(r=>r.kind===kind&&r.time===time&&r.personId===personId&&r.end===end))
-      rows.push({kind,time,personId,end});
+  const add=(kind,time,slot,end)=>{
+    const personId=slot.personId,slotKey=slot.slotKey;
+    if(!rows.some(r=>r.kind===kind&&r.time===time&&r.slotKey===slotKey&&r.end===end))
+      rows.push({kind,time,personId,slotKey,end,person:staffingPerson(slot)});
   };
-  const previousIds=new Set(prev.map(x=>x.person.id));
-  const nextIds=new Set(next.map(x=>x.person.id));
+  const previousIds=new Set(prev.map(x=>x.slotKey));
+  const nextIds=new Set(next.map(x=>x.slotKey));
   for(const x of handoverPeers(s)){
-    if(x.start>s.start&&x.start<s.end&&!nextIds.has(x.personId)){
-      add("join",x.start,x.personId,x.end>s.end?x.end:null);
+    if(x.start>s.start&&x.start<s.end&&!nextIds.has(x.slotKey)){
+      add("join",x.start,x,x.end>s.end?x.end:null);
     }
-    if(x.end>s.start&&x.end<s.end&&!previousIds.has(x.personId)){
-      add("leave",x.end,x.personId,null);
+    if(x.end>s.start&&x.end<s.end&&!previousIds.has(x.slotKey)){
+      add("leave",x.end,x,null);
     }
-    if(x.start<=s.start&&x.end>s.end&&!nextIds.has(x.personId)){
-      add("continue",s.end,x.personId,x.end);
+    if(x.start<=s.start&&x.end>=s.end&&!nextIds.has(x.slotKey)){
+      add(x.end===s.end?"whole":"continue",s.end,x,x.end>s.end?x.end:null);
     }
   }
   return rows.sort((a,b)=>a.time.localeCompare(b.time)||a.kind.localeCompare(b.kind)||
-    namedPerson(a.personId).name.localeCompare(namedPerson(b.personId).name,"sv"));
+    a.person.name.localeCompare(b.person.name,"sv"));
 }
 function staffingChangesHtml(rows){
   const groups=[];
   for(const row of rows){
     let group=groups.find(g=>g.kind===row.kind&&g.time===row.time&&g.end===row.end);
     if(!group){group={...row,people:[]};groups.push(group);}
-    group.people.push(namedPerson(row.personId));
+    group.people.push(row.person);
   }
   return groups.map(g=>{
     const label=g.kind==="join"?"Ansluter kl. "+g.time:
-      g.kind==="leave"?"Slutar kl. "+g.time:"Fortsätter efter dig";
-    return `<div class="info-row">${icon("users","sm")}<span>${esc(label)}: ${g.people.map(nameButton).join(", ")}${g.end?", till kl. "+esc(g.end):""}</span></div>`;
+      g.kind==="leave"?"Slutar kl. "+g.time:
+      g.kind==="whole"?"Arbetar hela ditt pass":"Arbetar hela ditt pass och fortsätter efter dig";
+    return `<div class="info-row">${icon("users","sm")}<span>${esc(label)}: ${g.people.map(staffingName).join(", ")}${g.end?", till kl. "+esc(g.end):""}</span></div>`;
   }).join("");
 }
 function reliefTimesFor(s,person){
