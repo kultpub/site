@@ -261,7 +261,7 @@ function colleaguesTable(s,prev,next){
       continue;
     }
     let changed=false;
-    if(row.end>s.start&&row.end<=s.end){
+    if(row.end>s.start&&row.end<s.end){
       events.push({...row,event:"leave",time:row.end,order:0});changed=true;
     }
     if(row.start>s.start&&row.start<s.end){
@@ -273,7 +273,7 @@ function colleaguesTable(s,prev,next){
     a.person.name.localeCompare(b.person.name,"sv"));
   if(!events.length)return "";
   const timeCell=x=>`<td style="text-align:right;vertical-align:top;white-space:nowrap;padding:7px 0 7px 10px;border-top:1px solid #dce5dc"><span style="display:inline-flex;align-items:center;gap:7px">${x.event==="whole"?"":`<span class="sr-only">${x.event==="leave"?"Slutar":"Ansluter"} </span>`}${x.event==="whole"?"":staffingEventIcon(x.event)}<span>${x.event==="whole"?"Hela passet":esc(x.time)}</span></span></td>`;
-  return `<table style="width:100%;border-collapse:collapse;font-size:14px"><thead><tr><th scope="col" style="text-align:left;padding:0 8px 8px 0">Kollegor under ditt pass</th><th scope="col" style="text-align:right;padding:0 0 8px 10px">Tid</th></tr></thead><tbody>${events.map(x=>`<tr><td style="padding:7px 8px 7px 0;border-top:1px solid #dce5dc">${staffingName(x.person)}</td>${timeCell(x)}</tr>`).join("")}</tbody></table><div style="display:flex;justify-content:flex-end;align-items:center;gap:12px;font-size:12px;color:var(--muted);margin-top:8px"><span style="display:inline-flex;align-items:center;gap:5px">${staffingEventIcon("leave")} Slutar</span><span style="display:inline-flex;align-items:center;gap:5px">${staffingEventIcon("join")} Ansluter</span></div>`;
+  return `<table style="width:100%;border-collapse:collapse;font-size:14px"><thead><tr><th scope="col" style="text-align:left;padding:0 8px 8px 0">Kollegor under ditt pass</th><th scope="col" style="text-align:right;padding:0 0 8px 10px">Tid</th></tr></thead><tbody>${events.map(x=>`<tr><td style="padding:7px 8px 7px 0;border-top:1px solid #dce5dc">${staffingName(x.person)}</td>${timeCell(x)}</tr>`).join("")}</tbody></table>`;
 
 }
 function reliefTimesFor(s,person){
