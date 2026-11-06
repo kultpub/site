@@ -239,7 +239,7 @@ function colleaguesTable(s,prev,next){
   // Den här tabellen gäller aktiviteten och dagen, inte andra jobb på samma plats.
   const relevant=(state.plan?.assignments||[]).filter(x=>
     x.activityId===s.activityId&&x.day===s.day&&x.personId&&x.personId!==s.personId&&
-    validTime(x.start)&&validTime(x.end)&&x.start<s.end&&x.end>s.start);
+    validTime(x.start)&&validTime(x.end)&&x.start<=s.end&&x.end>=s.start);
   for(const x of relevant){
     if(excluded.has(x.id)&&x.kind!=="relief")continue;
     const person=namedPerson(x.personId);
@@ -247,29 +247,33 @@ function colleaguesTable(s,prev,next){
     // Avlösaren ska synas även när du själv har paus.
     const periods=realWorkSegments(x);
     for(const period of periods){
-      if(period.start>=s.end||period.end<=s.start)continue;
+      if(period.start>s.end||period.end<s.start)continue;
       if(!rows.some(r=>r.personId===x.personId&&r.start===period.start&&r.end===period.end))
         rows.push({...x,...period,person});
     }
   }
-  for(const x of staffingSlots(s).filter(x=>!x.personId&&x.start<s.end&&x.end>s.start&&!excluded.has(x.slotKey)))
+  for(const x of staffingSlots(s).filter(x=>!x.personId&&x.start<=s.end&&x.end>=s.start&&!excluded.has(x.slotKey)))
     rows.push({...x,person:staffingPerson(x)});
   const events=[];
   for(const row of rows){
-    if(row.start<=s.start&&row.end>=s.end){
+    if(row.start<s.start&&row.end>s.end){
       events.push({...row,event:"whole",time:"99:99",order:2});
       continue;
     }
     let changed=false;
-    if(row.end>s.start&&row.end<s.end){
+    if(row.end>=s.start&&row.end<=s.end){
       events.push({...row,event:"leave",time:row.end,order:0});changed=true;
     }
-    if(row.start>s.start&&row.start<s.end){
+    if(row.start>=s.start&&row.start<=s.end){
       events.push({...row,event:"join",time:row.start,order:1});changed=true;
     }
     if(!changed)events.push({...row,event:"whole",time:"99:99",order:2});
   }
-  events.sort((a,b)=>a.time.localeCompare(b.time)||a.order-b.order||
+  // Återkomster efter en tidigare avgång i det egna passet går först vid lika tid.
+  const priority=event=>event.event==="join"&&events.some(previous=>
+    previous.event==="leave"&&event.person.id&&previous.person.id===event.person.id&&
+    previous.time<event.time)?-1:event.order;
+  events.sort((a,b)=>a.time.localeCompare(b.time)||priority(a)-priority(b)||
     a.person.name.localeCompare(b.person.name,"sv"));
   if(!events.length)return "";
   const timeCell=x=>`<td style="text-align:right;vertical-align:top;white-space:nowrap;padding:7px 0 7px 10px;border-top:1px solid #dce5dc"><span style="display:inline-flex;align-items:center;gap:7px">${x.event==="whole"?"":`<span class="sr-only">${x.event==="leave"?"Slutar":"Ansluter"} </span>`}${x.event==="whole"?"":staffingEventIcon(x.event)}<span>${x.event==="whole"?"Hela passet":esc(x.time)}</span></span></td>`;

@@ -1,7 +1,7 @@
 /* Mitt Julstök: versionsbundet appskal. Personligt namnval och schema sparas separat. */
 const CACHE_PREFIX="mitt-julstok-app-";
-const CACHE_NAME=CACHE_PREFIX+"20261106-8f4452bb208d";
-const SHELL=["./","./index.html","./styles.css?v=20261106-8f4452bb208d","./app.js?v=20261106-8f4452bb208d","./qr.js?v=20261106-8f4452bb208d","./manifest.webmanifest","./icon-192.png","./icon-512.png"];
+const CACHE_NAME=CACHE_PREFIX+"20261106-c7824f6b3617";
+const SHELL=["./","./index.html","./styles.css?v=20261106-c7824f6b3617","./app.js?v=20261106-c7824f6b3617","./qr.js?v=20261106-c7824f6b3617","./manifest.webmanifest","./icon-192.png","./icon-512.png"];
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE_NAME).then(cache=>
     cache.addAll(SHELL.map(url=>new Request(url,{cache:"reload"})))
@@ -32,7 +32,7 @@ self.addEventListener("fetch",event=>{
       // Stöd äldre HTML-sidor som fortfarande begär resurser utan versionsnummer.
       const filename=url.pathname.split("/").pop();
       if(["app.js","qr.js","styles.css"].includes(filename)){
-        const asset=await cache.match("./"+filename+"?v=20261106-8f4452bb208d");
+        const asset=await cache.match("./"+filename+"?v=20261106-c7824f6b3617");
         if(asset)return asset;
       }
       throw error;
