@@ -2845,7 +2845,7 @@
     display: none;
   }
 
-  #placeName {
+  #placeName,#placeType {
     width: 50%;
     min-width: 0;
   }
@@ -2917,7 +2917,7 @@
   }
 
   @media (max-width:480px) {
-    #placeName {
+    #placeName, #placeType {
       width: 100%;
     }
   }
@@ -7373,6 +7373,45 @@
   flex:0 0 18px;
   margin:0;
 }
+
+.places-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:stretch}
+.place-card[data-open-place]{height:auto;min-height:0;max-height:none;padding:0;align-self:stretch;background:white}
+.place-card .place-photo{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:var(--soft)}
+.place-card-content{padding:15px}
+.place-card[data-open-place] h2{white-space:normal;margin:0 0 7px}
+.place-card[data-open-place] p{white-space:normal;margin:6px 0;line-height:1.5}
+.place-card .place-description{color:var(--muted)}
+.place-card .place-search-match{color:var(--green2)}
+.place-card .place-maps-link{position:relative;z-index:2;margin-top:9px;display:inline-flex}
+@media(max-width:1100px){.places-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.places-grid{grid-template-columns:minmax(0,1fr)}}
+
+/* Kompakta platskort med kvadratisk bild och information bredvid. */
+.places-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.place-card[data-open-place]{display:grid;grid-template-columns:80px minmax(0,1fr);align-items:start}
+.place-card .place-photo{width:80px;height:80px;aspect-ratio:1/1;object-fit:cover;margin:12px 0 12px 10px;border-radius:7px}
+.place-card-content{padding:12px 10px 12px 20px;min-width:0}
+.place-card[data-open-place] h2{font-size:15px;overflow-wrap:anywhere}
+.place-card[data-open-place] p{font-size:12px;overflow-wrap:anywhere}
+.place-card .place-maps-link{font-size:11px;white-space:normal}
+@media(max-width:1350px){.places-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:1050px){.places-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.places-grid{grid-template-columns:minmax(0,1fr)}}
+
+  /* Samma ikonkolumn som knapparna i de två inramade grupperna. */
+  @media (min-width:761px) {
+    .nav > button[data-id="places"],
+    .nav > button[data-action="open-mobile"] {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 18px;
+      gap: 8px;
+      margin-inline: 9px;
+      width: calc(100% - 18px);
+    }
+    .nav > button[data-id="places"] .nav-title-wrap {
+      display: block;
+    }
+  }
 </style>
 
 </head>
@@ -9530,7 +9569,6 @@ function navigationCount(view) {
   if (view==="people") return plan.people.filter(person=>
     ui.peopleDay===null || person.availability.some(range=>range.day===ui.peopleDay)).length;
   if (view==="staffing") return navigationStaffingPercentage();
-  if (view==="places") return plan.places.filter(isListedPlace).length;
   return "";
 }
 
@@ -9553,7 +9591,7 @@ function render() {
     ["activities","Aktiviteter",activityCount,"Här hanterar du Julstökets arbetsuppgifter – vilka pass, pauser och avlösningar de består av."],
     ["staffing","Bemanning",navigationCount("staffing"),"Här bemannar du Julstökets arbetsuppgifter – pass och avlösningar kopplas till person."],
     ["people","Personal",navigationCount("people"),"Här registrerar du de personer som ska arbeta under Julstöket – dagar och arbetstider."],
-    ["places","Platser",navigationCount("places"),"Här registrerar du samtliga platser och lokaler Julstökets arbetsuppgifter."]
+    ["places","Platser","","Hantera platser där arbete utförs – och se vilket arbete som utförs på dessa."]
   ];
 
 const navButton=([view,label,count,tip]) => `
@@ -9566,7 +9604,8 @@ const navButton=([view,label,count,tip]) => `
     </button>`;
 $("navigation").innerHTML=`<section class="nav-stage" aria-label="Steg 1: Vad ska göras? Vem jobbar?"><div class="nav-stage-heading"><span>1</span> Vad ska göras? Vem jobbar?</div>${["activities","people"].map(view=>navButton(items.find(item=>item[0]===view))).join("")}</section><div class="nav-stage-arrow" aria-hidden="true">↓</div><section class="nav-stage" aria-label="Steg 2: Vem gör vad?"><div class="nav-stage-heading"><span>2</span> Vem gör vad?</div>${navButton(items.find(item=>item[0]==="staffing"))}</section>` + `
     <div class="nav-separator" role="separator"></div>
-    <button type="button" data-action="open-mobile">Se mobilversion ↗</button>`;
+    ${navButton(["places","Översikt platser","","Hantera platser där arbete utförs – och se vilket arbete som utförs på dessa."])}
+    <button type="button" data-action="open-mobile"><span>Se mobilversion ↗</span><span class="location-info menu-info-icon" data-menu-tip="Förhandsgranska mobilversion av planens innehåll." aria-label="Förhandsgranska mobilversion av planens innehåll.">i</span></button>`;
 
   const eventLabel=new Date(eventDates(plan.year)[0]+"T12:00:00").getDate()+"–"+
     dateLabel(2)+" "+plan.year;
@@ -10783,11 +10822,11 @@ function peopleCards() {
 
 function placesPage() {
   return heading(
-    "Platser",
-    "Använd tydliga platsnamn så att alla hittar rätt, använd gärna Google Maps-länkar.",
+    "Översikt platser",
+    "Se aktiviteter och bemanning på Julstökets olika platser.",
     button("+ Ny plats","edit-place","","primary",'style="width:100px;min-width:100px;max-width:100px;flex:none"')
   )+`<div class="filters"><input type="search" id="placesSearch" value="${esc(ui.placesQuery)}"
-      placeholder="Sök plats…" aria-label="Sök platser"></div>
+      placeholder="Sök plats, aktivitet, instruktion eller person…" aria-label="Sök platser och tillhörande aktiviteter och personal"></div>
     <div class="places-grid" id="placeCards">${placeCards()}</div>`;
 }
 
@@ -10796,31 +10835,46 @@ function isListedPlace(place) {
   return !isGeneralPlaceName(place.name);
 }
 
+function placeTypeImage(type) {
+  return ({spot:"map_spot.png",area:"map_area.png",house:"map_house.png"})[type] || "map_spot.png";
+}
+function placeImageFile(value, type) {
+  const name=String(value || "").trim();
+  return /^[a-zA-Z0-9_(). -]+\.(png|jpe?g|webp|gif|avif)$/i.test(name)?name:placeTypeImage(type);
+}
 function placeCards() {
-  const query=ui.placesQuery.toLocaleLowerCase("sv-SE");
-  const places=plan.places.filter(place => {
-    if (!isListedPlace(place)) return false;
-    const description=typeof PLACE_DESCRIPTIONS[place.name]==="string" ? PLACE_DESCRIPTIONS[place.name] : "";
-    return !query || [place.name,description].some(text => text.toLocaleLowerCase("sv-SE").includes(query));
-  }).sort((a,b) => a.name.localeCompare(b.name,"sv"));
-  return places.map(place => {
-    const count=plan.activities.filter(activity => activity.placeId===place.id).length;
-    const storedLink=placeDirectory.find(item => item.id===place.id)?.mapsUrl || place.mapsUrl || "";
-    const mapsUrl=normalizeGoogleMapsLink(storedLink);
-    const mapsAction=mapsUrl?`<a class="place-maps-link" href="${esc(mapsUrl)}" target="_blank" rel="noopener noreferrer" aria-label="Visa ${esc(place.name)} i Google Maps (öppnas i ny flik)">Google Maps ↗</a>`:"";
+  const normalize=value=>String(value || "").toLocaleLowerCase("sv-SE").replace(/\s+/g," ").trim();
+  const terms=normalize(ui.placesQuery).split(" ").filter(Boolean);
+  return plan.places.filter(isListedPlace).sort((a,b)=>a.name.localeCompare(b.name,"sv")).map(place=>{
+    const registered=placeDirectory.find(item=>item.id===place.id) || {};
+    const description=registered.description || place.description || PLACE_DESCRIPTIONS[place.name] || "";
+    const activities=plan.activities.filter(activity=>activity.placeId===place.id);
+    const ids=new Set(activities.map(activity=>activity.id));
+    const shifts=plan.assignments.filter(shift=>ids.has(shift.activityId));
+    const people=plan.people.filter(person=>shifts.some(shift=>shift.personId===person.id));
+    const activityText=activity=>[activity.title,activity.notes,...Object.values(activity.dayNotes || {})].join(" ");
+    const haystack=normalize([place.name,description,registered.mapsUrl || place.mapsUrl,...activities.map(activityText),...people.flatMap(person=>[person.name,person.phone]),...shifts.flatMap(shift=>[shift.note,shift.start,shift.end,DAYS[shift.day]])].join(" "));
+    if (!terms.every(term=>haystack.includes(term))) return "";
+    const matches=terms.length?[...activities.filter(activity=>terms.some(term=>normalize(activityText(activity)).includes(term))).map(activity=>activity.title),...people.filter(person=>terms.some(term=>normalize(person.name+" "+person.phone).includes(term))).map(person=>person.name)]:[];
+    const mapsUrl=normalizeGoogleMapsLink(registered.mapsUrl || place.mapsUrl || "");
     return `<article class="place-card" data-open-place="${esc(place.id)}">
       <button type="button" class="place-card-open" aria-label="Visa aktiviteter på ${esc(place.name)}"></button>
-      <div class="card-head">
-        <div class="card-title"><h2 title="${esc(place.name)}">${esc(place.name)}</h2>
-          <p>${count} ${count===1?"aktivitet":"aktiviteter"} under helgen</p></div>
-        ${mapsAction}
-      </div>
-    </article>`;
-  }).join("") || `<div class="empty"><h3>${query?"Ingen plats matchar sökningen":"Inga platser registrerade"}</h3>
-    <p>${query?"Prova ett annat platsnamn.":"Lägg till en plats för att börja."}</p></div>`;
+      <img class="place-photo" src="${esc(placeImageFile(registered.imageFile || place.imageFile, registered.placeType || place.placeType))}" alt="" loading="lazy">
+      <div class="place-card-content"><h2>${esc(place.name)}</h2>
+      ${description?`<p class="place-description">${esc(description)}</p>`:""}
+      <p>${activities.length} ${activities.length===1?"aktivitet":"aktiviteter"} under hela Julstöket</p>
+      ${matches.length?`<p class="place-search-match">Träff: ${esc([...new Set(matches)].slice(0,4).join(" · "))}</p>`:""}
+      ${mapsUrl?`<a class="place-maps-link" href="${esc(mapsUrl)}" target="_blank" rel="noopener noreferrer">Google Maps ↗</a>`:""}
+      </div></article>`;
+  }).join("") || '<div class="empty"><h3>Inga platser hittades</h3><p>Prova en annan sökning.</p></div>';
 }
 
-
+// Felande platsbilder ersätts en gång; även reservbilden kan saknas utan en felladdningsloop.
+document.addEventListener("error",event=>{
+  const image=event.target;
+  if (!image.matches?.("img.place-photo") || image.dataset.fallback) return;
+  image.dataset.fallback="true";image.src="map_spot.png";
+},true);
 
 /* ---------- Dialoger ---------- */
 
@@ -11630,7 +11684,7 @@ function personSchedule(id) {
       ${shifts.map(shift => {
         const activity=plan.activities.find(item=>item.id===shift.activityId);
         const pauseRows=personSchedulePauses(activity,shift);
-        const place=activity?placeLabel(activity.placeId):"";
+        const place=activity?esc(placeName(activity.placeId)):"";
         return `<div class="scheduleitem"><div class="scheduleitem-main">
           <strong>${esc(shift.start)}–${esc(shift.end)} · ${activity
             ? `<button type="button" class="schedule-activity-link" data-action="staff-person-activity" data-id="${esc(activity.id)}" data-day="${day}">${esc(activity.title)}</button>`
@@ -12066,7 +12120,7 @@ async function openFirebaseSession(user) {
     if (generation!==sessionGeneration) return;
     if (!archive.exists() || archive.data().year!==2025 || !Array.isArray(archive.data().activities)) throw Error("Årsarkivet 2025 saknas eller har fel format i Firebase.");
     peopleDirectory=people.docs.map(doc=>({id:doc.id,name:doc.data().name,phone:doc.data().phone || ""}));
-    placeDirectory=places.docs.map(doc=>({id:doc.id,name:doc.data().name,description:doc.data().description || "",mapsUrl:doc.data().mapsUrl || ""}));
+    placeDirectory=places.docs.map(doc=>({id:doc.id,name:doc.data().name,description:doc.data().description || "",mapsUrl:doc.data().mapsUrl || "",imageFile:doc.data().imageFile || "",placeType:doc.data().placeType || ""}));
     refreshPlaceMetadata();
     HISTORICAL_EDITIONS["2025"]=clone(archive.data());
     normalizeHistoricalEditions();
@@ -12096,7 +12150,7 @@ function subscribeRegisters() {
   },fail));
   registerSubscriptions.push(active.fs.onSnapshot(active.fs.collection(active.db,"julstokPlaces"),snapshot=>{
     if (cloud!==active) return;
-    placeDirectory=snapshot.docs.map(doc=>({id:doc.id,name:doc.data().name,description:doc.data().description || "",mapsUrl:doc.data().mapsUrl || ""}));
+    placeDirectory=snapshot.docs.map(doc=>({id:doc.id,name:doc.data().name,description:doc.data().description || "",mapsUrl:doc.data().mapsUrl || "",imageFile:doc.data().imageFile || "",placeType:doc.data().placeType || ""}));
     refreshPlaceMetadata();reconcilePlaces(plan);
     if (!saving && !switchingYear) render();
   },fail));
@@ -12289,6 +12343,11 @@ function editPlace(id) {
   const old=plan.places.find(place=>place.id===id),registered=placeDirectory.find(place=>place.id===id);
   showDialog(old?"Redigera plats":"Ny plats","Platsregistret är gemensamt för alla planeringsår.",
     `<label class="field">Platsnamn<input id="placeName" required maxlength="150" value="${esc(old?.name || "")}"></label>
+      <label class="field">Platstyp<select id="placeType">
+        <option value="spot"${!["area","house"].includes(registered?.placeType || old?.placeType)?" selected":""}>Punkt (standard)</option>
+        <option value="area"${(registered?.placeType || old?.placeType)==="area"?" selected":""}>Område</option>
+        <option value="house"${(registered?.placeType || old?.placeType)==="house"?" selected":""}>Hus</option>
+      </select></label>
       <label class="field place-edit-description">Beskrivning<input id="placeDescription" type="text" maxlength="2000" value="${esc(registered?.description || old?.description || "")}"></label>
       <label class="field place-edit-maps">Google Maps-länk eller koordinater
         <input id="placeMapsUrl" type="text" maxlength="3000" autocomplete="off"
@@ -12299,11 +12358,11 @@ function editPlace(id) {
       <p class="place-maps-preview" id="placeMapsPreview" hidden><a id="placeMapsPreviewLink" target="_blank" rel="noopener noreferrer">Öppna i Google Maps</a></p>`,
     (registered?button("Ta bort","delete-place",id,"danger push-left"):"")+button("Avbryt","close")+saveButton(),async()=>{
       const value={name:$("placeName").value.trim(),description:$("placeDescription").value.trim(),
-        mapsUrl:normalizeGoogleMapsLink($("placeMapsUrl").value)};
+        mapsUrl:normalizeGoogleMapsLink($("placeMapsUrl").value),placeType:$("placeType").value || "spot",imageFile:registered?.imageFile || old?.imageFile || ""};
       if (!value.name || isGeneralPlaceName(value.name)) throw Error("Ange ett platsnamn. Allmänt väljs på aktiviteten.");
       if (placeDirectory.some(place=>place.id!==id && place.name.toLocaleLowerCase("sv-SE")===value.name.toLocaleLowerCase("sv-SE"))) throw Error("Platsen finns redan.");
       const target=id || uid();
-      await writeRegister("julstokPlaces",target,value,registered?{name:registered.name,description:registered.description,mapsUrl:registered.mapsUrl || ""}:null);
+      await writeRegister("julstokPlaces",target,value,registered?{name:registered.name,description:registered.description,mapsUrl:registered.mapsUrl || "",imageFile:registered.imageFile || "",placeType:registered.placeType || ""}:null);
       placeDirectory=placeDirectory.filter(place=>place.id!==target).concat({id:target,...value});
       refreshPlaceMetadata();reconcilePlaces(plan);closeDialog();render();toast("Platsregistret är uppdaterat.");
     });
