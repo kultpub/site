@@ -427,6 +427,6 @@ document.addEventListener("click",event=>{const button=event.target.closest("[da
 document.addEventListener("input",event=>{const input=event.target;if(input.id==="nameInput"){state.nameSearch=input.value;focusRender("nameInput");}});
 function init(){const showDemo=new URLSearchParams(location.search).get("demo")==="1";if(showDemo)setDemo();else if(state.seasonMode!=="active"){render();}else{readCache(state.year);reconcilePerson();render();connect();}
   minuteTimer=setInterval(refreshClock,30000);
-  if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost"))navigator.serviceWorker.register("service-worker.js").catch(()=>{});
+  if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost"))navigator.serviceWorker.register("service-worker.js",{updateViaCache:"none"}).then(reg=>reg.update()).catch(()=>{});
 }
 init();
