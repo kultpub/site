@@ -227,6 +227,12 @@ function staffingChangesHtml(rows){
     return `<div class="info-row">${icon("users","sm")}<span>${esc(label)}: ${g.people.map(staffingName).join(", ")}${g.end?", till kl. "+esc(g.end):""}</span></div>`;
   }).join("");
 }
+// Font Awesome Free 6.7.2 circle-plus / circle-minus, CC BY 4.0.
+// https://fontawesome.com/license/free — Copyright 2024 Fonticons, Inc.
+const STAFFING_ICONS={"join": "<svg aria-hidden=\"true\" focusable=\"false\" width=\"16\" height=\"16\" fill=\"currentColor\" style=\"display:block;flex:none\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc. --><path d=\"M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM232 344l0-64-64 0c-13.3 0-24-10.7-24-24s10.7-24 24-24l64 0 0-64c0-13.3 10.7-24 24-24s24 10.7 24 24l0 64 64 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-64 0 0 64c0 13.3-10.7 24-24 24s-24-10.7-24-24z\"/></svg>", "leave": "<svg aria-hidden=\"true\" focusable=\"false\" width=\"16\" height=\"16\" fill=\"currentColor\" style=\"display:block;flex:none\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc. --><path d=\"M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM184 232l144 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-144 0c-13.3 0-24-10.7-24-24s10.7-24 24-24z\"/></svg>"};
+function staffingEventIcon(event){
+  return `<span style="display:inline-flex;color:${event==="leave"?"#b42318":event==="join"?"#167548":"#66736c"}">${STAFFING_ICONS[event]}</span>`;
+}
 function colleaguesTable(s,prev,next){
   const excluded=new Set([...prev,...next].map(x=>x.slotKey));
   const colleagues=colocation(s);
@@ -242,9 +248,27 @@ function colleaguesTable(s,prev,next){
   }
   for(const x of staffingSlots(s).filter(x=>!x.personId&&x.start<s.end&&x.end>s.start&&!excluded.has(x.slotKey)))
     rows.push({...x,person:staffingPerson(x)});
-  rows.sort((a,b)=>a.end.localeCompare(b.end)||a.person.name.localeCompare(b.person.name,"sv"));
-  if(!rows.length)return "";
-  return `<table style="width:100%;border-collapse:collapse;font-size:14px"><thead><tr><th scope="col" style="text-align:left;padding:0 12px 8px 0">Kollegor på plats</th><th scope="col" style="text-align:right;padding-bottom:8px">Slutar</th></tr></thead><tbody>${rows.map(x=>`<tr><td style="padding:7px 12px 7px 0;border-top:1px solid #dce5dc">${staffingName(x.person)}${x.start>s.start?`<br><small>Ansluter kl. ${esc(x.start)}</small>`:""}</td><td style="text-align:right;vertical-align:top;white-space:nowrap;padding:7px 0;border-top:1px solid #dce5dc">${esc(x.end)}</td></tr>`).join("")}</tbody></table>`;
+  const events=[];
+  for(const row of rows){
+    if(row.start<=s.start&&row.end>=s.end){
+      events.push({...row,event:"whole",time:"99:99",order:2});
+      continue;
+    }
+    let changed=false;
+    if(row.end>s.start&&row.end<=s.end){
+      events.push({...row,event:"leave",time:row.end,order:0});changed=true;
+    }
+    if(row.start>s.start&&row.start<s.end){
+      events.push({...row,event:"join",time:row.start,order:1});changed=true;
+    }
+    if(!changed)events.push({...row,event:"whole",time:"99:99",order:2});
+  }
+  events.sort((a,b)=>a.time.localeCompare(b.time)||a.order-b.order||
+    a.person.name.localeCompare(b.person.name,"sv"));
+  if(!events.length)return "";
+  const timeCell=x=>`<td style="text-align:right;vertical-align:top;white-space:nowrap;padding:7px 0 7px 10px;border-top:1px solid #dce5dc"><span style="display:inline-flex;align-items:center;gap:7px">${x.event==="whole"?"":`<span class="sr-only">${x.event==="leave"?"Slutar":"Ansluter"} </span>`}${x.event==="whole"?"":staffingEventIcon(x.event)}<span>${x.event==="whole"?"Hela passet":esc(x.time)}</span></span></td>`;
+  return `<table style="width:100%;border-collapse:collapse;font-size:14px"><thead><tr><th scope="col" style="text-align:left;padding:0 8px 8px 0">Kollegor under ditt pass</th><th scope="col" style="text-align:right;padding:0 0 8px 10px">Tid</th></tr></thead><tbody>${events.map(x=>`<tr><td style="padding:7px 8px 7px 0;border-top:1px solid #dce5dc">${staffingName(x.person)}</td>${timeCell(x)}</tr>`).join("")}</tbody></table><div style="display:flex;justify-content:flex-end;align-items:center;gap:12px;font-size:12px;color:var(--muted);margin-top:8px"><span style="display:inline-flex;align-items:center;gap:5px">${staffingEventIcon("leave")} Slutar</span><span style="display:inline-flex;align-items:center;gap:5px">${staffingEventIcon("join")} Ansluter</span></div>`;
+
 }
 function reliefTimesFor(s,person){
   const periods=[];
