@@ -16,7 +16,8 @@ const TZ="Europe/Stockholm";
 const $=id=>document.getElementById(id);
 const esc=value=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
 const icon=(id,cls="")=>`<svg class="icon ${cls}" aria-hidden="true"><use href="#i-${id}"></use></svg>`;
-const norm=str=>String(str??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLocaleLowerCase("sv-SE").trim();
+// Sökning: å, ä och ö är egna bokstäver och behålls. Övriga accenter (t.ex. é) tas bort.
+const norm=str=>String(str??"").normalize("NFC").toLocaleLowerCase("sv-SE").replace(/[^åäö]/gu,ch=>ch.normalize("NFD").replace(/[\u0300-\u036f]/g,"")).trim();
 const validTime=str=>typeof str==="string" && /^([01]\d|2[0-3]):[0-5]\d$/.test(str);
 const minutes=str=>validTime(str)?Number(str.slice(0,2))*60+Number(str.slice(3)):NaN;
 const intersects=(a,b)=>validTime(a?.start)&&validTime(a?.end)&&validTime(b?.start)&&validTime(b?.end) && a.start<b.end && b.start<a.end;
@@ -95,7 +96,7 @@ function locationOf(id){
   if(planned)return {...planned,mapsUrl:planned.mapsUrl||""};
   return {id,name:"Plats ej angiven",description:"",mapsUrl:""};
 }
-function isGeneral(place){return !place||place.name==="Allmänt"||norm(place.name)==="allmant"||norm(place.name)==="ej platsspecifik";}
+function isGeneral(place){return !place||place.name==="Allmänt"||norm(place.name)==="allmänt"||norm(place.name)==="ej platsspecifik";}
 function assignments(personId,day){return (state.plan?.assignments||[]).filter(s=>s.personId===personId&&(day==null||s.day===day)&&validTime(s.start)&&validTime(s.end)).sort((a,b)=>a.day-b.day||a.start.localeCompare(b.start)||a.end.localeCompare(b.end));}
 function activityFor(s){return namedActivity(s.activityId);}
 function placeForShift(s){return locationOf(activityFor(s)?.placeId??null);}
