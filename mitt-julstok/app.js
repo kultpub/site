@@ -25,8 +25,25 @@ const firstLetters=str=>String(str||"").trim().split(/\s+/).map(x=>x[0]||"").sli
 function storeGet(key){try{return localStorage.getItem(key);}catch{return null;}}
 function storeSet(key,value){try{localStorage.setItem(key,value);}catch{}}
 function storeDel(key){try{localStorage.removeItem(key);}catch{}}
-function stockholmToday(){return new Intl.DateTimeFormat("sv-SE",{timeZone:TZ,year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());}
-function stockholmMinute(){const parts=new Intl.DateTimeFormat("sv-SE",{timeZone:TZ,hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).formatToParts(new Date());return Number(parts.find(p=>p.type==="hour")?.value||0)*60+Number(parts.find(p=>p.type==="minute")?.value||0);}
+function realToday(){return new Intl.DateTimeFormat("sv-SE",{timeZone:TZ,year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());}
+function realMinute(){const parts=new Intl.DateTimeFormat("sv-SE",{timeZone:TZ,hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).formatToParts(new Date());return Number(parts.find(p=>p.type==="hour")?.value||0)*60+Number(parts.find(p=>p.type==="minute")?.value||0);}
+// Testläge (endast i demoläget): ?demo=1&dag=1&nu=14:30
+// dag = 0 (fredag), 1 (lördag) eller 2 (söndag); nu = starttid för testklockan, som sedan går som vanligt.
+// Om bara nu anges används fredag. Utan demo=1 påverkas aldrig riktiga användare.
+const TEST=(()=>{try{
+  const q=new URLSearchParams(location.search);
+  if(q.get("demo")!=="1")return null;
+  const m=/^(\d{1,2}):(\d{2})$/.exec(q.get("nu")||"");
+  const d=q.get("dag");
+  let day=/^[0-2]$/.test(d||"")?Number(d):null;
+  let start=null;
+  if(m&&Number(m[1])<24&&Number(m[2])<60)start=Number(m[1])*60+Number(m[2]);
+  if(start===null&&day===null)return null;
+  if(day===null)day=0;
+  return {day,start,offset:start===null?0:start-realMinute()};
+}catch{return null;}})();
+function stockholmToday(){return TEST?eventDates(Number(realToday().slice(0,4)))[TEST.day]:realToday();}
+function stockholmMinute(){const m=realMinute();return TEST?((m+TEST.offset)%1440+1440)%1440:m;}
 function stockholmYear(){return Number(stockholmToday().slice(0,4));}
 function addDays(iso,days){const d=new Date(iso+"T12:00:00Z");d.setUTCDate(d.getUTCDate()+days);return d.toISOString().slice(0,10);}
 function eventDates(year){const date=new Date(Date.UTC(year,11,24));date.setUTCDate(date.getUTCDate()-date.getUTCDay()-21);return [-2,-1,0].map(offset=>{let d=new Date(date);d.setUTCDate(d.getUTCDate()+offset);return d.toISOString().slice(0,10);});}
@@ -151,10 +168,10 @@ function staffingSlots(s){
   return slots;
 }
 function staffingPerson(slot){
-  return slot.personId?namedPerson(slot.personId):{id:null,name:"Ännu ej bemannad"};
+  return slot.personId?namedPerson(slot.personId):{id:null,name:"(Ej bemannad)"};
 }
 function staffingName(person){
-  return person?.id?nameButton(person):esc("Ännu ej bemannad");
+  return person?.id?nameButton(person):esc("(Ej bemannad)");
 }
 function handoverPeers(s){
   if(s.kind!=="ordinary")return [];
@@ -186,7 +203,7 @@ function handover(s,edge){
   return [{person:staffingPerson(matches[0]),slotKey:matches[0].slotKey,time:matches[0][key]}];
 }
 function handoverNames(items,edge){
-  return items.map(item=>staffingName(item.person)+", "+(edge==="before"?"slutar":"börjar")+" kl. "+esc(item.time)).join("; ");
+  return items.map(item=>staffingName(item.person)+(edge==="before"?", slutar kl. ":" kl. ")+esc(item.time)).join("; ");
 }
 // Bemanningsförändringar i samma aktivitet; pausavlösningar visas för sig.
 function staffingChanges(s,prev,next){
@@ -299,9 +316,9 @@ function saveCache(){if(!state.plan||state.demo)return;try{storeSet(STORE.cache+
 function readCache(year){try{const value=JSON.parse(storeGet(STORE.cache+year)||"null");if(value?.plan?.year===year&&Array.isArray(value.plan.people)&&Array.isArray(value.plan.assignments)){state.plan=value.plan;state.registerPeople=value.registerPeople||[];state.registerPlaces=value.registerPlaces||[];state.loadedAt=value.at||null;state.cached=true;state.status="cached";return true;}}catch{}return false;}
 function toast(msg){const el=$("toast");el.textContent=msg;el.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>{el.hidden=true;},3300);}
 function datesHeading(day){const days=eventDates(state.year);return DAY_NAMES[day]+" "+dateLabel(days[day]);}
-function renderStatus(){if(state.demo)return `<span class="statusline warning">${icon("info","sm")} Demonstration – fiktiva uppgifter</span>`;if(state.status==="live")return `<span class="statusline">${icon("check","sm")} Uppdaterat från planeringen</span>`;if(state.cached||state.status==="cached")return `<span class="statusline warning">${icon("wifi-off","sm")} Sparad kopia${state.loadedAt?" · "+esc(new Date(state.loadedAt).toLocaleString("sv-SE",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})):""}</span>`;if(state.status==="error")return `<span class="statusline warning">${icon("info","sm")} Kunde inte hämta aktuella uppgifter</span>`;return `<span class="statusline">${icon("clock","sm")} Hämtar senaste schema…</span>`;}
+function renderStatus(){if(state.demo)return `<span class="statusline warning">${icon("info","sm")} Demonstration – fiktiva uppgifter${TEST?` · testtid${TEST.start!==null?" från "+String(Math.floor(TEST.start/60)).padStart(2,"0")+":"+String(TEST.start%60).padStart(2,"0"):""}`:""}</span>`;if(state.status==="live")return `<span class="statusline">${icon("check","sm")} Uppdaterat från planeringen</span>`;if(state.cached||state.status==="cached")return `<span class="statusline warning">${icon("wifi-off","sm")} Sparad kopia${state.loadedAt?" · "+esc(new Date(state.loadedAt).toLocaleString("sv-SE",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})):""}</span>`;if(state.status==="error")return `<span class="statusline warning">${icon("info","sm")} Kunde inte hämta aktuella uppgifter</span>`;return `<span class="statusline">${icon("clock","sm")} Hämtar senaste schema…</span>`;}
 function shell(body){const p=currentPerson();return `<main class="shell"><header class="top"><div class="topbar"><div><h1 class="brand">Mitt Julstök</h1><button class="who" type="button" data-action="choose" style="border:0;padding:0;background:transparent">${icon("user","sm")} ${esc(p?.name||"Välj namn")} ${icon("chevron","sm")}</button></div><div class="top-actions"><button class="top-icon" aria-label="Sök kollega" title="Sök kollega" data-action="view" data-view="people">${icon("search","lg")}</button><button class="top-icon" aria-label="Dela appen" title="Dela appen" data-action="view" data-view="share">${icon("share","lg")}</button></div></div>${renderStatus()}</header><div class="content">${body}</div></main><nav class="bottom-nav" aria-label="Huvudmeny"><div class="nav-inner">${[["home","calendar","Min dag"],["people","users","Kollegor"],["places","pin","Platser"],["share","share","Dela"]].map(([v,i,l])=>`<button type="button" data-action="view" data-view="${v}" class="nav-btn ${state.view===v?"selected":""}" ${state.view===v?'aria-current="page"':""}>${icon(i)}<span>${l}</span></button>`).join("")}</div></nav>`;}
-function renderNameSelect(){const everyone=planPeople(),list=everyone.filter(p=>norm(p.name).includes(norm(state.nameSearch))||norm(phoneOf(p)).includes(norm(state.nameSearch)));return `<div class="overlay"><section class="overlay-inner"><div class="overlay-head"><div class="overlay-mark"><img src="icon-192.png" alt=""></div><h1>Mitt Julstök</h1><p>Välj ditt namn för att se dina arbetspass, pauser och kollegor. Du behöver normalt bara välja en gång på den här telefonen.</p></div>${state.error&&!state.cached?`<div class="notice">${esc(state.error)}</div>`:""}<label for="nameInput" class="sr-only">Sök ditt namn</label><div class="search">${icon("search")}<input id="nameInput" autocomplete="off" type="search" placeholder="Skriv ditt namn…" value="${esc(state.nameSearch)}" autofocus></div><div class="list-title">${everyone.length?`${list.length} av ${everyone.length} medarbetare`:"Personal"}</div><div class="rows" id="nameResults">${list.length?list.slice(0,100).map(p=>`<button type="button" class="rowlink" data-action="set-person" data-id="${esc(p.id)}"><strong>${esc(p.name)}</strong>${icon("chevron")}</button>`).join(""): `<div class="empty"><p>${everyone.length?"Inget namn matchar din sökning.":state.status==="loading"?"Hämtar personalregistret…":"Det finns ännu ingen personal inlagd för årets Julstök."}</p></div>`}</div><p class="system-notice">Ditt namnval sparas lokalt i den här webbläsaren. Det är inte en inloggning.</p>${state.status==="error"?`<button class="action-btn outline block" data-action="retry">Försök ansluta igen</button>`:""}<div class="system-notice">${state.demo?"Exempelläget visar ingen riktig personal eller bemanning.":""}</div></section></div>`;}
+function renderNameSelect(){const everyone=planPeople(),list=everyone.filter(p=>norm(p.name).includes(norm(state.nameSearch))||norm(phoneOf(p)).includes(norm(state.nameSearch)));return `<div class="overlay"><section class="overlay-inner"><div class="overlay-head"><div class="overlay-mark"><img src="icon-192.png" alt=""></div><h1>Mitt Julstök</h1><p>Välj ditt namn för att se dina arbetspass, pauser och kollegor. Du behöver normalt bara välja en gång på den här telefonen.</p></div>${state.error&&!state.cached?`<div class="notice">${esc(state.error)}</div>`:""}<label for="nameInput" class="sr-only">Sök ditt namn</label><div class="search">${icon("search")}<input id="nameInput" autocomplete="off" type="search" placeholder="Skriv ditt namn…" value="${esc(state.nameSearch)}" autofocus></div><div class="list-title">${everyone.length?`${list.length} av ${everyone.length} medarbetare`:"Personal"}</div><div class="rows" id="nameResults">${list.length?list.slice(0,100).map(p=>`<button type="button" class="rowlink" data-action="set-person" data-id="${esc(p.id)}"><strong>${esc(p.name)}</strong>${icon("chevron")}</button>`).join(""): `<div class="empty"><p>${everyone.length?"Inget namn matchar din sökning.":state.status==="loading"?"Hämtar personalregistret…":"Det finns ännu ingen personal inlagd för årets Julstök."}</p></div>`}</div><p class="system-notice">Ditt namnval sparas lokalt i webbläsaren.</p>${state.status==="error"?`<button class="action-btn outline block" data-action="retry">Försök ansluta igen</button>`:""}<div class="system-notice">${state.demo?"Exempelläget visar ingen riktig personal eller bemanning.":""}</div></section></div>`;}
 function renderDays(){const dates=eventDates(state.year),today=dayIndexNow();return `<div class="days" role="group" aria-label="Välj dag">${dates.map((d,i)=>`<button type="button" class="day ${state.day===i?"selected":""} ${i===today?"today":""}" data-action="day" data-day="${i}" aria-pressed="${state.day===i}"><strong>${DAY_NAMES[i]}</strong><small>${compactDate(d)}</small></button>`).join("")}</div>`;}
 function renderAlert() {
   const hasError = Boolean(state.error);
@@ -327,16 +344,187 @@ function renderAlert() {
   return "";
 }
 function workingSummary(p,day){const av=availableRanges(p,day);return av.length?av.map(x=>`${x.start}–${x.end}`).join(", "):"Arbetstid ej registrerad";}
+
+// Lodrätt personligt Gantt – tiden går nedåt, med egen stapel längst till vänster.
+// Kollegurval och Gantt-axel begränsas till användarens exakta arbetstid.
+// Endast hela timmar visas i tidskolumnen. Avvikande start-/sluttider
+// markeras med små etiketter intill den blå stapeln.
+// Den egna stapeln visar alltid exakt det egna arbetstillfället.
+// Varje stapel visar sina egna klockslag, så att inget behöver avläsas mot en skala.
+const GANTT_PX_PER_MINUTE=1.1;
+const GANTT_HEAD=46; // Högre rubrikrad: första heltimmen ryms ovanför startlinjen
+const GANTT_EDGE_PADDING=0; // Ingen luft mellan rubrikraden och arbetspassets exakta start
+const GANTT_FOOT=0; // Tidsytan slutar exakt vid min blå stapels slut
+function personalGantt(s){
+  const start=minutes(s.start),end=minutes(s.end);
+  if(!Number.isFinite(start)||!Number.isFinite(end)||end<=start)return "";
+  const axisStart=start;
+  const axisEnd=end;
+  const height=Math.max(80,Math.round((axisEnd-axisStart)*GANTT_PX_PER_MINUTE));
+  const same=(state.plan?.assignments||[]).filter(x=>x.day===s.day&&x.activityId===s.activityId&&
+    x.personId&&x.personId!==s.personId&&validTime(x.start)&&validTime(x.end)&&minutes(x.start)<axisEnd&&minutes(x.end)>axisStart);
+  // Varje sammanhängande arbetstillfälle får en egen kolumn.
+  // Registrerade pauser delar inte upp arbetstillfället. Separata pass med
+  // ett verkligt glapp blir däremot separata kolumner även för samma person.
+  const groups=[];
+  const ordered=[...same].sort((a,b)=>a.start.localeCompare(b.start)||a.end.localeCompare(b.end));
+  for(const x of ordered){
+    const a=minutes(x.start),b=minutes(x.end);
+    const previous=groups.findLast(g=>g.personId===x.personId&&g.kind===x.kind&&g.end===a);
+    const group=previous||{personId:x.personId,kind:x.kind,start:a,end:b,assignments:[]};
+    if(!previous)groups.push(group);
+    group.end=Math.max(group.end,b);
+    group.assignments.push(x);
+  }
+  const others=groups.map(g=>{
+    const segments=[];
+    for(const x of g.assignments){
+      for(const segment of realWorkSegments(x)){
+        const rs=minutes(segment.start),re=minutes(segment.end);
+        const a=Math.max(axisStart,rs),b=Math.min(axisEnd,re);
+        if(a<b)segments.push({start:a,end:b,cutTop:rs<axisStart,cutBottom:re>axisEnd,realStart:rs,realEnd:re});
+      }
+    }
+    segments.sort((p,q)=>p.start-q.start||p.end-q.end);
+    // En avlösare kan täcka flera personer i följd. När täckningsperioderna
+    // möts (eller överlappar) utan avbrott visas EN sammanhängande stapel.
+    // Verkliga glapp och registrerade pauser ska däremot förbli synliga.
+    if(g.kind==="relief"){
+      const joined=[];
+      for(const segment of segments){
+        const last=joined[joined.length-1];
+        if(last&&segment.start<=last.end){
+          if(segment.end>last.end){
+            last.end=segment.end;
+            last.realEnd=segment.realEnd;
+            last.cutBottom=segment.cutBottom;
+          }
+        }else joined.push({...segment});
+      }
+      segments.splice(0,segments.length,...joined);
+    }
+    // Kollegors registrerade pauser visas i samma kolumn som deras arbetstillfälle.
+    // Klipp pauser till mitt pass och slå ihop överlappande pausintervall.
+    const pauseParts=g.assignments.flatMap(x=>breaksOf(x).map(p=>({
+      start:Math.max(axisStart,minutes(p.start)),end:Math.min(axisEnd,minutes(p.end)),
+      type:p.type||"Paus"
+    })).filter(p=>Number.isFinite(p.start)&&Number.isFinite(p.end)&&p.start<p.end));
+    pauseParts.sort((a,b)=>a.start-b.start||a.end-b.end);
+    const colleaguePauses=[];
+    for(const pause of pauseParts){
+      const last=colleaguePauses[colleaguePauses.length-1];
+      if(last&&pause.start<=last.end)last.end=Math.max(last.end,pause.end);
+      else colleaguePauses.push({...pause});
+    }
+    return {personId:g.personId,name:namedPerson(g.personId)?.name||"",start:g.start,end:g.end,segments,pauses:colleaguePauses};
+  }).filter(p=>p.name&&p.segments.length)
+    // Grupp 1: redan på plats vid min start (inklusive samma starttid),
+    // sorterade efter verklig sluttid. Grupp 2: ansluter senare under
+    // mitt arbetstillfälle, sorterade efter verklig starttid.
+    // Vid lika huvudtid används den andra tidsgränsen, därefter namn.
+    .sort((p,q)=>{
+      const pHere=p.start<=start,qHere=q.start<=start;
+      if(pHere!==qHere)return pHere?-1:1;
+      return (pHere?p.end-q.end||p.start-q.start:p.start-q.start||p.end-q.end)
+        ||p.name.localeCompare(q.name,"sv");
+    });
+  const fmt=t=>`${String(Math.floor(t/60)).padStart(2,"0")}:${String(t%60).padStart(2,"0")}`;
+  if(!others.length)return "";
+  const mine=realWorkSegments(s).map(p=>({start:minutes(p.start),end:minutes(p.end),cutTop:false,cutBottom:false,realStart:minutes(p.start),realEnd:minutes(p.end)}));
+  // Samma regel för MIN avlösning som för kollegors avlösningar:
+  // flera täckningsperioder utan tidsmässigt glapp ska ge en enda blå stapel.
+  // realWorkSegments har redan tagit bort registrerade pauser, så glapp bevaras.
+  if(s.kind==="relief"){
+    mine.sort((a,b)=>a.start-b.start||a.end-b.end);
+    const joined=[];
+    for(const segment of mine){
+      const last=joined[joined.length-1];
+      if(last&&segment.start<=last.end){
+        if(segment.end>last.end){last.end=segment.end;last.realEnd=segment.realEnd;}
+      }else joined.push({...segment});
+    }
+    mine.splice(0,mine.length,...joined);
+  }
+  const lanes=[{name:"Jag",self:true,segments:mine},...others];
+  const pauses=breaksOf(s).map(p=>({a:Math.max(start,minutes(p.start)),b:Math.min(end,minutes(p.end)),type:p.type||"Paus"})).filter(p=>p.a<p.b);
+  const pauseText=pauses.map(p=>`${p.type} ${fmt(p.a)}–${fmt(p.b)}`).join(", ");
+  const isToday=dayIndexNow()===s.day;
+  const heading=`<div class="pg-heading">Kollegor under mitt pass</div>`;
+  const trackHeight=height;
+  const yFor=t=>(t-axisStart)/(axisEnd-axisStart)*height;
+  // Endast hela timmar i Tid-kolumnen; aldrig start/slut som extra tick.
+  // Min egen exakta start och sluttid syns i stället vid den blå stapeln.
+  const ticks=[];
+  for(let t=Math.ceil(axisStart/60)*60;t<=axisEnd;t+=60)ticks.push(t);
+  // Den blå bakgrunden täcker hela MITT arbetstillfälle (inklusive paus).
+  // Ingen del av tidsytan får fortsätta nedanför den egna sluttiden.
+  const grid=ticks.map(t=>`<div class="vg-tick${t===axisStart?" vg-first":""}${t===axisEnd?" vg-last":""}" style="top:${Math.min(trackHeight-1,yFor(t))}px"><span>${esc(fmt(t))}</span></div>`).join("");
+  const lines=ticks.map(t=>`<i class="vg-hl" style="top:${Math.min(trackHeight-1,yFor(t))}px"></i>`).join("");
+  const pauseBars=periods=>periods.map(p=>`<span class="vg-bar vg-bar-pause" style="top:${yFor(p.a)}px;height:${Math.max(2,yFor(p.b)-yFor(p.a))}px" title="${esc(p.type+' '+fmt(p.a)+'–'+fmt(p.b))}"></span>`).join("");
+  const pbars=pauseBars(pauses);
+  const bar=(seg,self)=>{
+    const top=yFor(seg.start),h=Math.max(2,yFor(seg.end)-top),range=fmt(seg.start)+"–"+fmt(seg.end);
+    const cut=(seg.cutTop?' vg-cut-top':'')+(seg.cutBottom?' vg-cut-bottom':'');
+    return `<span class="vg-bar${self?' vg-bar-me':''}${cut}" style="top:${top}px;height:${h}px" title="${esc(range)}"></span>`;
+  };
+  // Tunn hjälplinje från siffran ner till början av kollegans sista arbetstid.
+  const guide=person=>{
+    if(person.self||!person.segments.length)return '';
+    const h=yFor(person.segments[person.segments.length-1].start);
+    return h>3?`<i class="vg-guide" style="height:${h}px"></i>`:'';
+  };
+  const badge=(person,n)=>person.self?'<b class="vg-num vg-num-me">Jag</b>':`<b class="vg-num">${n}</b>`;
+  let counter=0;const nums=lanes.map(p=>p.self?0:++counter);
+  // Exakt start/slut visas endast för den blå stapeln när tiden inte är hel.
+  // Etiketterna placeras inom Gantt-ytan och ändrar inte tidsskalan.
+  const myEdgeLabels=`${start%60?`<span class="vg-my-edge vg-my-edge-start" title="Min starttid">${esc(fmt(start))}</span>`:''}${end%60?`<span class="vg-my-edge vg-my-edge-end" title="Min sluttid">${esc(fmt(end))}</span>`:''}`;
+  const columns=lanes.map((person,i)=>`<div class="vg-person${person.self?' vg-self':''}"><div class="vg-person-label" title="${esc(person.name)}">${badge(person,nums[i])}</div><div class="vg-person-track" style="height:${trackHeight}px">${lines}${guide(person)}${person.segments.map(p=>bar(p,person.self)).join('')}${person.self?pbars+myEdgeLabels:pauseBars((person.pauses||[]).map(p=>({a:p.start,b:p.end,type:p.type})))}</div></div>`).join('');
+  const selfWidth=others.length>=5?60:others.length>=3?64:70;
+  const colleagueCount=new Set(others.map(p=>p.personId)).size;
+  const note=colleagueCount===1?"Här visas din kollegas faktiska start- och sluttid.":"Här visas dina kollegors faktiska start- och sluttider.";
+  const key=others.map((p,i)=>`<li>${badge(p,i+1)}<span class="vg-key-name">${esc(p.name)}</span><span class="vg-key-time"><span>${esc(fmt(p.start)+"–"+fmt(p.end))}</span></span></li>`).join("");
+  return `<div class="personal-gantt vertical-gantt" data-axis-start="${axisStart}" data-axis-end="${axisEnd}" aria-label="Kollegor under mitt pass ${esc(s.start)} till ${esc(s.end)}">
+    ${heading}
+    <div class="vg-scroll" tabindex="0" aria-label="Kollegornas tider under mitt pass, tiden går nedåt">
+      <div class="vg-chart" style="--vg-time-width:46px;--vg-min:34px;--vg-self-width:${selfWidth}px;--vg-n:${lanes.length};height:${trackHeight+GANTT_HEAD}px">
+        <div class="vg-timecol"><div class="vg-time-label">Tid</div><div class="vg-time-track" style="height:${trackHeight}px">${grid}</div></div>
+        ${columns}
+        ${isToday?`<div class="vg-now" hidden aria-label="Aktuell tid"></div>`:''}
+      </div>
+    </div>
+    <ol class="vg-key">${key}</ol>
+    <p class="pg-note">${esc(note)}</p>
+  </div>`;
+}
+function updateGanttClock(){
+  const now=stockholmMinute();
+  document.querySelectorAll('.vertical-gantt').forEach(chart=>{
+    const pass=chart.closest('[data-pass-day]');if(!pass)return;
+    const start=minutes(pass.dataset.start),end=minutes(pass.dataset.end),marker=chart.querySelector('.vg-now');
+    if(!marker)return;
+    const visible=dayIndexNow()===Number(pass.dataset.passDay)&&now>=start&&now<=end;
+    marker.hidden=!visible;
+    if(visible){
+      const track=chart.querySelector('.vg-time-track');
+      const axisStart=Number(chart.dataset.axisStart),axisEnd=Number(chart.dataset.axisEnd);
+      marker.style.top=`${GANTT_HEAD+(now-axisStart)/(axisEnd-axisStart)*(track.offsetHeight-GANTT_FOOT)}px`;
+    }
+  });
+}
+function initializeGantt(){updateGanttClock();}
+
 function renderHome(){const p=currentPerson();if(!p)return "";const shifts=assignments(p.id,state.day),today=dayIndexNow();const count=shifts.length;
-  return `${renderAlert()}${renderDays()}<div class="heading"><h2>${esc(datesHeading(state.day))}</h2>${state.day===today?`<span class="today-tag">Idag</span>`:today>=0?`<button class="today-return" data-action="day" data-day="${today}">Till idag</button>`:""}</div><p class="summary">${esc(workingSummary(p,state.day))} · ${count} ${count===1?"pass":"pass"}</p>${count?`<div class="cards">${shifts.map((s,i)=>passCard(s,i)).join("")}</div>`:`<div class="empty">${icon("calendar","lg")}<h3>Inga arbetspass ${state.day===today?"idag":"den här dagen"}</h3><p>${availableRanges(p,state.day).length?"Du har arbetstid registrerad, men inga uppgifter tilldelade.":"Välj en annan dag för att se ditt schema."}</p></div>`}<p class="legend">${icon("clock","sm")} Tiderna och placeringarna är hämtade ur Julstökets planering.</p>`;}
-function passCard(s,index){const activity=activityFor(s),place=placeForShift(s),isToday=dayIndexNow()===state.day,status=timeState(s),pauses=breaksOf(s),isRelief=s.kind==="relief";const labels={done:"Avslutat",live:"Pågår just nu",break:"Paus pågår",next:"Kommande",planned:"Planerat"};const colleagues=colocation(s);const prev=handover(s,"before"),next=handover(s,"after");const table=colleaguesTable(s,prev,next);const forMe=relievedByMe(s);const returners=forMe.filter(person=>assignments(person.id,s.day).some(x=>x.activityId===s.activityId&&realWorkSegments(x).some(part=>part.start===s.end&&part.end>s.end)&&breaksOf(x).some(p=>p.end===s.end&&p.start<s.end&&p.end>s.start)));const instructions=[activity?.notes||"",activity?.dayNotes?.[s.day]||"",s.note||""].filter(x=>String(x).trim()).join("\n\n");
-  return `<article class="pass ${status==="live"||status==="break"?"live":""}" id="pass-${esc(s.id)}" data-pass-day="${s.day}"><div class="pass-head"><span class="pass-time">${esc(s.start)}–${esc(s.end)}</span>${isToday?`<span class="pill ${status}">${labels[status]}</span>`:isRelief?'<span class="pill next">Avlösning</span>':""}</div><div class="pass-body"><h3 class="pass-title">${esc(activity?.title||"Arbetsuppgift")}${isRelief?' <span style="font-size:12px;font-weight:600;color:#587669">· Avlösning</span>':""}</h3><div class="place-line">${icon("pin","sm")} ${esc(place.name)}</div>${mapButton(place)?`<div class="place-actions">${mapButton(place)}</div>`:""}${instructions?`<div class="instructions"><h4>Instruktioner</h4><div class="text">${esc(instructions)}</div></div>`:""}${pauses.length||forMe.length||prev.length||next.length||table?`<div class="detail">${pauses.map(p=>{const relief=reliefForPause(s,p);return `<div class="info-row">${icon("coffee","sm")}<span><strong>${esc(p.type||"Paus")}: ${esc(p.start)}–${esc(p.end)}</strong>${relief.length?`<br>Du blir avlöst av: ${relief.map(nameButton).join(", ")}`:""}</span></div>`;}).join("")}${forMe.length?`<div class="info-row">${icon("users","sm")}<span><strong>Du avlöser:</strong> ${forMe.map(p=>nameButton(p)+(reliefTimesFor(s,p)?", "+esc(reliefTimesFor(s,p)):"")).join("; ")}</span></div>`:""}${isRelief&&returners.length?`<div class="info-row">${icon("arrow","sm")}<span>Du blir ersatt av: ${returners.map(p=>nameButton(p)+", börjar kl. "+esc(s.end)).join("; ")}</span></div>`:""}${prev.length?`<div class="info-row">${icon("back","sm")}<span>Du ersätter: ${handoverNames(prev,"before")}</span></div>`:""}${next.length?`<div class="info-row">${icon("arrow","sm")}<span>Du blir ersatt av: ${handoverNames(next,"after")}</span></div>`:""}${table}</div>`:""}</div></article>`;}
+  return `${renderAlert()}${renderDays()}<div class="heading"><h2>${esc(datesHeading(state.day))}</h2>${state.day===today?`<span class="today-tag">Idag</span>`:today>=0?`<button class="today-return" data-action="day" data-day="${today}">Till idag</button>`:""}</div><p class="summary">${esc(workingSummary(p,state.day))} · ${count} ${count===1?"pass":"pass"}</p>${count?`<div class="cards">${shifts.map((s,i)=>passCard(s,i)).join("")}</div>`:`<div class="empty">${icon("calendar","lg")}<h3>Inga arbetspass ${state.day===today?"idag":"den här dagen"}</h3><p>${availableRanges(p,state.day).length?"Du har arbetstid registrerad, men inga uppgifter tilldelade.":"Välj en annan dag för att se ditt schema."}</p></div>`}`;}
+function passCard(s,index){const activity=activityFor(s),place=placeForShift(s),isToday=dayIndexNow()===state.day,status=timeState(s),pauses=breaksOf(s),isRelief=s.kind==="relief";const labels={done:"Avslutat",live:"Pågår just nu",break:"Paus pågår",next:"Kommande",planned:"Planerat"};const colleagues=colocation(s);const prev=handover(s,"before"),next=handover(s,"after");const table=personalGantt(s);const forMe=relievedByMe(s);const returners=forMe.filter(person=>assignments(person.id,s.day).some(x=>x.activityId===s.activityId&&realWorkSegments(x).some(part=>part.start===s.end&&part.end>s.end)&&breaksOf(x).some(p=>p.end===s.end&&p.start<s.end&&p.end>s.start)));const instructions=[activity?.notes||"",activity?.dayNotes?.[s.day]||"",s.note||""].filter(x=>String(x).trim()).join("\n\n");
+  return `<article class="pass ${status==="live"||status==="break"?"live":""}" id="pass-${esc(s.id)}" data-pass-day="${s.day}" data-start="${esc(s.start)}" data-end="${esc(s.end)}"><div class="pass-head"><span class="pass-time">${esc(s.start)}–${esc(s.end)}</span>${isToday?`<span class="pill ${status}">${labels[status]}</span>`:isRelief?'<span class="pill next">Avlösare</span>':""}</div><div class="pass-body"><h3 class="pass-title">${esc(activity?.title||"Arbetsuppgift")}${isRelief?' <span style="font-size:12px;font-weight:600;color:#587669">· Avlösare</span>':""}</h3><div class="place-line">${icon("pin","sm")} ${esc(place.name)}</div>${mapButton(place)?`<div class="place-actions">${mapButton(place)}</div>`:""}${instructions?`<div class="instructions"><h4>Instruktioner</h4><div class="text">${esc(instructions)}</div></div>`:""}${pauses.length||forMe.length||prev.length||next.length||table?`<div class="detail">${pauses.map(p=>{const relief=reliefForPause(s,p);return `<div class="info-row">${icon("coffee","sm")}<span><strong>${esc(p.type||"Paus")}: ${esc(p.start)}–${esc(p.end)}</strong>${relief.length?`<br>Avlösare: ${relief.map(nameButton).join(", ")}`:""}</span></div>`;}).join("")}${forMe.length?`<div class="info-row">${icon("users","sm")}<span><strong>Du avlöser:</strong> ${forMe.map(p=>nameButton(p)+(reliefTimesFor(s,p)?", "+esc(reliefTimesFor(s,p)):"")).join("; ")}</span></div>`:""}${isRelief&&returners.length?`<div class="info-row">${icon("arrow","sm")}<span>Ersättare: ${returners.map(p=>nameButton(p)+" kl. "+esc(s.end)).join("; ")}</span></div>`:""}${prev.length?`<div class="info-row">${icon("back","sm")}<span>Du ersätter: ${handoverNames(prev,"before")}</span></div>`:""}${next.length?`<div class="info-row">${icon("arrow","sm")}<span>Ersättare: ${handoverNames(next,"after")}</span></div>`:""}${table}</div>`:""}</div></article>`;}
 function personNow(person){const now=activeNow(person.id);const dateIndex=dayIndexNow();if(dateIndex<0)return `<p class="smallmuted">Julstöket pågår inte just nu. Se planerade arbetsuppgifter nedan.</p>`;if(!now.length)return `<p class="smallmuted">Inget pass pågår just nu enligt schemat.</p>`;return now.map(s=>{const a=activityFor(s),place=placeForShift(s),onBreak=onPause(s,stockholmMinute());return `<div class="mini-entry"><strong>${onBreak?"Paus":a?.title||"Arbetsuppgift"}</strong><small>${esc(place.name)} · ${esc(s.start)}–${esc(s.end)}</small>${mapButton(place)?`<div class="place-actions">${mapButton(place)}</div>`:""}${onBreak?`<small>Personen har paus enligt schemat – fysisk position är inte känd.</small>`:""}</div>`;}).join("");}
 function renderPeople(){if(state.detailPersonId){const p=namedPerson(state.detailPersonId);if(!p){state.detailPersonId=null;return renderPeople();}const shifts=assignments(p.id),phone=phoneLink(p);return `${renderAlert()}<button class="context-back" data-action="person-back">${icon("back","sm")} Till kollegorna</button><div class="person-hero"><h2>${esc(p.name)}</h2>${phone||'<p class="smallmuted">Inget telefonnummer registrerat.</p>'}<div class="section-divider"></div><h3 class="inline-title">Just nu · enligt schemat</h3>${personNow(p)}</div><h3 class="inline-title" style="margin-top:22px">Arbetspass under Julstöket</h3>${shifts.length?DAY_NAMES.map((name,day)=>{const list=shifts.filter(s=>s.day===day),av=availableRanges(p,day);if(!list.length&&!av.length)return "";return `<div class="person-dayline">${esc(datesHeading(day))} · ${esc(workingSummary(p,day))}</div>${list.map(s=>{const a=activityFor(s),place=placeForShift(s);return `<div class="mini-entry"><strong>${esc(s.start)}–${esc(s.end)} · ${esc(a?.title||"Arbetsuppgift")}</strong><small>${esc(place.name)}${s.kind==="relief"?" · Avlösning":""}</small>${breaksOf(s).map(p=>`<small>Paus ${esc(p.start)}–${esc(p.end)}${reliefForPause(s,p).length?` · Avlösare: ${esc(reliefForPause(s,p).map(x=>x.name).join(", "))}`:""}</small>`).join("")}</div>`;}).join("")}`;}).join(""):`<div class="empty"><p>Inga uppgifter tilldelade.</p></div>`}`;}
   const list=planPeople();return `${renderAlert()}<div class="heading"><h2>Hitta kollega</h2></div><p class="smallmuted search-help">Tryck på en person för att se var personen arbetar enligt schemat. Telefonnummer går att ringa direkt.</p><div class="rows">${list.length?list.map(p=>{const now=activeNow(p.id),place=now[0]?placeForShift(now[0]):null;return `<div class="rowlink"><button type="button" class="rowlink-main" data-action="person" data-id="${esc(p.id)}"><strong>${esc(p.name)}</strong><small>${place?`Just nu: ${esc(place.name)}${onPause(now[0],stockholmMinute())?" · Paus":""}`:"Inget pågående pass"}</small></button>${phoneLink(p)||icon("chevron")}</div>`;}).join(""):`<div class="empty"><p>Ingen personal finns att visa.</p></div>`}</div>`;}
 function renderPlaces(){const places=(state.plan?.places||[]).filter(p=>!isGeneral(p)).sort((a,b)=>a.name.localeCompare(b.name,"sv"));const list=places;const today=dayIndexNow(),now=stockholmMinute();return `${renderAlert()}<div class="heading"><h2>Platser</h2></div><p class="smallmuted search-help">${state.demo?"Exempelläget innehåller inga verifierade kartpositioner. I den publicerade appen används de länkar som registrerats under Redigera plats i planeringsverktyget.":"Kartlänkar öppnas i Google Maps och hämtas från platsregistret."}</p>${list.length?list.map(p=>{const loc=locationOf(p.id);const workers=today<0?[]:unique((state.plan?.assignments||[]).filter(s=>s.day===today&&activityFor(s)?.placeId===p.id&&realWorkSegments(s).some(segment=>withinTime(segment,now))).map(s=>s.personId)).map(namedPerson).filter(Boolean);return `<section class="place-entry"><h3>${esc(loc.name)}</h3>${loc.description?`<div class="desc">${esc(loc.description)}</div>`:""}${mapButton(loc)?`<div class="place-actions">${mapButton(loc)}</div>`:""}<div class="current"><strong>Här arbetar just nu · enligt schemat</strong>${workers.length?`<div class="person-list">${workers.map(person=>`<button class="person-chip" data-action="person" data-id="${esc(person.id)}">${esc(person.name)}</button>`).join("")}</div>`:`<p class="empty-inline">${today<0?"Julstöket pågår inte just nu.":"Ingen schemalagd här just nu."}</p>`}</div></section>`;}).join(""):`<div class="empty"><p>Inga platser hittades.</p></div>`}`;}
-function sharedUrl(){try{const url=new URL(window.location.href);if(!["http:","https:"].includes(url.protocol))return "";url.search="";url.hash="";return url.toString();}catch{return "";}}
-function shareReady(){try{return window.location.protocol==="https:"&&!/^(localhost|127\.0\.0\.1)$/.test(window.location.hostname);}catch{return false;}}
+// Delningslänken är alltid appens publicerade adress, oavsett var sidan öppnats.
+const SHARE_URL="https://kultpub.github.io/site/mitt-julstok/";
+function sharedUrl(){return SHARE_URL;}
+function shareReady(){return true;}
 function renderShare(){const url=sharedUrl(),usable=shareReady();return `${renderAlert()}<div class="heading"><h2>Dela Mitt Julstök</h2></div><section class="share-card"><h3>En länk för alla</h3><p>En kollega skannar QR-koden, öppnar appen och väljer sitt eget namn. Inget namn eller schema finns i QR-koden.</p>${usable?`<div class="qr-wrap" id="qrWrap"><canvas id="qrCanvas" width="300" height="300" role="img" aria-label="QR-kod som länkar till Mitt Julstök"></canvas></div><div class="url-box">${esc(url)}</div><div class="actions"><button class="action-btn" data-action="share">${icon("share","sm")} Dela</button><button class="action-btn outline" data-action="copy">Kopiera länk</button></div>`:`<div class="qr-wrap"><div style="padding:18px;font-size:13px;color:var(--muted)">${icon("info","lg")}<p>QR-koden blir tillgänglig när appen publicerats på en HTTPS-adress.</p></div></div><p>På en lokal filadress eller testsida går QR-koden inte att använda på en annan telefon.</p>`}</section><p class="smallmuted" style="margin-top:15px">Du kan också lägga till Mitt Julstök på telefonens hemskärm via webbläsarens meny.</p><button class="action-btn secondary block" data-action="choose" style="margin-top:16px">Byt person</button>`;}
 function seasonMessage(){
   const mode=state.seasonMode;
@@ -383,10 +571,10 @@ function renderSeasonGate(){
       </div>
     </main>`;
 }
-function render(){let content="";if(state.seasonMode!=="active"&&!state.demo){content=renderSeasonGate();}else if(!state.plan){content=state.status==="error"?`<main class="shell"><div class="content"><h2>Mitt Julstök</h2><div class="notice">${esc(state.error||"Kunde inte hämta planen.")}</div><div class="actions"><button class="action-btn" data-action="retry">Försök igen</button><button class="action-btn outline" data-action="demo">Visa exempel</button></div></div></main>`:`<div class="boot"><div class="boot-logo"><img src="icon-192.png" alt=""></div><h1>Mitt Julstök</h1><p>Hämtar Julstökets uppgifter…</p></div>`;}else if(!currentPerson()){content=renderNameSelect();}else{content=shell(state.view==="people"?renderPeople():state.view==="places"?renderPlaces():state.view==="share"?renderShare():renderHome());}$("app").innerHTML=content;if(state.view==="share"&&currentPerson()&&shareReady()&&$("qrCanvas")){try{window.JulQR?.draw($("qrCanvas"),sharedUrl());}catch(error){$("qrWrap").innerHTML=`<p class="error-message">QR-koden kunde inte skapas.</p>`;}}}
+function render(){const preserved=[...document.querySelectorAll(".vg-scroll")].map(el=>({id:el.closest("[data-pass-day]")?.id,left:el.scrollLeft}));let content="";if(state.seasonMode!=="active"&&!state.demo){content=renderSeasonGate();}else if(!state.plan){content=state.status==="error"?`<main class="shell"><div class="content"><h2>Mitt Julstök</h2><div class="notice">${esc(state.error||"Kunde inte hämta planen.")}</div><div class="actions"><button class="action-btn" data-action="retry">Försök igen</button><button class="action-btn outline" data-action="demo">Visa exempel</button></div></div></main>`:`<div class="boot"><div class="boot-logo"><img src="icon-192.png" alt=""></div><h1>Mitt Julstök</h1><p>Hämtar Julstökets uppgifter…</p></div>`;}else if(!currentPerson()){content=renderNameSelect();}else{content=shell(state.view==="people"?renderPeople():state.view==="places"?renderPlaces():state.view==="share"?renderShare():renderHome());}$("app").innerHTML=content;initializeGantt();for(const saved of preserved){if(!saved.id)continue;const target=document.getElementById(saved.id)?.querySelector(".vg-scroll");if(target)target.scrollLeft=saved.left;}if(state.view==="share"&&currentPerson()&&shareReady()&&$("qrCanvas")){try{window.JulQR?.draw($("qrCanvas"),sharedUrl());}catch(error){$("qrWrap").innerHTML=`<p class="error-message">QR-koden kunde inte skapas.</p>`;}}}
 function focusRender(id){const el=$(id),pos=el?.selectionStart??null;render();const target=$(id);if(target){target.focus();if(pos!==null&&target.setSelectionRange)try{target.setSelectionRange(pos,pos);}catch{}}}
 function exampleData(){const people=[{id:"demo-amanda",name:"Amanda (exempel)",phone:"070-123 45 67",availability:[{day:0,start:"15:00",end:"20:00"},{day:1,start:"09:00",end:"18:00"},{day:2,start:"10:00",end:"14:00"}]},{id:"demo-sara",name:"Sara (exempel)",phone:"070-222 11 00",availability:[{day:1,start:"10:00",end:"18:00"}]},{id:"demo-ludvig",name:"Ludvig (exempel)",phone:"070-333 22 11",availability:[{day:1,start:"11:00",end:"18:00"}]}],places=[{id:"demo-gate",name:"Gröna grinden",description:"Entréområdet (exempel)",mapsUrl:""},{id:"demo-shop",name:"Vita huset",description:"Museibutiken (exempel)",mapsUrl:""},{id:"demo-square",name:"Torget",description:"",mapsUrl:""}],activities=[{id:"demo-a1",title:"Entrékassor",placeId:"demo-gate",notes:"Välkomna besökarna och kontrollera biljetter.",dayNotes:{},staffingPattern:{shifts:[]}},{id:"demo-a2",title:"Julbutiken",placeId:"demo-shop",notes:"Kontrollera växelkassan vid passets början.",dayNotes:{1:"På lördagen är det extra mycket besökare."},staffingPattern:{shifts:[{id:"demo-source",kind:"ordinary",day:1,breaks:[{id:"demo-pause",start:"13:00",end:"13:30"}]},{id:"demo-rel-source",kind:"relief",day:1,breaks:[],reliefPeriods:[{breakId:"demo-pause",start:"13:00",end:"13:30"}]}]}},{id:"demo-a3",title:"Glöggförsäljning",placeId:"demo-square",notes:"Se till att glöggen hålls varm.",dayNotes:{},staffingPattern:{shifts:[]}}],assignments=[{id:"demo-s1",activityId:"demo-a1",personId:"demo-amanda",day:0,start:"15:00",end:"20:00",kind:"ordinary",breaks:[]},{id:"demo-s2",activityId:"demo-a1",personId:"demo-amanda",day:1,start:"09:00",end:"11:00",kind:"ordinary",breaks:[]},{id:"demo-s3",activityId:"demo-a2",personId:"demo-amanda",day:1,start:"11:00",end:"15:00",kind:"ordinary",breaks:[{id:"demo-pause",start:"13:00",end:"13:30",type:"Paus"}],patternShiftId:"demo-source"},{id:"demo-s4",activityId:"demo-a3",personId:"demo-amanda",day:1,start:"15:30",end:"18:00",kind:"ordinary",breaks:[]},{id:"demo-s5",activityId:"demo-a2",personId:"demo-ludvig",day:1,start:"13:00",end:"13:30",kind:"relief",breaks:[],patternShiftId:"demo-rel-source"},{id:"demo-s6",activityId:"demo-a2",personId:"demo-sara",day:1,start:"11:00",end:"15:00",kind:"ordinary",breaks:[]},{id:"demo-s7",activityId:"demo-a1",personId:"demo-amanda",day:2,start:"10:00",end:"14:00",kind:"ordinary",breaks:[]}];return {schemaVersion:1,year:state.year,revision:1,places,people,activities,assignments};}
-function setDemo(){stopListeners();state.demo=true;state.plan=exampleData();state.registerPeople=state.plan.people;state.registerPlaces=state.plan.places;state.status="live";state.error="";state.cached=false;state.personId="";state.detailPersonId=null;state.view="home";render();}
+function setDemo(){stopListeners();state.demo=true;if(TEST)state.day=TEST.day;state.plan=exampleData();state.registerPeople=state.plan.people;state.registerPlaces=state.plan.places;state.status="live";state.error="";state.cached=false;state.personId="";state.detailPersonId=null;state.view="home";render();}
 function stopListeners(){for(const stop of [stopPlan,stopPeople,stopPlaces])try{stop?.();}catch{}stopPlan=stopPeople=stopPlaces=null;}
 function syncSeason(){
   if(state.demo) return false;
@@ -418,7 +606,7 @@ function listen(){if(!firestore||state.demo||state.seasonMode!=="active")return;
   stopPeople=fs.onSnapshot(fs.collection(db,"julstokPeople"),snap=>{state.registerPeople=snap.docs.map(d=>({id:d.id,...d.data()}));saveCache();render();},connectionError);
   stopPlaces=fs.onSnapshot(fs.collection(db,"julstokPlaces"),snap=>{state.registerPlaces=snap.docs.map(d=>({id:d.id,...d.data()}));saveCache();render();},connectionError);
 }
-function refreshClock(){if(syncSeason())return;if(!currentPerson()||state.view!=="home"||state.status==="loading")return;const active=document.activeElement?.tagName;if(active==="INPUT"||active==="SELECT")return;render();}
+function refreshClock(){if(syncSeason())return;if(!currentPerson()||state.view!=="home"||state.status==="loading")return;const active=document.activeElement?.tagName;if(active==="INPUT"||active==="SELECT")return;updateGanttClock();const liveCards=document.querySelectorAll(".pass");for(const card of liveCards){const data=(state.plan?.assignments||[]).find(x=>"pass-"+x.id===card.id);if(!data)continue;const status=timeState(data);card.classList.toggle("live",status==="live"||status==="break");const pill=card.querySelector(".pass-head .pill");if(pill&&dayIndexNow()===state.day){const labels={done:"Avslutat",live:"Pågår just nu",break:"Paus pågår",next:"Kommande",planned:"Planerat"};pill.className="pill "+status;pill.textContent=labels[status];}}}
 async function copyLink(){const url=sharedUrl();if(!url)return;try{await navigator.clipboard.writeText(url);toast("Länken är kopierad.");}catch{const input=document.createElement("textarea");input.value=url;input.style.position="fixed";input.style.opacity="0";document.body.append(input);input.select();try{document.execCommand("copy");toast("Länken är kopierad.");}catch{toast("Kunde inte kopiera länken.");}input.remove();}}
 async function shareLink(){const url=sharedUrl();if(!url)return;if(navigator.share){try{await navigator.share({title:"Mitt Julstök",text:"Öppna ditt personliga schema för Julstöket.",url});}catch(error){if(error.name!=="AbortError")toast("Delningen misslyckades.");}}else await copyLink();}
 // Händelsedelegering gör att sökning och navigering fungerar efter varje renderering.

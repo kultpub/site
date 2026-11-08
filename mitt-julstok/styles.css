@@ -53,3 +53,118 @@
   height: 100%;
   object-fit: contain;
 }
+
+/* Personligt lodrätt Gantt: kompakt tidsaxel med frysta klockslag. */
+.personal-gantt{margin-top:13px;border-top:1px solid var(--line);padding-top:11px}
+.pg-heading{font-size:13px;font-weight:760;display:flex;gap:6px;justify-content:space-between;flex-wrap:wrap;margin-bottom:9px}
+.pg-swipe{font-size:11px;font-weight:500;color:var(--muted)}
+.vg-scroll{margin:0 -15px;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;touch-action:pan-x pan-y;scrollbar-width:thin;border:solid var(--line);border-width:1px 0;border-radius:0;background:#eef1ee}
+.vg-chart{position:relative;display:flex;width:max(100%,calc(var(--vg-time-width) + var(--vg-n)*var(--vg-min)));box-sizing:border-box}
+.vg-timecol{position:sticky;left:0;z-index:7;flex:0 0 var(--vg-time-width);width:var(--vg-time-width);background:#f6f9f5;border-right:1px solid #d9e3d8}
+.vg-time-label{height:30px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--muted);background:#eef3ec;border-bottom:1px solid #d9e3d8}
+.vg-time-track{position:relative}
+.vg-tick{position:absolute;left:0;right:0;height:0;pointer-events:none;z-index:2}
+.vg-tick span{position:absolute;top:-8px;left:0;right:0;text-align:center;color:#3f5a4b;font:700 12px/16px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-variant-numeric:tabular-nums}
+.vg-first span,.vg-last span{top:-8px}
+.vg-tick::after{content:"";position:absolute;right:-1px;top:0;width:7px;height:0;border-top:1px solid #7f9a8b}
+.vg-person{position:relative;flex:1 0 var(--vg-min);min-width:var(--vg-min)}
+.vg-person-label{height:30px;display:flex;align-items:center;justify-content:center;background:#eef3ec;border-bottom:1px solid #d9e3d8}
+.vg-num{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#2f7d4e;color:#fff;font-size:11px;font-weight:800;line-height:1;flex:none}
+.vg-num-me{width:auto;min-width:28px;padding:0 5px;border-radius:10px;background:#0867d7;font-size:11px}
+.vg-person-track{position:relative;background:#e0e8e1}
+.vg-self .vg-person-track{background:#dceaff}
+.vg-self .vg-person-label{background:#dcecff}
+.vg-hl{position:absolute;left:0;right:0;height:0;border-top:1px solid #c5d3c8;z-index:1;pointer-events:none}
+.vg-self .vg-hl{border-top-color:#b3cbee}
+.vg-bar{position:absolute;left:50%;transform:translateX(-50%);width:8px;border-radius:4px;z-index:2;min-height:2px;background:#2f7d4e}
+.vg-bar-me{background:#0867d7;width:11px;border-radius:5.5px}
+.vg-self .vg-bar-pause{width:11px}
+.vg-guide{position:absolute;top:0;left:50%;width:0;border-left:1px solid #c3cbc6;transform:translateX(-.5px);z-index:1;pointer-events:none}
+.vg-bar-pause{background:repeating-linear-gradient(135deg,#f0b429 0,#f0b429 3px,transparent 3px,transparent 7px);border-radius:0;z-index:3}
+.vg-cut-top{border-top-left-radius:1px;border-top-right-radius:1px}
+.vg-cut-bottom{border-bottom-left-radius:1px;border-bottom-right-radius:1px}
+.vg-key{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:6px}
+.vg-key li{display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.3}
+.vg-key .vg-key-name{flex:1;min-width:0;font-weight:650;overflow-wrap:anywhere;padding-top:1px}
+.vg-key .vg-key-time{display:flex;flex-direction:column;align-items:flex-end;gap:2px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap;font-size:12px}
+.vg-now{position:absolute;z-index:8;height:2px;left:0;right:0;background:#dc382b;pointer-events:none}
+.pg-empty{font-size:12px;color:var(--muted);margin:8px 0 0}
+.pg-note{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);margin:9px 0 0}
+.pg-legend{display:flex;flex-wrap:wrap;gap:7px 12px;padding-top:8px;font-size:11px;color:var(--muted)}
+.pg-legend>span{display:inline-flex;align-items:center;gap:4px}.pg-key{display:inline-block;width:15px;height:8px;border-radius:3px}.pg-key-mine{background:#0867d7}.pg-key-colleague{background:#338453}.pg-key-pause{background:#efc55a}.pg-key-now{width:14px;height:2px;background:#dc382b;border-radius:0}
+
+/* Exakta tidsangivelser vid den blå stapelns ändpunkter, aldrig vid kollegorna. */
+.vg-self{flex-basis:var(--vg-self-width,64px);min-width:var(--vg-self-width,64px)}
+.vg-my-edge{position:absolute;left:calc(50% + 5.5px);z-index:5;white-space:nowrap;font-size:10px;line-height:13px;height:13px;font-weight:700;font-variant-numeric:tabular-nums;color:#1454a4;background:transparent;padding:0 0 0 3px;border-radius:0;pointer-events:none}
+.vg-my-edge-start{top:-6.5px}
+.vg-my-edge-end{bottom:-6.5px}
+
+/* v20: Alla heltimmesetiketter centreras exakt vid respektive timlinje.
+   Den högre rubrikraden bevaras för etiketten vid översta gränsen. */
+.vg-time-label,.vg-person-label{height:46px}
+.vg-first span,.vg-last span{top:-8px}
+
+/* v22: Tid-kolumnen har inga horisontella linjer genom klockslagen.
+   Timlinjerna behålls i personkolumnerna och klockslagen förblir
+   vertikalt centrerade mot motsvarande timlinje. */
+.vg-scroll{border-top:0;border-bottom:0}
+.vg-time-label{border-bottom:0}
+.vg-time-track{background:#e0e8e1}
+.vg-tick span{top:-8px}
+
+/* v24: tidsytan slutar exakt vid min sluttid. Vit marginal UNDER
+   tidsytan ger plats för sista klockslaget och separerar namnförklaringen.
+   Blå bakgrund fortsätter hela vägen till min stapels slut, även efter
+   sista hela timlinjen. Ingen vertikal rullning i diagrammet. */
+.vg-scroll{padding-bottom:8px;background:#fff;overflow-y:hidden}
+.vg-key{margin-top:8px}
+.vg-self .vg-person-track{background:#dceaff}
+.vg-time-track{background:#e0e8e1}
+
+
+/* v25: Gantt-ytans bakgrund är svagt grå för tydligare avgränsning. */
+
+/* v26: Tydligt avgransad neutralgrå tidsyta, genomskinliga specialtider. */
+
+/* v29: Nattblått Gantt. Tidsytan har en egen mörk palett som inte finns
+   någon annanstans i appen (resten är vitt och salviagrönt), så att den
+   aldrig flyter ihop med kort, chips eller bakgrunder. Alla Gantt-färger
+   styrs härifrån via variablerna nedan. */
+.vertical-gantt{
+  --gt-frame:#0f1c2f;      /* ram, rubrikceller och tidskolumn */
+  --gt-track:#16273f;      /* kollegors spår */
+  --gt-self:#1f4170;       /* mitt spår, tydligt ljusare blått */
+  --gt-self-head:#1a3860;  /* rubrikcell för "Jag" */
+  --gt-line:#34507a;       /* timlinjer i kollegors spår */
+  --gt-line-self:#4f78b0;  /* timlinjer i mitt spår */
+  --gt-text:#dce8f8;       /* klockslag */
+  --gt-muted:#93aacc;      /* "Tid", tickstreck */
+  --gt-me:#62b3ff;         /* min stapel */
+  --gt-col:#4fd18b;        /* kollegors staplar */
+  --gt-pause:#f6c244;      /* pauser */
+  --gt-now:#ff5a49;        /* aktuell tid */
+}
+/* Ytan under spåren är vit: ingen mörkblå remsa under Gantt-schemat. */
+.vertical-gantt .vg-scroll{background:#fff;border:0;padding-bottom:10px}
+/* Tid-kolumnen är ljus med svart text och skiljer sig tydligt från det mörka diagrammet. */
+.vertical-gantt .vg-timecol{background:#fff;border-right:1px solid #c3cddc}
+.vertical-gantt .vg-time-label{background:#fff;color:#111;border:0}
+.vertical-gantt .vg-time-track{background:#fff}
+.vertical-gantt .vg-tick span{color:#111}
+.vertical-gantt .vg-tick::after{border-top-color:#5d7090}
+.vertical-gantt .vg-person-label{background:var(--gt-frame);border:0}
+.vertical-gantt .vg-self .vg-person-label{background:var(--gt-self-head)}
+.vertical-gantt .vg-person-track{background:var(--gt-track)}
+.vertical-gantt .vg-self .vg-person-track{background:var(--gt-self)}
+.vertical-gantt .vg-hl{border-top-color:var(--gt-line)}
+.vertical-gantt .vg-self .vg-hl{border-top-color:var(--gt-line-self)}
+.vertical-gantt .vg-guide{border-left-color:#5a7299}
+.vertical-gantt .vg-bar{background:var(--gt-col)}
+.vertical-gantt .vg-bar-me{background:var(--gt-me)}
+.vertical-gantt .vg-bar-pause{background:repeating-linear-gradient(135deg,var(--gt-pause) 0,var(--gt-pause) 3px,transparent 3px,transparent 7px)}
+/* Specialtiden får en liten bricka i spårets färg, så att den förblir läsbar även där den sticker ut över den vita ytan under spåret. */
+.vertical-gantt .vg-my-edge{color:#bfe0ff;background:var(--gt-self);border-radius:3px;padding:0 4px 0 3px}
+.vertical-gantt .vg-num{background:var(--gt-col);color:#06281a}
+.vertical-gantt .vg-num-me{background:var(--gt-me);color:#06223f}
+.vertical-gantt .vg-now{background:var(--gt-now)}
+.vertical-gantt 
