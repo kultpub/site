@@ -518,7 +518,7 @@ function renderHome(){const p=currentPerson();if(!p)return "";const shifts=assig
 function passCard(s,index){const activity=activityFor(s),place=placeForShift(s),isToday=dayIndexNow()===state.day,status=timeState(s),pauses=breaksOf(s),isRelief=s.kind==="relief";const labels={done:"Avslutat",live:"Pågår just nu",break:"Paus pågår",next:"Kommande",planned:"Planerat"};const colleagues=colocation(s);const prev=handover(s,"before"),next=handover(s,"after");const table=personalGantt(s);const forMe=relievedByMe(s);const returners=forMe.filter(person=>assignments(person.id,s.day).some(x=>x.activityId===s.activityId&&realWorkSegments(x).some(part=>part.start===s.end&&part.end>s.end)&&breaksOf(x).some(p=>p.end===s.end&&p.start<s.end&&p.end>s.start)));const instructions=[activity?.notes||"",activity?.dayNotes?.[s.day]||"",s.note||""].filter(x=>String(x).trim()).join("\n\n");
   return `<article class="pass ${status==="live"||status==="break"?"live":""}" id="pass-${esc(s.id)}" data-pass-day="${s.day}" data-start="${esc(s.start)}" data-end="${esc(s.end)}"><div class="pass-head"><span class="pass-time">${esc(s.start)}–${esc(s.end)}</span>${isToday?`<span class="pill ${status}">${labels[status]}</span>`:isRelief?'<span class="pill next">Avlösare</span>':""}</div><div class="pass-body"><h3 class="pass-title">${esc(activity?.title||"Arbetsuppgift")}${isRelief?' <span style="font-size:12px;font-weight:600;color:#587669">· Avlösare</span>':""}</h3><div class="place-line">${icon("pin","sm")} ${esc(place.name)}</div>${mapButton(place)?`<div class="place-actions">${mapButton(place)}</div>`:""}${instructions?`<div class="instructions"><h4>Instruktioner</h4><div class="text">${esc(instructions)}</div></div>`:""}${pauses.length||forMe.length||prev.length||next.length||table?`<div class="detail">${pauses.map(p=>{const relief=reliefForPause(s,p);return `<div class="info-row">${icon("coffee","sm")}<span><strong>${esc(p.type||"Paus")}: ${esc(p.start)}–${esc(p.end)}</strong>${relief.length?`<br>Avlösare: ${relief.map(nameButton).join(", ")}`:""}</span></div>`;}).join("")}${forMe.length?`<div class="info-row">${icon("users","sm")}<span><strong>Du avlöser:</strong> ${forMe.map(p=>nameButton(p)+(reliefTimesFor(s,p)?", "+esc(reliefTimesFor(s,p)):"")).join("; ")}</span></div>`:""}${prev.length?`<div class="info-row">${icon("back","sm")}<span>Du ersätter: ${handoverNames(prev,"before")}</span></div>`:""}${next.length?`<div class="info-row">${icon("arrow","sm")}<span>Ersättare: ${handoverNames(next,"after")}</span></div>`:""}${table}</div>`:""}</div></article>`;}
 function personNow(person){const now=activeNow(person.id);const dateIndex=dayIndexNow();if(dateIndex<0)return `<p class="smallmuted">Julstöket pågår inte just nu. Se planerade arbetsuppgifter nedan.</p>`;if(!now.length)return `<p class="smallmuted">Inget pass pågår just nu enligt schemat.</p>`;return now.map(s=>{const a=activityFor(s),place=placeForShift(s),onBreak=onPause(s,stockholmMinute());return `<div class="mini-entry"><strong>${onBreak?"Paus":a?.title||"Arbetsuppgift"}</strong><small>${esc(place.name)} · ${esc(s.start)}–${esc(s.end)}</small>${mapButton(place)?`<div class="place-actions">${mapButton(place)}</div>`:""}${onBreak?`<small>Personen har paus enligt schemat – fysisk position är inte känd.</small>`:""}</div>`;}).join("");}
-function renderPeople(){if(state.detailPersonId){const p=namedPerson(state.detailPersonId);if(!p){state.detailPersonId=null;return renderPeople();}const shifts=assignments(p.id),phone=phoneLink(p);return `${renderAlert()}<button class="context-back" data-action="person-back">${icon("back","sm")} ${state.personFrom==="search"?"Till sökningen":"Till kollegorna"}</button><div class="person-hero"><h2>${esc(p.name)}</h2>${phone||'<p class="smallmuted">Inget telefonnummer registrerat.</p>'}<div class="section-divider"></div><h3 class="inline-title">Just nu · enligt schemat</h3>${personNow(p)}</div><h3 class="inline-title" style="margin-top:22px">Arbetspass under Julstöket</h3>${shifts.length?DAY_NAMES.map((name,day)=>{const list=shifts.filter(s=>s.day===day),av=availableRanges(p,day);if(!list.length&&!av.length)return "";return `<div class="person-dayline">${esc(datesHeading(day))} · ${esc(workingSummary(p,day))}</div>${list.map(s=>{const a=activityFor(s),place=placeForShift(s);return `<div class="mini-entry"><strong>${esc(s.start)}–${esc(s.end)} · ${esc(a?.title||"Arbetsuppgift")}</strong><small>${esc(place.name)}${s.kind==="relief"?" · Avlösning":""}</small>${breaksOf(s).map(p=>`<small>Paus ${esc(p.start)}–${esc(p.end)}${reliefForPause(s,p).length?` · Avlösare: ${esc(reliefForPause(s,p).map(x=>x.name).join(", "))}`:""}</small>`).join("")}</div>`;}).join("")}`;}).join(""):`<div class="empty"><p>Inga uppgifter tilldelade.</p></div>`}`;}
+function renderPeople(){if(state.detailPersonId){const p=namedPerson(state.detailPersonId);if(!p){state.detailPersonId=null;return renderPeople();}const shifts=assignments(p.id),phone=phoneLink(p);return `${renderAlert()}<button class="context-back" data-action="person-back">${icon("back","sm")} ${state.personFrom==="search"?"Till sökningen":state.personFrom==="places"?"Till platserna":"Till kollegorna"}</button><div class="person-hero"><h2>${esc(p.name)}</h2>${phone||'<p class="smallmuted">Inget telefonnummer registrerat.</p>'}<div class="section-divider"></div><h3 class="inline-title">Just nu · enligt schemat</h3>${personNow(p)}</div><h3 class="inline-title" style="margin-top:22px">Arbetspass under Julstöket</h3>${shifts.length?DAY_NAMES.map((name,day)=>{const list=shifts.filter(s=>s.day===day),av=availableRanges(p,day);if(!list.length&&!av.length)return "";return `<div class="person-dayline">${esc(datesHeading(day))} · ${esc(workingSummary(p,day))}</div>${list.map(s=>{const a=activityFor(s),place=placeForShift(s);return `<div class="mini-entry"><strong>${esc(s.start)}–${esc(s.end)} · ${esc(a?.title||"Arbetsuppgift")}</strong><small>${esc(place.name)}${s.kind==="relief"?" · Avlösning":""}</small>${breaksOf(s).map(p=>`<small>Paus ${esc(p.start)}–${esc(p.end)}${reliefForPause(s,p).length?` · Avlösare: ${esc(reliefForPause(s,p).map(x=>x.name).join(", "))}`:""}</small>`).join("")}</div>`;}).join("")}`;}).join(""):`<div class="empty"><p>Inga uppgifter tilldelade.</p></div>`}`;}
   const list=planPeople();return `${renderAlert()}<div class="heading"><h2>Hitta kollega</h2></div><p class="smallmuted search-help">Tryck på en person för att se var personen arbetar enligt schemat. Telefonnummer går att ringa direkt.</p><div class="rows">${list.length?list.map(p=>{const now=activeNow(p.id),place=now[0]?placeForShift(now[0]):null;return `<div class="rowlink"><button type="button" class="rowlink-main" data-action="person" data-id="${esc(p.id)}"><strong>${esc(p.name)}</strong><small>${place?`Just nu: ${esc(place.name)}${onPause(now[0],stockholmMinute())?" · Paus":""}`:"Inget pågående pass"}</small></button>${phoneLink(p)||icon("chevron")}</div>`;}).join(""):`<div class="empty"><p>Ingen personal finns att visa.</p></div>`}</div>`;}
 const PLACE_IMAGE_BASE="https://kultpub.github.io/site/";
 const PLACE_TYPE_IMAGES={spot:"map_spot.png",house:"map_house.png",area:"map_area.png",allmogehallen:"allmogehallen.png",arbetarbostaden:"arbetarbostaden.png",blekingegarden:"blekingegarden.png",bosmalatorpet:"bosmalatorpet.png",cafeet:"cafeet.png",green_gate:"green_gate.png",hylla_smedja:"hylla_smedja.png",onsjostugan:"onsjostugan.png",red_gate:"red_gate.png",black_gate:"black_gate.png",thomanderska_huset:"thomanderska_huset.png",vastra_vrams_prastgard:"vastra_vrams_prastgard.png"};
@@ -556,7 +556,8 @@ function searchLine(columns,cells){return `<div style="display:grid;grid-templat
 function searchPersonRow(p,data){
   const list=data.byPerson.get(p.id)||[];
   const lines=list.map(s=>searchLine("2.4em 6.6em minmax(0,1fr)",[esc(dayAbbr(s.day)),esc(s.start+"–"+s.end),esc(activityFor(s)?.title||"Arbetsuppgift")])).join("");
-  return `<div class="rowlink" style="align-items:flex-start"><button type="button" class="rowlink-main" data-action="person" data-from="search" data-id="${esc(p.id)}"><strong>${esc(p.name)}</strong>${lines?`<div style="${SEARCH_LINES_STYLE}">${lines}</div>`:""}</button>${phoneLink(p)||icon("chevron")}</div>`;
+  const phone=phoneLink(p);
+  return `<div class="rowlink" style="display:block"><button type="button" class="rowlink-main" style="display:block;width:100%" data-action="person" data-from="search" data-id="${esc(p.id)}"><strong>${esc(p.name)}</strong>${lines?`<div style="${SEARCH_LINES_STYLE}">${lines}</div>`:""}</button>${phone?`<div style="text-align:right;margin-top:6px">${phone}</div>`:""}</div>`;
 }
 function searchActivityRow(a,data){
   const list=data.byActivity.get(a.id)||[];
@@ -634,7 +635,7 @@ function renderSeasonGate(){
       </div>
     </main>`;
 }
-function render(){const preserved=[...document.querySelectorAll(".vg-scroll")].map(el=>({id:el.closest("[data-pass-day]")?.id,left:el.scrollLeft}));let content="";if(state.seasonMode!=="active"&&!state.demo){content=renderSeasonGate();}else if(!state.plan){content=state.status==="error"?`<main class="shell"><div class="content"><h2>Mitt Julstök</h2><div class="notice">${esc(state.error||"Kunde inte hämta planen.")}</div><div class="actions"><button class="action-btn" data-action="retry">Försök igen</button><button class="action-btn outline" data-action="demo">Visa exempel</button></div></div></main>`:`<div class="boot"><div class="boot-logo"><img src="icon-192.png" alt=""></div><h1>Mitt Julstök</h1><p>Hämtar Julstökets uppgifter…</p></div>`;}else if(!currentPerson()){content=renderNameSelect();}else{content=shell(state.view==="people"?renderPeople():state.view==="places"?renderPlaces():state.view==="share"?renderShare():state.view==="search"?renderSearch():renderHome());}$("app").innerHTML=content;initializeGantt();for(const saved of preserved){if(!saved.id)continue;const target=document.getElementById(saved.id)?.querySelector(".vg-scroll");if(target)target.scrollLeft=saved.left;}if(state.view==="share"&&currentPerson()&&shareReady()&&$("qrCanvas")){try{window.JulQR?.draw($("qrCanvas"),sharedUrl());}catch(error){$("qrWrap").innerHTML=`<p class="error-message">QR-koden kunde inte skapas.</p>`;}}}
+function render(){const preserved=[...document.querySelectorAll(".vg-scroll")].map(el=>({id:el.closest("[data-pass-day]")?.id,left:el.scrollLeft}));let content="";if(state.seasonMode!=="active"&&!state.demo){content=renderSeasonGate();}else if(!state.plan){content=state.status==="error"?`<main class="shell"><div class="content"><h2>Mitt Julstök</h2><div class="notice">${esc(state.error||"Kunde inte hämta planen.")}</div><div class="actions"><button class="action-btn" data-action="retry">Försök igen</button><button class="action-btn outline" data-action="demo">Visa exempel</button></div></div></main>`:`<div class="boot"><div class="boot-logo"><img src="icon-192.png" alt=""></div><h1>Mitt Julstök</h1><p>Hämtar Julstökets uppgifter…</p></div>`;}else if(!currentPerson()){content=renderNameSelect();}else{content=shell(state.view==="people"?renderPeople():state.view==="places"?renderPlaces():state.view==="share"?renderShare():state.view==="search"?renderSearch():renderHome());}$("app").innerHTML=content;document.body.style.touchAction=swipeAllowed()?"pan-y pinch-zoom":"";initializeGantt();for(const saved of preserved){if(!saved.id)continue;const target=document.getElementById(saved.id)?.querySelector(".vg-scroll");if(target)target.scrollLeft=saved.left;}if(state.view==="share"&&currentPerson()&&shareReady()&&$("qrCanvas")){try{window.JulQR?.draw($("qrCanvas"),sharedUrl());}catch(error){$("qrWrap").innerHTML=`<p class="error-message">QR-koden kunde inte skapas.</p>`;}}}
 function focusRender(id){const el=$(id),pos=el?.selectionStart??null;render();const target=$(id);if(target){target.focus();if(pos!==null&&target.setSelectionRange)try{target.setSelectionRange(pos,pos);}catch{}}}
 function exampleData(){const people=[{id:"demo-amanda",name:"Amanda (exempel)",phone:"070-123 45 67",availability:[{day:0,start:"15:00",end:"20:00"},{day:1,start:"09:00",end:"18:00"},{day:2,start:"10:00",end:"14:00"}]},{id:"demo-sara",name:"Sara (exempel)",phone:"070-222 11 00",availability:[{day:1,start:"10:00",end:"18:00"}]},{id:"demo-ludvig",name:"Ludvig (exempel)",phone:"070-333 22 11",availability:[{day:1,start:"11:00",end:"18:00"}]}],places=[{id:"demo-gate",name:"Gröna grinden",description:"Entréområdet (exempel)",mapsUrl:""},{id:"demo-shop",name:"Vita huset",description:"Museibutiken (exempel)",mapsUrl:""},{id:"demo-square",name:"Torget",description:"",mapsUrl:""}],activities=[{id:"demo-a1",title:"Entrékassor",placeId:"demo-gate",notes:"Välkomna besökarna och kontrollera biljetter.",dayNotes:{},staffingPattern:{shifts:[]}},{id:"demo-a2",title:"Julbutiken",placeId:"demo-shop",notes:"Kontrollera växelkassan vid passets början.",dayNotes:{1:"På lördagen är det extra mycket besökare."},staffingPattern:{shifts:[{id:"demo-source",kind:"ordinary",day:1,breaks:[{id:"demo-pause",start:"13:00",end:"13:30"}]},{id:"demo-rel-source",kind:"relief",day:1,breaks:[],reliefPeriods:[{breakId:"demo-pause",start:"13:00",end:"13:30"}]}]}},{id:"demo-a3",title:"Glöggförsäljning",placeId:"demo-square",notes:"Se till att glöggen hålls varm.",dayNotes:{},staffingPattern:{shifts:[]}}],assignments=[{id:"demo-s1",activityId:"demo-a1",personId:"demo-amanda",day:0,start:"15:00",end:"20:00",kind:"ordinary",breaks:[]},{id:"demo-s2",activityId:"demo-a1",personId:"demo-amanda",day:1,start:"09:00",end:"11:00",kind:"ordinary",breaks:[]},{id:"demo-s3",activityId:"demo-a2",personId:"demo-amanda",day:1,start:"11:00",end:"15:00",kind:"ordinary",breaks:[{id:"demo-pause",start:"13:00",end:"13:30",type:"Paus"}],patternShiftId:"demo-source"},{id:"demo-s4",activityId:"demo-a3",personId:"demo-amanda",day:1,start:"15:30",end:"18:00",kind:"ordinary",breaks:[]},{id:"demo-s5",activityId:"demo-a2",personId:"demo-ludvig",day:1,start:"13:00",end:"13:30",kind:"relief",breaks:[],patternShiftId:"demo-rel-source"},{id:"demo-s6",activityId:"demo-a2",personId:"demo-sara",day:1,start:"11:00",end:"15:00",kind:"ordinary",breaks:[]},{id:"demo-s7",activityId:"demo-a1",personId:"demo-amanda",day:2,start:"10:00",end:"14:00",kind:"ordinary",breaks:[]}];return {schemaVersion:1,year:state.year,revision:1,places,people,activities,assignments};}
 function setDemo(){stopListeners();state.demo=true;if(TEST)state.day=TEST.day;state.plan=exampleData();state.registerPeople=state.plan.people;state.registerPlaces=state.plan.places;state.status="live";state.error="";state.cached=false;state.personId="";state.detailPersonId=null;state.view="home";render();}
@@ -674,37 +675,67 @@ async function copyLink(){const url=sharedUrl();if(!url)return;try{await navigat
 async function shareLink(){const url=sharedUrl();if(!url)return;if(navigator.share){try{await navigator.share({title:"Mitt Julstök",text:"Öppna ditt personliga schema för Julstöket.",url});}catch(error){if(error.name!=="AbortError")toast("Delningen misslyckades.");}}else await copyLink();}
 // Händelsedelegering gör att sökning och navigering fungerar efter varje renderering.
 document.addEventListener("click",event=>{const button=event.target.closest("[data-action]");if(!button)return;const action=button.dataset.action;
-  if(action==="view"){state.view=button.dataset.view;state.detailPersonId=null;state.personFrom=null;render();window.scrollTo(0,0);return;}
-  if(action==="set-person"){rememberPerson(namedPerson(button.dataset.id));state.nameSearch="";state.view="home";render();window.scrollTo(0,0);return;}
-  if(action==="choose"){state.personId="";storeDel(STORE.person);storeDel(STORE.personMeta);state.nameSearch="";state.view="home";render();$("nameInput")?.focus();return;}
+  if(action==="view"){state.view=button.dataset.view;state.detailPersonId=null;state.personFrom=null;syncHistory();render();window.scrollTo(0,0);return;}
+  if(action==="set-person"){rememberPerson(namedPerson(button.dataset.id));state.nameSearch="";state.view="home";state.detailPersonId=null;syncHistory();render();window.scrollTo(0,0);return;}
+  if(action==="choose"){state.personId="";storeDel(STORE.person);storeDel(STORE.personMeta);state.nameSearch="";state.view="home";state.detailPersonId=null;syncHistory();render();$("nameInput")?.focus();return;}
   if(action==="day"){state.day=Number(button.dataset.day);render();window.scrollTo(0,0);return;}
-  if(action==="person"){state.personFrom=button.dataset.from||null;if(state.personFrom==="search")state.searchScroll=window.scrollY;state.detailPersonId=button.dataset.id;state.view="people";render();window.scrollTo(0,0);return;}
+  if(action==="person"){const origin=button.dataset.from||(state.view==="places"||state.view==="search"?state.view:null);state.personFrom=origin;if(origin)state.searchScroll=window.scrollY;state.detailPersonId=button.dataset.id;state.view="people";syncHistory();render();window.scrollTo(0,0);return;}
   if(action==="person-back"){personBack();return;}
   if(action==="retry"){if(firestore)listen();else connect();return;}
   if(action==="demo"){setDemo();return;}
   if(action==="share"){shareLink();return;}
   if(action==="copy"){copyLink();return;}
 });
-function personBack(){
-  state.detailPersonId=null;
-  if(state.personFrom==="search"){state.view="search";state.personFrom=null;render();window.scrollTo(0,state.searchScroll||0);return;}
+// Navigeringsnivåer: 0 = Min dag, 1 = flik (Kollegor, Platser, Sök, Dela), 2 = person.
+// Varje nivå har en historikpost, så telefonens bakåtgest/bakåtknapp går en nivå upp i stället för att stänga appen.
+let histPending=false,histTimer=null;
+function navLevel(){return state.detailPersonId?2:state.view!=="home"?1:0;}
+function histLevel(){try{return Number(history.state?.jul)||0;}catch{return 0;}}
+function syncHistory(){
+  if(histPending)return;
+  const target=navLevel(),cur=histLevel();
+  try{
+    if(target>cur){for(let i=cur+1;i<=target;i++)history.pushState({jul:i},"");}
+    else if(target<cur){histPending=true;clearTimeout(histTimer);histTimer=setTimeout(()=>{histPending=false;},600);history.go(target-cur);}
+  }catch{histPending=false;}
+}
+function personBackNow(){
+  const from=state.personFrom;
+  state.detailPersonId=null;state.personFrom=null;
+  if(from==="search"||from==="places"){state.view=from;render();window.scrollTo(0,state.searchScroll||0);return;}
   render();
 }
-// Svep åt höger i en persons vy går tillbaka (till Kollegor, eller till sökningen om man kom därifrån).
+function levelUp(){
+  if(state.detailPersonId){personBackNow();return;}
+  if(state.view!=="home"){state.view="home";render();window.scrollTo(0,0);}
+}
+function personBack(){if(histLevel()>0&&navLevel()>0)history.back();else levelUp();}
+window.addEventListener("popstate",()=>{
+  histPending=false;clearTimeout(histTimer);
+  const k=histLevel();let guard=3;
+  while(navLevel()>k&&guard--)levelUp();
+  syncHistory();
+});
+// Svep åt höger i en undervy går en nivå upp. Pekhändelser fungerar för både finger och mus.
+// I undervyer sätts touch-action så att webbläsaren bara tar hand om lodrät scrollning
+// och lämnar det horisontella svepet till appen.
 let swipeStart=null;
-document.addEventListener("touchstart",event=>{
-  if(state.view!=="people"||!state.detailPersonId||event.touches.length!==1||event.target.closest?.(".vg-scroll,input,textarea,select")){swipeStart=null;return;}
-  const t=event.touches[0];swipeStart={x:t.clientX,y:t.clientY,time:Date.now()};
+function swipeAllowed(){return navLevel()>0&&!!currentPerson();}
+document.addEventListener("pointerdown",event=>{
+  if(!swipeAllowed()||!event.isPrimary||(event.pointerType==="mouse"&&event.button!==0)||event.target.closest?.(".vg-scroll,input,textarea,select")){swipeStart=null;return;}
+  swipeStart={x:event.clientX,y:event.clientY,time:Date.now(),id:event.pointerId};
 },{passive:true});
-document.addEventListener("touchend",event=>{
-  if(!swipeStart)return;
-  const t=event.changedTouches[0],dx=t.clientX-swipeStart.x,dy=t.clientY-swipeStart.y,dt=Date.now()-swipeStart.time;
+document.addEventListener("pointerup",event=>{
+  if(!swipeStart||event.pointerId!==swipeStart.id)return;
+  const dx=event.clientX-swipeStart.x,dy=event.clientY-swipeStart.y,dt=Date.now()-swipeStart.time;
   swipeStart=null;
-  if(dx>70&&dx>Math.abs(dy)*1.8&&dt<800&&state.detailPersonId)personBack();
+  if(swipeAllowed()&&dx>60&&dx>Math.abs(dy)*1.5&&dt<1000)personBack();
 },{passive:true});
-document.addEventListener("touchcancel",()=>{swipeStart=null;},{passive:true});
+document.addEventListener("pointercancel",()=>{swipeStart=null;},{passive:true});
+
 document.addEventListener("input",event=>{const input=event.target;if(input.id==="nameInput"){state.nameSearch=input.value;focusRender("nameInput");}if(input.id==="searchInput"){state.query=input.value;focusRender("searchInput");}});
-function init(){const showDemo=new URLSearchParams(location.search).get("demo")==="1";if(showDemo)setDemo();else if(state.seasonMode!=="active"){render();}else{readCache(state.year);reconcilePerson();render();connect();}
+function init(){try{if(histLevel()>0)history.replaceState({jul:0},"");}catch{}
+  const showDemo=new URLSearchParams(location.search).get("demo")==="1";if(showDemo)setDemo();else if(state.seasonMode!=="active"){render();}else{readCache(state.year);reconcilePerson();render();connect();}
   minuteTimer=setInterval(refreshClock,30000);
   if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost"))navigator.serviceWorker.register("service-worker.js",{updateViaCache:"none"}).then(reg=>reg.update()).catch(()=>{});
 }
