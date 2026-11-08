@@ -168,3 +168,4 @@
 .vertical-gantt .vg-num-me{background:var(--gt-me);color:#06223f}
 .vertical-gantt .vg-now{background:var(--gt-now)}
 .vertical-gantt 
+.place-entry{position:relative}.place-entry .place-photo{position:absolute;top:12px;right:12px;width:64px;height:64px;object-fit:cover;border-radius:10px;border:1px solid var(--line);background:#f5f7f2}.place-entry:has(.place-photo) h3,.place-entry:has(.place-photo) .desc{padding-right:78px}
