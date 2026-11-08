@@ -10835,8 +10835,26 @@ function isListedPlace(place) {
   return !isGeneralPlaceName(place.name);
 }
 
+// Platstyper: först Punkt, Hus, Område, sedan resten i bokstavsordning.
+const PLACE_TYPES=[
+  {value:"spot",label:"Punkt (standard)",image:"map_spot.png"},
+  {value:"house",label:"Hus",image:"map_house.png"},
+  {value:"area",label:"Område",image:"map_area.png"},
+  {value:"allmogehallen",label:"Allmogehallen",image:"allmogehallen.png"},
+  {value:"arbetarbostaden",label:"Arbetarbostaden",image:"arbetarbostaden.png"},
+  {value:"blekingegarden",label:"Blekingegården",image:"blekingegarden.png"},
+  {value:"bosmalatorpet",label:"Bosmålatorpet",image:"bosmalatorpet.png"},
+  {value:"cafeet",label:"Caféet",image:"cafeet.png"},
+  {value:"green_gate",label:"Gröna grinden",image:"green_gate.png"},
+  {value:"hylla_smedja",label:"Hylla Smedja",image:"hylla_smedja.png"},
+  {value:"onsjostugan",label:"Onsjöstugan",image:"onsjostugan.png"},
+  {value:"red_gate",label:"Röda grinden",image:"red_gate.png"},
+  {value:"black_gate",label:"Svarta grinden",image:"black_gate.png"},
+  {value:"thomanderska_huset",label:"Thomanderska huset",image:"thomanderska_huset.png"},
+  {value:"vastra_vrams_prastgard",label:"Västra Vrams Prästgård",image:"vastra_vrams_prastgard.png"}
+];
 function placeTypeImage(type) {
-  return ({spot:"map_spot.png",area:"map_area.png",house:"map_house.png",green_gate:"green_gate.png",red_gate:"red_gate.png",black_gate:"black_gate.png"})[type] || "map_spot.png";
+  return PLACE_TYPES.find(t=>t.value===type)?.image || "map_spot.png";
 }
 function placeImageFile(value, type) {
   const name=String(value || "").trim();
@@ -12344,12 +12362,7 @@ function editPlace(id) {
   showDialog(old?"Redigera plats":"Ny plats","Platsregistret är gemensamt för alla planeringsår.",
     `<label class="field">Platsnamn<input id="placeName" required maxlength="150" value="${esc(old?.name || "")}"></label>
       <label class="field">Platstyp<select id="placeType">
-		<option value="spot"${!["area","house","green_gate","red_gate","black_gate"].includes(registered?.placeType || old?.placeType)?" selected":""}>Punkt (standard)</option>
-		<option value="area"${(registered?.placeType || old?.placeType)==="area"?" selected":""}>Område</option>
-		<option value="house"${(registered?.placeType || old?.placeType)==="house"?" selected":""}>Hus</option>
-		<option value="green_gate"${(registered?.placeType || old?.placeType)==="green_gate"?" selected":""}>Gröna grinden</option>
-		<option value="red_gate"${(registered?.placeType || old?.placeType)==="red_gate"?" selected":""}>Röda grinden</option>
-		<option value="black_gate"${(registered?.placeType || old?.placeType)==="black_gate"?" selected":""}>Svarta grinden</option>
+${PLACE_TYPES.map(t=>`<option value="${t.value}"${((PLACE_TYPES.some(x=>x.value===(registered?.placeType || old?.placeType))?(registered?.placeType || old?.placeType):"spot"))===t.value?" selected":""}>${t.label}</option>`).join("")}
       </select></label>
       <label class="field place-edit-description">Beskrivning<input id="placeDescription" type="text" maxlength="2000" value="${esc(registered?.description || old?.description || "")}"></label>
       <label class="field place-edit-maps">Google Maps-länk eller koordinater
