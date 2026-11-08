@@ -10836,7 +10836,7 @@ function isListedPlace(place) {
 }
 
 function placeTypeImage(type) {
-  return ({spot:"map_spot.png",area:"map_area.png",house:"map_house.png"})[type] || "map_spot.png";
+  return ({spot:"map_spot.png",area:"map_area.png",house:"map_house.png",green_gate:"green_gate.png",red_gate:"red_gate.png",black_gate:"black_gate.png"})[type] || "map_spot.png";
 }
 function placeImageFile(value, type) {
   const name=String(value || "").trim();
@@ -12344,9 +12344,12 @@ function editPlace(id) {
   showDialog(old?"Redigera plats":"Ny plats","Platsregistret är gemensamt för alla planeringsår.",
     `<label class="field">Platsnamn<input id="placeName" required maxlength="150" value="${esc(old?.name || "")}"></label>
       <label class="field">Platstyp<select id="placeType">
-        <option value="spot"${!["area","house"].includes(registered?.placeType || old?.placeType)?" selected":""}>Punkt (standard)</option>
-        <option value="area"${(registered?.placeType || old?.placeType)==="area"?" selected":""}>Område</option>
-        <option value="house"${(registered?.placeType || old?.placeType)==="house"?" selected":""}>Hus</option>
+		<option value="spot"${!["area","house","green_gate","red_gate","black_gate"].includes(registered?.placeType || old?.placeType)?" selected":""}>Punkt (standard)</option>
+		<option value="area"${(registered?.placeType || old?.placeType)==="area"?" selected":""}>Område</option>
+		<option value="house"${(registered?.placeType || old?.placeType)==="house"?" selected":""}>Hus</option>
+		<option value="green_gate"${(registered?.placeType || old?.placeType)==="green_gate"?" selected":""}>Gröna grinden</option>
+		<option value="red_gate"${(registered?.placeType || old?.placeType)==="red_gate"?" selected":""}>Röda grinden</option>
+		<option value="black_gate"${(registered?.placeType || old?.placeType)==="black_gate"?" selected":""}>Svarta grinden</option>
       </select></label>
       <label class="field place-edit-description">Beskrivning<input id="placeDescription" type="text" maxlength="2000" value="${esc(registered?.description || old?.description || "")}"></label>
       <label class="field place-edit-maps">Google Maps-länk eller koordinater
