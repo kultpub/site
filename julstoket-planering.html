@@ -4442,6 +4442,14 @@
     margin-top: 6px;
   }
 
+  /* Avlösning utanför pauser: markeras tills tiderna justerats. */
+  .activity-edit-modal .activity-pass[data-invalid] {
+    outline: 2px solid #b3261e;
+    outline-offset: -2px;
+  }
+  .activity-edit-modal .relief-day-hint { margin: 8px 0 0; }
+  .activity-edit-modal .relief-day-hint[data-invalid] { color: #b3261e; }
+
   .activity-edit-modal .formsection h3 {
     margin: 0 0 8px;
   }
@@ -7400,6 +7408,7 @@
 
   /* Samma ikonkolumn som knapparna i de två inramade grupperna. */
   @media (min-width:761px) {
+    .nav > button[data-id="shared-info"],
     .nav > button[data-id="places"],
     .nav > button[data-action="open-mobile"] {
       display: grid;
@@ -7408,6 +7417,7 @@
       margin-inline: 9px;
       width: calc(100% - 18px);
     }
+    .nav > button[data-id="shared-info"] .nav-title-wrap,
     .nav > button[data-id="places"] .nav-title-wrap {
       display: block;
     }
@@ -8342,14 +8352,22 @@ function historyActivityCard(activity,year) {
     </article>`;
 }
 
+function searchText(value) {
+  return String(value ?? "")
+    .normalize("NFC")
+    .toLocaleLowerCase("sv-SE")
+    .replace(/é/g, "e")
+    .replace(/['’‘ʼ]/g, "");
+}
+
 function filterHistoryActivities() {
-  const query=ui.historyQuery.trim().toLocaleLowerCase("sv-SE");
+  const query=searchText(ui.historyQuery.trim());
   const cards=[...modal.querySelectorAll(".history-activity")];
   const byId=new Map(historicalEdition(ui.bankYear).activities.map(activity => [activity.id,activity]));
   let shown=0,available=0;
   for (const card of cards) {
     const activity=byId.get(card.dataset.historyActivity);
-    const text=[activity?.title,activity?.place?.name].filter(Boolean).join(" ").toLocaleLowerCase("sv-SE");
+    const text=searchText([activity?.title,activity?.place?.name].filter(Boolean).join(" "));
     card.hidden=!!query && !text.includes(query);
     if (!card.hidden) { shown++; if (card.querySelector('input[name="historySelection"]:not(:disabled)')) available++; }
   }
@@ -8866,7 +8884,7 @@ function assignPatternActivity(activity, preferredDay=null) {
             <p id="staffingConflict-${index}" class="person-day-conflict" aria-live="polite" hidden></p></div>
         </section>`;
       }).join("")}</div></section>`).join("")}</div></div>`,
-    button("Avbryt","close")+saveButton("Spara bemanning"),async () => {
+    button("Avbryt","close")+saveButton("Spara bemanning",{track:true}),async () => {
       const stored=serializePersonDayDraft(activity,draft);
       const choices=groups.map(group => ({day:group.day,participantId:group.participantId,
         personId:draft.get(personDayKey(group)).personId}));
@@ -9594,8 +9612,8 @@ function render() {
     ["places","Platser","","Hantera platser där arbete utförs – och se vilket arbete som utförs på dessa."]
   ];
 
-const navButton=([view,label,count,tip]) => `
-    <button type="button" data-action="navigate" data-id="${view}" class="${ui.view===view?"active":""}">
+const navButton=([view,label,count,tip],action="navigate") => `
+    <button type="button" data-action="${action}" data-id="${view}" class="${ui.view===view?"active":""}"${action==="edit-shared-info"?' aria-haspopup="dialog"':""}>
       <span class="nav-title-wrap">
         <span>${label}</span>
         <span class="badge${count===""?" is-empty":""}"${count===""?' aria-hidden="true"':""}>${count}</span>
@@ -9604,6 +9622,7 @@ const navButton=([view,label,count,tip]) => `
     </button>`;
 $("navigation").innerHTML=`<section class="nav-stage" aria-label="Steg 1: Vad ska göras? Vem jobbar?"><div class="nav-stage-heading"><span>1</span> Vad ska göras? Vem jobbar?</div>${["activities","people"].map(view=>navButton(items.find(item=>item[0]===view))).join("")}</section><div class="nav-stage-arrow" aria-hidden="true">↓</div><section class="nav-stage" aria-label="Steg 2: Vem gör vad?"><div class="nav-stage-heading"><span>2</span> Vem gör vad?</div>${navButton(items.find(item=>item[0]==="staffing"))}</section>` + `
     <div class="nav-separator" role="separator"></div>
+    ${navButton(["shared-info","Instruktioner till alla","","Vem ringer man om man blir sjuk? Var är min lunchbiljett? Här kan du lägga in information som gäller alla medarbetare under hela Julstöket."],"edit-shared-info")}
     ${navButton(["places","Översikt platser","","Hantera platser där arbete utförs – och se vilket arbete som utförs på dessa."])}
     <button type="button" data-action="open-mobile"><span>Se mobilversion ↗</span><span class="location-info menu-info-icon" data-menu-tip="Förhandsgranska mobilversion av planens innehåll." aria-label="Förhandsgranska mobilversion av planens innehåll.">i</span></button>`;
 
@@ -9671,9 +9690,14 @@ function sortSelect(id,value) {
 }
 
 function activityDefinitions() {
-  const query=ui.query.toLocaleLowerCase("sv-SE"),selected=ui.activityDays;
+  const query=searchText(ui.query),selected=ui.activityDays;
   const matches=plan.activities.filter(activity =>
-    (!query || [activity.title,placeName(activity.placeId),activity.notes,...Object.values(activity.dayNotes || {})].join(" ").toLocaleLowerCase("sv-SE").includes(query)) &&
+    (!query || searchText([
+      activity.title,
+      placeName(activity.placeId),
+      activity.notes,
+      ...Object.values(activity.dayNotes || {})
+    ].join(" ")).includes(query)) &&
     (!selected.length || activityDays(activity).some(day => selected.includes(day))));
   return sortActivities(matches,ui.activitySort,selected);
 }
@@ -9963,7 +9987,7 @@ function activityPassEditorHTML(editor) {
   a.end.localeCompare(b.end)
 ).map(shift => {
           const label=patternPersonLabel(activity,day,shift.participantId);
-          return `<section class="activity-pass" data-editor-shift="${esc(shift.id)}">
+          return `<section class="activity-pass" data-editor-shift="${esc(shift.id)}" data-shift-kind="${esc(shift.kind)}">
             <div class="activity-pass-head"><strong${personColor(label)?` style="color:${personColor(label)}"`:""}>${esc(label)}</strong></div>
             <div class="activity-pass-times">
               ${pair(shift.start,shift.end,"pass",DAYS[day]+", "+label+", arbete")}</div>
@@ -9975,6 +9999,7 @@ function activityPassEditorHTML(editor) {
             <button type="button" class="remove remove-person-work" data-pass-edit="remove-shift" aria-label="Ta bort arbete för ${esc(label)}"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="m3 3 6 6M9 3 3 9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"/></svg></button>
           </section>`;
         }).join("")}</div>
+      <p class="hint relief-day-hint" data-relief-hint="${day}" hidden></p>
       <div class="activity-add-people"><button type="button" class="btn small" data-pass-edit="add-shift" data-day="${day}">+ Pass</button>
         <button type="button" class="btn small" data-pass-edit="add-relief" data-day="${day}">+ Avlösning</button></div>
     </section>`).join("")}</div>`;
@@ -9995,6 +10020,25 @@ function readPassEditorModel(editor) {
   return model;
 }
 
+// Avlösningar får bara ligga inom tid där någon har paus. Pauser som ligger kant i kant
+// eller överlappar bildar ett sammanhängande fönster; en avlösning får täcka flera pauser
+// men måste ligga helt inom ett och samma fönster. Svaret Ja/Nej på avlösningsfrågan
+// påverkar inte detta.
+function reliefCoverWindows(shifts,day) {
+  const ranges=shifts.filter(shift => shift.day===day && shift.kind!=="relief")
+    .flatMap(shift => (shift.breaks || []).filter(validRange).map(pause => ({start:minute(pause.start),end:minute(pause.end)})))
+    .sort((a,b) => a.start-b.start),windows=[];
+  for (const range of ranges) {
+    const last=windows.at(-1);
+    if (last && range.start<=last.end) last.end=Math.max(last.end,range.end);
+    else windows.push({...range});
+  }
+  return windows;
+}
+const reliefWithinWindows=(range,windows) => validRange(range) &&
+  windows.some(window => window.start<=minute(range.start) && minute(range.end)<=window.end);
+const reliefWindowText=windows => windows.map(window => time(window.start)+"–"+time(window.end)).join(", ");
+
 function syncPassEditorClocks() {
   modal.querySelectorAll("[data-pass-day]").forEach(panel => {
     const missing=[...panel.querySelectorAll(".pass-start,.pass-end,.pause-start,.pause-end")].some(input => !input.value);
@@ -10013,6 +10057,31 @@ function syncPassEditorClocks() {
       end._timeChoices=CLOCK_CHOICES.filter(value => value>start.value && windows.some(window => minute(start.value)>=window.start && minute(start.value)<window.end && minute(value)<=window.end));
       setClockDisabled(start,!windows.length);setClockDisabled(end,!start.value || !end._timeChoices.length);
     });
+  });
+  // Avlösningar: endast tid som täcks av pauser (en eller flera sammanhängande) kan väljas.
+  const editor=$("modalForm")?._activityEditor;
+  if (!editor) return;
+  const model=readPassEditorModel(editor);
+  modal.querySelectorAll("[data-pass-day]").forEach(panel => {
+    const day=Number(panel.dataset.passDay),windows=reliefCoverWindows(model.shifts,day);
+    const cards=[...panel.querySelectorAll('[data-editor-shift][data-shift-kind="relief"]')],invalid=[];
+    cards.forEach(card => {
+      const start=card.querySelector(".pass-start"),end=card.querySelector(".pass-end");
+      start._timeChoices=CLOCK_CHOICES.filter(value => windows.some(window => minute(value)>=window.start && minute(value)<window.end));
+      const own=windows.find(window => /^([01]\d|2[0-3]):[0-5]\d$/.test(start.value) && window.start<=minute(start.value) && minute(start.value)<window.end);
+      end._timeChoices=own?CLOCK_CHOICES.filter(value => value>start.value && minute(value)<=own.end):[];
+      setClockDisabled(start,!windows.length);setClockDisabled(end,!start.value || !end._timeChoices.length);
+      const range={start:start.value,end:end.value},bad=validRange(range) && !reliefWithinWindows(range,windows);
+      card.toggleAttribute("data-invalid",bad);
+      if (bad) invalid.push(card.querySelector(".activity-pass-head strong")?.textContent || "Avlösning");
+    });
+    const hint=panel.querySelector("[data-relief-hint]");
+    if (!hint) return;
+    hint.hidden=!cards.length;
+    hint.toggleAttribute("data-invalid",!!invalid.length || !windows.length);
+    hint.textContent=!windows.length?"Det finns inga pauser den här dagen. En avlösning måste täcka minst en paus – lägg först in pauser på de ordinarie passen."
+      :"Avlösning kan bara läggas inom tid där någon har paus: "+reliefWindowText(windows)+"."+
+        (invalid.length?" Justera tiderna för "+invalid.join(", ")+".":"");
   });
 }
 
@@ -10043,6 +10112,10 @@ function bindPassEditor(editor) {
       synchronizePauseReliefTimes(editor,readPassEditorModel(editor));
     }
     syncPassEditorClocks();
+    if (event.target.matches(".pass-start")) {
+      const card=event.target.closest('[data-shift-kind="relief"]'),end=card?.querySelector(".pass-end");
+      if (end?.value && !(end._timeChoices || []).includes(end.value)) {end.value="";refreshClockDisplay(end);syncPassEditorClocks();}
+    }
     renderPauseQuestions(editor);
   };
   form.addEventListener("change",changed);
@@ -10116,6 +10189,8 @@ function bindPassEditor(editor) {
         const day=Number(button.dataset.day),previous=editor.model.shifts.filter(shift => shift.day===day).sort((a,b) => a.end.localeCompare(b.end)).at(-1);
         editor.activeDay=day;
         if (action==="add-day") editor.pendingDays.add(day);
+        if (action==="add-relief" && !reliefCoverWindows(editor.model.shifts,day).length)
+          throw Error("En avlösning måste täcka en paus. Lägg först in minst en paus på ett ordinarie pass "+dayLower(day)+".");
         const person={id:uid(),label:"Pass "+(editor.model.participants.length+1)};
         const shift={id:uid(),participantId:person.id,requirementId:"",day,start:action==="add-relief"?"":previous?.end || "",end:"",kind:action==="add-relief"?"relief":"ordinary",breaks:[]};
         editor.model.participants.push(person);editor.model.shifts.push(shift);
@@ -10224,6 +10299,11 @@ function readActivityDraft(old,id,{preview=false}={}) {
       if (shift.breaks.some(other => other!==pause && overlaps(other,pause))) throw Error("Pauserna för "+person.label+" överlappar.");
     }
     shift.breaks.sort((a,b) => a.start.localeCompare(b.start));
+  }
+  for (const shift of pattern.shifts.filter(item => item.kind==="relief")) {
+    const windows=reliefCoverWindows(pattern.shifts,shift.day),label=patternPersonLabel({staffingPattern:pattern},shift.day,shift.participantId);
+    if (!reliefWithinWindows(shift,windows)) throw Error(label+" på "+dayLower(shift.day)+" måste täcka en eller flera pauser som tillsammans är en sammanhängande tid"+
+      (windows.length?" ("+reliefWindowText(windows)+").":" – det finns inga pauser den dagen."));
   }
   const requirements=requirementsFromPasses(pattern,old?.requirements || []);
   for (const shift of pattern.shifts) shift.requirementId=requirements.find(range => range.day===shift.day && range.start<=shift.start && range.end>shift.start)?.id;
@@ -10383,11 +10463,11 @@ function editActivity(id, preferredDay=null) {
     <div class="formsection"><h3>Arbetstider och pauser</h3>
       <div id="activityPassEditor"></div><div id="pauseReliefQuestions" aria-live="polite" hidden></div>
     </div>`,
-    (old?button("Ta bort","delete-activity-options",old.id,"danger push-left"):"")+button("Avbryt","close")+saveButton(old?"Spara ändringar":"Skapa aktivitet"),
+    (old?button("Ta bort","delete-activity-options",old.id,"danger push-left"):"")+button("Avbryt","close")+saveButton(old?"Spara aktivitet":"Skapa aktivitet",{track:!!old}),
     async () => {
       const activity=readActivityDraft(old,draftId);activity.title=$("actTitle").value.trim();
       if (!activity.requirements.length) throw Error("Lägg till minst ett arbete.");
-      if (!await reviewPauseRelief(activity)) return;
+      if (!await reviewPauseRelief(activity)) return false;
       const preview=clone(plan);rebasePassChoices(editor,activity,preview);
       await commit(data => {
         mapEditorAssignments(editor,data);synchronizePatternAssignments(data,activity);
@@ -10516,15 +10596,14 @@ function staffingCoverage(activityId,day,data=plan) {
     label:String(Math.round(percent))};
 }
 
-
 function staffingCards() {
-  const query=ui.query.toLocaleLowerCase("sv-SE");
+  const query=searchText(ui.query);
   const selected=ui.staffingDays;
   const matches=plan.activities.filter(activity => {
     const days=activityDays(activity).filter(day => !selected.length || selected.includes(day));
     const names=plan.assignments.filter(s => s.activityId===activity.id).map(s => personName(s.personId));
     return days.length>0 && (!ui.onlyGaps || days.some(day => gaps(activity.id,day).length)) &&
-      (!query || [activity.title,placeName(activity.placeId),...names].join(" ").toLocaleLowerCase("sv-SE").includes(query));
+      (!query || searchText([activity.title,placeName(activity.placeId),...names].join(" ")).includes(query));
   });
   const activities=sortActivities(matches,ui.staffingSort,selected);
   if (!activities.length) return `<div class="empty"><h3>Inga aktiviteter att visa</h3><p>${plan.activities.length?"Ändra sökningen eller urvalet.":"Lägg först till en aktivitet i Aktiviteter."}</p></div>`;
@@ -10668,12 +10747,12 @@ function sortPeople(people,order=ui.peopleSort,day=ui.peopleDay) {
     return (field==="end"?right.localeCompare(left):left.localeCompare(right)) || compareNames(a,b);
   });
 }
+
 function selectedPeople() {
-  const query=ui.peopleQuery.toLocaleLowerCase("sv-SE");
+  const query=searchText(ui.peopleQuery);
   return sortPeople(plan.people.filter(person =>
     (ui.peopleDay===null || person.availability.some(range=>range.day===ui.peopleDay)) &&
-    (!query || [person.name,person.phone,formatPhone(person.phone)]
-      .join(" ").toLocaleLowerCase("sv-SE").includes(query))
+    (!query || searchText([person.name,person.phone,formatPhone(person.phone)].join(" ")).includes(query))
   ));
 }
 
@@ -10861,7 +10940,7 @@ function placeImageFile(value, type) {
   return /^[a-zA-Z0-9_(). -]+\.(png|jpe?g|webp|gif|avif)$/i.test(name)?name:placeTypeImage(type);
 }
 function placeCards() {
-  const normalize=value=>String(value || "").toLocaleLowerCase("sv-SE").replace(/\s+/g," ").trim();
+  const normalize=value=>searchText(value).replace(/\s+/g," ").trim();
   const terms=normalize(ui.placesQuery).split(" ").filter(Boolean);
   return plan.places.filter(isListedPlace).sort((a,b)=>a.name.localeCompare(b.name,"sv")).map(place=>{
     const registered=placeDirectory.find(item=>item.id===place.id) || {};
@@ -10978,7 +11057,9 @@ function showDialog(title,subtitle,body,footer="",onSubmit=null) {
         }
         throw Error("Välj timme och minuter för alla tider innan du sparar.");
       }
-      await onSubmit();
+      const result=await onSubmit();
+      const form=$("modalForm");
+      if (result!==false && form?._markSaved && form.isConnected && modal.open) form._markSaved();
     } catch (error) {
       showError(error);
     } finally {
@@ -10987,7 +11068,84 @@ function showDialog(title,subtitle,body,footer="",onSubmit=null) {
   };
 
   if (!modal.open) modal.showModal();
+  trackDialogChanges($("modalForm"));
   $("modalTitle").focus({preventScroll:true});
+}
+
+// Mitt Julstök läser sharedInfo i julstokPlans/{år}. Kontakternas id:n
+// matchas mot people[].id i samma dokument för aktuellt namn och telefonnummer.
+const SICK_CONTACT_DAYS=["friday","saturday","sunday"];
+
+function editSharedInfo() {
+  const year=plan.year;
+  const initial=plan.sharedInfo;
+  const people=plan.people.slice().sort((a,b)=>a.name.localeCompare(b.name,"sv"));
+  const options=people.map(person=>`<option value="${esc(person.id)}">${esc(person.name)}</option>`).join("");
+  const contactFields=SICK_CONTACT_DAYS.map((key,day)=>{
+    const personId=initial?.sickContactPersonIds?.[key];
+    const missingOption=personId && !people.some(person=>person.id===personId)
+      ? `<option value="${esc(personId)}">Tidigare vald person saknas</option>` : "";
+    return `<div class="formsection" data-sick-contact="${key}">
+      <h3>${DAYS[day]}</h3>
+      <div class="formgrid">
+        <label class="field">Namn<select aria-label="Kontaktperson ${DAYS[day]}" aria-describedby="sickContactHint-${key}">
+          <option value="">Ingen vald</option>${missingOption}${options}
+        </select></label>
+        <label class="field" data-no-dirty>Telefonnummer<input type="tel" readonly aria-label="Telefonnummer ${DAYS[day]}"></label>
+      </div>
+      <p class="hint" id="sickContactHint-${key}" aria-live="polite"></p>
+    </div>`;
+  }).join("");
+  showDialog("Instruktioner till alla",`Gemensam information för Julstöket ${year}.`,
+    `<label class="field">Instruktioner till alla medarbetare
+      <textarea id="sharedInfoText" rows="6"></textarea>
+    </label>
+    <div class="formsection">
+      <h3>Kontakt vid sjukfrånvaro</h3>
+      <p class="hint">Välj en person från Personal för varje dag. Telefonnummer hämtas automatiskt.</p>
+      ${contactFields}
+    </div>`,
+    button("Avbryt","close")+saveButton("Spara",{track:true}),async()=>{
+      if (plan.year!==year) throw Error("Planeringsåret har ändrats. Öppna Instruktioner till alla igen.");
+      const current=plan.sharedInfo;
+      if ((current?.text || "")!==(initial?.text || "") || SICK_CONTACT_DAYS.some(key=>
+        (current?.sickContactPersonIds?.[key] || null)!==(initial?.sickContactPersonIds?.[key] || null))) {
+        throw Error("Informationen har ändrats av någon annan. Öppna Instruktioner till alla igen innan du sparar.");
+      }
+      const sickContactPersonIds={};
+      for (const [day,key] of SICK_CONTACT_DAYS.entries()) {
+        const personId=modal.querySelector(`[data-sick-contact="${key}"] select`).value;
+        if (personId) {
+          const person=plan.people.find(item=>item.id===personId);
+          if (!person) throw Error(`${DAYS[day]}: Den valda personen finns inte i årets personal. Lägg till personen i Personal eller välj en annan.`);
+          if (!formatPhone(person.phone)) throw Error(`${DAYS[day]}: ${person.name} saknar telefonnummer i Personal.`);
+        }
+        sickContactPersonIds[key]=personId || null;
+      }
+      const text=$("sharedInfoText").value.trim();
+      await commit(data=>{data.sharedInfo={text,sickContactPersonIds};},"Instruktioner till alla är sparad.");
+      closeDialog();
+    });
+
+  $("sharedInfoText").value=initial?.text || "";
+  for (const key of SICK_CONTACT_DAYS) {
+    const row=modal.querySelector(`[data-sick-contact="${key}"]`);
+    const select=row.querySelector("select");
+    const phoneField=row.querySelector("input");
+    const hint=$(`sickContactHint-${key}`);
+    select.value=initial?.sickContactPersonIds?.[key] || "";
+    const updateContact=()=>{
+      const person=plan.people.find(item=>item.id===select.value);
+      const phone=formatPhone(person?.phone);
+      phoneField.value=phone;
+      hint.textContent=phone?"":person?"Personen saknar telefonnummer i Personal."
+        :select.value?"Den valda personen saknas i årets personal. Lägg till personen i Personal eller välj en annan."
+        :people.length?"":"Årets personal är tom. Lägg till personer i Personal först.";
+      hint.hidden=!hint.textContent;
+    };
+    select.addEventListener("change",updateContact);
+    updateContact();
+  }
 }
 
 function showError(error) {
@@ -11001,8 +11159,36 @@ function showError(error) {
   }
 }
 
-function saveButton(label="Spara") {
-  return `<button type="submit" class="btn primary">${esc(label)}</button>`;
+function saveButton(label="Spara",{track=false}={}) {
+  return `<button type="submit" class="btn primary"${track?" data-save-tracked":""}>${esc(label)}</button>`;
+}
+
+/* Spara-knappen är grå när posten visas oredigerad/sparad och grön så fort något ändras.
+   Jämförelsen sker mot formulärets värden när dialogen öppnades (eller senast sparades). */
+function dialogFormSignature(form) {
+  return [...form.querySelectorAll("input,select,textarea")]
+    .filter(control => !["search","button","submit"].includes(control.type) && !control.closest("[data-no-dirty]"))
+    .map(control => control.type==="checkbox" || control.type==="radio" ? (control.checked?"1":"0") : control.value)
+    .join("\u241F");
+}
+
+function trackDialogChanges(form) {
+  const save=form.querySelector("button[data-save-tracked]");
+  if (!save) return;
+  let baseline=null,pending=false;
+  const apply=dirty => {save.classList.toggle("primary",dirty);save.dataset.saveState=dirty?"dirty":"saved";};
+  const update=() => {
+    pending=false;
+    if (baseline===null || !form.isConnected) return;
+    apply(dialogFormSignature(form)!==baseline);
+  };
+  const schedule=() => {if (!pending) {pending=true;requestAnimationFrame(update);}};
+  form._markSaved=() => {baseline=dialogFormSignature(form);apply(false);};
+  apply(false);
+  // Utgångsläget läses när dialogen är färdigbyggd; vissa fält fylls i först efter ett ögonblick.
+  setTimeout(() => {if (form.isConnected) form._markSaved();},150);
+  ["input","change","click","keyup"].forEach(type => form.addEventListener(type,schedule));
+  new MutationObserver(schedule).observe(form,{childList:true,subtree:true});
 }
 
 function confirmAction(title,text,action) {
@@ -11210,7 +11396,7 @@ function editBulkAvailability() {
     `<label class="field">Sök person<input id="bulkPeopleSearch" type="search" placeholder="Sök namn…"></label>
     <label class="new-person-annual"><input type="checkbox" id="bulkSelectAll"> Markera alla synliga</label>
     <div class="directory-list" id="bulkPeople">${plan.people.slice().sort((a,b)=>a.name.localeCompare(b.name,"sv")).map(person=>
-      `<label class="directory-person" data-bulk-name="${esc(person.name.toLocaleLowerCase("sv-SE"))}"><input type="checkbox" data-bulk-person value="${esc(person.id)}"><span>${esc(person.name)}</span></label>`).join("")}</div>
+      `<label class="directory-person" data-bulk-name="${esc(searchText(person.name))}"><input type="checkbox" data-bulk-person value="${esc(person.id)}"><span>${esc(person.name)}</span></label>`).join("")}</div>
     <h3>Arbetsdagar och tider</h3>${availabilityFields()}`,
     button("Avbryt","close")+saveButton("Spara för valda personer"),async()=>{
       const ids=[...modal.querySelectorAll('[data-bulk-person]:checked')].map(input=>input.value),ranges=readAvailabilityFields();
@@ -11222,7 +11408,10 @@ function editBulkAvailability() {
       },"Arbetstiderna är sparade för de valda personerna.");closeDialog();
     });
   bindAvailabilityFields();
-  $("bulkPeopleSearch").oninput=()=>{const q=$("bulkPeopleSearch").value.toLocaleLowerCase("sv-SE");modal.querySelectorAll('[data-bulk-name]').forEach(row=>row.hidden=!row.dataset.bulkName.includes(q));};
+  $("bulkPeopleSearch").oninput=()=>{
+    const query=searchText($("bulkPeopleSearch").value);
+    modal.querySelectorAll('[data-bulk-name]').forEach(row=>row.hidden=!row.dataset.bulkName.includes(query));
+  };
   $("bulkSelectAll").onchange=event=>modal.querySelectorAll('[data-bulk-name]:not([hidden]) input').forEach(input=>input.checked=event.target.checked);
 }
 
@@ -11245,7 +11434,7 @@ function editPerson(id) {
       ${availabilityFields(old?.availability || [])}
     </div>`,
     (old?button("Ta bort","delete-person",old.id,"danger push-left"):"")+
-      button("Avbryt","close")+saveButton(),
+      button("Avbryt","close")+saveButton("Spara person",{track:!!old}),
     async () => {
       const person={
         ...(old || {}),
@@ -11336,13 +11525,13 @@ function levenshtein(a, b) {
 
 function findMatchingPeople(inputVal) {
   if (!inputVal || !inputVal.trim()) return [];
-  const query = inputVal.trim().toLowerCase();
+  const query = searchText(inputVal.trim());
   const queryTokens = query.split(/\s+/).filter(Boolean);
   if (!queryTokens.length) return [];
 
   const scored = [];
   for (const person of plan.people) {
-    const nameLower = person.name.toLowerCase();
+    const nameLower = searchText(person.name);
     const nameTokens = nameLower.split(/\s+/).filter(Boolean);
 
     let totalScore = 0;
@@ -11423,7 +11612,7 @@ function assignActivity(activityId, day) {
          </section>`;
        }).join("")}
      </div>`,
-    button("Avbryt", "close") + saveButton("Spara bemanning"),
+    button("Avbryt", "close") + saveButton("Spara bemanning",{track:true}),
 	async () => {
       const containers = modal.querySelectorAll(".staff-select-container");
       const newAssignments = [];
@@ -12266,8 +12455,8 @@ function updateDirectorySelection() {
 }
 function renderDirectoryList() {
   const host=$("directoryList");if (!host) return;
-  const query=($("directorySearch")?.value || "").toLocaleLowerCase("sv-SE");
-  host.innerHTML=peopleDirectory.filter(person=>[person.name,person.phone].join(" ").toLocaleLowerCase("sv-SE").includes(query))
+  const query=searchText($("directorySearch")?.value);
+  host.innerHTML=peopleDirectory.filter(person=>searchText([person.name,person.phone].join(" ")).includes(query))
     .sort((a,b)=>a.name.localeCompare(b.name,"sv")).map(person=>{
       const added=personAlreadyAdded(person);
       return `<div class="directory-person"><label><input type="checkbox" data-directory-select value="${esc(person.id)}" ${added?"disabled":directorySelection.has(person.id)?"checked":""}><span><strong>${esc(person.name)}</strong><small>${esc(person.phone) || "Telefon ej angiven"}${added?" · Redan tillagd":""}</small></span></label>
@@ -12323,7 +12512,7 @@ function editDirectoryPerson(id) {
   showDialog(old?"Redigera registerperson":"Ny person","",
     `<div class="formgrid"><label class="field">Namn<input id="directoryName" required maxlength="100" value="${esc(old?.name || "")}"></label><label class="field">Telefon<input id="directoryPhone" type="tel" maxlength="150" value="${esc(old?.phone || "")}"></label></div>
     ${old?"":`<label class="new-person-annual"><input type="checkbox" id="newPersonAnnual" checked> Lägg också till i personalen för ${plan.year}</label><section id="newPersonTimes"><h3>Arbetsdagar och tider</h3>${availabilityFields()}</section>`}`,
-    (old?button("Ta bort ur registret","directory-delete",old.id,"danger push-left"):"")+button("Avbryt","directory-manage")+saveButton(),
+    (old?button("Ta bort ur registret","directory-delete",old.id,"danger push-left"):"")+button("Avbryt","directory-manage")+saveButton("Spara person",{track:!!old}),
     async()=>{
       const value={name:$("directoryName").value.trim(),phone:formatPhone($("directoryPhone").value)};
       if (!value.name) throw Error("Ange ett namn.");
@@ -12372,7 +12561,7 @@ ${PLACE_TYPES.map(t=>`<option value="${t.value}"${((PLACE_TYPES.some(x=>x.value=
       </label>
       <p class="hint">Klistra in en Maps-länk, GPS-koordinater eller en adress. Allt sparas som en Google Maps-länk.</p>
       <p class="place-maps-preview" id="placeMapsPreview" hidden><a id="placeMapsPreviewLink" target="_blank" rel="noopener noreferrer">Öppna i Google Maps</a></p>`,
-    (registered?button("Ta bort","delete-place",id,"danger push-left"):"")+button("Avbryt","close")+saveButton(),async()=>{
+    (registered?button("Ta bort","delete-place",id,"danger push-left"):"")+button("Avbryt","close")+saveButton("Spara plats",{track:!!old}),async()=>{
       const value={name:$("placeName").value.trim(),description:$("placeDescription").value.trim(),
         mapsUrl:normalizeGoogleMapsLink($("placeMapsUrl").value),placeType:$("placeType").value || "spot",imageFile:registered?.imageFile || old?.imageFile || ""};
       if (!value.name || isGeneralPlaceName(value.name)) throw Error("Ange ett platsnamn. Allmänt väljs på aktiviteten.");
@@ -12916,6 +13105,7 @@ document.addEventListener("click",async event => {
     if (action==="choose-place") chooseActivityPlace(id);
     if (action==="edit-instructions") editActivityInstructions();
     if (action==="navigate") navigate(id);
+    if (action==="edit-shared-info") {editSharedInfo();return;}
     if (action==="open-mobile") {openMobileVersion();return;}
     
     if (action==="close") closeDialog();
