@@ -175,3 +175,31 @@
 .top-actions { flex-shrink: 0; }
 .shared-info-text { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.55; }
 .sick-contact { flex-wrap: wrap; overflow-wrap: anywhere; }
+
+/* Olästa schemaändringar på info-knappen. */
+.top-icon[data-view="info"] { position: relative; }
+.schedule-notice-dot {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--green);
+  border-radius: 50%;
+  background: #ff5659;
+  box-sizing: content-box;
+}
+.schedule-changes-dialog {
+  width: min(420px, calc(100% - 32px));
+  max-height: min(78dvh, 600px);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 20px;
+  color: var(--green);
+  background: var(--paper);
+}
+.schedule-changes-dialog::backdrop { background: #122d24a6; }
+.schedule-changes-dialog h2 { margin: 0 0 14px; font-size: 21px; }
+.schedule-change-list { list-style: none; margin: 0 0 17px; padding: 0; }
+.schedule-change-list li { padding: 10px 0; border-bottom: 1px solid var(--line); }
+.schedule-change-list p { margin: 5px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.45; }
