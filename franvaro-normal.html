@@ -8,6 +8,13 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         input:disabled { background-color: #f1f5f9; color: #64748b; cursor: not-allowed; }
+        /* Startsidans knappar: något mindre text, och textdelen får krympa/radbrytas så den aldrig hamnar över pilen. */
+        #quickActions > button, #myRegistrationsSection > button { font-size: 15px; }
+        #quickActions > button > span:first-child, #myRegistrationsSection > button > span:first-child { min-width: 0; }
+        @media (max-width: 1023px) {
+            #quickActions > button > span:first-child, #myRegistrationsSection > button > span:first-child { padding-right: 12px; }
+        }
+        #editModal select:disabled { background-color: #f1f5f9; color: #64748b; cursor: not-allowed; }
         body { font-family: 'Inter', sans-serif; scrollbar-gutter: stable; }
         #appBody { --page-accent: #35553e; background-color: #eef3ef; }
         #appBody.login-theme { --page-accent: #713e55; background-color: #f5edf1; }
@@ -19,11 +26,16 @@
         #pageSubtitle { color: #ffffffd9; }
         #presenceInfoButton[hidden] { display: none; }
         #navIntranetBtn, #navStartBtn { color: var(--page-accent); }
-        #dateModalClose, #informationTooltipClose {
+        #dateModalClose, #editModalClose, #informationTooltipClose {
             transform: rotate(0deg);
             transition: transform 200ms ease, background-color 200ms ease;
         }
-        #dateModalClose:hover, #informationTooltipClose:hover { transform: rotate(90deg); }
+        /* Rotation bara vid hovring med mus; aldrig vid klick eller tryck på pekskärm. */
+        @media (hover: hover) and (pointer: fine) {
+            #dateModalClose:hover, #dateModalClose:active,
+            #editModalClose:hover, #editModalClose:active,
+            #informationTooltipClose:hover, #informationTooltipClose:active { transform: rotate(90deg); }
+        }
         #informationOverlay { position: fixed; inset: 0; z-index: 100; }
         #informationOverlay[hidden] { display: none; }
 		#informationTooltip {
@@ -49,6 +61,16 @@
             vertical-align: middle;
             margin-right: 6px;
         }
+        .offline-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #ef4444;
+            border-radius: 50%;
+            box-shadow: 0 0 0 3px #fee2e2;
+            vertical-align: middle;
+            margin-right: 6px;
+        }
         .quarter-time-picker {
             display: grid;
             grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
@@ -57,20 +79,19 @@
         }
         #intranetListContainer {
             --absence-name-height: 20px;
-            --absence-contact-height: 32px;
-            --absence-return-height: 32px;
+            --absence-contact-height: 20px;
         }
-        #intranetListContainer > .absence-row { align-items: flex-start; }
+        #intranetListContainer > .absence-row { align-items: flex-start; row-gap: 4px; }
         #intranetListContainer .absence-details {
             display: grid;
             grid-template-columns: minmax(0, 1fr);
-            grid-template-rows: var(--absence-name-height) var(--absence-contact-height) var(--absence-return-height);
+            grid-template-rows: var(--absence-name-height) var(--absence-contact-height);
             flex: 1;
             min-width: 0;
         }
         #intranetListContainer .absence-name { grid-row: 1; }
         #intranetListContainer .absence-contact { grid-row: 2; }
-        #intranetListContainer .absence-return { grid-row: 3; }
+        #intranetListContainer .absence-return { flex: 0 0 100%; }
         #intranetListContainer .absence-category {
             align-self: flex-start;
             justify-content: center;
@@ -81,11 +102,12 @@
         #appShell { transform: translateY(-15px); }
 
         #appBody[data-view="startView"] #appShell,
-        #appBody[data-view="intranetView"] #appShell {
-            height: 580px;
-            min-height: 580px;
+        #appBody[data-view="intranetView"] #appShell,
+        #appBody[data-view="myView"] #appShell {
+            height: 600px;
+            min-height: 600px;
         }
-        #appContent, #intranetView { min-height: 0; }
+        #appContent, #intranetView, #myView { min-height: 0; }
         #pageHeader { flex-shrink: 0; }
         #intranetListContainer {
             flex: 1 1 auto;
@@ -95,13 +117,15 @@
         }
 
         #appBody[data-view="startView"],
-        #appBody[data-view="intranetView"] {
+        #appBody[data-view="intranetView"],
+        #appBody[data-view="myView"] {
             align-items: flex-start;
         }
         @media (max-width: 1023px) {
             #appBody[data-view="startView"],
-            #appBody[data-view="intranetView"] {
-                padding-top: max(4rem, calc(50dvh - 266px));
+            #appBody[data-view="intranetView"],
+            #appBody[data-view="myView"] {
+                padding-top: max(4rem, calc(50dvh - 276px));
             }
         }
 
@@ -110,7 +134,8 @@
             #appShell { max-width: 920px; min-height: 520px; border-radius: 24px; }
             #appBody[data-view="loginView"] #appShell { max-width: 560px; min-height: 580px; }
             #appBody[data-view="startView"] #appShell,
-            #appBody[data-view="intranetView"] #appShell { width: 100%; max-width: 920px; }
+            #appBody[data-view="intranetView"] #appShell,
+            #appBody[data-view="myView"] #appShell { width: 100%; max-width: 920px; }
             #pageHeader { padding: 28px 36px; }
             #pageTitle { font-size: 28px; line-height: 1.25; }
             #pageSubtitle { font-size: 15px; margin-top: 8px; }
@@ -125,7 +150,8 @@
             #loginButton { min-height: 48px; }
 
             #quickActions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-            #quickActions > button { position: relative; min-height: 180px; padding: 24px; justify-content: center; font-size: 17px; }
+            #quickActions > button { position: relative; min-height: 180px; padding: 24px; justify-content: center; font-size: 16px; }
+            #myRegistrationsSection > button { font-size: 16px; }
             #quickActions > button + button { margin-top: 0; }
             #quickActions > button > span:first-child { flex-direction: column; gap: 16px; text-align: center; }
             #quickActions > button > span:first-child > span:first-child { width: 60px; height: 60px; }
@@ -133,9 +159,8 @@
 
             #absenceForm { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 24px; max-height: none; overflow: visible; padding-right: 0; }
             #absenceForm > * { min-width: 0; margin-top: 0; }
-            #absenceForm > div:first-child, #availabilityField { grid-column: 1 / -1; }
+            #absenceForm > div:first-child, #availabilityField, #offsiteShortWarning { grid-column: 1 / -1; }
             #dateFields { grid-column: 1 / -1; gap: 24px; }
-            #dateHint { grid-column: 1 / -1; font-size: 13px; }
             #durationFields { grid-column: 1 / -1; }
             #timeFields { grid-column: 1 / -1; gap: 24px; }
             #absenceForm input, #absenceForm select { min-height: 44px; font-size: 15px; }
@@ -146,16 +171,16 @@
             #intranetSortSelect { width: auto; }
             #intranetListContainer {
                 display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; max-height: none; overflow-y: auto;
-                --absence-name-height: 24px; --absence-contact-height: 22px; --absence-return-height: 22px;
+                --absence-name-height: 24px; --absence-contact-height: 22px;
             }
             #intranetListContainer > * { margin-top: 0; }
             #intranetListContainer > p { grid-column: 1 / -1; }
-            #intranetListContainer > .absence-row { min-width: 0; min-height: 100px; padding: 18px 20px; gap: 16px; }
+            #intranetListContainer > .absence-row { min-width: 0; min-height: 100px; padding: 18px 20px; gap: 4px 16px; }
             #intranetListContainer .absence-details { min-width: 0; }
             #intranetListContainer .absence-name { font-size: 16px; line-height: 1.5; }
             #intranetListContainer .absence-contact, #intranetListContainer .absence-return { font-size: 13px; line-height: 1.6; }
             #intranetListContainer .absence-category { font-size: 13px; padding: 6px 10px; width: 80px; min-height: 30px; }
-            #modalCard { max-width: 440px; padding: 28px; }
+            #modalCard, #editCard { max-width: 440px; padding: 28px; }
             #appBody button:focus-visible { outline: 2px solid var(--page-accent); outline-offset: 3px; }
             #informationTooltipClose:focus-visible { outline-color: white; }
         }
@@ -249,6 +274,19 @@
                     </button>
                 </div>
 
+                <div id="myRegistrationsSection" class="space-y-3">
+                    <hr class="border-slate-200">
+                    <button onclick="goToView('myView')" class="w-full bg-white hover:bg-slate-50 border-2 border-slate-200 hover:border-[#2c4a3e] p-4 rounded-xl text-left font-semibold text-slate-700 flex justify-between items-center transition group shadow-sm">
+                        <span class="flex items-center gap-3">
+                            <span class="w-12 h-12 rounded-xl bg-[#eaf0e9] text-[#315b47] flex items-center justify-center shrink-0">
+                                <svg class="w-6 h-6 fill-none stroke-current stroke-[1.6] stroke-linecap-round stroke-linejoin-round" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9zM9 12h6M9 16h4"/></svg>
+                            </span>
+                            <span>Mina registreringar</span>
+                        </span>
+                        <span class="text-slate-400 group-hover:text-[#2c4a3e] transition text-xl">›</span>
+                    </button>
+                </div>
+
                 <div class="mt-auto pt-4 border-t border-slate-100 text-center">
                     <button onclick="handleLogout()" class="text-sm text-rose-600 hover:text-rose-700 font-semibold">Logga ut</button>
                 </div>
@@ -269,8 +307,7 @@
                         <select id="reason" onchange="updateAbsenceForm(true)" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#2c4a3e] text-sm bg-white font-medium">
                             <option value="Semester">Semester</option>
                             <option value="Hemarbete">Arbete på annan ort</option>
-                            <option value="Vårdbesök">Vårdbesök</option>
-                            <option value="Kompledighet">Kompledighet</option>
+                            <option value="Kompledighet">Kompledighet / Disponibel tid</option>
                             <option value="Tjänstledig">Tjänstledig / Föräldraledig</option>
                             <option value="Annan privat anledning">Annan privat anledning</option>
                         </select>
@@ -282,20 +319,19 @@
                             <input type="date" id="startDate" required onchange="updateAbsenceForm()" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-[#2c4a3e] text-xs font-medium">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold uppercase text-slate-500 mb-1" for="endDate">Till datum</label>
-                            <input type="date" id="endDate" required onchange="updateAbsenceForm()" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-[#2c4a3e] text-xs font-medium">
+                            <label class="block text-xs font-semibold uppercase text-slate-500 mb-1" for="returnDate">Åter i tjänst</label>
+                            <input type="date" id="returnDate" required onchange="updateAbsenceForm()" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:border-[#2c4a3e] text-xs font-medium">
                         </div>
                     </div>
 
-                    <p id="dateHint" class="text-xs text-slate-500" aria-live="polite"></p>
-
-                    <div id="durationFields" class="hidden">
+                    <div id="durationFields">
                         <label for="dayExtent" class="block text-xs font-semibold uppercase text-slate-500 mb-1">Frånvarons omfattning</label>
-                        <select id="dayExtent" onchange="updateAbsenceForm()" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#2c4a3e] text-sm bg-white font-medium">
+                        <select id="dayExtent" onchange="updateAbsenceForm(false, true)" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#2c4a3e] text-sm bg-white font-medium">
                             <option value="">Välj heldag eller del av dag</option>
                             <option value="full">Heldag</option>
                             <option value="partial">Del av dag</option>
                         </select>
+                        <p id="offsiteNote" class="hidden text-xs text-slate-500 mt-2">Frånvaro på grund av <strong>arbete på annan ort</strong> gäller när frånvaron omfattar minst 4 timmar (halvdag) – inte vid korta ärenden eller t.ex. möten förlagda på annan ort.</p>
                     </div>
 
                     <div id="timeFields" class="grid grid-cols-2 gap-2 hidden">
@@ -319,6 +355,8 @@
                         </div>
                     </div>
 
+                    <p id="offsiteShortWarning" role="alert" class="hidden text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2.5 leading-relaxed"></p>
+
                     <div id="availabilityField">
                         <label class="block text-xs font-semibold uppercase text-slate-500 mb-1" for="availability">Tillgänglighet</label>
                         <select id="availability" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#2c4a3e] text-sm bg-white font-medium shadow-sm">
@@ -332,6 +370,18 @@
                 <button type="submit" form="absenceForm" class="w-full bg-[#2c4a3e] hover:bg-[#1f342b] text-white py-3.5 rounded-xl font-semibold shadow-lg shadow-[#2c4a3e]/15 transition duration-200 mt-auto">
                     Skicka anmälan
                 </button>
+            </div>
+
+            <!-- VIEW 5: MINA REGISTRERINGAR -->
+            <div id="myView" class="view hidden flex-col flex-1 space-y-4">
+                <div>
+                    <button onclick="goToView('startView')" class="text-[#2c4a3e] font-semibold text-sm flex items-center gap-1 mb-2 hover:underline">
+                        ← Tillbaka
+                    </button>
+                    <h2 class="text-xl font-bold text-[#2c4a3e]">Mina registreringar</h2>
+                    <p class="text-slate-500 text-sm mt-1">Du kan ändra sådant som ännu inte har inträffat. Det som redan har passerat kan inte ändras.</p>
+                </div>
+                <div id="myListContainer" class="space-y-3 overflow-y-auto flex-1 min-h-0 pr-1" aria-live="polite"></div>
             </div>
 
             <!-- VIEW 4: INTRANET LIST VIEW -->
@@ -359,12 +409,11 @@
             </button>
 
             <h3 id="modalTitle" class="text-lg font-bold text-[#2c4a3e] mb-1">Från vilken dag?</h3>
-            <p id="modalSubtitle" class="text-slate-500 text-xs mb-4">Välj när frånvaron börjar gälla.</p>
+            <p id="modalSubtitle" class="text-slate-500 text-sm font-medium mb-4">Från när gäller anmälan?</p>
             
             <div class="space-y-4">
                 <div>
-                    <label class="block text-xs font-semibold uppercase text-slate-500 mb-1">Gäller från</label>
-                    <select id="quickDateSelect" class="w-full px-3 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-[#2c4a3e] text-sm bg-white font-medium shadow-sm">
+                    <select id="quickDateSelect" aria-labelledby="modalSubtitle" class="w-full px-3 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-[#2c4a3e] text-sm bg-white font-medium shadow-sm">
                         <!-- Populated via JS -->
                     </select>
                 </div>
@@ -378,6 +427,55 @@
                     </button>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- EDIT MODAL (Mina registreringar) -->
+    <div id="editModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center p-4 z-50 transition-opacity duration-300">
+        <div id="editCard" class="bg-white w-full max-w-sm rounded-2xl shadow-2xl p-6 relative transform scale-95 transition-transform duration-300 max-h-[calc(100dvh-32px)] overflow-y-auto">
+            <button id="editModalClose" type="button" onclick="closeEditModal()" aria-label="Stäng" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600">
+                <svg aria-hidden="true" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+            </button>
+
+            <h3 id="editTitle" class="text-lg font-bold text-[#2c4a3e] mb-1 pr-10">Ändra registrering</h3>
+            <p id="editSubtitle" class="text-slate-500 text-sm font-medium mb-4"></p>
+
+            <form id="editForm" onsubmit="saveEdit(event)" novalidate class="space-y-4">
+                <div id="editStartGroup" class="space-y-2">
+                    <label for="editStartDate" class="block text-xs font-semibold uppercase text-slate-500">Start</label>
+                    <input type="date" id="editStartDate" onchange="onEditStartChange()" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#2c4a3e] text-sm font-medium">
+                    <div id="editStartTimeWrap" class="quarter-time-picker">
+                        <select id="editStartHour" aria-label="Starttid, timme" onchange="onEditTimeChange(this)" class="min-w-0 w-full px-2 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#2c4a3e] text-sm font-medium bg-white shadow-sm"></select>
+                        <span aria-hidden="true" class="text-slate-400 font-semibold">:</span>
+                        <select id="editStartMinute" aria-label="Starttid, minut" onchange="onEditTimeChange(this)" class="min-w-0 w-full px-2 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#2c4a3e] text-sm font-medium bg-white shadow-sm"></select>
+                    </div>
+                    <p id="editStartLocked" class="hidden text-xs text-slate-500">Starten har redan inträffat och kan inte ändras.</p>
+                </div>
+
+                <div id="editReturnGroup" class="space-y-2">
+                    <label for="editReturnDate" class="block text-xs font-semibold uppercase text-slate-500">Åter i tjänst</label>
+                    <input type="date" id="editReturnDate" onchange="evaluateEdit()" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#2c4a3e] text-sm font-medium">
+                    <div id="editReturnTimeWrap">
+                        <label id="editReturnTimeLabel" for="editReturnHour" class="block text-xs font-semibold uppercase text-slate-500 mb-1">Klockslag (valfritt)</label>
+                        <div class="quarter-time-picker">
+                            <select id="editReturnHour" aria-label="Åter i tjänst, timme" onchange="onEditTimeChange(this)" class="min-w-0 w-full px-2 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#2c4a3e] text-sm font-medium bg-white shadow-sm"></select>
+                            <span aria-hidden="true" class="text-slate-400 font-semibold">:</span>
+                            <select id="editReturnMinute" aria-label="Åter i tjänst, minut" onchange="onEditTimeChange(this)" class="min-w-0 w-full px-2 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#2c4a3e] text-sm font-medium bg-white shadow-sm"></select>
+                        </div>
+                    </div>
+                </div>
+
+                <p id="editError" role="alert" class="hidden text-sm text-rose-600 font-medium"></p>
+
+                <div class="space-y-2 pt-1">
+                    <button id="editSaveBtn" type="submit" class="w-full bg-[#2c4a3e] hover:bg-[#1f342b] text-white py-3 rounded-xl font-semibold text-sm shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed">
+                        Spara
+                    </button>
+                    <button type="button" onclick="closeEditModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl font-semibold text-sm transition">
+                        Avbryt
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -397,6 +495,8 @@
     </div>
 
     <script>
+        const monthAbbreviations = ['jan', 'feb', 'mar', 'apr', 'maj', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'];
+
         function localDateValue(date) {
             return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
         }
@@ -406,10 +506,35 @@
             return localDateValue(new Date(year, month - 1, day + 1, 12));
         }
 
-        const unavailableReasons = new Set(['Semester', 'Vårdbesök', 'Kompledighet', 'Tjänstledig', 'Annan privat anledning']);
+        const unavailableReasons = new Set(['Semester', 'Kompledighet', 'Tjänstledig', 'Annan privat anledning']);
+        const currentUserName = 'Johan Hofvendahl';
+        const reasonLabels = {
+            Sjuk: 'Sjuk', Vab: 'Vab', Semester: 'Semester', Hemarbete: 'Arbete på annan ort',
+            Kompledighet: 'Kompledighet / Disponibel tid', Tjänstledig: 'Tjänstledig / Föräldraledig',
+            'Annan privat anledning': 'Annan privat anledning'
+        };
+        // Rubriker på korten i "Mina registreringar" (\n = fast radbrytning, så att rubriken ryms bredvid statusetiketten).
+        const cardLabels = {
+            Hemarbete: 'Arbete annan ort',
+            Kompledighet: 'Kompledighet /\nDisponibel tid',
+            Tjänstledig: 'Tjänstledig /\nFöräldraledig',
+            'Annan privat anledning': 'Annan privat\nanledning'
+        };
+        const categoryColors = {
+            Sjuk: 'bg-rose-100 text-rose-800',
+            Vab: 'bg-orange-100 text-orange-800',
+            Ledig: 'bg-emerald-100 text-emerald-800',
+            AAO: 'bg-blue-100 text-blue-800',
+            Frånvaro: 'bg-amber-100 text-amber-800'
+        };
+        function absenceCategory(type) {
+            return type === 'Sjuk' ? 'Sjuk' : type === 'Vab' ? 'Vab'
+                : ['Semester', 'Kompledighet', 'Tjänstledig'].includes(type)
+                ? 'Ledig' : type === 'Hemarbete' ? 'AAO' : 'Frånvaro';
+        }
         const availabilityStatuses = new Set(['Tillgänglig (mail/telefon)', 'Nås sporadiskt (mail/telefon)', 'Ej tillgänglig']);
         const informationMessages = {
-            presence: 'Om du inte anmäler frånvaro, antas du vara i tjänst på din ordinarie arbetsplats. Detta inkluderar arbete på Diabasen, på något av våra besöksmål eller tillfälliga ärenden i tjänsten.',
+            presence: 'Om du inte anmäler frånvaro, räknas du som i tjänst på din ordinarie arbetsplats. Undantag: Kortare ärenden i tjänsten, arbete på Diabasen eller på något av Kulturens besöksmål räknas inte som frånvaro, förutsatt att den sammanlagda tiden understiger 4 timmar (en halvdag).',
             list: 'Listan visar vilka kollegor som inte är på plats just idag och i vilken mån de är tillgängliga. När uppgift finns visas också när de är tillbaka.',
             offsite: 'Arbete Annan Ort\n- hemifrån\n- tjänsteresa\n- konferens\n- motsvarande'
         };
@@ -427,7 +552,7 @@
                 availability: 'Ej tillgänglig', example: true },
             { name: 'Erik Svensson', type: 'Vab', startDate: exampleDay(-1), endDate: null,
                 availability: 'Ej tillgänglig', example: true },
-            { name: 'Sara Lindgren', type: 'Vårdbesök', startDate: exampleDate, endDate: exampleDate,
+            { name: 'Sara Lindgren', type: 'Annan privat anledning', startDate: exampleDate, endDate: exampleDate,
                 startTime: '13:00', endTime: '15:30', availability: 'Ej tillgänglig',
                 returnInfo: { date: exampleDate, time: '15:30' }, example: true },
             { name: 'Lars Johansson', type: 'Annan privat anledning', startDate: exampleDate, endDate: exampleDate,
@@ -444,43 +569,66 @@
                 startTime: '10:00', endTime: '16:30', availability: 'Nås sporadiskt (mail/telefon)',
                 returnInfo: { date: exampleDate, time: '16:30' }, example: true }
         ];
+        // Exempel på egna registreringar (kommande), så att "Mina registreringar" går att prova direkt.
+        absenceRecords.push(
+            { id: 'example-semester', mine: true, name: currentUserName, type: 'Semester',
+                startDate: exampleDay(14), endDate: exampleDay(18), availability: 'Ej tillgänglig',
+                returnInfo: { date: exampleDay(19), time: '' }, example: true },
+            { id: 'example-hemarbete', mine: true, name: currentUserName, type: 'Hemarbete',
+                startDate: exampleDay(3), endDate: exampleDay(3), startTime: '09:00', endTime: '16:00',
+                availability: 'Tillgänglig (mail/telefon)', returnInfo: { date: exampleDay(3), time: '16:00' }, example: true }
+        );
         let renderedListDate = '';
+        let editingId = null;
+        let pendingDeleteId = null;
+        let editPrevStart = '';
         let currentIntranetSort = 'lastname';
         const intranetNameCollator = new Intl.Collator('sv', { sensitivity: 'base' });
 
-        function updateAbsenceForm(reasonChanged = false) {
+        function previousDateValue(value) {
+            const [year, month, day] = value.split('-').map(Number);
+            return localDateValue(new Date(year, month - 1, day - 1, 12));
+        }
+
+        function updateAbsenceForm(reasonChanged = false, extentChanged = false) {
             const reason = document.getElementById('reason').value;
             const start = document.getElementById('startDate');
-            const end = document.getElementById('endDate');
+            const ret = document.getElementById('returnDate');
             const extent = document.getElementById('dayExtent');
-            const medical = reason === 'Vårdbesök';
-            const leave = reason === 'Tjänstledig';
             const travel = reason === 'Hemarbete';
-            end.disabled = medical || !start.value;
-            end.min = start.value ? (leave ? nextDateValue(start.value) : start.value) : '';
-            if (medical) {
-                end.value = start.value;
-            } else if (start.value && (!end.value || end.value < end.min)) {
-                end.value = end.min;
-            }
-            end.setCustomValidity('');
             if (reasonChanged) {
                 document.getElementById('availability').value = unavailableReasons.has(reason)
                     ? 'Ej tillgänglig' : 'Tillgänglig (mail/telefon)';
                 extent.value = '';
             }
-            const sameDay = Boolean(start.value && end.value && start.value === end.value);
-            const chooseExtent = Boolean(start.value && end.value)
-                && (sameDay || travel) && reason !== 'Semester' && !leave;
-            extent.options[0].textContent = travel && !sameDay
+            const hasStart = Boolean(start.value);
+            const partial = hasStart && extent.value === 'partial';
+            ret.disabled = !hasStart;
+            if (hasStart) {
+                const nextDay = nextDateValue(start.value);
+                // Hela dagar: åter i tjänst tidigast dagen efter första frånvarodagen.
+                // Del av dag: åter i tjänst kan vara samma dag (med sluttid).
+                ret.min = partial ? start.value : nextDay;
+                if (extentChanged && partial && ret.value === nextDay) ret.value = start.value;
+                if (!ret.value || ret.value < ret.min) ret.value = ret.min;
+            } else {
+                ret.min = '';
+            }
+            ret.setCustomValidity('');
+            const hasDates = hasStart && Boolean(ret.value);
+            const singleDay = hasDates && (partial
+                ? ret.value === start.value
+                : ret.value === nextDateValue(start.value));
+            // Omfattningen är ett aktivt val: inget förval, och anmälan går inte igenom utan val.
+            extent.options[0].textContent = !singleDay && hasDates
                 ? 'Välj hela dagar eller ange tider' : 'Välj heldag eller del av dag';
-            extent.options[1].textContent = sameDay ? 'Heldag' : 'Hela dagar';
-            extent.options[2].textContent = travel && !sameDay ? 'Ange start- och sluttid' : 'Del av dag';
-            document.getElementById('durationFields').classList.toggle('hidden', !chooseExtent);
-            extent.disabled = !chooseExtent;
-            extent.required = chooseExtent;
-            const partial = chooseExtent && extent.value === 'partial';
+            extent.options[1].textContent = singleDay ? 'Heldag' : 'Hela dagar';
+            extent.options[2].textContent = !singleDay && hasDates ? 'Ange start- och sluttid' : 'Del av dag';
+            extent.disabled = !hasStart;
+            extent.setCustomValidity('');
+            extent.required = true;
             document.getElementById('timeFields').classList.toggle('hidden', !partial);
+            document.getElementById('offsiteNote').classList.toggle('hidden', !(travel && partial && singleDay));
             for (const id of ['startTime', 'endTime']) {
                 const field = document.getElementById(id);
                 field.disabled = !partial;
@@ -490,13 +638,6 @@
                     select.required = partial;
                 }
             }
-            document.getElementById('dateHint').textContent = medical
-                ? 'Till datum följer Från datum och kan inte ändras.'
-                : leave ? 'Frånvaron gäller hela dagar. Till datum måste vara efter Från datum.'
-                : reason === 'Semester' ? 'Semestern gäller hela dagar, inklusive från- och tilldatum.'
-                : travel ? 'Välj hela dagar eller ange starttid på Från datum och sluttid på Till datum.'
-                : start.value && end.value && !sameDay ? 'Frånvaron gäller hela dagar, inklusive från- och tilldatum.'
-                : 'Välj heldag eller ange starttid och sluttid för del av dag.';
             validateAbsenceTimes();
         }
 
@@ -514,11 +655,42 @@
             }
         }
 
+        // Arbete på annan ort gäller bara när frånvaron omfattar minst 4 timmar (en halvdag).
+        // Är inlagd start- och sluttid kortare visas en varningstext och anmälan går inte att skicka.
+        const OFFSITE_MIN_MINUTES = 240;
+        const OFFSITE_RULE_TEXT = 'Frånvaro på grund av arbete på annan ort gäller när frånvaron omfattar minst 4 timmar (halvdag).';
+
+        function formatMinutes(minutes) {
+            const hours = Math.floor(minutes / 60);
+            const rest = minutes % 60;
+            return [hours ? `${hours} tim` : '', rest ? `${rest} min` : ''].filter(Boolean).join(' ');
+        }
+
+        // Returnerar true om tiden är för kort (och visar då varningstexten).
+        function updateOffsiteDurationWarning() {
+            const warning = document.getElementById('offsiteShortWarning');
+            const start = document.getElementById('startTime');
+            const end = document.getElementById('endTime');
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('returnDate').value;
+            let message = '';
+            if (document.getElementById('reason').value === 'Hemarbete' && !end.disabled
+                && startDate && endDate && start.value && end.value) {
+                const minutes = Math.round((parseMoment(endDate, end.value) - parseMoment(startDate, start.value)) / 60000);
+                if (minutes > 0 && minutes < OFFSITE_MIN_MINUTES) {
+                    message = `Obs! ${OFFSITE_RULE_TEXT} Den tid du har angett är ${formatMinutes(minutes)}, så anmälan kan inte skickas. Kortare ärenden, eller t.ex. möten förlagda på annan ort, räknas inte som frånvaro.`;
+                }
+            }
+            warning.textContent = message;
+            warning.classList.toggle('hidden', !message);
+            return Boolean(message);
+        }
+
         function validateAbsenceTimes() {
             const start = document.getElementById('startTime');
             const end = document.getElementById('endTime');
             const startDate = document.getElementById('startDate').value;
-            const endDate = document.getElementById('endDate').value;
+            const endDate = document.getElementById('returnDate').value;
             for (const field of [start, end]) {
                 const hour = document.getElementById(field.id + 'Hour');
                 const minute = document.getElementById(field.id + 'Minute');
@@ -528,16 +700,18 @@
                 field.value = hour.value && quarterMinutes.includes(minute.value)
                     ? `${hour.value}:${minute.value}` : '';
             }
+            const offsiteTooShort = updateOffsiteDurationWarning();
             const endMinute = document.getElementById('endTimeMinute');
             if (endMinute.validationMessage) return;
             endMinute.setCustomValidity(!end.disabled && startDate && endDate && start.value && end.value
                 && `${endDate}T${end.value}` <= `${startDate}T${start.value}`
-                ? 'Slutdatum och sluttid måste vara efter startdatum och starttid.' : '');
+                ? 'Åter i tjänst (datum och sluttid) måste vara efter startdatum och starttid.'
+                : offsiteTooShort ? 'Arbete på annan ort kräver minst 4 timmar (halvdag). Justera start- eller sluttid.' : '');
         }
 
         initializeTimePickers();
+        initializeEditPickers();
         document.getElementById('startDate').value = localDateValue(new Date());
-        document.getElementById('endDate').value = localDateValue(new Date());
         updateAbsenceForm(true);
         renderIntranetList();
 
@@ -642,6 +816,7 @@
             target.classList.remove('hidden');
             target.classList.add('flex');
             const listView = viewId === 'intranetView';
+            if (viewId !== 'myView') pendingDeleteId = null;
             document.body.classList.toggle('list-theme', listView);
             document.body.classList.toggle('login-theme', viewId === 'loginView');
             const title = document.getElementById('pageTitle');
@@ -659,6 +834,9 @@
             document.getElementById('navIntranetBtn').hidden = !isLoggedIn || viewId === 'intranetView' || viewId === 'loginView';
             document.getElementById('navStartBtn').hidden = !isLoggedIn || viewId !== 'intranetView';
             
+
+            if (viewId === 'myView') renderMyList();
+            updateMyRegistrationsButton();
 
             if (viewId === 'intranetView') {
                 currentIntranetSort = 'lastname';
@@ -692,7 +870,6 @@
         function openDateModal(type) {
             activeQuickType = type;
             const titleEl = document.getElementById('modalTitle');
-            const subTitleEl = document.getElementById('modalSubtitle');
             const selectEl = document.getElementById('quickDateSelect');
 
             titleEl.innerText = type === 'Sjuk' ? 'Sjukanmälan' : 'Vab-anmälan';
@@ -701,19 +878,9 @@
             const tomorrow = new Date(today);
             tomorrow.setDate(today.getDate() + 1);
 
-            const formatSwedishDate = (date) => date.toLocaleDateString('sv-SE', {
-                weekday: 'long', month: 'long', day: 'numeric'
-            });
-            const hour = today.getHours();
-            const startTime = hour >= 8 && hour < 15
-                ? `${String(Math.round(hour + today.getMinutes() / 60)).padStart(2, '0')}:00` : '';
-            const todayLabel = startTime ? `Från kl. ${startTime} idag` : `Idag [${formatSwedishDate(today)}]`;
-            subTitleEl.innerText = startTime
-                ? `Gäller anmälan från kl. ${startTime} idag eller imorgon?`
-                : 'Gäller anmälan från idag eller imorgon?';
             selectEl.innerHTML = `
-                <option value="${localDateValue(today)}" data-start-time="${startTime}">${todayLabel}</option>
-                <option value="${localDateValue(tomorrow)}">Imorgon [${formatSwedishDate(tomorrow)}]</option>
+                <option value="${localDateValue(today)}">Gäller från idag</option>
+                <option value="${localDateValue(tomorrow)}">Gäller från imorgon</option>
             `;
 
             const modal = document.getElementById('dateModal');
@@ -740,30 +907,30 @@
         function confirmQuickAbsence() {
             const select = document.getElementById('quickDateSelect');
             const selectedDate = select.value;
-            const time = select.selectedOptions[0].dataset.startTime;
-            const period = selectedDate + (time ? ` från kl. ${time}` : '');
+            const period = selectedDate;
             closeDateModal();
             showToast(`Anmälan (${activeQuickType}) från ${period} registrerad!`);
             
             addToIntranetList({ type: activeQuickType, startDate: selectedDate, endDate: null,
-                startTime: time || '', period });
+                period });
         }
 
         function submitDetailedAbsence(event) {
             if (event) event.preventDefault();
             const form = document.getElementById('absenceForm');
-            const reason = document.getElementById('reason').value;
+            const reasonSelect = document.getElementById('reason');
+            const reason = reasonSelect.value;
+            const reasonLabel = reasonSelect.selectedOptions[0].textContent;
             const start = document.getElementById('startDate').value;
-            const endField = document.getElementById('endDate');
-            const end = endField.value;
-            if (start && end && (end < start || (reason === 'Tjänstledig' && end === start))) {
-                endField.setCustomValidity(reason === 'Tjänstledig'
-                    ? 'Till datum måste vara efter Från datum.' : 'Till datum kan inte vara före Från datum.');
-            }
+            const returnDate = document.getElementById('returnDate').value;
+            const extentField = document.getElementById('dayExtent');
+            extentField.setCustomValidity(extentField.value ? '' : 'Välj heldag eller del av dag.');
             validateAbsenceTimes();
             if (!form.reportValidity()) return;
-            const partial = !document.getElementById('dayExtent').disabled
-                && document.getElementById('dayExtent').value === 'partial';
+            const partial = extentField.value === 'partial';
+            // Åter i tjänst är dagen man är tillbaka: sista frånvarodagen är dagen före.
+            // Vid del av dag är man borta till sluttiden på Åter i tjänst-datumet.
+            const end = partial ? returnDate : previousDateValue(returnDate);
             const period = start === end ? start : `${start} – ${end}`;
             const duration = partial
                 ? `kl. ${document.getElementById('startTime').value}–${document.getElementById('endTime').value}`
@@ -772,10 +939,10 @@
                 ? `${start} kl. ${document.getElementById('startTime').value} – ${end} kl. ${document.getElementById('endTime').value}`
                 : `${period}, ${duration}`;
             const availability = document.getElementById('availability').value;
-            showToast(`Anmälan avseende "${reason}" skickades!`);
+            showToast(`Anmälan avseende "${reasonLabel}" skickades!`);
             goToView('startView');
             const returnInfo = {
-                date: partial ? end : nextDateValue(end),
+                date: returnDate,
                 time: partial ? document.getElementById('endTime').value : ''
             };
             addToIntranetList({ type: reason, startDate: start, endDate: end, availability, returnInfo,
@@ -788,9 +955,9 @@
             const [year, month, day] = returnInfo.date.split('-').map(Number);
             const date = new Date(year, month - 1, day, 12);
             if (Number.isNaN(date.getTime())) return '';
-            const options = { weekday: 'long', day: 'numeric', month: 'long' };
-            if (year !== new Date().getFullYear()) options.year = 'numeric';
-            return `Åter ${date.toLocaleDateString('sv-SE', options)}${returnInfo.time ? ` kl. ${returnInfo.time}` : ''}`;
+            const weekday = date.toLocaleDateString('sv-SE', { weekday: 'long' });
+            const yearPart = year !== new Date().getFullYear() ? ` ${year}` : '';
+            return `Åter ${weekday} ${day} ${monthAbbreviations[month - 1]}${yearPart}${returnInfo.time ? ` kl. ${returnInfo.time}` : ''}`;
         }
 
         function absenceAppliesToDate(record, date) {
@@ -798,8 +965,22 @@
                 && (!record.endDate || record.endDate >= date));
         }
 
+        // Tidpunkten då anmälan gjordes. Sparas i bakgrunden och visas inte i gränssnittet.
+        function registrationTimestamp() {
+            const now = new Date();
+            const pad = value => String(value).padStart(2, '0');
+            return {
+                date: localDateValue(now),
+                time: `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`,
+                iso: now.toISOString()
+            };
+        }
+
         function addToIntranetList(record) {
-            absenceRecords.unshift({ ...record, name: record.name || 'Johan Hofvendahl' });
+            absenceRecords.unshift({ ...record, name: record.name || currentUserName,
+                id: 'r' + Date.now() + Math.random().toString(36).slice(2, 7), mine: true,
+                registered: registrationTimestamp() });
+            updateMyRegistrationsButton();
             renderIntranetList();
         }
 
@@ -834,8 +1015,7 @@
             if (!container.getClientRects().length) return;
             const slots = [
                 ['--absence-name-height', '.absence-name'],
-                ['--absence-contact-height', '.absence-contact'],
-                ['--absence-return-height', '.absence-return']
+                ['--absence-contact-height', '.absence-contact']
             ];
             for (const [property] of slots) container.style.removeProperty(property);
             const defaults = getComputedStyle(container);
@@ -849,12 +1029,11 @@
         function createIntranetListItem(record) {
             const { type, availability = '', returnInfo = null } = record;
             const quickAbsence = type === 'Sjuk' || type === 'Vab';
-            const category = ['Semester', 'Kompledighet', 'Tjänstledig'].includes(type)
-                ? 'Ledig' : type === 'Hemarbete' ? 'AAO' : 'Frånvaro';
+            const category = absenceCategory(type);
             const item = document.createElement('div');
             item.className = record.example
-                ? 'p-3 bg-slate-50 rounded-xl border border-slate-200 flex justify-between items-center gap-2 text-sm'
-                : 'p-3 bg-emerald-50/50 rounded-xl border border-emerald-100 flex justify-between items-center gap-2 text-sm animate-fade-in';
+                ? 'p-3 bg-slate-50 rounded-xl border border-slate-200 flex flex-wrap justify-between items-center gap-2 text-sm'
+                : 'p-3 bg-emerald-50/50 rounded-xl border border-emerald-100 flex flex-wrap justify-between items-center gap-2 text-sm animate-fade-in';
             item.classList.add('absence-row');
             const details = document.createElement('div');
             details.className = 'absence-details';
@@ -863,33 +1042,37 @@
             name.textContent = record.name;
             item.dataset.period = record.period || '';
             item.dataset.startDate = record.startDate;
+            if (record.registered) item.dataset.registeredAt = record.registered.iso;
             if (record.endDate) item.dataset.endDate = record.endDate;
             details.append(name);
-            if (!quickAbsence && availabilityStatuses.has(availability) && availability !== 'Ej tillgänglig') {
+            const shownAvailability = quickAbsence ? 'Ej tillgänglig' : availability;
+            if (availabilityStatuses.has(shownAvailability)) {
                 const contact = document.createElement('p');
                 contact.className = 'absence-contact text-xs text-slate-500';
                 const dot = document.createElement('span');
-                dot.className = 'online-dot';
+                dot.className = shownAvailability === 'Ej tillgänglig' ? 'offline-dot' : 'online-dot';
                 dot.setAttribute('aria-hidden', 'true');
-                const availabilityLabel = availability === 'Tillgänglig (mail/telefon)' ? 'Tillgänglig' : 'Nås sporadiskt';
+                const availabilityLabel = shownAvailability === 'Tillgänglig (mail/telefon)' ? 'Tillgänglig'
+                    : shownAvailability === 'Nås sporadiskt (mail/telefon)' ? 'Nås sporadiskt' : 'Ej tillgänglig';
                 contact.append(dot, document.createTextNode(availabilityLabel));
                 details.append(contact);
             }
-            const returnText = quickAbsence ? '' : formatReturnInfo(returnInfo);
+            const returnText = formatReturnInfo(returnInfo);
+            let returnLine = null;
             if (returnText) {
-                const returnLine = document.createElement('p');
+                returnLine = document.createElement('p');
                 returnLine.className = 'absence-return text-xs text-slate-500';
                 returnLine.textContent = returnText;
-                details.append(returnLine);
                 item.dataset.returnDate = returnInfo.date;
                 if (returnInfo.time) item.dataset.returnTime = returnInfo.time;
+            } else {
+                // Platshållare: kort utan "Åter"-uppgift reserverar samma rad, så alla kort blir lika höga.
+                returnLine = document.createElement('p');
+                returnLine.className = 'absence-return text-xs text-slate-500';
+                returnLine.setAttribute('aria-hidden', 'true');
+                returnLine.textContent = '\u00a0';
             }
             const badge = document.createElement('span');
-            const categoryColors = {
-                Ledig: 'bg-emerald-100 text-emerald-800',
-                AAO: 'bg-blue-100 text-blue-800',
-                Frånvaro: 'bg-amber-100 text-amber-800'
-            };
             badge.className = `absence-category text-xs px-2 py-1 rounded-md font-medium inline-flex items-center gap-1 shrink-0 ${categoryColors[category]}`;
             badge.textContent = category;
             if (type === 'Hemarbete') {
@@ -904,11 +1087,383 @@
                 badge.append(info);
             }
             item.append(details, badge);
+            if (returnLine) item.append(returnLine);
             return item;
         }
 
+
+        // ================= MINA REGISTRERINGAR =================
+        function parseMoment(date, time) {
+            const [year, month, day] = date.split('-').map(Number);
+            const [hour, minute] = (time || '00:00').split(':').map(Number);
+            return new Date(year, month - 1, day, hour || 0, minute || 0);
+        }
+
+        function dayNumber(value) {
+            const [year, month, day] = value.split('-').map(Number);
+            return Math.round(Date.UTC(year, month - 1, day) / 86400000);
+        }
+
+        function shiftDateValue(value, days) {
+            const [year, month, day] = value.split('-').map(Number);
+            return localDateValue(new Date(year, month - 1, day + days, 12));
+        }
+
+        function isQuickType(type) {
+            return type === 'Sjuk' || type === 'Vab';
+        }
+
+        // 'upcoming' = starten har inte inträffat, 'ongoing' = startad men inte slut, 'past' = slut.
+        // Heldagar räknas från kl. 00:00 på startdagen till kl. 00:00 på "Åter i tjänst"-dagen.
+        function recordStatus(record, now = new Date()) {
+            const start = parseMoment(record.startDate, record.startTime);
+            const end = record.returnInfo && record.returnInfo.date
+                ? parseMoment(record.returnInfo.date, record.returnInfo.time) : null;
+            if (end && end <= now) return 'past';
+            if (start <= now) return 'ongoing';
+            return 'upcoming';
+        }
+
+        function shortDate(value) {
+            const [year, month, day] = value.split('-').map(Number);
+            const weekday = new Date(year, month - 1, day, 12)
+                .toLocaleDateString('sv-SE', { weekday: 'short' }).replace('.', '');
+            const yearPart = year !== new Date().getFullYear() ? ` ${year}` : '';
+            return `${weekday} ${day} ${monthAbbreviations[month - 1]}${yearPart}`;
+        }
+
+        function describePeriod(record) {
+            const start = shortDate(record.startDate);
+            if (!record.endDate) return `Från ${start}`;
+            if (record.startTime) {
+                const endTime = record.endTime || (record.returnInfo && record.returnInfo.time) || '';
+                return record.startDate === record.endDate
+                    ? `${start} kl. ${record.startTime}–${endTime}`
+                    : `${start} kl. ${record.startTime} – ${shortDate(record.endDate)} kl. ${endTime}`;
+            }
+            return record.startDate === record.endDate ? start : `${start} – ${shortDate(record.endDate)}`;
+        }
+
+        function makeEl(tag, className, text) {
+            const node = document.createElement(tag);
+            if (className) node.className = className;
+            if (text !== undefined) node.textContent = text;
+            return node;
+        }
+
+        function myActionButton(label, className, handler) {
+            const button = makeEl('button', `px-3 py-2 rounded-lg text-sm font-semibold transition ${className}`, label);
+            button.type = 'button';
+            button.addEventListener('click', handler);
+            return button;
+        }
+
+        function renderMyList() {
+            const container = document.getElementById('myListContainer');
+            container.replaceChildren();
+            const now = new Date();
+            const mine = absenceRecords.filter(record => record.mine)
+                .map(record => ({ record, status: recordStatus(record, now),
+                    start: parseMoment(record.startDate, record.startTime) }));
+            const active = mine.filter(entry => entry.status !== 'past').sort((a, b) => a.start - b.start);
+            const past = mine.filter(entry => entry.status === 'past').sort((a, b) => b.start - a.start);
+
+            if (mine.length === 0) {
+                container.append(makeEl('p', 'text-sm text-slate-500 p-3', 'Du har inga registreringar.'));
+                return;
+            }
+            if (active.length === 0) {
+                container.append(makeEl('p', 'text-sm text-slate-500 p-3', 'Du har inga pågående eller kommande registreringar.'));
+            }
+            for (const { record, status } of active) container.append(createMyListItem(record, status));
+            if (past.length) {
+                container.append(makeEl('p', 'text-xs font-semibold uppercase text-slate-500 pt-2', 'Tidigare'));
+                for (const { record, status } of past) container.append(createMyListItem(record, status));
+            }
+        }
+
+        function createMyListItem(record, status) {
+            const isPast = status === 'past';
+            const quick = isQuickType(record.type);
+            const item = makeEl('div', `p-4 rounded-xl border border-slate-200 flex flex-col gap-3 ${isPast
+                ? 'bg-slate-50 opacity-75' : 'bg-white shadow-sm'}`);
+            item.dataset.recordId = record.id;
+
+            // Rubrik och status på en rad; period och återkomst på egna rader under, utan radbrytning.
+            const block = makeEl('div', 'min-w-0');
+            const top = makeEl('div', 'flex items-start justify-between gap-3');
+            const cardLabel = cardLabels[record.type] || reasonLabels[record.type] || record.type;
+            const info = makeEl('div', 'min-w-0');
+            info.append(makeEl('p', 'font-semibold text-slate-700 text-sm whitespace-pre-line', cardLabel));
+            const lineClass = 'text-xs text-slate-500 whitespace-nowrap overflow-hidden text-ellipsis';
+            const lines = makeEl('div', 'mt-0.5');
+            lines.append(makeEl('p', lineClass, describePeriod(record)));
+            const returnText = formatReturnInfo(record.returnInfo);
+            if (returnText) lines.append(makeEl('p', lineClass, returnText));
+            else if (quick) lines.append(makeEl('p', lineClass, 'Åter i tjänst: inte angivet'));
+
+            const chipStyles = {
+                upcoming: ['Kommande', 'bg-sky-100 text-sky-800'],
+                ongoing: ['Pågår', 'bg-amber-100 text-amber-800'],
+                past: ['Passerad', 'bg-slate-200 text-slate-600']
+            };
+            const [chipText, chipClass] = chipStyles[status];
+            top.append(info, makeEl('span', `text-xs px-2 py-1 rounded-md font-medium shrink-0 ${chipClass}`, chipText));
+            block.append(top, lines);
+            item.append(block);
+
+            if (!isPast) {
+                const actions = makeEl('div', 'flex flex-wrap gap-2 items-center');
+                if (pendingDeleteId === record.id) {
+                    actions.append(makeEl('span', 'text-sm text-slate-600 mr-1', 'Radera hela registreringen?'));
+                    actions.append(myActionButton('Ja, radera', 'bg-rose-600 hover:bg-rose-700 text-white', () => confirmDelete(record.id)));
+                    actions.append(myActionButton('Avbryt', 'bg-slate-100 hover:bg-slate-200 text-slate-700', cancelDelete));
+                } else {
+                    const editLabel = status === 'upcoming' ? 'Ändra'
+                        : record.returnInfo ? 'Ändra åter i tjänst' : 'Ange åter i tjänst';
+                    actions.append(myActionButton(editLabel, 'bg-[#2c4a3e] hover:bg-[#1f342b] text-white',
+                        () => openEditModal(record.id)));
+                    // Radera går bara om ingenting har hunnit inträffa.
+                    if (status === 'upcoming') {
+                        actions.append(myActionButton('Radera', 'border border-rose-200 text-rose-600 hover:bg-rose-50',
+                            () => { pendingDeleteId = record.id; renderMyList(); }));
+                    }
+                }
+                item.append(actions);
+            }
+            return item;
+        }
+
+        // Knappen "Mina registreringar" (med linjen ovanför) visas bara om användaren har egna registreringar.
+        function updateMyRegistrationsButton() {
+            document.getElementById('myRegistrationsSection').hidden = !absenceRecords.some(record => record.mine);
+        }
+
+        function cancelDelete() {
+            pendingDeleteId = null;
+            renderMyList();
+        }
+
+        function confirmDelete(id) {
+            const index = absenceRecords.findIndex(record => record.id === id && record.mine);
+            pendingDeleteId = null;
+            if (index === -1) { renderMyList(); return; }
+            if (recordStatus(absenceRecords[index]) !== 'upcoming') {
+                renderMyList();
+                showToast('Registreringen har hunnit börja och kan inte raderas.', true);
+                return;
+            }
+            absenceRecords.splice(index, 1);
+            updateMyRegistrationsButton();
+            renderMyList();
+            renderIntranetList();
+            showToast('Registreringen har raderats.');
+        }
+
+        // ---------- Ändra-dialog ----------
+        function initializeEditPickers() {
+            for (const prefix of ['editStart', 'editReturn']) {
+                document.getElementById(prefix + 'Hour').innerHTML = '<option value="">--</option>'
+                    + Array.from({ length: 24 }, (_, hour) => {
+                        const value = String(hour).padStart(2, '0');
+                        return `<option value="${value}">${value}</option>`;
+                    }).join('');
+                document.getElementById(prefix + 'Minute').innerHTML = quarterMinutes
+                    .map(value => `<option value="${value}">${value}</option>`).join('');
+            }
+        }
+
+        function setEditTime(prefix, time) {
+            document.getElementById(prefix + 'Hour').value = time ? time.slice(0, 2) : '';
+            document.getElementById(prefix + 'Minute').value = time ? time.slice(3, 5) : '00';
+        }
+
+        function readEditTime(prefix) {
+            const hour = document.getElementById(prefix + 'Hour').value;
+            const minute = document.getElementById(prefix + 'Minute').value || '00';
+            return hour ? `${hour}:${minute}` : '';
+        }
+
+        function onEditTimeChange(select) {
+            if (select.id.endsWith('Hour') && !select.value) {
+                document.getElementById(select.id.replace('Hour', 'Minute')).value = '00';
+            }
+            evaluateEdit();
+        }
+
+        function onEditStartChange() {
+            // Flyttas starten följer slutet med, så att längden på frånvaron bevaras.
+            const startEl = document.getElementById('editStartDate');
+            const returnEl = document.getElementById('editReturnDate');
+            if (startEl.value && editPrevStart && returnEl.value) {
+                returnEl.value = shiftDateValue(returnEl.value, dayNumber(startEl.value) - dayNumber(editPrevStart));
+            }
+            if (startEl.value) editPrevStart = startEl.value;
+            evaluateEdit();
+        }
+
+        function openEditModal(id) {
+            const record = absenceRecords.find(item => item.id === id && item.mine);
+            if (!record) return;
+            const status = recordStatus(record);
+            if (status === 'past') {
+                renderMyList();
+                showToast('Registreringen har passerat och kan inte ändras.', true);
+                return;
+            }
+            editingId = id;
+            const timed = Boolean(record.startTime);
+            const quick = isQuickType(record.type);
+            const label = reasonLabels[record.type] || record.type;
+            document.getElementById('editTitle').textContent = status === 'upcoming'
+                ? 'Ändra registrering' : quick && !record.returnInfo ? 'Ange åter i tjänst' : 'Ändra åter i tjänst';
+            document.getElementById('editSubtitle').textContent = status === 'upcoming'
+                ? `${label}, ${describePeriod(record)}. Du kan ändra både start och slut.`
+                : quick
+                    ? `${label} från ${shortDate(record.startDate)}. Du kan ange när du är åter i tjänst, även i förväg, t.ex. på fredag kväll för måndag.`
+                    : `${label}, ${describePeriod(record)}. Anmälan har börjat, så du kan bara ändra när du är åter i tjänst.`;
+            document.getElementById('editStartDate').value = record.startDate;
+            editPrevStart = record.startDate;
+            setEditTime('editStart', record.startTime || '');
+            document.getElementById('editReturnDate').value = record.returnInfo ? record.returnInfo.date : '';
+            setEditTime('editReturn', record.returnInfo ? record.returnInfo.time : '');
+            document.getElementById('editStartTimeWrap').classList.toggle('hidden', !timed);
+            document.getElementById('editReturnTimeWrap').classList.toggle('hidden', !(timed || quick));
+            document.getElementById('editReturnTimeLabel').textContent = timed ? 'Sluttid' : 'Klockslag (valfritt)';
+            evaluateEdit();
+
+            const modal = document.getElementById('editModal');
+            const card = document.getElementById('editCard');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            card.scrollTop = 0;
+            setTimeout(() => {
+                card.classList.remove('scale-95');
+                card.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeEditModal() {
+            const modal = document.getElementById('editModal');
+            const card = document.getElementById('editCard');
+            card.classList.remove('scale-100');
+            card.classList.add('scale-95');
+            editingId = null;
+            setTimeout(() => {
+                if (editingId) return;
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        // Läser formuläret, uppdaterar vilka fält som är låsta och visar ev. felmeddelande.
+        function evaluateEdit() {
+            const record = absenceRecords.find(item => item.id === editingId);
+            if (!record) return { error: 'Registreringen finns inte längre.' };
+            const now = new Date();
+            const today = localDateValue(now);
+            const status = recordStatus(record, now);
+            const timed = Boolean(record.startTime);
+            const quick = isQuickType(record.type);
+            const locked = status !== 'upcoming';
+
+            const startEl = document.getElementById('editStartDate');
+            const returnEl = document.getElementById('editReturnDate');
+            startEl.disabled = locked;
+            returnEl.disabled = status === 'past';
+            for (const prefix of ['editStart', 'editReturn']) {
+                const hour = document.getElementById(prefix + 'Hour');
+                const minute = document.getElementById(prefix + 'Minute');
+                const off = prefix === 'editStart' ? locked : status === 'past';
+                hour.disabled = off;
+                minute.disabled = off || !hour.value;
+            }
+            document.getElementById('editStartLocked').classList.toggle('hidden', !locked);
+
+            const startDate = locked ? record.startDate : startEl.value;
+            const startTime = timed ? (locked ? record.startTime : readEditTime('editStart')) : '';
+            startEl.min = today;
+            returnEl.min = startDate && startDate > today ? startDate : today;
+            const returnDate = returnEl.value;
+            const returnTime = timed || quick ? readEditTime('editReturn') : '';
+
+            let error = '';
+            if (status === 'past') {
+                error = 'Registreringen har passerat och kan inte längre ändras.';
+            } else if (!startDate) {
+                error = 'Ange startdatum.';
+            } else if (timed && !startTime) {
+                error = 'Ange starttid.';
+            } else {
+                const start = parseMoment(startDate, startTime);
+                if (!locked && (timed ? start < now : startDate < today)) {
+                    error = 'Starten kan inte flyttas till en tidpunkt som redan har passerat.';
+                } else if (!returnDate) {
+                    if (!quick) error = timed ? 'Ange slutdatum.' : 'Ange när du är åter i tjänst.';
+                } else if (timed && !returnTime) {
+                    error = 'Ange sluttid.';
+                } else {
+                    const back = parseMoment(returnDate, returnTime);
+                    if (back <= start) {
+                        error = timed ? 'Sluttiden måste vara efter starttiden.'
+                            : quick ? 'Åter i tjänst måste vara efter starten. Välj ett senare datum eller ange klockslag.'
+                            : 'Åter i tjänst måste vara en senare dag än startdagen.';
+                    } else if (record.type === 'Hemarbete' && timed
+                        && Math.round((back - start) / 60000) < OFFSITE_MIN_MINUTES) {
+                        error = `${OFFSITE_RULE_TEXT} Den tid du har angett är ${formatMinutes(Math.round((back - start) / 60000))}.`;
+                    } else if (back <= now) {
+                        error = quick
+                            ? 'Åter i tjänst kan inte vara en tidpunkt som redan har passerat. Vill du vara åter i dag, ange ett klockslag senare än nu.'
+                            : 'Åter i tjänst kan inte vara en tidpunkt som redan har passerat.';
+                    }
+                }
+            }
+            const errorEl = document.getElementById('editError');
+            errorEl.textContent = error;
+            errorEl.classList.toggle('hidden', !error);
+            document.getElementById('editSaveBtn').disabled = Boolean(error);
+            return { error, record, timed, quick, locked, startDate, startTime, returnDate, returnTime };
+        }
+
+        function saveEdit(event) {
+            if (event) event.preventDefault();
+            const result = evaluateEdit();
+            if (result.error) return;
+            const { record, timed, quick, locked, startDate, startTime, returnDate, returnTime } = result;
+            const unchanged = record.startDate === startDate
+                && (record.startTime || '') === startTime
+                && (record.returnInfo ? record.returnInfo.date : '') === returnDate
+                && (record.returnInfo && returnDate ? record.returnInfo.time || '' : '') === (returnDate ? returnTime : '');
+            if (unchanged) { closeEditModal(); return; }
+
+            record.startDate = startDate;
+            if (timed) record.startTime = startTime;
+            if (returnDate) {
+                record.returnInfo = { date: returnDate, time: returnTime };
+                // Med klockslag är man borta t.o.m. återkomstdagen, annars t.o.m. dagen före.
+                record.endDate = returnTime ? returnDate : previousDateValue(returnDate);
+                if (timed) record.endTime = returnTime;
+            } else {
+                delete record.returnInfo;
+                record.endDate = null;
+            }
+            record.period = describePeriod(record);
+            record.modified = registrationTimestamp();
+            closeEditModal();
+            renderMyList();
+            renderIntranetList();
+            showToast(locked ? 'Åter i tjänst har sparats.' : 'Registreringen har ändrats.');
+        }
+
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape' && !document.getElementById('editModal').classList.contains('hidden')
+                && document.getElementById('informationOverlay').hidden) closeEditModal();
+        });
+
         function refreshDailyList() {
             if (renderedListDate !== localDateValue(new Date())) renderIntranetList();
+            if (document.body.dataset.view === 'myView'
+                && document.getElementById('editModal').classList.contains('hidden')) renderMyList();
         }
 
         setInterval(refreshDailyList, 60000);
