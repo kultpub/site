@@ -173,7 +173,12 @@
 /* Gemensamma instruktioner och sjukfrånvarokontakter. */
 .topbar > :first-child { min-width: 0; overflow-wrap: anywhere; }
 .top-actions { flex-shrink: 0; }
-.shared-info-text { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.55; }
+.shared-info-text { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.55; color: #000; }
+.shared-info-text ul { list-style: disc; padding-inline-start: 1.5em; margin: 0; }
+.shared-info-text p { margin: 0; }
+.shared-info-text .shared-text-red { color: #b91c1c; }
+.shared-info-text .shared-text-black { color: #000; }
+.shared-info-text :is(.shared-text-red,.shared-text-black) a { color: inherit; }
 .sick-contact { flex-wrap: wrap; overflow-wrap: anywhere; }
 
 /* Olästa schemaändringar på info-knappen. */
@@ -201,5 +206,5 @@
 .schedule-changes-dialog::backdrop { background: #122d24a6; }
 .schedule-changes-dialog h2 { margin: 0 0 14px; font-size: 21px; }
 .schedule-change-list { list-style: none; margin: 0 0 17px; padding: 0; }
-.schedule-change-list li { padding: 10px 0; border-bottom: 1px solid var(--line); }
-.schedule-change-list p { margin: 5px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.45; }
+.schedule-change-list > li { padding: 10px 0; border-bottom: 1px solid var(--line); }
+.schedule-change-content { margin: 5px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.45; }

@@ -16,11 +16,8 @@ const TZ="Europe/Stockholm";
 const $=id=>document.getElementById(id);
 const esc=value=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
 
-function renderInstruction(value) {
-  const text = String(value ?? "");
+function* instructionLinks(text) {
   const pattern = /\b(?:https?:\/\/|www\.)[^\s<>"']+|[\w.%+-]+@[\w.-]+\.[a-z]{2,}\b/gi;
-  let html = "";
-  let end = 0;
 
   for (const match of text.matchAll(pattern)) {
     let address = match[0].replace(/[.,;:!?]+$/, "");
@@ -34,14 +31,30 @@ function renderInstruction(value) {
     const web = /^(?:https?:\/\/|www\.)/i.test(address);
     const href = /^www\./i.test(address) ? "https://" + address
       : web ? address : "mailto:" + address;
-    const attributes = web ? ' target="_blank" rel="noopener noreferrer"' : "";
-
-    html += esc(text.slice(end, match.index));
-    html += `<a href="${esc(href)}"${attributes}>${esc(address)}</a>`;
-    end = match.index + address.length;
+    yield {start:match.index,end:match.index + address.length,href,web};
   }
+}
 
+function linkInstructionText(text,links,offset=0) {
+  if (!text) return "";
+  let html = "";
+  let end = 0;
+  for (const link of links) {
+    if (link.end<=offset) continue;
+    if (link.start>=offset+text.length) break;
+    const start = Math.max(0,link.start-offset);
+    const stop = Math.min(text.length,link.end-offset);
+    const attributes = link.web ? ' target="_blank" rel="noopener noreferrer"' : "";
+    html += esc(text.slice(end,start));
+    html += `<a href="${esc(link.href)}"${attributes}>${esc(text.slice(start,stop))}</a>`;
+    end = stop;
+  }
   return html + esc(text.slice(end));
+}
+
+function renderInstruction(value) {
+  const text = String(value ?? "");
+  return linkInstructionText(text,instructionLinks(text));
 }
 
 const icon=(id,cls="")=>`<svg class="icon ${cls}" aria-hidden="true"><use href="#i-${id}"></use></svg>`;
@@ -608,6 +621,72 @@ function sharedInstructionText(){
   return typeof text==="string"?text.trim():"";
 }
 
+function sharedInstructionHtml(){
+  const html=state.plan?.sharedInfo?.html;
+  return typeof html==="string"?html.trim():"";
+}
+
+function renderSharedInstruction(text,html){
+  if(!html)return renderInstruction(text);
+
+  // Tolka formatet i en inaktiv mall och bygg upp en ny HTML-sträng med godkända element.
+  const template=document.createElement("template");
+  template.innerHTML=html;
+  const blocks=new Set(["div","p","ul","li"]);
+  const ignored=new Set(["script","style","template","iframe","object","noscript"]);
+  let result="",hasText=false,run=[];
+  const flush=()=>{
+    // En adress kan börja i ett textformat och fortsätta i ett annat.
+    const links=[...instructionLinks(run.map(part=>part.text ?? "").join(""))];
+    let offset=0;
+    for(const part of run){
+      if(typeof part==="string"){result+=part;continue;}
+      result+=linkInstructionText(part.text,links,offset);
+      offset+=part.text.length;
+    }
+    run=[];
+  };
+  const visit=node=>{
+    if(node.nodeType===Node.TEXT_NODE){
+      hasText ||= Boolean(node.data.trim());
+      run.push({text:node.data});
+      return;
+    }
+    if(node.nodeType!==Node.ELEMENT_NODE || node.namespaceURI!=="http://www.w3.org/1999/xhtml")return;
+    const tag=node.localName;
+    if(ignored.has(tag))return;
+    if(tag==="br"){flush();result+="<br>";return;}
+    if(blocks.has(tag)){
+      flush();
+      result+=`<${tag}>`;
+      node.childNodes.forEach(visit);
+      flush();
+      result+=`</${tag}>`;
+      return;
+    }
+
+    let open="",close="";
+    if(tag==="strong" || tag==="em"){
+      open=`<${tag}>`;close=`</${tag}>`;
+    }else if(tag==="span"){
+      const color=node.style.color.replace(/\s/g,"");
+      const red=color==="#b91c1c" || color==="rgb(185,28,28)";
+      const black=color==="#000" || color==="rgb(0,0,0)";
+      if(red || black){
+        open=red ? '<span class="shared-text-red">' : '<span class="shared-text-black">';
+        close="</span>";
+      }
+    }
+    if(open)run.push(open);
+    node.childNodes.forEach(visit);
+    if(close)run.push(close);
+  };
+
+  template.content.childNodes.forEach(visit);
+  flush();
+  return hasText?result:renderInstruction(text);
+}
+
 function sickContactsFor(shifts){
   const contacts=state.plan?.sharedInfo?.sickContactPersonIds;
   return ["friday","saturday","sunday"].map((key,day)=>shifts.some(shift=>shift.day===day)
@@ -619,6 +698,7 @@ function personalScheduleSnapshot(person){
   const shifts=assignments(person.id);
   return {
     sharedText:sharedInstructionText(),
+    sharedHtml:sharedInstructionHtml(),
     sickContacts:sickContactsFor(shifts).map(contact=>{
       if(!contact)return null;
       const person=contact.person;
@@ -650,10 +730,11 @@ function personalScheduleSnapshot(person){
 
 function scheduleChanges(before,after){
   const changes=[];
-  if(before.sharedText!==after.sharedText){
+  if(before.sharedText!==after.sharedText || (before.sharedHtml ?? "")!==after.sharedHtml){
     changes.push({
       title:"Instruktioner till alla",
-      html:renderInstruction(after.sharedText || "De gemensamma instruktionerna har tagits bort.")
+      html:renderSharedInstruction(after.sharedText,after.sharedHtml) || "De gemensamma instruktionerna har tagits bort.",
+      shared:true
     });
   }
   const hours=value=>value || "Ingen arbetstid registrerad";
@@ -730,7 +811,7 @@ function unreadSchedule(person){
   }
   // Lägg till de gemensamma uppgifterna i äldre baslinjer och bevara olästa schemaändringar.
   if(typeof baseline.sharedText!=="string" || !Array.isArray(baseline.sickContacts)){
-    baseline={...baseline,sharedText:snapshot.sharedText,sickContacts:snapshot.sickContacts};
+    baseline={...baseline,sharedText:snapshot.sharedText,sharedHtml:snapshot.sharedHtml,sickContacts:snapshot.sickContacts};
     saveScheduleBaseline(key,baseline);
   }
   return {key,snapshot,changes:scheduleChanges(baseline,snapshot)};
@@ -741,7 +822,7 @@ function openInfo(){
   if(!changes.length){goToView("info");return;}
   const dialog=$("scheduleChangesDialog");
   dialog.querySelector("ul").innerHTML=changes.map(change=>
-    `<li><strong>${esc(change.title)}</strong><p>${change.html ?? esc(change.text)}</p></li>`).join("");
+    `<li><strong>${esc(change.title)}</strong><div class="schedule-change-content${change.shared?" shared-info-text":""}">${change.html ?? esc(change.text)}</div></li>`).join("");
   dialog.querySelector("form").onsubmit=event=>{
     event.preventDefault();
     // Kvittera versionen som faktiskt visades, även om en ny kom under läsningen.
@@ -753,7 +834,7 @@ function openInfo(){
 }
 
 function renderSharedInfo(){
-  const text=sharedInstructionText();
+  const instructions=renderSharedInstruction(sharedInstructionText(),sharedInstructionHtml());
   const worker=currentPerson();
   const contacts=sickContactsFor(worker?assignments(worker.id):[]).map((contact,day)=>{
     if(!contact)return "";
@@ -766,7 +847,7 @@ function renderSharedInfo(){
   return `${renderAlert()}
     <button type="button" class="context-back" data-action="person-back">${icon("back","sm")} Till Min dag</button>
     <div class="heading"><h2>Instruktioner till alla</h2></div>
-    ${text?`<div class="person-hero shared-info-text">${renderInstruction(text)}</div>`:'<p class="smallmuted">Inga gemensamma instruktioner har lagts in ännu.</p>'}
+    ${instructions?`<div class="person-hero shared-info-text">${instructions}</div>`:'<p class="smallmuted">Inga gemensamma instruktioner har lagts in ännu.</p>'}
     ${contacts?`<section aria-labelledby="sickContactsTitle">
       <h3 class="inline-title" id="sickContactsTitle">Vem ringer jag om jag blir sjuk?</h3>
       <div class="rows">${contacts}</div>
