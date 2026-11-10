@@ -3310,6 +3310,38 @@
     font-weight: 400;
   }
 
+  .shared-info-format {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .shared-info-format [data-shared-format="bold"] { font-weight: 700; }
+  .shared-info-format [data-shared-format="italic"] { font-style: italic; }
+  .shared-info-format [data-shared-format="foreColor"] { color: #b91c1c; }
+  .shared-info-format [aria-pressed="true"] { background: #e2eddf; }
+
+  #sharedInfoText {
+    min-height: 9em;
+    max-height: 18em;
+    overflow-y: auto;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+    padding: 10px 11px;
+    border: 1px solid #d0d9c8;
+    border-radius: 6px;
+    background: white;
+    color: #000;
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  #sharedInfoText ul {
+    list-style: disc;
+    margin: 0;
+    padding-inline-start: 1.5em;
+  }
+
   .field textarea {
     min-height: 85px;
     resize: vertical;
@@ -11170,6 +11202,92 @@ function showDialog(title,subtitle,body,footer="",onSubmit=null) {
 // matchas mot people[].id i samma dokument för aktuellt namn och telefonnummer.
 const SICK_CONTACT_DAYS=["friday","saturday","sunday"];
 
+const SHARED_INFO_RED="#b91c1c";
+
+function sharedInfoColor(color) {
+  switch (color.toLowerCase().replace(/\s/g,"")) {
+    case SHARED_INFO_RED:
+    case "rgb(185,28,28)": return SHARED_INFO_RED;
+    case "#000":
+    case "#000000":
+    case "rgb(0,0,0)": return "#000";
+    default: return "";
+  }
+}
+
+// Bara text, radbrytningar, punktlistor, fetstil, kursiv och två fasta färger.
+function sanitizeSharedInfoHtml(html) {
+  const template=document.createElement("template");
+  template.innerHTML=html;
+  const serialize=node=>{
+    if (node.nodeType===Node.TEXT_NODE) return esc(node.data);
+    if (node.nodeType!==Node.ELEMENT_NODE || node.namespaceURI!=="http://www.w3.org/1999/xhtml") return "";
+    const tag=node.localName;
+    if (["script","style","template","iframe","object","noscript"].includes(tag)) return "";
+    if (tag==="br") return "<br>";
+    const content=[...node.childNodes].map(serialize).join("");
+    if (tag==="span" || tag==="font") {
+      const color=sharedInfoColor(node.style.color || node.getAttribute("color") || "");
+      return color && content ? `<span style="color:${color}">${content}</span>` : content;
+    }
+    const allowedTag=tag==="b" ? "strong" : tag==="i" ? "em" : tag;
+    return ["strong","em","div","p","ul","li"].includes(allowedTag)
+      ? `<${allowedTag}>${content}</${allowedTag}>` : content;
+  };
+  return [...template.content.childNodes].map(serialize).join("");
+}
+
+function initSharedInfoEditor(editor,initial) {
+  editor.innerHTML=typeof initial?.html==="string"
+    ? sanitizeSharedInfoHtml(initial.html)
+    : esc(initial?.text || "").replace(/\r\n?|\n/g,"<br>");
+  const buttons=[...modal.querySelectorAll("[data-shared-format]")];
+  let lastRange=null;
+  const selection=window.getSelection();
+  const editorRange=()=>{
+    if (!selection.rangeCount) return null;
+    const range=selection.getRangeAt(0);
+    return editor.contains(range.commonAncestorContainer) ? range : null;
+  };
+  const formatActive=command=>command==="foreColor"
+    ? sharedInfoColor(document.queryCommandValue(command))===SHARED_INFO_RED
+    : document.queryCommandState(command);
+  const syncButtons=()=>{
+    if (document.activeElement!==editor || !editorRange()) return;
+    for (const button of buttons) {
+      button.setAttribute("aria-pressed",String(formatActive(button.dataset.sharedFormat)));
+    }
+  };
+
+  editor.addEventListener("focusout",()=>{lastRange=editorRange()?.cloneRange() || lastRange;});
+  editor.addEventListener("input",syncButtons);
+  editor.addEventListener("keyup",syncButtons);
+  editor.addEventListener("pointerup",syncButtons);
+  editor.addEventListener("focus",syncButtons);
+  editor.addEventListener("paste",event=>{
+    event.preventDefault();
+    document.execCommand("insertText",false,event.clipboardData.getData("text/plain"));
+  });
+  editor.addEventListener("drop",event=>event.preventDefault());
+
+  for (const button of buttons) {
+    button.addEventListener("mousedown",event=>event.preventDefault());
+    button.addEventListener("click",()=>{
+      const range=editorRange()?.cloneRange() || lastRange;
+      editor.focus();
+      if (range && editor.contains(range.commonAncestorContainer)) {
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
+      const command=button.dataset.sharedFormat;
+      document.execCommand("styleWithCSS",false,false);
+      const value=command==="foreColor" ? (formatActive(command) ? "#000" : SHARED_INFO_RED) : null;
+      document.execCommand(command,false,value);
+      syncButtons();
+    });
+  }
+}
+
 function editSharedInfo() {
   const year=plan.year;
   const initial=plan.sharedInfo;
@@ -11191,9 +11309,17 @@ function editSharedInfo() {
     </div>`;
   }).join("");
   showDialog("Instruktioner till alla",`Gemensam information för Julstöket ${year}.`,
-    `<label class="field">Instruktioner till alla medarbetare
-      <textarea id="sharedInfoText" rows="6" placeholder="Skriv instruktioner som gäller alla. Webbadresser och e-postadresser blir klickbara i mobilversionen."></textarea>
-    </label>
+    `<div class="field">
+      <span id="sharedInfoLabel">Instruktioner till alla medarbetare</span>
+      <div class="shared-info-format" role="group" aria-label="Textformatering">
+        <button type="button" class="btn small" data-shared-format="insertUnorderedList" aria-pressed="false">• Punktlista</button>
+        <button type="button" class="btn small" data-shared-format="bold" aria-pressed="false">Fet</button>
+        <button type="button" class="btn small" data-shared-format="italic" aria-pressed="false">Kursiv</button>
+        <button type="button" class="btn small" data-shared-format="foreColor" aria-pressed="false">Röd text</button>
+      </div>
+      <div id="sharedInfoText" contenteditable="true" role="textbox" aria-multiline="true" aria-labelledby="sharedInfoLabel"></div>
+      <p class="hint">Webbadresser och e-postadresser blir klickbara i mobilversionen.</p>
+    </div>
     <div class="formsection">
       <h3>Kontakt vid sjukfrånvaro</h3>
       <p class="hint">Välj en person från Personal för varje dag. Telefonnummer hämtas automatiskt.</p>
@@ -11202,7 +11328,8 @@ function editSharedInfo() {
     button("Avbryt","close")+saveButton("Spara",{track:true}),async()=>{
       if (plan.year!==year) throw Error("Planeringsåret har ändrats. Öppna Instruktioner till alla igen.");
       const current=plan.sharedInfo;
-      if ((current?.text || "")!==(initial?.text || "") || SICK_CONTACT_DAYS.some(key=>
+      if ((current?.text || "")!==(initial?.text || "") || (current?.html || "")!==(initial?.html || "") ||
+        SICK_CONTACT_DAYS.some(key=>
         (current?.sickContactPersonIds?.[key] || null)!==(initial?.sickContactPersonIds?.[key] || null))) {
         throw Error("Informationen har ändrats av någon annan. Öppna Instruktioner till alla igen innan du sparar.");
       }
@@ -11216,12 +11343,14 @@ function editSharedInfo() {
         }
         sickContactPersonIds[key]=personId || null;
       }
-      const text=$("sharedInfoText").value.trim();
-      await commit(data=>{data.sharedInfo={text,sickContactPersonIds};},"Instruktioner till alla är sparad.");
+      const editor=$("sharedInfoText");
+      const text=editor.innerText.trim();
+      const html=text ? sanitizeSharedInfoHtml(editor.innerHTML) : "";
+      await commit(data=>{data.sharedInfo={text,html,sickContactPersonIds};},"Instruktioner till alla är sparade.");
       closeDialog();
     });
 
-  $("sharedInfoText").value=initial?.text || "";
+  initSharedInfoEditor($("sharedInfoText"),initial);
   for (const key of SICK_CONTACT_DAYS) {
     const row=modal.querySelector(`[data-sick-contact="${key}"]`);
     const select=row.querySelector("select");
@@ -11240,6 +11369,7 @@ function editSharedInfo() {
     select.addEventListener("change",updateContact);
     updateContact();
   }
+  $("modalForm")._markSaved();
   guardDialogEdits();
 }
 
@@ -11261,10 +11391,13 @@ function saveButton(label="Spara",{track=false}={}) {
 /* Spara-knappen är grå när posten visas oredigerad/sparad och grön så fort något ändras.
    Jämförelsen sker mot formulärets värden när dialogen öppnades (eller senast sparades). */
 function dialogFormSignature(form,exclude="[data-no-dirty]") {
-  return [...form.querySelectorAll("input,select,textarea")]
+  return JSON.stringify([...form.querySelectorAll('input,select,textarea,[contenteditable="true"]')]
     .filter(control => !["search","button","submit"].includes(control.type) && !control.closest(exclude))
-    .map(control => control.type==="checkbox" || control.type==="radio" ? (control.checked?"1":"0") : control.value)
-    .join("\u241F");
+    .map(control => {
+      if (control.isContentEditable) return control.innerHTML;
+      if (control.type==="checkbox" || control.type==="radio") return control.checked;
+      return control.value;
+    }));
 }
 
 function trackDialogChanges(form) {
@@ -11281,7 +11414,7 @@ function trackDialogChanges(form) {
   form._markSaved=() => {baseline=dialogFormSignature(form);apply(false);};
   apply(false);
   // Utgångsläget läses när dialogen är färdigbyggd; vissa fält fylls i först efter ett ögonblick.
-  setTimeout(() => {if (form.isConnected) form._markSaved();},150);
+  setTimeout(() => {if (baseline===null && form.isConnected) form._markSaved();},150);
   ["input","change","click","keyup"].forEach(type => form.addEventListener(type,schedule));
   new MutationObserver(schedule).observe(form,{childList:true,subtree:true});
 }
