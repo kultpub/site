@@ -1,7 +1,8 @@
 /* Mitt Julstök: versionsbundet appskal. Personligt namnval och schema sparas separat. */
 const CACHE_PREFIX="mitt-julstok-app-";
-const CACHE_NAME=CACHE_PREFIX+"20261109-shared-notices-v42";
-const SHELL=["./","./index.html","./styles.css?v=20261109-shared-notices-v42","./app.js?v=20261109-shared-notices-v42","./qr.js?v=20261108-gantt-contrast-v39","./manifest.webmanifest","./icon-192.png","./icon-512.png"];
+const APP_VERSION="20261110-instruction-links-v43";
+const CACHE_NAME=CACHE_PREFIX+APP_VERSION;
+const SHELL=["./","./index.html","./styles.css?v=20261109-shared-notices-v42","./app.js?v="+APP_VERSION,"./qr.js?v=20261108-gantt-contrast-v39","./manifest.webmanifest","./icon-192.png","./icon-512.png"];
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE_NAME).then(cache=>
     cache.addAll(SHELL.map(url=>new Request(url,{cache:"reload"})))
@@ -32,7 +33,7 @@ self.addEventListener("fetch",event=>{
       // Stöd äldre HTML-sidor som fortfarande begär resurser utan versionsnummer.
       const filename=url.pathname.split("/").pop();
       if(["app.js","qr.js","styles.css"].includes(filename)){
-        const version=filename==="qr.js"?"20261108-gantt-contrast-v39":"20261109-shared-notices-v42";
+        const version=filename==="qr.js"?"20261108-gantt-contrast-v39":filename==="app.js"?APP_VERSION:"20261109-shared-notices-v42";
         const asset=await cache.match("./"+filename+"?v="+version);
         if(asset)return asset;
       }

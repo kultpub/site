@@ -15,6 +15,35 @@ const DAY_NAMES=["Fredag","Lördag","Söndag"];
 const TZ="Europe/Stockholm";
 const $=id=>document.getElementById(id);
 const esc=value=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+
+function renderInstruction(value) {
+  const text = String(value ?? "");
+  const pattern = /\b(?:https?:\/\/|www\.)[^\s<>"']+|[\w.%+-]+@[\w.-]+\.[a-z]{2,}\b/gi;
+  let html = "";
+  let end = 0;
+
+  for (const match of text.matchAll(pattern)) {
+    let address = match[0].replace(/[.,;:!?]+$/, "");
+
+    // Skilj en omgivande parentes från parenteser som hör till adressen.
+    while (address.endsWith(")") &&
+      (address.match(/\)/g) || []).length > (address.match(/\(/g) || []).length) {
+      address = address.slice(0, -1);
+    }
+
+    const web = /^(?:https?:\/\/|www\.)/i.test(address);
+    const href = /^www\./i.test(address) ? "https://" + address
+      : web ? address : "mailto:" + address;
+    const attributes = web ? ' target="_blank" rel="noopener noreferrer"' : "";
+
+    html += esc(text.slice(end, match.index));
+    html += `<a href="${esc(href)}"${attributes}>${esc(address)}</a>`;
+    end = match.index + address.length;
+  }
+
+  return html + esc(text.slice(end));
+}
+
 const icon=(id,cls="")=>`<svg class="icon ${cls}" aria-hidden="true"><use href="#i-${id}"></use></svg>`;
 // Sökning: å, ä och ö är egna bokstäver och behålls. Övriga accenter (t.ex. é) tas bort.
 const norm=str=>String(str??"").normalize("NFC").toLocaleLowerCase("sv-SE").replace(/[^åäö]/gu,ch=>ch.normalize("NFD").replace(/[\u0300-\u036f]/g,"")).trim();
@@ -517,7 +546,7 @@ function initializeGantt(){updateGanttClock();}
 function renderHome(){const p=currentPerson();if(!p)return "";const shifts=assignments(p.id,state.day),today=dayIndexNow();const count=shifts.length;
   return `${renderAlert()}${renderDays()}<div class="heading"><h2>${esc(datesHeading(state.day))}</h2>${state.day===today?`<span class="today-tag">Idag</span>`:today>=0?`<button class="today-return" data-action="day" data-day="${today}">Till idag</button>`:""}</div><p class="summary">${esc(workingSummary(p,state.day))} · ${count} ${count===1?"pass":"pass"}</p>${count?`<div class="cards">${shifts.map((s,i)=>passCard(s,i)).join("")}</div>`:`<div class="empty">${icon("calendar","lg")}<h3>Du har inga arbetspass ${state.day===today?"idag":"den här dagen"}</h3><p>${availableRanges(p,state.day).length?"Du har arbetstid registrerad, men inga uppgifter tilldelade.":"Välj en annan dag för att se ditt schema."}</p></div>`}`;}
 function passCard(s,index){const activity=activityFor(s),place=placeForShift(s),isToday=dayIndexNow()===state.day,status=timeState(s),pauses=breaksOf(s),isRelief=s.kind==="relief";const labels={done:"Avslutat",live:"Pågår just nu",break:"Paus pågår",next:"Kommande",planned:"Planerat"};const colleagues=colocation(s);const prev=handover(s,"before"),next=handover(s,"after");const table=personalGantt(s);const forMe=relievedByMe(s);const returners=forMe.filter(person=>assignments(person.id,s.day).some(x=>x.activityId===s.activityId&&realWorkSegments(x).some(part=>part.start===s.end&&part.end>s.end)&&breaksOf(x).some(p=>p.end===s.end&&p.start<s.end&&p.end>s.start)));const instructions=[activity?.notes||"",activity?.dayNotes?.[s.day]||"",s.note||""].filter(x=>String(x).trim()).join("\n\n");
-  return `<article class="pass ${status==="live"||status==="break"?"live":""}" id="pass-${esc(s.id)}" data-pass-day="${s.day}" data-start="${esc(s.start)}" data-end="${esc(s.end)}"><div class="pass-head"><span class="pass-time">${esc(s.start)}–${esc(s.end)}</span>${isToday?`<span class="pill ${status}">${labels[status]}</span>`:isRelief?'<span class="pill next">Avlösare</span>':""}</div><div class="pass-body"><h3 class="pass-title">${esc(activity?.title||"Arbetsuppgift")}${isRelief?' <span style="font-size:12px;font-weight:600;color:#587669">· Avlösare</span>':""}</h3><div class="place-line">${icon("pin","sm")} ${esc(place.name)}</div>${mapButton(place)?`<div class="place-actions">${mapButton(place)}</div>`:""}${instructions?`<div class="instructions"><h4>Instruktioner</h4><div class="text">${esc(instructions)}</div></div>`:""}${pauses.length||forMe.length||prev.length||next.length||table?`<div class="detail">${pauses.map(p=>{const relief=reliefForPause(s,p);return `<div class="info-row">${icon("coffee","sm")}<span><strong>${esc(p.type||"Paus")}: ${esc(p.start)}–${esc(p.end)}</strong>${relief.length?`<br>Avlösare: ${relief.map(nameButton).join(", ")}`:""}</span></div>`;}).join("")}${forMe.length?`<div class="info-row">${icon("users","sm")}<span><strong>Du avlöser:</strong> ${forMe.map(p=>nameButton(p)+(reliefTimesFor(s,p)?", "+esc(reliefTimesFor(s,p)):"")).join("; ")}</span></div>`:""}${prev.length?`<div class="info-row">${icon("back","sm")}<span>Du ersätter: ${handoverNames(prev,"before")}</span></div>`:""}${next.length?`<div class="info-row">${icon("arrow","sm")}<span>Ersättare: ${handoverNames(next,"after")}</span></div>`:""}${table}</div>`:""}</div></article>`;}
+  return `<article class="pass ${status==="live"||status==="break"?"live":""}" id="pass-${esc(s.id)}" data-pass-day="${s.day}" data-start="${esc(s.start)}" data-end="${esc(s.end)}"><div class="pass-head"><span class="pass-time">${esc(s.start)}–${esc(s.end)}</span>${isToday?`<span class="pill ${status}">${labels[status]}</span>`:isRelief?'<span class="pill next">Avlösare</span>':""}</div><div class="pass-body"><h3 class="pass-title">${esc(activity?.title||"Arbetsuppgift")}${isRelief?' <span style="font-size:12px;font-weight:600;color:#587669">· Avlösare</span>':""}</h3><div class="place-line">${icon("pin","sm")} ${esc(place.name)}</div>${mapButton(place)?`<div class="place-actions">${mapButton(place)}</div>`:""}${instructions?`<div class="instructions"><h4>Instruktioner</h4><div class="text">${renderInstruction(instructions)}</div></div>`:""}${pauses.length||forMe.length||prev.length||next.length||table?`<div class="detail">${pauses.map(p=>{const relief=reliefForPause(s,p);return `<div class="info-row">${icon("coffee","sm")}<span><strong>${esc(p.type||"Paus")}: ${esc(p.start)}–${esc(p.end)}</strong>${relief.length?`<br>Avlösare: ${relief.map(nameButton).join(", ")}`:""}</span></div>`;}).join("")}${forMe.length?`<div class="info-row">${icon("users","sm")}<span><strong>Du avlöser:</strong> ${forMe.map(p=>nameButton(p)+(reliefTimesFor(s,p)?", "+esc(reliefTimesFor(s,p)):"")).join("; ")}</span></div>`:""}${prev.length?`<div class="info-row">${icon("back","sm")}<span>Du ersätter: ${handoverNames(prev,"before")}</span></div>`:""}${next.length?`<div class="info-row">${icon("arrow","sm")}<span>Ersättare: ${handoverNames(next,"after")}</span></div>`:""}${table}</div>`:""}</div></article>`;}
 function personNow(person){const now=activeNow(person.id);const dateIndex=dayIndexNow();if(dateIndex<0)return `<p class="smallmuted">Julstöket pågår inte just nu. Se planerade arbetsuppgifter nedan.</p>`;if(!now.length)return `<p class="smallmuted">Inget pass pågår just nu enligt schemat.</p>`;return now.map(s=>{const a=activityFor(s),place=placeForShift(s),onBreak=onPause(s,stockholmMinute());return `<div class="mini-entry"><strong>${onBreak?"Paus":a?.title||"Arbetsuppgift"}</strong><small>${esc(place.name)} · ${esc(s.start)}–${esc(s.end)}</small>${mapButton(place)?`<div class="place-actions">${mapButton(place)}</div>`:""}${onBreak?`<small>Personen har paus enligt schemat – fysisk position är inte känd.</small>`:""}</div>`;}).join("");}
 function renderPeople(){if(state.detailPersonId){const p=namedPerson(state.detailPersonId);if(!p){state.detailPersonId=null;return renderPeople();}const shifts=assignments(p.id),phone=phoneLink(p);return `${renderAlert()}<button class="context-back" data-action="person-back">${icon("back","sm")} ${state.personFrom==="search"?"Till sökningen":state.personFrom==="places"?"Till platserna":"Till kollegorna"}</button><div class="person-hero"><h2>${esc(p.name)}</h2>${phone||'<p class="smallmuted">Inget telefonnummer registrerat.</p>'}<div class="section-divider"></div><h3 class="inline-title">Just nu · enligt schemat</h3>${personNow(p)}</div><h3 class="inline-title" style="margin-top:22px">Arbetspass under Julstöket</h3>${shifts.length?DAY_NAMES.map((name,day)=>{const list=shifts.filter(s=>s.day===day),av=availableRanges(p,day);if(!list.length&&!av.length)return "";return `<div class="person-dayline">${esc(datesHeading(day))} · ${esc(workingSummary(p,day))}</div>${list.map(s=>{const a=activityFor(s),place=placeForShift(s);return `<div class="mini-entry"><strong>${esc(s.start)}–${esc(s.end)} · ${esc(a?.title||"Arbetsuppgift")}</strong><small>${esc(place.name)}${s.kind==="relief"?" · Avlösning":""}</small>${breaksOf(s).map(p=>`<small>Paus ${esc(p.start)}–${esc(p.end)}${reliefForPause(s,p).length?` · Avlösare: ${esc(reliefForPause(s,p).map(x=>x.name).join(", "))}`:""}</small>`).join("")}</div>`;}).join("")}`;}).join(""):`<div class="empty"><p>Inga uppgifter tilldelade.</p></div>`}`;}
   const list=planPeople();return `${renderAlert()}<div class="heading"><h2>Hitta kollega</h2></div><p class="smallmuted search-help">Tryck på en person för att se var personen arbetar enligt schemat. Telefonnummer går att ringa direkt.</p><div class="rows">${list.length?list.map(p=>{const now=activeNow(p.id),place=now[0]?placeForShift(now[0]):null;return `<div class="rowlink"><button type="button" class="rowlink-main" data-action="person" data-id="${esc(p.id)}"><strong>${esc(p.name)}</strong><small>${place?`Just nu: ${esc(place.name)}${onPause(now[0],stockholmMinute())?" · Paus":""}`:"Inget pågående pass"}</small></button>${phoneLink(p)||icon("chevron")}</div>`;}).join(""):`<div class="empty"><p>Ingen personal finns att visa.</p></div>`}</div>`;}
@@ -624,7 +653,7 @@ function scheduleChanges(before,after){
   if(before.sharedText!==after.sharedText){
     changes.push({
       title:"Instruktioner till alla",
-      text:after.sharedText || "De gemensamma instruktionerna har tagits bort."
+      html:renderInstruction(after.sharedText || "De gemensamma instruktionerna har tagits bort.")
     });
   }
   const hours=value=>value || "Ingen arbetstid registrerad";
@@ -667,9 +696,11 @@ function scheduleChanges(before,after){
       continue;
     }
     const [old]=remaining.splice(index,1);
-    const lines=fields.filter(([key])=>old[key]!==shift[key]).map(([key,label,format=value=>value || "—"])=>
-      `${label}: ${format(old[key])} → ${format(shift[key])}`);
-    if(lines.length)changes.push({title,text:lines.join("\n")});
+    const lines=fields.filter(([key])=>old[key]!==shift[key]).map(([key,label,format=value=>value || "—"])=>{
+      const renderValue=key==="instructions"?renderInstruction:esc;
+      return `${esc(label)}: ${renderValue(format(old[key]))} → ${renderValue(format(shift[key]))}`;
+    });
+    if(lines.length)changes.push({title,html:lines.join("\n")});
   }
   for(const shift of remaining){
     changes.push({
@@ -710,7 +741,7 @@ function openInfo(){
   if(!changes.length){goToView("info");return;}
   const dialog=$("scheduleChangesDialog");
   dialog.querySelector("ul").innerHTML=changes.map(change=>
-    `<li><strong>${esc(change.title)}</strong><p>${esc(change.text)}</p></li>`).join("");
+    `<li><strong>${esc(change.title)}</strong><p>${change.html ?? esc(change.text)}</p></li>`).join("");
   dialog.querySelector("form").onsubmit=event=>{
     event.preventDefault();
     // Kvittera versionen som faktiskt visades, även om en ny kom under läsningen.
@@ -735,7 +766,7 @@ function renderSharedInfo(){
   return `${renderAlert()}
     <button type="button" class="context-back" data-action="person-back">${icon("back","sm")} Till Min dag</button>
     <div class="heading"><h2>Instruktioner till alla</h2></div>
-    ${text?`<div class="person-hero shared-info-text">${esc(text)}</div>`:'<p class="smallmuted">Inga gemensamma instruktioner har lagts in ännu.</p>'}
+    ${text?`<div class="person-hero shared-info-text">${renderInstruction(text)}</div>`:'<p class="smallmuted">Inga gemensamma instruktioner har lagts in ännu.</p>'}
     ${contacts?`<section aria-labelledby="sickContactsTitle">
       <h3 class="inline-title" id="sickContactsTitle">Vem ringer jag om jag blir sjuk?</h3>
       <div class="rows">${contacts}</div>
