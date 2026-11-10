@@ -5316,11 +5316,17 @@
   }
 
   .activity-instruction-modal .instruction-fields textarea {
-    height: 140px;
-    min-height: 140px;
-    width: 100%;
-    resize: vertical;
+	height: 140px;
+	min-height: 140px;
+	width: 100%;
+	resize: vertical;
   }
+  
+.activity-instruction-modal [data-instruction-save] {
+  display: flex;
+  width: fit-content;
+  margin: 8px 0 0 auto;
+}  
 
   .activity-instruction-modal .instruction-copy {
     display: flex;
@@ -8931,8 +8937,9 @@ function assignPatternActivity(activity, preferredDay=null) {
       if (descriptions) input.setAttribute("aria-describedby",descriptions);else input.removeAttribute("aria-describedby");
     });
   };
+  const staffingForm=$("modalForm");
   requestAnimationFrame(() => {
-    if (!modal.open || !$("staffingPerson-0")) return;
+    if (!modal.open || $("modalForm")!==staffingForm) return;
     groups.forEach((group,index) => {
       const id="staffingPerson-"+index,value=draft.get(personDayKey(group));
       const label=patternPersonLabel(activity,group.day,group.participantId);
@@ -8950,6 +8957,7 @@ function assignPatternActivity(activity, preferredDay=null) {
       if (value.mixed) input.setAttribute("aria-describedby","staffingMixed-"+index);
     });
     showConflicts();
+    guardDialogEdits();
   });
 }
 
@@ -10401,7 +10409,8 @@ function editActivityInstructions() {
     <button type="button" class="closebtn" data-instruction-cancel aria-label="Stäng instruktionen"><svg class="close-icon" viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 5 15 15M15 5 5 15"/></svg></button></div>
     <div class="dialog-body"><div class="instruction-fields">
       ${[["all","Allmänt"],...DAYS.map((name,day) => [String(day),name])].map(([key,name]) => `<div class="instruction-field">
-        <label class="field">${name}<textarea data-instruction-edit="${key}" placeholder="${key==="all"?"Instruktioner som gäller oavsett dag":"Instruktioner specifikt "+name.toLocaleLowerCase("sv-SE")+"."}"></textarea></label>
+        <label class="field">${name}<textarea data-instruction-edit="${key}" placeholder="${key==="all"?"Instruktioner som gäller oavsett dag":"Instruktioner för "+name.toLocaleLowerCase("sv-SE")}. Webbadresser och e-postadresser blir klickbara i mobilversionen."></textarea></label>
+        <button type="button" class="btn small" data-instruction-save aria-label="Spara instruktion – ${name}">Spara instruktion</button>
       </div>`).join("")}
       </div><p class="instruction-hint" data-instruction-copy-status role="status" aria-live="polite">Instruktionerna sparas när du sparar aktiviteten.</p></div>
     <div class="dialog-foot"><button type="button" class="btn" data-instruction-cancel>Avbryt</button>
@@ -10409,8 +10418,44 @@ function editActivityInstructions() {
   const fields=[store,...DAYS.map((_,day) => modal.querySelector(`[data-instruction-day="${day}"]`))];
   const inputs=[dialog.querySelector('[data-instruction-edit="all"]'),...DAYS.map((_,day) => dialog.querySelector(`[data-instruction-edit="${day}"]`))];
   inputs.forEach((field,index) => {field.value=fields[index].value;});
+  const saveButtons=[...dialog.querySelectorAll("[data-instruction-save]")];
+  const isChanged=index=>inputs[index].value!==fields[index].value;
+  const updateButtons=()=>{
+    saveButtons.forEach((button,index)=>{
+      const changed=isChanged(index);
+      button.classList.toggle("primary",changed);
+      button.dataset.saveState=changed?"dirty":"saved";
+    });
+  };
+  const saveInstructions=indices=>{
+    if (!indices.length) return;
+    indices.forEach(index=>{fields[index].value=inputs[index].value;});
+    syncActivityInstruction();
+    store.dispatchEvent(new Event("input",{bubbles:true}));
+    updateButtons();
+  };
+  const requestClose=async()=>{
+    const changed=inputs.map((_,index)=>index).filter(isChanged);
+    if (!changed.length) {dialog.close();return;}
+    const answer=await askToSaveEdits("Vill du spara dina ändringar?");
+    if (!answer || !dialog.open) return;
+    if (answer==="yes") saveInstructions(changed);
+    inputs.forEach((field,index)=>{field.value=fields[index].value;});
+    updateButtons();
+  };
+  updateButtons();
+  dialog.addEventListener("input",updateButtons);
+  dialog.addEventListener("cancel",event=>{event.preventDefault();requestClose();});
   dialog.addEventListener("click",event => {
-    if (event.target.closest("[data-instruction-cancel]")) {dialog.close();return;}
+    if (event.target.closest("[data-instruction-cancel]") || isDialogBackdrop(event,dialog)) {
+      requestClose();return;
+    }
+    const save=event.target.closest("[data-instruction-save]");
+    if (save) {
+      const index=saveButtons.indexOf(save);
+      if (isChanged(index)) saveInstructions([index]);
+      return;
+    }
     const button=event.target.closest("[data-instruction-copy]");
     if (!button) return;
     const source=dialog.querySelector(`[data-instruction-edit="${button.dataset.instructionCopy}"]`);
@@ -10433,13 +10478,7 @@ function editActivityInstructions() {
   },{once:true});
   dialog.querySelector("form").onsubmit=event => {
     event.preventDefault();
-    const changed=inputs.some((field,index) => field.value!==fields[index].value);
-    if (changed) {
-      inputs.forEach((field,index) => {fields[index].value=field.value;});
-      syncActivityInstruction();
-      store.dispatchEvent(new Event("input",{bubbles:true}));
-    }
-    dialog.close();
+    requestClose();
   };
   document.body.append(dialog);dialog.showModal();
   const activeDay=$("modalForm")?._activityEditor?.activeDay;
@@ -10465,6 +10504,7 @@ function editActivity(id, preferredDay=null) {
     </div>`,
     (old?button("Ta bort","delete-activity-options",old.id,"danger push-left"):"")+button("Avbryt","close")+saveButton(old?"Spara aktivitet":"Skapa aktivitet",{track:!!old}),
     async () => {
+      const closeAfterSave=$("modalForm")._saveOnDismiss;
       const activity=readActivityDraft(old,draftId);activity.title=$("actTitle").value.trim();
       if (!activity.requirements.length) throw Error("Lägg till minst ett arbete.");
       if (!await reviewPauseRelief(activity)) return false;
@@ -10474,7 +10514,7 @@ function editActivity(id, preferredDay=null) {
         if (old) data.activities[data.activities.findIndex(item => item.id===old.id)]=activity;
         else data.activities.push(activity);
       },"Aktiviteten är sparad.");
-      if (old) editActivity(activity.id);
+      if (old && !closeAfterSave) editActivity(activity.id);
       else closeDialog();
     });
   if (old) {
@@ -10501,6 +10541,9 @@ function editActivity(id, preferredDay=null) {
       return source?timelineChoiceValue(previous,source).text:"";
     }};
   });
+  guardDialogEdits(form=>JSON.stringify([
+    dialogFormSignature(form,"[data-no-dirty],#activityPassEditor"),readPassEditorModel(editor)
+  ]));
 }
 
 function setDisabledShortcutTooltip(control,text) {
@@ -10678,7 +10721,7 @@ function renderSmartPersonInput(containerId, selectedPersonId, onSelect, onInput
     if(onInput)onInput('',input.value);suggestions();
   });
   input.addEventListener('keydown',event=>{
-    if(event.key==='Escape'){event.preventDefault();event.stopPropagation();hideBox();}
+    if(event.key==='Escape' && box.style.display!=='none'){event.preventDefault();event.stopPropagation();hideBox();}
     if(event.key==='ArrowDown'){event.preventDefault();suggestions();box.querySelector('[data-person]:not(:disabled)')?.focus();}
     if(event.key==='Enter' && !storedPersonId){event.preventDefault();suggestions();}
   });
@@ -11007,9 +11050,56 @@ function returnToActivityPlaces() {
 }
 
 modal.addEventListener("cancel",event=>{
-  if (!activityPlaceContext) return;
-  event.preventDefault();closeDialog();
+  if (!activityPlaceContext && !$("modalForm")?._hasUnsavedEdits) return;
+  event.preventDefault();
+  requestDialogDismiss();
 });
+
+function isDialogBackdrop(event,dialog) {
+  if (event.target!==dialog) return false;
+  const rect=dialog.getBoundingClientRect();
+  return event.clientX<rect.left || event.clientX>rect.right ||
+    event.clientY<rect.top || event.clientY>rect.bottom;
+}
+
+function guardDialogEdits(read=dialogFormSignature) {
+  const form=$("modalForm"),baseline=read(form);
+  form._hasUnsavedEdits=()=>read(form)!==baseline;
+}
+
+function askToSaveEdits(title) {
+  if ($("saveEditsConfirm")) return Promise.resolve("");
+  hideMenuTooltip();hideGanttTooltip();closeClockPicker();
+  return new Promise(resolve=>{
+    const dialog=document.createElement("dialog");
+    dialog.id="saveEditsConfirm";dialog.className="activity-confirmation";
+    dialog.setAttribute("aria-labelledby","saveEditsTitle");
+    dialog.innerHTML=`<form method="dialog">
+      <div class="dialog-head"><h2 id="saveEditsTitle">${esc(title)}</h2></div>
+      <div class="dialog-foot">
+        <button type="submit" class="btn" value="ignore">Ignorera</button>
+        <button type="submit" class="btn primary" value="yes" autofocus>Ja</button>
+      </div></form>`;
+    dialog.addEventListener("close",()=>{
+      dialog.remove();
+      resolve(dialog.returnValue);
+    },{once:true});
+    document.body.append(dialog);dialog.showModal();
+  });
+}
+
+async function requestDialogDismiss(discard=closeDialog) {
+  const form=$("modalForm");
+  if (form?._savingEdits || $("saveEditsConfirm")) return;
+  if (!form?._hasUnsavedEdits?.()) {discard();return;}
+  const answer=await askToSaveEdits("Vill du spara din redigering?");
+  if (!modal.open || $("modalForm")!==form) return;
+  if (answer==="ignore") discard();
+  if (answer==="yes" && form.reportValidity()) {
+    form._saveOnDismiss=true;
+    form.requestSubmit();
+  }
+}
 
 function closeDialog() {
   if (activityPlaceContext) {
@@ -11043,7 +11133,9 @@ function showDialog(title,subtitle,body,footer="",onSubmit=null) {
 
   $("modalForm").onsubmit=async event => {
     event.preventDefault();
-    if (!onSubmit) return;
+    const submittingForm=event.currentTarget;
+    if (!onSubmit || submittingForm._savingEdits) return;
+    submittingForm._savingEdits=true;
 
     const submitButtons=[...modal.querySelectorAll('button[type="submit"]')];
     submitButtons.forEach(b => b.disabled=true);
@@ -11063,6 +11155,8 @@ function showDialog(title,subtitle,body,footer="",onSubmit=null) {
     } catch (error) {
       showError(error);
     } finally {
+      submittingForm._savingEdits=false;
+      submittingForm._saveOnDismiss=false;
       submitButtons.forEach(b => b.disabled=false);
     }
   };
@@ -11098,7 +11192,7 @@ function editSharedInfo() {
   }).join("");
   showDialog("Instruktioner till alla",`Gemensam information för Julstöket ${year}.`,
     `<label class="field">Instruktioner till alla medarbetare
-      <textarea id="sharedInfoText" rows="6"></textarea>
+      <textarea id="sharedInfoText" rows="6" placeholder="Skriv instruktioner som gäller alla. Webbadresser och e-postadresser blir klickbara i mobilversionen."></textarea>
     </label>
     <div class="formsection">
       <h3>Kontakt vid sjukfrånvaro</h3>
@@ -11146,6 +11240,7 @@ function editSharedInfo() {
     select.addEventListener("change",updateContact);
     updateContact();
   }
+  guardDialogEdits();
 }
 
 function showError(error) {
@@ -11165,9 +11260,9 @@ function saveButton(label="Spara",{track=false}={}) {
 
 /* Spara-knappen är grå när posten visas oredigerad/sparad och grön så fort något ändras.
    Jämförelsen sker mot formulärets värden när dialogen öppnades (eller senast sparades). */
-function dialogFormSignature(form) {
+function dialogFormSignature(form,exclude="[data-no-dirty]") {
   return [...form.querySelectorAll("input,select,textarea")]
-    .filter(control => !["search","button","submit"].includes(control.type) && !control.closest("[data-no-dirty]"))
+    .filter(control => !["search","button","submit"].includes(control.type) && !control.closest(exclude))
     .map(control => control.type==="checkbox" || control.type==="radio" ? (control.checked?"1":"0") : control.value)
     .join("\u241F");
 }
@@ -11413,6 +11508,7 @@ function editBulkAvailability() {
     modal.querySelectorAll('[data-bulk-name]').forEach(row=>row.hidden=!row.dataset.bulkName.includes(query));
   };
   $("bulkSelectAll").onchange=event=>modal.querySelectorAll('[data-bulk-name]:not([hidden]) input').forEach(input=>input.checked=event.target.checked);
+  guardDialogEdits();
 }
 
 function editPerson(id) {
@@ -11463,6 +11559,7 @@ function editPerson(id) {
     }
   );
   bindAvailabilityFields();
+  guardDialogEdits();
 }
 
 function showPlaceOverview(id) {
@@ -11687,7 +11784,9 @@ function assignActivity(activityId, day) {
     return {activity,data};
   });
   
+  const staffingForm=$("modalForm");
   requestAnimationFrame(() => {
+    if (!modal.open || $("modalForm")!==staffingForm) return;
     requirements.forEach((req) => {
       const shifts = plan.assignments.filter(s => 
         s.activityId === activityId && s.day === req.day && 
@@ -11703,6 +11802,7 @@ function assignActivity(activityId, day) {
           personId=>legacyCandidateReason(containerId,personId,activity,requirements));
       });
     });
+    guardDialogEdits();
   });
 }
 
@@ -11829,6 +11929,7 @@ function addBreak(id) {
     }
   );
   bindTimeRange("breakStart","breakEnd",windows,time(start),time(end));
+  guardDialogEdits();
 }
 
 // Koppla pauser till deras bemannade avlösningar. För kopplade pass används
@@ -12245,6 +12346,7 @@ function resetSession() {
   if (unsubscribe) unsubscribe();
   unsubscribe=null;
   registerSubscriptions.forEach(stop=>stop());registerSubscriptions=[];
+  $("saveEditsConfirm")?.close();
   if (modal.open) closeDialog();
   modal.innerHTML="";
   delete modal.dataset.directoryMode;
@@ -12494,6 +12596,7 @@ function editPeopleImport(chosen) {
     $("importTimeStatus").textContent="Tiderna är tillämpade på "+selected.length+" personer. Sparas när du importerar.";
   }
   $("applyImportTimes").onclick=()=>{try{apply();}catch(error){showError(error);}};
+  guardDialogEdits(form=>JSON.stringify([dialogFormSignature(form),[...ranges]]));
 }
 
 async function writeRegister(collection,id,value,expected=null) {
@@ -12536,6 +12639,7 @@ function editDirectoryPerson(id) {
     };
   }
   $("directoryName").focus();
+  guardDialogEdits();
 }
 
 function deleteDirectoryPerson(id) {
@@ -12581,6 +12685,7 @@ ${PLACE_TYPES.map(t=>`<option value="${t.value}"${((PLACE_TYPES.some(x=>x.value=
   };
   mapsInput.addEventListener("input",updateMapsPreview);
   updateMapsPreview();
+  guardDialogEdits();
 }
 function deleteRegisterPlace(id) {
   const old=placeDirectory.find(place=>place.id===id);if (!old) return;
@@ -13093,8 +13198,8 @@ document.addEventListener("click",async event => {
   try {
     if (action==="retry-firebase") {await initializeFirebase();return;}
     if (!cloud) return;
-    if (action==="directory-import") {showPeopleDirectory("import");return;}
-    if (action==="directory-manage") {showPeopleDirectory("manage");return;}
+    if (action==="directory-import") {requestDialogDismiss(()=>showPeopleDirectory("import"));return;}
+    if (action==="directory-manage") {requestDialogDismiss(()=>showPeopleDirectory("manage"));return;}
     if (action==="directory-new") {editDirectoryPerson();return;}
     if (action==="directory-edit") {editDirectoryPerson(id);return;}
     if (action==="directory-delete") {deleteDirectoryPerson(id);return;}
@@ -13108,7 +13213,7 @@ document.addEventListener("click",async event => {
     if (action==="edit-shared-info") {editSharedInfo();return;}
     if (action==="open-mobile") {openMobileVersion();return;}
     
-    if (action==="close") closeDialog();
+    if (action==="close") requestDialogDismiss();
     if (action==="help") showHelp();
     if (action==="copy-report") await copyWeekendReport();
     if (action==="select-report") selectWeekendReport();
@@ -13183,7 +13288,7 @@ document.addEventListener("click",async event => {
       const requestedDay=target.dataset.day;
       assignActivity(id,/^[012]$/.test(requestedDay || "")?Number(requestedDay):undefined);
     }
-    if (action==="shift") showShift(id);
+    if (action==="shift") requestDialogDismiss(()=>showShift(id));
     if (action==="staff-activity") {
       if (target.disabled) return;
       // I redigeringsmodalen hålls aktiv dag i passredigerarens tillstånd.
@@ -13335,9 +13440,7 @@ modal.addEventListener("click",event => {
     if (event.clientX>=picker.left && event.clientX<=picker.right &&
         event.clientY>=picker.top && event.clientY<=picker.bottom) return;
   }
-  const rect=modal.getBoundingClientRect();
-  if (event.clientX<rect.left || event.clientX>rect.right ||
-      event.clientY<rect.top || event.clientY>rect.bottom) closeDialog();
+  if (isDialogBackdrop(event,modal)) requestDialogDismiss();
 });
 
 render();
