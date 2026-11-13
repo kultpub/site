@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nordenstedtska seminariet – Föreläsningsarkiv</title>
+<style>
+:root{
+  --green-900:#0f2e28;--green-800:#153c34;--green-700:#1f5446;--green-600:#28594b;
+  --green-100:#e6f0ea;--green-50:#f1f6f2;
+  --brass:#c89150;--brass-soft:#f3e6d3;--rust:#a25319;
+  --ink:#1c2724;--ink-2:#455c54;--line:#e2e6df;--paper:#f6f5f0;--card:#fff;
+  --radius:18px;--ease:cubic-bezier(.22,.8,.26,1);
+  --sticky-h:0px;
+  font-family:"Work Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color:var(--ink);background:var(--paper);color-scheme:light;
+  -webkit-font-smoothing:antialiased;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;overflow-y:scroll;scrollbar-gutter:stable}  /* plats för skrollist även när listan är kort */
+body{margin:0;overflow-anchor:none}
+.wrap,main{max-width:980px;margin:0 auto}
+
+/* ---------- Header ---------- */
+header{
+  position:relative;overflow:hidden;color:#fff;
+  background:
+    radial-gradient(1200px 400px at 85% -10%,rgba(200,145,80,.28),transparent 60%),
+    radial-gradient(800px 300px at -10% 120%,rgba(255,255,255,.07),transparent 60%),
+    linear-gradient(160deg,var(--green-800),var(--green-900));
+  padding:4.2rem 1.25rem 3.4rem;
+}
+header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;
+  background:linear-gradient(90deg,var(--brass),#e2b67c 50%,var(--brass))}
+.eyebrow{display:inline-flex;align-items:center;gap:.6rem;margin:0 0 .9rem;
+  color:#d8e8de;font-size:.82rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+.eyebrow::before{content:"";width:1.8rem;height:2px;background:var(--brass);border-radius:2px}
+.back{color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.25);transition:border-color .2s,color .2s}
+.back:hover{color:#fff;border-color:var(--brass)}
+h1{font:500 clamp(2.5rem,7vw,4.6rem)/1.02 Georgia,"Times New Roman",serif;margin:0;letter-spacing:-.035em}
+.lead{margin:1rem 0 0;max-width:46ch;color:#cfe0d6;font-size:1.05rem;line-height:1.6}
+
+/* ---------- Sticky search bar ---------- */
+.toolbar{position:sticky;top:0;z-index:10;padding:.9rem 1.25rem;
+  background:rgba(246,245,240,.82);backdrop-filter:saturate(1.4) blur(14px);-webkit-backdrop-filter:saturate(1.4) blur(14px);
+  border-bottom:1px solid transparent;transition:border-color .25s,box-shadow .25s}
+.toolbar.is-stuck{border-color:var(--line);box-shadow:0 6px 24px -18px rgba(15,46,40,.45)}
+.toolbar .inner{max-width:980px;margin:0 auto;display:flex;flex-wrap:wrap;gap:.75rem 1rem;align-items:center}
+.field{position:relative;flex:1 1 320px}
+.field svg{position:absolute;left:1rem;top:50%;translate:0 -50%;width:1.1rem;height:1.1rem;color:var(--ink-2);pointer-events:none}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+input[type=search]{width:100%;font:inherit;font-size:1rem;color:inherit;padding:.85rem 2.8rem .85rem 2.75rem;
+  background:var(--card);border:1px solid #cdd6ce;border-radius:999px;outline:none;
+  transition:border-color .2s,box-shadow .2s;-webkit-appearance:none;appearance:none}
+input[type=search]::-webkit-search-cancel-button{display:none}
+input[type=search]:hover{border-color:#9fb1a6}
+input[type=search]:focus{border-color:var(--green-600);box-shadow:0 0 0 4px rgba(40,89,75,.14)}
+.clear{position:absolute;right:.4rem;top:50%;translate:0 -50%;width:2.25rem;height:2.25rem;padding:0;border:0;border-radius:50%;
+  background:var(--green-100);color:var(--green-700);cursor:pointer;display:grid;place-items:center;
+  transition:rotate .35s var(--ease),background-color .25s,color .25s}
+.clear svg{position:static;translate:none;width:1.05rem;height:1.05rem;display:block;color:currentColor}
+.clear:hover{background:var(--green-800);color:#fff;rotate:90deg}
+.clear:focus-visible{outline:3px solid var(--rust);outline-offset:2px}
+.meta{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+#count{margin:0;color:var(--ink-2);font-size:.9rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+.years{display:flex;gap:.35rem;flex-wrap:wrap}
+.years a{font-size:.85rem;font-weight:600;color:var(--green-700);text-decoration:none;padding:.35rem .75rem;border-radius:999px;
+  background:var(--card);border:1px solid var(--line);transition:background .2s,color .2s,border-color .2s}
+.years a:hover{background:var(--green-800);border-color:var(--green-800);color:#fff}
+.years a[aria-disabled=true]{opacity:.4;pointer-events:none}
+
+/* ---------- Lists ---------- */
+main{padding:.6rem 1.25rem 5rem}
+section{scroll-margin-top:calc(var(--sticky-h) + .5rem)}
+h2{display:flex;align-items:baseline;gap:.8rem;font:500 2.1rem Georgia,serif;margin:2.2rem 0 .8rem;letter-spacing:-.02em}
+h2 .n{font:600 .8rem "Work Sans",system-ui,sans-serif;color:var(--ink-2);letter-spacing:.04em}
+.list{display:grid;gap:.6rem}
+.lecture{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  transition:border-color .3s var(--ease),box-shadow .35s var(--ease),transform .35s var(--ease)}
+.lecture:hover{border-color:#cbd6cd;box-shadow:0 10px 30px -22px rgba(15,46,40,.5)}
+.lecture[open]{border-color:#b9cdbf;box-shadow:0 18px 40px -26px rgba(15,46,40,.55)}
+summary{display:grid;grid-template-columns:7.2rem 1fr 2.2rem;align-items:center;gap:1rem;cursor:pointer;
+  padding:1.05rem 1.2rem 1.05rem 1.3rem;list-style:none;border-radius:var(--radius);
+  -webkit-tap-highlight-color:transparent;user-select:none}
+summary::-webkit-details-marker{display:none}
+summary:focus-visible{outline:3px solid var(--rust);outline-offset:2px}
+time{display:inline-flex;flex-direction:column;justify-self:start;line-height:1.15;color:var(--green-700);
+  font-size:.92rem;font-weight:600;font-variant-numeric:tabular-nums}
+.title strong{display:block;font-weight:600;font-size:1.06rem;line-height:1.35;text-wrap:pretty}
+.title small{display:block;margin-top:.3rem;color:var(--ink-2);font-size:.92rem;font-weight:500}
+.badge{display:inline-block;margin-left:.5rem;padding:.12rem .55rem;border-radius:999px;vertical-align:.12em;
+  background:var(--brass-soft);color:#7a4a14;font:700 .7rem "Work Sans",system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase}
+.chev{width:2.2rem;height:2.2rem;border-radius:50%;display:grid;place-items:center;background:var(--green-50);color:var(--green-600);
+  transition:transform .45s var(--ease),background .3s,color .3s}
+.chev svg{width:1rem;height:1rem}
+summary:hover .chev{background:var(--green-100)}
+.lecture[open] .chev{transform:rotate(180deg);background:var(--green-800);color:#fff}
+
+.body{overflow:hidden}
+.body > .inner{padding:.2rem 1.3rem 1.5rem calc(7.2rem + 1rem + 1.3rem);line-height:1.72;max-width:calc(76ch + 9.5rem);color:#26332f}
+.body p{margin:0 0 .95rem}
+.body p:last-child{margin-bottom:0}
+.body p + p:has(> strong:first-child){padding-top:.95rem;border-top:1px dashed var(--line)}
+.body a{color:var(--green-700);font-weight:600;text-underline-offset:3px}
+.body a:hover{color:var(--rust)}
+
+#empty{margin:2.5rem 0;padding:2rem;text-align:center;color:var(--ink-2);background:var(--card);border:1px dashed #cdd6ce;border-radius:var(--radius)}
+
+@media (max-width:640px){
+  header{padding:3rem 1.1rem 2.6rem}
+  .toolbar{padding:.75rem 1rem}
+  main{padding:.4rem 1rem 4rem}
+  summary{grid-template-columns:1fr 2.2rem;gap:.35rem .8rem;padding:1rem 1rem 1rem 1.1rem}
+  time{grid-column:1/-1;flex-direction:row;gap:.35rem}
+  .chev{grid-row:2;grid-column:2}
+  .body > .inner{padding:.1rem 1.1rem 1.3rem}
+  .years{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <p class="eyebrow"><a class="back" href="nordenstedtska-seminariet.html">Nordenstedtska seminariet</a></p>
+    <h1>Tidigare föreläsningar</h1>
+    <p class="lead">Ett arkiv över seminariets föreläsningar – sök på ämne, föreläsare eller datum.</p>
+  </div>
+</header>
+
+<div class="toolbar" id="toolbar">
+  <div class="inner">
+    <div class="field">
+      <label for="query" class="sr-only">Sök i föreläsningsarkivet</label>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="query" type="search" placeholder="Sök, t.ex. mars 2025, Tegnér eller arkeologi" autocomplete="off" aria-describedby="count">
+      <button class="clear" type="button" id="clear" aria-label="Rensa sökningen" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+    <div class="meta">
+      <p id="count" role="status">51 föreläsningar</p>
+      <nav class="years" id="years" aria-label="Hoppa till år"></nav>
+    </div>
+  </div>
+</div>
+
+<main>
+<p id="empty" hidden>Inga föreläsningar matchar din sökning.</p>
+<section><h2>2026</h2><div class="list"><details class="lecture"><summary><time datetime="2026-03-05">5 mars</time><span><strong>Hur styrdes Norden innan riken fanns?</strong><small>Stefan Brink</small></span></summary><div class="body"><p>Hur fungerade lag och rätt utan stat? Vad hände när den gamla tron mötte kristendomen? I det här föredraget tar Stefan Brink oss till ett samhälle i omvandling – från hedniska maktstrukturer till kyrkans och kungamaktens nya landskap. Föreläsningen blir också en levande inblick i forskningen bakom den kommande boken <em>Viking Landscape – A Spatial (Pre-)History</em>, och i arbetet med att förstå hur det nordiska samhället växte fram.</p><p><strong>Stefan Brink</strong> är professor i Scandinavian Studies med anknytning till Cambridge University, University of the Highlands and Islands och Uppsala universitet. Under 20 år var han Sixth Century Professor och föreståndare för Centre for Scandinavian Studies vid University of Aberdeen. Han är ledamot av Kungl. Vitterhetsakademien, Kungl. Gustav Adolfs Akademien, Royal Society of Edinburgh och Royal Historical Society samt har varit gästprofessor vid bl.a. Princeton, Harvard, UCLA, Durham, Bergen, Århus och Bonn.</p></div></details><details class="lecture"><summary><time datetime="2026-03-12">12 mars</time><span><strong>Slaget vid Lützen</strong><small>Johan Romin</small></span></summary><div class="body"><p>Slaget vid Lützen den 6 november 1632 är ett av de mest mytomspunna och omtalade slagen i svensk historia. Här hade Sverige blandat sig i det europeiska krig, som senare kom att kallas för 30-åriga kriget. Den svenske kungen Gustav II Adolf ledde de protestantiska styrkorna och stod emot den katolska kejserliga armén under ledning av Albrecht von Wallenstein. Slaget blev historiskt och avgörande, inte minst med tanke på att den svenske kungen dödades under slaget. Men hur betydelsefull var egentligen denna drabbning? Vad hände under slaget och varför var Sverige ens med i detta krig? Vad var det strategiska syftet och målsättningen från svensk sida?</p><p><strong>Johan Romin</strong> är militärhistoriker och journalist, verksam på Kulturen i Lund, bland annat som producent och programledare för podden <em>Historielunden</em>. Han har examen i militärhistoria från Försvarshögskolan och skriver just nu på sin tredje bok i ämnet krig och konflikt.</p></div></details><details class="lecture"><summary><time datetime="2026-04-02">2 april</time><span><strong>Skånska spelkvinnor – musikföreläsning</strong><small>Miriam Andersén &amp; Anna Rynefors</small></span></summary><div class="body"><p>Fanns det några spelkvinnor i Skåne förr i tiden? Den frågan besvaras med musik, sång och berättande av två nutida spelkvinnor, som har forskat kring kvinnor i folkmusiktraditionen och hittat många spännande livsöden i bland annat Kulturens samlingar.</p><p>Riksspelmännen <strong>Miriam Andersén</strong> och <strong>Anna Rynefors</strong> startade sitt musikaliska samarbete <em>Kvinnolåt</em> år 2015 med syftet att synliggöra kvinnliga musiker, komponister och poeter från medeltiden och framåt. Båda är framgångsrika frilansmusiker med världen som arbetsfält och bosatta i Skåne.</p></div></details><details class="lecture"><summary><time datetime="2026-05-14">14 maj</time><span><strong>Skånska kriget 1675–1679</strong><small>Katarina Harrison Lindbergh</small></span></summary><div class="body"><p>Skånska kriget var ett av de hårdaste och mest brutala krig som drabbade Sverige och Danmark – fyllt av övergrepp, snapphanar, gömda skatter, ond bråd död och mänskligt lidande. Men mitt i mörkret fanns också en annan möjlighet. Med freden i Lund öppnades vägen mot något ljusare: försoning, samförstånd och en framtid där gamla fiender kunde börja närma sig varandra.</p><p><strong>Katarina Harrison Lindbergh</strong> är historiker och föreläsare med ett tiotal böcker bakom sig. Hon har framförallt skrivit om 1500-talet och 1600-talet i böcker som <em>Erik XIV</em> och <em>Skånska kriget 1675–1679</em>. Hon har också skrivit flera böcker om nordiska guda- och hjältesagor. Tillsammans med maken Dick Harrison poddar hon i <em>Harrisons dramatiska historia</em>.</p></div></details><details class="lecture"><summary><time datetime="2026-06-11">11 juni</time><span><strong>The Vikings’ Impact on Scotland’s Islands</strong><small>Alan MacNiven</small></span></summary><div class="body"><p>The lecture takes Islay in the Inner Hebrides as a case study in how scholars reconstruct the Viking past. While earlier accounts drew on National Romantic literature, more recent studies have looked for evidence in the DNA of present-day populations believed to have Viking ancestry. MacNiven considers what genetic evidence can contribute and where statistical errors or claims that go beyond the data can lead historians astray. He asks when DNA helps us understand the past and when the apparent precision of genetic analysis makes an uncertain interpretation seem more convincing than it is.</p><p><strong>Alan MacNiven</strong> is Senior Lecturer and Head of Scandinavian Studies at the University of Edinburgh, where he teaches on a range of courses covering the language, literature and culture of modern and medieval Scandinavia. He is particularly interested in areas where aspects of Nordic history and culture intersect with those of Scotland. Alan’s research has focused on the identification, interpretation and implications of the evidence for Viking activity in Scotia Scandinavica.</p></div></details><details class="lecture"><summary><time datetime="2026-06-11">11 juni</time><span><strong>Nils Månsson Mandelgren i nytt ljus</strong><small>Solfrid Söderlind</small></span></summary><div class="body"><p>Nils Månsson Mandelgren är mest känd för att ha dokumenterat äldre folklig kultur. Föreläsningen handlar om hans arbete för att påverka hur Sveriges kulturinstitutioner skulle utvecklas. Med utgångspunkt i en bok där tolv forskare medverkar tar Söderlind upp hans betydelse för museerna, kulturminnesvården och utbildningen inom konst och hantverk. Hon lyfter också fram hans förslag på hur människors levnadsvillkor kunde förbättras och det starka engagemang som drev honom att föra fram dem.</p><p><strong>Solfrid Söderlind</strong> är professor emerita vid Institutionen för kulturvetenskaper på Lunds universitet. Hon har tidigare varit överintendent för Nationalmuseum och tillsammans med etnologen Karin Gustavsson redaktör för boken <em>Nils Månsson Mandelgren och kampen för kulturens framtid</em> (2025).</p></div></details><details class="lecture"><summary><time datetime="2026-09-24">24 september</time><span><strong>Från Skåne till Alger – svenska livsöden i slaveriets Medelhav</strong><small>Joachim Östlund</small></span></summary><div class="body"><p>Den 29 december 1697 skriver två svenska soldater, Oluf Örnvinge och Johan Brant, ett brev från Alger till den svenske kungen. Soldaternas väg till Nordafrika hade börjat nästan tjugo år tidigare, i efterdyningarna av det Skånska kriget. Samtidigt berättar handlingar från Lunds domkapitel om kyrkliga kollekter för landsmän i fångenskap i ”Turkiet” – en samtida beteckning för det Osmanska riket, som Alger formellt tillhörde. Genom sådana spår vidgar föreläsningen bilden av den tidigmoderna världen och lyfter fram en historia om enskilda livsöden, ofrihet och människors vilja att hjälpa andra i nöd.</p><p><strong>Joachim Östlund</strong> är docent och universitetslektor i historia vid Lunds universitet. Han har bland annat forskat om Sveriges förbindelser med Medelhavsvärlden under tidigmodern tid och är författare till <em>Saltets pris: svenska slavar i Nordafrika och handeln i Medelhavet 1650–1770</em>. Han leder för närvarande forskningsprojektet <em>Scripture and Scholarship: The Swedish Search for Ancient Egypt, 1677–1739</em>, som undersöker hur kunskap om det forntida Egypten formades och diskuterades i stormaktstidens Sverige.</p></div></details><details class="lecture"><summary><time datetime="2026-10-08">8 oktober</time><span><strong>De många slagen om Lund 1676–2026</strong><small>Ulf Zander</small></span></summary><div class="body"><p>Det blodiga slaget vid Lund har tolkats på olika sätt från det sena 1800-talet till våra dagar. I skandinavismens och nationalismens tidevarv har det varit utgångspunkt för förening mellan brödrafolk, ett manande exempel på manlighet och stridsiver samt en batalj som kontrasterar senare tiders fredliga utveckling.</p><p><strong>Ulf Zander</strong> är professor i historia vid Lunds universitet och forskar om historiebruk och hur historia förmedlas i offentlighet och populärkultur. Han har särskilt studerat film, fotografi, monument och musik samt minnet av andra världskriget och Förintelsen. Bland hans böcker finns <em>Clio på bio</em> och <em>Raoul Wallenberg – liv och legend</em>.</p></div></details><details class="lecture"><summary><time datetime="2026-10-15">15 oktober</time><span><strong>Bakom kulisserna på Vipeholm – om att öppna arkiven och låta människorna som klassades som idioter träda fram</strong><small>Randi Mossige-Norheim</small></span></summary><div class="body"><p>Med utgångspunkt i sin egen familjehistoria gräver Randi Mossige-Norheim i arkiven och presenterar nu nya detaljer om det institutionella våld som de tvångsintagna patienterna på Vipeholm utsattes för. Kariesexperimentet var långt ifrån det enda experiment där patienter användes som försökspersoner. De intagna reducerades till ”koder” och ”material” och var helt utlämnade till överläkaren Hugo Fröderbergs hemsnickrade teorier om vem som var lågt eller högre stående.</p><p><strong>Randi Mossige-Norheim</strong> är dokumentärjournalist och har varit verksam på Sveriges Radio sedan 1980-talet. Hon har tidigare gjort en uppmärksammad radiodokumentärserie om Vipeholm för vilken hon fick Stora Journalistpriset 2021. I sin bok <em>När du var idiot</em> (utgiven i september 2026) återvänder hon till Vipeholm, för att försöka förstå vad hennes egen farbror och de andra patienterna var med om där inne på den slutna anstalten.</p></div></details><details class="lecture"><summary><time datetime="2026-10-22">22 oktober</time><span><strong>Slaget vid Lund 1676 – vad källorna berättar om slagets förlopp</strong><small>Göran Larsson</small></span></summary><div class="body"><p>Slaget vid Lund kan sägas utgöra något av en höjdpunkt i den långa konflikten mellan det danska och svenska riket om dominansen i Norden. Slaget avgjorde inte det Skånska kriget som fortsatte i ytterligare tre år, men den svenska segern möjliggjorde en fortsättning av kriget. Föreläsningen handlar om hur slaget utvecklades med utgångspunkt i samtida källor.</p><p><strong>Göran Larsson</strong> är en svensk arkivarie, museiman och författare som bland annat varit chef för Malmö Museer och Malmö stadsarkiv. Hans främsta intresseområde är Skånes historia och vid sidan av arkiv- och studenthistoriska skrifter har han även författat böcker om slaget vid Lund.</p></div></details></div></section>
+<section><h2>2025</h2><div class="list"><details class="lecture"><summary><time datetime="2025-11-06">6 november</time><span><strong>Sven Fristedt – mönster och möten</strong><small>Anna Lindqvist</small></span></summary><div class="body"><p>Konstnären och textilformgivaren Sven Fristedt (1940–2025) slog igenom med sina stormönstrade färgstarka tryckta tyger i en tid som präglades av framtidstro och ungdomskultur. I kvällens föredrag lyfts Sven Fristeds unika konstnärskap fram, men också de personer runt honom som bidrog till att svensk textilindustri blev internationellt känd.</p><p><strong>Anna Lindqvist</strong> är intendent på Kulturen och har varit innehållsansvarig för Kulturens utställning <em>Sven Fristedt – mästare i mönster</em>. Hon har varit redaktör och huvudförfattare till boken med samma namn och har även tidigare skrivit en flertal böcker om det svenska moderna textila kulturarvet.</p></div></details><details class="lecture"><summary><time datetime="2025-10-23">23 oktober</time><span><strong>När den nya tiden kom till bygden</strong><small>Karin Gustavsson</small></span></summary><div class="body"><p>Kvällens föreläsning fokuserar på de stora mängder uppteckningar och frågelistsvar som finns hos Folklivsarkivet och andra traditionsarkiv. Materialen är vittnesmål från ett förindustriellt Sverige och i föreläsningen möter vi några personer i de arkiverade berättelserna som har bidragit till kunskapen om livsvillkoren i en svunnen tid &#8211; och vad vi eventuellt kan lära av de erfarenheter som förmedlas i arkivmaterialet.</p><p><strong>Karin Gustavsson</strong> är fil. dr i etnologi, forskare vid Institutionen för kulturvetenskaper, Lunds universitet. Hon var chef för Folklivsarkivet med Skånes musiksamlingar vid Lunds universitet 2019–2024. Hon bedriver forskning inom det kulturhistoriska fältet och bidrog till <em>Kulturens årsbok 2025</em> med en text om äldre frågelistor som källor till kunskap om förändringar på landsbygden.</p></div></details><details class="lecture"><summary><time datetime="2025-10-02">2 oktober</time><span><strong>Att tjäna aristokratin</strong><small>Anna Nilsson Hammar &amp; Svante Norrhem</small></span></summary><div class="body"><p>Vad innebar det att arbeta i 1600-talets aristokratiska hushåll? Hur lärde sig människor att navigera de möjligheter och begränsningar som de stora godsmiljöerna innebar även för tjänstefolket? I detta föredrag möter vi människorna som arbetade vid den De la Gardieska familjens många slott och gods. Genom ett unikt källmaterial får vi inblickar i tjänstefolkens vardag och hur de själv valde att beskriva den.</p><p><strong>Svante Norrhem</strong> och <strong>Anna Nilsson Hammar</strong>, disputerade 1994 respektive 2012, och är båda verksamma vid Historiska institutionen vid Lunds universitet. De har intresserat sig för det tidigmoderna Sverige: för statstjänstemännen, de konfessionella konflikterna, adelns roll och för praktiska kunskaper i ett föränderligt samhälle.</p></div></details><details class="lecture"><summary><time datetime="2025-09-25">25 september</time><span><strong>Förintelsen i museal historieförmedling i Skandinavien</strong><small>Julia Håkansson</small></span></summary><div class="body"><p>Kvällens föreläsning presenterar ett pågående forskningsprojekt som undersöker ett femtontal utställningar på helt eller delvis statligt finansierade museer i Sverige, Norge och Danmark, med syftet att kartlägga likheter och skillnader i de skandinaviska historiekulturerna gällande museal historieförmedling om Förintelsen och andra världskriget. Forskningsprojektet undersöker också hur besökare relaterar till historieförmedling om Förintelsen i museala sammanhang.</p><p><strong>Julia Håkansson</strong> är fil. dr i historia och historiedidaktik och disputerade 2023 med en avhandling om Sverigedemokraternas och Dansk Folkepartis nationella berättelser. Hon är postdoktor i museologi vid Kulturen i Lund och Institutionen för kulturvetenskaper vid Lunds universitet, där hon forskar om hur Förintelsen och andra världskriget skildras på museer i Skandinavien, med särskilt fokus på Kulturens utställning om Ravensbrück.</p></div></details><details class="lecture"><summary><time datetime="2025-09-11">11 september</time><span><strong><em>Frithiofs saga</em> – ett poetiskt gravkummel</strong><small>Rikard Schönström</small></span></summary><div class="body"><p>Föreläsningen tar sin utgångspunkt i Esaias Tegnérs <em>Frithiofs saga</em>, ett av 1800-talets mest spridda svenska diktverk. Verket utkom 1825 i en fullständig version bestående av 24 sånger. Det översattes snart till en lång rad språk och lästes i hela Europa. Dikten bidrog starkt till Tegnérs rykte som en av sin tids mest betydande svenska författare.</p><p><strong>Rikard Schönström</strong> är professor emeritus i litteraturvetenskap vid Språk- och litteraturcentrum, Lunds universitet. Han disputerade på en avhandling om Pär Lagerkvist 1987 och har därefter skrivit ett flertal böcker och essäer om den moderna litteraturen i Norden samt ett par monografier om Bertolt Brecht. På senare år har han dessutom ägnat stort intresse åt Esaias Tegnérs diktning, bland annat som styrelseledamot i Tegnérsamfundet i Lund.</p></div></details><details class="lecture"><summary><time datetime="2025-06-05">5 juni</time><span><strong>De första domkyrkorna i Lund och Dalby – vad vet vi egentligen?</strong><small>Jes Wienberg</small></span></summary><div class="body"><p>Föredraget behandlar frågeställningar kring de tidiga domkyrkorna i Skåne under 1000-talet, före Lunds nuvarande domkyrka. Ämnet kretsar kring när och var dessa kyrkor existerade, deras arkitektoniska utformning samt de metoder som används för att datera dem – frågor som är både komplicerade och omdiskuterade.</p><p><strong>Jes Wienberg</strong> är professor emeritus i historisk arkeologi vid Lunds universitet med en lång akademisk karriär. Med examina som cand.phil och fil.dr fokuserar hans forskning på kyrkoarkitektur och medeltida kulturarv i Skandinavien.</p></div></details><details class="lecture"><summary><time datetime="2025-05-08">8 maj</time><span><strong>Längtan till landet Annorlunda – om sommarstugeliv</strong><small>Orvar Löfgren och Jonas Frykman</small></span></summary><div class="body"><p>En föreläsning om den kulturella och sociala betydelsen av sommarstugeliv i Sverige. Under senare delen av 1900-talet har sommarstugeägande blivit en utbredd erfarenhet, där den lilla röda stugan framträder som en symbol för både traditioner, känslor och konflikter som uppstår när stadsliv möter landsbygd.</p><p><strong>Orvar Löfgren</strong> och <strong>Jonas Frykman</strong> är professorer emeriti vid Lunds universitets avdelning för etnologi. De disputerade 1978 respektive 1977 och har haft en betydande inverkan på forskningen om svenska levnadsvillkor och kulturella traditioner. Tillsammans bidrar de även med en artikel om sommarstugeliv i <em>Kulturens årsbok 2025</em>.</p></div></details><details class="lecture"><summary><time datetime="2025-04-10">10 april</time><span><strong>Vem får ta plats i staden?</strong><small>Peter K. Andersson</small></span></summary><div class="body"><p>En föreläsning om hur vi beter oss i offentliga miljöer. Vem tar mest plats och hur bra är folk på att visa hänsyn? Dessa frågor är avgörande för hur vi lever i städer och hur stadsplanerare visualiserar stadens fysiska rum. I föredraget kontrasteras en rad historiska exempel mot hur stadsliv ter sig idag. Har folk blivit bättre på att samexistera i städer, eller rentav sämre? Vad kan vi lära oss av äldre tiders sätt att använda stadens offentliga rum?</p><p><strong>Peter K. Andersson</strong>, fil.dr. i historia, arbetar på Kulturen i Lund. Han är stadshistoriker med särskilt fokus på vardagsliv och social interaktion och disputerade 2012 med en avhandling om gatulivet i det senviktorianska London.</p></div></details><details class="lecture"><summary><time datetime="2025-04-03">3 april</time><span><strong>Det sena 1800-talets hypnosfeber</strong><small>Cecilia Riving</small></span></summary><div class="body"><p>En föreläsning om hypnosens guldålder. Hypnos började användas som medicinsk behandling på 1880-talet och läkare diskuterade ivrigt dess terapeutiska för- och nackdelar. Men hypnotismen var också ett populärkulturellt fenomen; kringresande hypnotisörer drog stor publik, i press och skönlitteratur gestaltades denna mystiska kraft som både lockade och skrämde. Hur kan vi förstå hypnosens dubbla natur? Och hur satte den avtryck i vår egen tid?</p><p><strong>Cecilia Riving</strong> är forskare vid Historiska institutionen på Lunds universitet och utbildningskoordinator vid den Nationella forskarskolan i historiska studier. Hon har bland annat arbetat med forskningsprojekt om psykiatriska patienters livsberättelser och har erfarenhet som kulturredaktör, tidskriftsredaktör och språkgranskare.</p></div></details><details class="lecture"><summary><time datetime="2025-03-20">20 mars</time><span><strong>Att vårda Lunds kulturmiljöer – stadsantikvariens utmaningar i en föränderlig tid</strong><small>Petter Eiring</small></span></summary><div class="body"><p>Vi befinner oss i en tid där stora omvälvningar står för dörren både lokalt och globalt. Klimathot, urbanisering, förtätning, infrastruktur och ändrade myndighetskrav utgör centrala utmaningar i arbetet med stadsbyggnad och kulturmiljövård. Lund, vår 1000-åriga stad, har ständigt förändrats och det är av vikt att reflektera över vilket arv vi lämnar till framtida generationer.</p><p><strong>Petter Eiring</strong> är stadsantikvarie och arkitekt (SAR/MSA). Han arbetar vid Stadsplaneringsavdelningen vid Samhällsbyggnadsförvaltningen, Lunds kommun och fungerar som expert och rådgivare i frågor rörande stadens kulturmiljöer.</p></div></details></div></section>
+<section><h2>2024</h2><div class="list"><details class="lecture"><summary><time datetime="2024-11-07">7 november</time><span><strong>Brott och straff i Lund på 1640-talet</strong><small>Mattias Karlsson</small></span></summary><div class="body"><p>Just nu pågår ett projekt som syftar till att publicera Lunds bytings protokoll, bevarade från 1642 och framåt. Domböckerna upptas mestadels av tvister och konflikter, ibland med dödlig utgång. I mellanrummen fångar protokollen även lundabornas mindre dramatiska vardag. Föredraget bjuder på en exposé av individer och händelser, allt från förlupna ord och förargelseväckande beteende till tragik med blanka knivar.</p><p>Kvällens föreläsare <strong>Mattias Karlsson</strong> är doktor i historisk arkeologi vid Lunds universitet. Han arbetar som arkeolog vid Kulturen och är inblandad i en rad olika pågående projekt, bland annat forskning som rör kyrktak, källor till gamla Lund och Allhelgonaklostret i Lund.</p></div></details><details class="lecture"><summary><time datetime="2024-10-24">24 oktober</time><span><strong>Det öländska järnålderssamhället</strong><small>Jan-Henrik Fallgren</small></span></summary><div class="body"><p>Det öländsk järnålderssamhället kommer att beskrivas utifrån den stora mängden bevarade bebyggelselämningar, hus, gårdar och byar, från tidsperioderna romersk järnålder – början av vendeltiden. De samtida fornborgarna kommer också att behandlas utifrån deras rumsliga belägenhet i förhållande till den samtida jordbruksbebyggelsen, liksom deras funktion som centralplatser.</p><p><strong>Jan-Henrik Fallgren</strong> är docent i arkeologi vid Uppsala universitet. Han har också varit verksam vid University of Aberdeen och ingår nu i det omfattande projektet <em>Crisis, conflict and climate – social change in Scandinavia in the years 300–700</em>, som leds av arkeologer vid Stockholms universitet och även inkluderar arkeologer vid Linnéuniversitetet och Kalmar läns museum.</p></div></details><details class="lecture"><summary><time datetime="2024-10-10">10 oktober</time><span><strong>1920-talet som nuets spegelbild</strong><small>Kim Salomon och Klas-Göran Karlsson</small></span></summary><div class="body"><p>1920-talet blir ofta en transportsträcka mellan första världskrigets efterspel och andra världskrigets förspel. Ambitionen med vår föreläsning är att ändra på detta synsätt. Visserligen vilar det stora krigets skugga ännu över decenniet, särskilt dess första hälft, men årtiondet är också tröskeln till det nya och moderna, med amerikanisering, fredsdrömmar, bilism, frigjordhet, populärkultur och mycket annat. Det är ett 20-tal som vi ett århundrade senare med fördel kan spegla oss i.</p><p><strong>Klas-Göran Karlsson</strong> och <strong>Kim Salomon</strong> är professorer emeritus från Lunds universitet och forskar om samtidshistoria.</p></div></details><details class="lecture"><summary><time datetime="2024-09-26">26 september</time><span><strong>Gudars skymning: Den fornnordiska religionens upplösning och död</strong><small>Olof Sundqvist</small></span></summary><div class="body"><p>I föreläsningen skildras religionsskiftet i Norden mellan 900 och 1100 och främst övergången från den förkristna religionen till kristendom. Det var en lång process som skedde vid olika tidpunkter på olika platser. Här får vi höra hur och varför det skedde, vilka processer som fick den fornnordiska religionen att trängas undan och vilken roll som inhemska kungar och hövdingar spelade i avvecklingen både i Norge och på Island.</p><p><strong>Olof Sundqvist</strong> är professor i religionshistoria vid Stockholms universitet. Sin senaste bok <em>The Demise of Norse Religion: Dismantling and Defending the Old Order in Viking Age Scandinavia</em> (2023) ägnar han den fornnordiska religionen.</p></div></details><details class="lecture"><summary><time datetime="2024-09-12">12 september</time><span><strong>Kulturens medeltidsmiljöer – då och nu</strong><small>Gunilla Gardelin</small></span></summary><div class="body"><p>Under 1800-talet växte fascinationen för medeltiden, en strömning som påverkade litteratur, konst och arkitektur. I samband med den ”stora kloakgrävningen” på 1890-talet började Kulturen att samla in fornfynd. Det blev nu uppenbart att Lunds kulturlager var en verklig skattkammare och de påträffade föremålen kom snabbt att exponeras i museets utställningar. Men för dåvarande museichef Georg Karlin uttrycktes intresset för medeltiden även i Kulturens friluftsmuseum. Sedan hans tid har miljöerna förändrats men också synen på medeltiden. Just nu pågår ett arbete med att utveckla de medeltida miljöerna i friluftsmuseet och vitalisera kunskapen om dem. I föreläsningen får vi veta mer om allt detta.</p><p><strong>Gunilla Gardelin</strong> är fil. lic. i Historisk arkeologi vid Lunds universitet och är verksam på Kulturen. Hon har tidigare arbetat med att förnya Kulturens utställning <em>Metropolis – Lund och medeltiden</em> och är bland annat författare till boken <em>Kyrkornas Lund</em>.</p></div></details><details class="lecture"><summary><time datetime="2024-05-23">23 maj</time><span><strong>Kreativiteten på Sankt Lars</strong><small>Thomas Millroth</small></span></summary><div class="body"><p>En föreläsning om kreativitet hos patienter på Sankt Lars sjukhus. Maria Rudbeck, som var patient i 53 år, uttryckte sig genom broderier och ritningar och hon dokumenterade sina uppfinningar i fyra ”uppfinningsböcker”. Rudolf Persson förvandlade en tysk mönsterbok till fantasier om &#8221;montenegrinsk-ottomanska kriget&#8221; i likhet med den amerikanske konstnären Henry Dargers unika stil. Sone Sonessons anteckningsbok, skapad under hans tid på Sankt Lars, speglar en dualistisk kamp, medan Britta Sjögrens intensiva uttryck involverar de böcker som hon läst och approprierat.</p><p><strong>Thomas Millroth</strong> är författare, konstkurator, kritiker och konsthistoriker. Han har skrivit ett fyrtiotal verk, varav merparten om konst, och medverkar återkommande i Sydsvenskan. Utöver detta har han bland annat varit verksam som lärare i konst- och musikhistoria samt chef för Ystads konstmuseum 1995–2008.</p></div></details><details class="lecture"><summary><time datetime="2024-05-02">2 maj</time><span><strong>Lund är en prästastad</strong><small>Gunnar Wetterberg</small></span></summary><div class="body"><p>Guds betydelse undervärderas ofta i nutida historieskrivning, trots att tron har präglat människors handlingar långt in i framtiden. Prästerna fungerade som landets första intellektuella och spelade en central roll i tolkningen och förmedlingen av tron under mer än tusen år. I föreläsningen belyses kristendomens framgång, dess överlevnad genom Gustav Vasas plundringar, prästfruars roll i kulturspridningen och kyrkans ställning i 1900-talets stora strider.</p><p><strong>Gunnar Wetterberg</strong> är historiker och författare. Han har tidigare varit samhällspolitisk chef för Saco och är sedan 2010 en fristående kolumnist på Expressens ledarsida. Utöver sitt författarskap har han också engagerat sig i styrelser för institutioner som Lunds universitet och Utrikespolitiska institutet.</p></div></details><details class="lecture"><summary><time datetime="2024-04-18">18 april</time><span><strong>En ovanlig järnåldersboplats nära Uppåkra</strong><small>Adam Bolander</small></span></summary><div class="body"><p>Sommaren 2023 undersökte Arkeologerna en järnåldersboplats utmed väg 108, där denna passerar Knästorp. Resultaten var på flera vis häpnadsväckande, inte minst det omfattande fyndmaterialet som bland annat innehöll vapendetaljer samt en rad exklusiva och högkvalitativa smycken. Sammantaget avspeglade de att en storman eller en lokal ledare, förmodligen med ett väpnat följe, varit bosatt på platsen. Bosättningen i Knästorp visade sig ha varit i bruk under nära nog 400 år, närmare bestämt från romersk järnålder och in i vendeltid. Med endast två kilometer till centralplatsen i Uppåkra väcks naturligtvis också frågor kring hur de båda platserna samexisterat och vilket utbyte som skett dem emellan.</p><p><strong>Adam Bolander</strong> är projektledare och arkeolog på Arkeologerna, Statens historiska museer i Lund. Han är huvudsakligen inriktad på järnålder/tidig medeltid och har lång erfarenhet av undersökningar av järnåldersbosättningar i området kring Uppåkra.</p></div></details><details class="lecture"><summary><time datetime="2024-04-04">4 april</time><span><strong>Voices of Child Survivors</strong><small>Joanna Michlic</small></span></summary><div class="body"><p>In this lecture, I discuss the process of comprehending and (not-comprehending) of cognitive and emotional messages articulated by Holocaust survivors in their early postwar testimonies. I examine the nature of the early and late post-war testimonies, paying particular attention to secret memories (Christopher Browning). I argue that we need to read the three waves of child survivors’ testimonies in a sequence to fully grasp the sheer short- and long-term impact of the Holocaust on different stages of young survivors’ lives.</p><p><strong>Joanna Michlic</strong> is a social and cultural historian with Polish roots. She has taught and conducted research in Israel, USA and the United Kingdom. Currently, she is a guest professor in Holocaust and contemporary history at Lund University.</p></div></details><details class="lecture"><summary><time datetime="2024-03-21">21 mars</time><span><strong>Vackra kvinor och korta kjolar</strong><small>Emma Severinsson</small></span></summary><div class="body"><p>1920-talets mode med korta kjolar i samklang med det nya slanka idealet ställde högre krav på att kvinnor skulle vårda sina kroppar. Trots att korsetter inte övergavs fullständigt fanns förväntningar på att kvinnor inte skulle behöva omformande underplagg. De förväntades vara ”naturligt” vackra och för att leva upp till idealet fanns hjälp att få. Bantningstéer, hårborttagningsmedel och krämer för att få vitare hud var några av de produkter som lanserades i början av 1900-talet. Ingen behövde längre vara ful poängterade tidens skönhetsexperter.</p><p><strong>Emma Severinsson</strong> är fil dr i historia och lektor i modevetenskap vid Lunds universitet. Hon har bland annat skrivit boken <em>Skräddat för herrskap – en kulturskatt på Svaneholms slott</em> som belönades med Lengertz litteraturpris 2023.</p></div></details></div></section>
+<section><h2>2023</h2><div class="list"><details class="lecture"><summary><time datetime="2023-11-09">9 november</time><span><strong>Tydellsamlingen – en musikföreläsning</strong><small>Sven Midgren</small></span></summary><div class="body"><p>På Kulturen i Lund finns en anmärkningsvärd notsamling som i spelmanskretsar ofta benämns Tydell-samlingen. Denna samling, som fortfarande till stora delar är outforskad, donerades till Kulturen under åren 1934–35 och rymmer ett stort antal noter och musikstycken med starka band till den svenska folkmusiktraditionen. Samlingen utgör en ovärderlig källa för förståelsen av äldre musikpraktik och spelmanskultur i Sverige, men mycket återstår ännu att upptäcka och analysera.</p><p><strong>Sven Midgren</strong> är fiolspelare, frilansmusiker, fiollärare och folkmusikforskare.</p></div></details><details class="lecture"><summary><time datetime="2023-10-26">26 oktober</time><span><strong>En föreläsning om Kulturens konstslöjdanstalt</strong><small>Ludwig Qvarnström och Kerstin Lind</small></span></summary><div class="body"><p>En föreläsning om Kulturens konstslöjdanstalt som ger en inblick i denna unika skolas historia och dess betydelse för konstslöjden i Sverige. Skolan etablerades redan 1897 på Kulturen i Lund och var en viktig utbildningsinstitution för hantverk och konstnärligt skapande under många år. Föreläsningen kommer att beröra både skolans utveckling genom åren och några intressanta forskningsperspektiv som belyser verksamhetens påverkan på konstslöjdens historia och dess roll i det kulturella landskapet.</p><p><strong>Ludwig Qvarnström</strong> är lektor på Inst. för kulturvetenskaper, LU.</p><p><strong>Kerstin Lind</strong> är doktorand och adjunkt vid Inst. för kultur och samhälle, LiU.</p></div></details><details class="lecture"><summary><time datetime="2023-10-12">12 oktober</time><span><strong>Ordning och ögonfröjd – tecknerskornas värld</strong><small>Nina Davis</small></span></summary><div class="body"><p>Från 1893 och fram till en bit in på 1930-talet dokumenterades tusentals föremål i Kulturens samlingar genom noggrant utförda teckningar och akvarellmålningar. Dessa detaljerade avbildningar gjordes på så kallade katalogkort, som var en viktig del av museets arbete med att registrera och bevara information om sina samlingar. Varje föremål fick en egen bild, vilket gör dessa katalogkort till en värdefull visuell dokumentation av Kulturens rika föremålssamling under denna tid.</p><p><strong>Nina Davis</strong> är intendent på Kulturen.</p></div></details><details class="lecture"><summary><time datetime="2023-09-28">28 september</time><span><strong>Kalle och Kivik till folket!</strong><small>Cecilia Fredriksson</small></span></summary><div class="body"><p>Cecilia Fredriksson håller en föreläsning om det fascinerande mötet mellan varuhus, design och masskonsumtion i Sverige under 1960- och 70-talen. Hon utforskar hur dessa decennier präglades av förändrade konsumtionsmönster och hur varuhusen blev viktiga platser för spridning av modern design till allmänheten. Genom föreläsningen får vi en inblick i hur design och varuhuskultur formade vardagslivet och samhällsutvecklingen under denna tid av stark tillväxt och konsumtion.</p><p><strong>Cecilia Fredriksson</strong> är professor i etnologi vid Lunds universitet.</p></div></details><details class="lecture"><summary><time datetime="2023-09-14">14 september</time><span><strong>Medeltida stenhuggarmönster</strong><small>Dag Mether</small></span></summary><div class="body"><p>Föreläsningen fokuserar på Kulturens medeltida stensamling och de fascinerande mönster som lämnats efter av stenhuggare i Lund under medeltiden. Genom att studera dessa stenhuggarmärken och ornament får vi en inblick i hur skickliga hantverkare arbetade och bidrog till stadens byggnadskultur under denna period. Föreläsningen belyser både den konstnärliga och historiska betydelsen av dessa mönster, och hur de fortfarande berättar om medeltidens hantverkstraditioner.</p><p><strong>Dag Mether</strong> är konservator på Kulturen.</p></div></details><details class="lecture"><summary><time datetime="2023-05-25">25 maj</time><span><strong>Förintelsens materiella vittnesbörd</strong><small>Britta Geschwind</small></span></summary><div class="body"><p>Föreläsningen handlar om tre olika forskningsprojekt. Först om interneringslägret Gunnarpshemmet i Höör, där kvinnliga flyktingar tvångsinternerades 1945–1946. Studien följer kvinnor som kommit till Sverige från koncentrationslägret Ravensbrück och sedan tvångsinternerades i Sverige på ”sexualmoralisk” grund. Den undersöker hur kön, sexualitet och andra maktordningar formade medborgarskapets gränser för dem. Föreläsningen behandlar även ett pågående museiprojekt på Kulturen i Lund, <em>I de överlevandes spår</em>, som undersöker platser med koppling till Förintelsen i Lund som utgår ifrån museets arkiv. Slutligen diskuteras ett pågående forskningsprojekt, <em>Svensk hågkomst om Förintelsen</em>, som undersöker hur Förintelsesamlingar används vid svenska museer.</p><p><strong>Britta Geschwind</strong> är etnolog och forskare vid institutionen för Kulturvetenskaper i Lund, samt FoU-koordinator vid Sveriges museum om Förintelsen i Stockholm.</p></div></details><details class="lecture"><summary><time datetime="2023-05-11">11 maj</time><span><strong>August Strindberg i censurerad engelsk översättning</strong><small>Lars Liljegren</small></span></summary><div class="body"><p>I den första engelska översättningen av August Strindbergs <em>Giftas</em> (1884, 1886) har Strindbergs naturalistiska diskurs, hans explicita sexuella beskrivningar och kritik av kyrkan helt exkluderats eller mildrats. Översättaren har helt enkelt censurerat bort just de egenskaper för vilka såväl författaren som verket var (ö)kända. Föreläsningen ger belysande och underhållande exempel på vad som försvunnit och vilken effekt detta har på såväl översättningen som på bilden av Strindberg som en provocerande och chockerande författare.</p><p><strong>Lars Liljegren</strong> är lektor i engelska på Linköpings universitet med särskilt ansvar för engelska på ämneslärarutbildningen. Han har tre gånger utsetts till Årets lärarutbildare.</p></div></details><details class="lecture"><summary><time datetime="2023-04-27">27 april</time><span><strong>Vad kan en möbeldetalj säga oss?</strong><small>Ludwig Qvarnström</small></span></summary><div class="body"><p>En möbel kommunicerar något mycket konkret till sin betraktare eller brukare. En stol är en stol och bjuder vanligtvis in brukaren att sätta sig ner. I många sammanhang tycks funktionen utgöra grunden för möbelns mening. Stolen, som ett tecken betraktat, betyder en möjlighet att sitta ner. Samtidigt är det uppenbart att möbler och en mängd andra ting vi omger oss med fylls med en mängd andra betydelser. Den här föreläsningen lägger, med utgångspunkt i konstruktiva detaljer i möbler, fokus på hur dessa betydelser skiftat genom historien och hur detta även säger något om hantverkets roll i samhället.</p><p><strong>Ludwig Qvarnström</strong> är lektor på Institutionen för kulturvetenskaper på Lunds universitet och ägnar sig framför allt åt forskning och undervisning inom konsthistoria och visuella studier.</p></div></details><details class="lecture"><summary><time datetime="2023-04-14">14 april</time><span><strong>Kalifer, khazarer eller volgabulgarer?</strong><small>Mats Roslund</small></span></summary><div class="body"><p>Vikingatidens resor österut omgärdas av myter och samtidens behov av goda historier. Flera tolkningar av dessa resor från senare år understryker handel med det islamiska kalifatet. Kvällens föredragshållare Mats Roslund menar istället att de flodrika områdena mellan Finska viken och Kaspiska havet var som viktigast för skandinaverna. Kontakterna med isla-miska områden fortsatte under 1000-talet genom rusernas rike. Under medeltiden fortsatte samspelet, men i andra riktningar där handelns nätverk utvecklades. Några av föremålen finns i Kulturens samlingar.</p><p><strong>Mats Roslund</strong> är professor i historisk arkeologi vid Lunds universitet. Han forskar på städer, sociala identiteter och handel under tidig medeltid, islamisk och bysantinsk arkeologi och järnålderns centralplats Uppåkra.</p></div></details><details class="lecture"><summary><time datetime="2023-03-30">30 mars</time><span><strong>Tid, arkeologi och konst – Kulturpelaren på Kulturen</strong><small>Jes Wienberg och Bodil Petersson</small></span></summary><div class="body"><p>Om vårt förhållande till tid, hur arkeologi och konst förhåller sig till varandra och till tiden, och särskilt om Kulturpelaren på Kulturen, dess historia från 1913 till dagens utställning och hur pelaren med dess arkeologiska kulturlager, föremål och skulptur visar tidens gång.</p><p><strong>Bodil Petersson</strong> är professor i arkeologi vid Linnéuniversitet.</p><p><strong>Jes Wienberg</strong> är professor i historisk arkeologi vid Lunds universitet.</p></div></details></div></section>
+<section><h2>2022</h2><div class="list"><details class="lecture"><summary><time datetime="2022-11-17">17 november</time><span><strong>Mellan Gamla Stan och Södermalm – 1000 år vid Söderström i Stockholm</strong><small>Jan Kockum</small></span></summary><div class="body"><p>I samband med att Slussen i Stockholm byggs om pågår det sedan 2013 arkeologiska undersökningar som omfattar den södra delen av Gamla Stan, den norra delen av Södermalm och området däremellan. Sammanlagt berörs cirka 50 000 kvadratmeter. I föreläsningen berättar arkeolog Jan Kockum, en av projektledarna, om några av alla de arkeologiska resultaten från undersökningarna samt om de logistiska utmaningarna som det innebär att arbeta parallellt med rivnings- och byggnationsarbete.</p><p><strong>Jan Kockum</strong> är doktorand i historisk arkeologi och har tidigare bland annat arbetat som arkeolog på Kulturen och Regionmuseet Kristianstad. Idag är han projektledare på Arkeologikonsult och är engagerad i arkeologiska undersökningar i samband med ombyggnaden av Slussen.</p></div></details><details class="lecture"><summary><time datetime="2022-10-13">13 oktober</time><span><strong>Sverige – världsbäst på fika</strong><small>Viveka Adelswärd</small></span></summary><div class="body"><p>Ordet fika innefattar idag så mycket mer än bara exempelvis ”kaffe med tilltugg”. På Wikipedia kan man hitta den storstilade förklaringen att det gäller ”en svensk samhällsinstitution som innebär mellanmänskligt umgänge i kombination med intagandet av exempelvis kaffe och kaka”. Kanske är detta att ta i. Räcker det inte med att kalla fika för en social aktivitet? Men vilken benämning man än väljer så framkallas frågor. Vad innebär det att fika? Varför fikar man? Vem fikar man med? Hur gör man? Vilka samtalsämnen är typiska? Är jobbfikat samma sak som vänfikat? Finns det speciella regler? Vad menar vi när vi säger ”Ska vi ta en fika”?</p><p><strong>Viveka Adelswärd</strong> är professor emerita i kommunikation vid Linköpings universitet. Hon medverkade under många år i Språkspalten i <em>Svenska Dagbladet</em> och skrev krönikor i <em>Östgöta Correspondenten</em>. Hon har tidigare skrivit både vetenskapligt och underfundigt om människors samtal med varandra.</p></div></details><details class="lecture"><summary><time datetime="2022-09-29">29 september</time><span><strong>Trädgårdsproduktion vid 1500-talets svenska kungsgårdar</strong><small>Per Larsson</small></span></summary><div class="body"><p>Mellan 1540 och 1620 förvaltade den svenska kronan över 100 gods, eller avelsgårdar, i södra och mellersta Sverige. Godsen förde detaljerade redogörelser för växt- och djurhållning, fiske, textilier, byggnader m.m. vilket resulterade i tusentals bevarade kontosidor. Materialet har tidigare använts för studier av spannmålsproduktion, arbetsfördelning och andra kulturhistoriska aspekter. Någon analys eller omfattande studie över trädgårdsproduktionen har tills nyligen saknats.</p><p><strong>Per Larsson</strong> är intendent på Kulturen och fil dr i ekologi. Han har bland annat forskat på trädgårdshistoria och landskapsekologi. Hans forskningsintresse kretsar kring samspelet människa/natur, både historiskt och i vår samtid. Han har skrivit ett flertal vetenskapliga artiklar och varit delaktig i olika antologier.</p></div></details><details class="lecture"><summary><time datetime="2022-09-22">22 september</time><span><strong>Storgårdsbönder med slottsparksambitioner</strong><small>Aja Guldåker och Allan Gunnarsson</small></span></summary><div class="body"><p><em>Storgårdsbönder med slottsparksambitioner</em> är titeln på en undersökning av ett antal park‐ och trädgårdsstrukturer, bland annat i anslutning till Hardeberga boställe och Hardeberga säteri (öster om Lund). Ett resultat av arbetet är frågan vilka värden dessa anläggningar kan tillskrivas idag och vad de historiska spåren kan berätta om trädgårds- och parkkulturens status, uttryck, drivkrafter och influenser under tidigt 1900-tal.</p><p><strong>Aja Guldåker</strong> är arkeolog på Kulturen och har varit engagerad i en rad olika utgrävningar och undersökningar, bland annat med inriktning trädgårdsarkeologi.</p><p><strong>Allan Gunnarsson</strong> är landskapsarkitekt och universitetslektor med inriktning mot vegetationsbyggnad och parkskötsel. Han bedriver bland annat forskning med inriktning mot vegetationsbyggnad, landskapsvård samt trädgårds-, park- och kulturlandskapshistoria.</p></div></details><details class="lecture"><summary><time datetime="2022-08-25">25 augusti</time><span><strong>Demokratins framtid</strong><small>Sören Holmberg</small></span></summary><div class="body"><p>Nittonhundratalet är demokratins århundrade – en demokratisk framgångssaga. Vid seklets början fanns inga demokratier. När det tog slut var en majoritet av världens länder demokratier med i huvudsak fungerande flerpartisystem och allmänna val. Framgången har dock inte fortsatt in på 2000-talet. Sedan ett tiotal år tillbaka ökar inte längre antalet demokratier – tvärtom kan en viss minskning noteras. Därtill har den demokratiska kvaliteten sjunkit något i många befintliga demokratier, med USA som det mest iögonfallande exemplet. Hur ser demokratins framtid ut?</p><p><strong>Sören Holmberg</strong> är seniorprofessor i statsvetenskap vid Göteborgs universitet och ledamot av Kungliga Vitterhetsakademien. Hans forskning är inriktad på väljare, val, representativ demokrati och samhälleliga styrsystem. Holmberg har varit ansvarig för det svenska valforskningsprogrammet 1979–2010 och är en av grundarna av och fortfarande aktiv i SOM-institutet och Quality of Government-institutet vid Göteborgs universitet.</p></div></details><details class="lecture"><summary><time datetime="2022-06-16">16 juni</time><span><strong>DNA inom Arkeologi – möjligheter, svårigheter och framtida utmaningar</strong><small>Caroline Ahlström Arcini</small></span></summary><div class="body"><p>Hur är det möjligt att studera DNA i arkeologiska material? Vilka är de tidiga svårigheterna? Hur används DNA idag inom arkeologin och hur kan det hjälpa oss att besvara frågeställningar som vi annars inte kan komma åt? Föreläsningen innehåller några exempel och Caroline berättar om hur man som arkeolog bör tänka vid en undersökning.</p><p><strong>Caroline Ahlström Arcini</strong> är doktor i medicinens historia vid Lunds universitet och arbetar sedan mer än 30 år som osteolog vid Arkeologerna, Statens historiska museer. Hon har skrivit ett flertal böcker, som bland annat rör Lunds tidiga invånare.</p></div></details><details class="lecture"><summary><time datetime="2022-06-02">2 juni</time><span><strong>Elleholmsprojektet och Hunehals borg</strong><small>Jimmy Juhlin</small></span></summary><div class="body"><p>Föreläsningen behandlar två arkeologiska projekt, ett vid borgen Sjöborg 2016–2020 i Elleholm och ett vid Hunehals borg 2018–2021 i Kungsbacka kommun. Gemensamt för dessa är att det handlar om medeltida befästningar i det danska kungariket. Borgarna är kända sedan tidigare men idag kan de undersökas med nya metoder och frågeställningar. Okända strukturer har kommit i dagen och man har kunnat klargöra en del dateringar.</p><p><strong>Jimmy Juhlin</strong> är 1:e antikvarie i byggnadsvård på Blekinge museum.</p></div></details><details class="lecture"><summary><time datetime="2022-04-13">13 april</time><span><strong>Kaffe – med mjölk?!</strong><small>Håkan Jönsson</small></span></summary><div class="body"><p>Att ha mjölk i kaffe tillhör för många de mest triviala vardagssysslorna. Men fram till 1980-talet var det en ovanlig syn, och ytterligare 50 år tillbaka framställdes mjölk och kaffe som symboliska motpoler och bittra fiender. Föredraget tar oss på en historisk resa i fikandets Sverige, från Mjölkpropagandans dagar över 1980-talets café au lait-kampanjer till da-gens lattemammor och baristor som gör hjärtan i caffelatten.</p><p><strong>Håkan Jönsson</strong> är lektor vid Institutionen för livsmedelsteknik och docent vid Avdelningen för etnologi vid Lunds universitet. Han har sedan flera år forskat kring den gastronomiska utvecklingen i Sverige. Han är också vice ordförande i den europeiska arbetsgruppen för etnologisk matforskning, SIEF Food WG.</p></div></details><details class="lecture"><summary><time datetime="2022-03-30">30 mars</time><span><strong>Karl XII – hjältekonung eller galning?</strong><small>Bengt Liljegren</small></span></summary><div class="body"><p>Karl XII var en sällsam människa. Hemlighetsfull, egensinnig och självsvåldig. Redan samtiden hade svårt att begripa sig på honom, och detsamma gäller i lika hög grad eftervärlden. I sitt föredrag berättar Bengt Liljegren, som under flera år ägnat sig åt Karl XII, den fascinerande historien om vår siste stormaktskung.</p><p><strong>Bengt Liljegren</strong> är lärare, historiker och författare från Lund. Han har haft stora framgångar med biografier över t.ex. Karl XII, Alexander den store och Winston Churchill. Hans senaste bok är en levnadsteckning över John F. Kennedy.</p></div></details><details class="lecture"><summary><time datetime="2022-03-16">16 mars</time><span><strong>Sockensigillen i Skåne, Halland, Blekinge och Bornholm</strong><small>Mattias Karlsson</small></span></summary><div class="body"><p>I ett pågående forskningsprojekt om Lunds stifts sockensigill uppmärksammas bortglömda sigill som ligger till grund för helt nya rön. På 1500-talet hade i princip varje socken och kyrka i stiftet sitt eget sigill. Följ med på en resa som börjar vid tiden kring reformationen i Danmark och slutar med 1863 års borgerliga sockenkommun. I sockensigillen förenas bild, text och kontext till unika vittnesmål om kyrkornas värnhelgon och identiteter, om livet på sockenstämmorna och om socknarnas rättsliga betydelse. Kanske får du höra något om just din hemsockens sigill!</p><p><strong>Mattias Karlsson</strong> är doktor i historisk arkeologi vid Lunds universitet. Han arbetar som arkeolog vid Kulturen och är inblandad i en rad olika pågående projekt, bland annat forskning som rör kyrktak, källor till gamla Lund och Allhelgonaklostret i Lund.</p></div></details></div></section>
+</main>
+
+<script>
+/* ---------- Förbered markup ---------- */
+const chevron = '<span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>';
+for (const d of document.querySelectorAll('.lecture')) {
+  d.querySelector('summary > span').classList.add('title');
+  d.querySelector('summary').insertAdjacentHTML('beforeend', chevron);
+  const body = d.querySelector('.body');
+  const inner = document.createElement('div');
+  inner.className = 'inner';
+  while (body.firstChild) inner.appendChild(body.firstChild);
+  body.appendChild(inner);
+}
+const sections = [...document.querySelectorAll('main section')];
+const yearsNav = document.querySelector('#years');
+for (const s of sections) {
+  const year = s.querySelector('h2').textContent.trim();
+  s.id = 'ar-' + year;
+  s.querySelector('h2').insertAdjacentHTML('beforeend', '<span class="n"></span>');
+  yearsNav.insertAdjacentHTML('beforeend', `<a href="#ar-${year}">${year}</a>`);
+}
+
+/* ---------- Datum: kommande föreläsningar ---------- */
+const stockholmDate = new Intl.DateTimeFormat('sv-SE', {timeZone: 'Europe/Stockholm'});
+function updateUpcoming() {
+  const today = stockholmDate.format(new Date());
+  for (const d of document.querySelectorAll('.lecture')) {
+    const date = d.querySelector('time').dateTime;
+    const strong = d.querySelector('.title strong');
+    let badge = strong.querySelector('.badge');
+    if (date >= today && !badge) strong.insertAdjacentHTML('beforeend', '<span class="badge">Kommande</span>');
+    if (date < today && badge) badge.remove();
+    if (date < today) d.querySelectorAll('[data-upcoming-link]').forEach(l => l.remove());
+  }
+}
+updateUpcoming();
+window.addEventListener('pageshow', updateUpcoming);
+document.addEventListener('visibilitychange', updateUpcoming);
+setInterval(updateUpcoming, 60000);
+
+/* ---------- Mjuk expandering + auto-collapse ---------- */
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+const DURATION = 420;
+const EASING = 'cubic-bezier(.22,.8,.26,1)';
+const running = new Map();   // details -> Animation
+
+function animateBody(details, opening) {
+  const body = details.querySelector('.body');
+  const prev = running.get(details);
+  const from = body.getBoundingClientRect().height;   // fortsätt från aktuell höjd om något redan pågår
+  if (prev) prev.cancel();
+  if (opening) details.open = true;
+  const to = opening ? body.scrollHeight : 0;
+  if (reduceMotion.matches) { if (!opening) details.open = false; running.delete(details); return null; }
+  const anim = body.animate(
+    [{height: from + 'px', opacity: opening ? (from ? 1 : 0) : 1}, {height: to + 'px', opacity: opening ? 1 : 0}],
+    {duration: DURATION, easing: EASING}
+  );
+  running.set(details, anim);
+  anim.onfinish = () => {
+    if (running.get(details) !== anim) return;
+    running.delete(details);
+    if (!opening) details.open = false;
+  };
+  anim.oncancel = () => { if (running.get(details) === anim) running.delete(details); };
+  return anim;
+}
+
+// Samma kurva som animationen, så att skrollningen och expanderingen rör sig i takt
+function bezier(x1, y1, x2, y2) {
+  const f = (t, a, b) => 3 * a * t * (1 - t) ** 2 + 3 * b * t * t * (1 - t) + t ** 3;
+  return x => {
+    let lo = 0, hi = 1, t = x;
+    for (let i = 0; i < 24; i++) { t = (lo + hi) / 2; f(t, x1, x2) < x ? lo = t : hi = t; }
+    return f(t, y1, y2);
+  };
+}
+const ease = bezier(.22, .8, .26, 1);
+let scrollJob = 0;
+
+// Skrollar så att den öppnade föreläsningen hamnar mitt i den synliga ytan
+// (under sökfältet). Slutläget räknas ut i förväg, eftersom andra rader fälls ihop samtidigt.
+function centerOnOpen(details, collapseAbove, beforeHeight, beforeBody) {
+  const body = details.querySelector('.body');
+  const finalH = beforeHeight - beforeBody + body.scrollHeight;
+  const barH = toolbar.offsetHeight;
+  const barDocTop = document.querySelector('header').offsetHeight;   // där sökfältet ligger innan det fastnar
+  const finalTopDoc = details.getBoundingClientRect().top + scrollY - collapseAbove;
+  const centerDoc = finalTopDoc + finalH / 2;
+  const tall = finalH >= innerHeight - barH - 24;
+  // Anta först att sökfältet sitter fast i toppen …
+  let target = tall ? finalTopDoc - barH - 12 : centerDoc - (barH + innerHeight) / 2;
+  // … annars ligger det kvar under sidhuvudet och den synliga ytan börjar längre ner
+  if (target < barDocTop)
+    target = tall ? Math.min(target, barDocTop) : 2 * centerDoc - barDocTop - barH - innerHeight;
+  const docH = document.documentElement.scrollHeight - collapseAbove + (body.scrollHeight - beforeBody);
+  target = Math.max(0, Math.min(target, docH - innerHeight));
+  const start = scrollY, job = ++scrollJob;
+  if (reduceMotion.matches) { scrollTo({top: target, behavior: 'instant'}); return; }
+  const t0 = performance.now();
+  (function tick(now) {
+    if (job !== scrollJob) return;
+    const p = Math.min(1, (now - t0) / DURATION);
+    scrollTo({top: start + (target - start) * ease(p), behavior: 'instant'});
+    if (p < 1) requestAnimationFrame(tick);
+  })(t0);
+}
+// Avbryt autoskrollningen om användaren själv skrollar
+for (const ev of ['wheel', 'touchstart', 'keydown']) addEventListener(ev, () => scrollJob++, {passive: true});
+
+function isOpening(d) { return !d.open || running.get(d)?.effect.getKeyframes().at(-1).height === '0px'; }
+
+document.querySelector('main').addEventListener('click', e => {
+  const summary = e.target.closest('summary');
+  if (!summary) return;
+  e.preventDefault();
+  const details = summary.parentElement;
+  const opening = isOpening(details);
+  if (opening) {
+    let collapseAbove = 0;
+    document.querySelectorAll('.lecture[open]').forEach(other => {
+      if (other === details || isOpening(other)) return;   // redan på väg att stängas
+      if (other.compareDocumentPosition(details) & Node.DOCUMENT_POSITION_FOLLOWING)
+        collapseAbove += other.querySelector('.body').getBoundingClientRect().height;
+      animateBody(other, false);
+    });
+    const beforeHeight = details.getBoundingClientRect().height;
+    const beforeBody = details.open ? details.querySelector('.body').getBoundingClientRect().height : 0;
+    animateBody(details, true);
+    centerOnOpen(details, collapseAbove, beforeHeight, beforeBody);
+  } else {
+    animateBody(details, false);
+  }
+});
+
+/* ---------- Sök ---------- */
+const search = document.querySelector('#query');
+const clearBtn = document.querySelector('#clear');
+const count = document.querySelector('#count');
+const empty = document.querySelector('#empty');
+function normalize(text) {
+  return text.toLocaleLowerCase('sv').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
+}
+const abbreviations = 'jan feb mar apr maj jun jul aug sep okt nov dec'.split(' ');
+const groups = sections.map(section => ({
+  section,
+  label: section.querySelector('h2 .n'),
+  link: yearsNav.querySelector(`a[href="#${section.id}"]`),
+  lectures: [...section.querySelectorAll('.lecture')].map(element => {
+    const iso = element.querySelector('time').dateTime;
+    const [year, month, day] = iso.split('-');
+    return {element, index: normalize([
+      element.querySelector('time').textContent, element.querySelector('strong').textContent,
+      element.querySelector('small').textContent, element.querySelector('.body').textContent,
+      iso, year + month + day, abbreviations[Number(month) - 1]].join(' '))};
+  })
+}));
+function filter() {
+  const terms = normalize(search.value).split(' ').filter(Boolean);
+  let hits = 0;
+  for (const {section, label, link, lectures} of groups) {
+    let visible = 0;
+    for (const {element, index} of lectures) {
+      const matches = terms.every(term => index.includes(term));
+      element.hidden = !matches;
+      visible += Number(matches);
+    }
+    section.hidden = visible === 0;
+    link.setAttribute('aria-disabled', visible === 0);
+    label.textContent = visible === 1 ? '1 föreläsning' : visible + ' föreläsningar';
+    hits += visible;
+  }
+  count.textContent = (hits === 1 ? '1 föreläsning' : hits + ' föreläsningar') + (terms.length ? ' hittades' : '');
+  empty.hidden = hits !== 0;
+  clearBtn.hidden = !search.value;
+}
+search.addEventListener('input', filter);
+clearBtn.addEventListener('click', () => { search.value = ''; filter(); search.focus(); });
+search.addEventListener('keydown', e => { if (e.key === 'Escape' && search.value) { search.value = ''; filter(); } });
+filter();
+
+/* ---------- Sticky-verktygsfält ---------- */
+const toolbar = document.querySelector('#toolbar');
+const setStickyH = () => document.documentElement.style.setProperty('--sticky-h', toolbar.offsetHeight + 'px');
+setStickyH(); addEventListener('resize', setStickyH);
+
+// Länk till en viss föreläsning: nordenstedtska-arkiv.html?q=… fyller i sökningen och öppnar träffen
+const params = new URLSearchParams(location.search);
+if (params.get('q')) {
+  search.value = params.get('q');
+  filter();
+  const hits = [...document.querySelectorAll('.lecture:not([hidden])')];
+  if (hits.length === 1) requestAnimationFrame(() => hits[0].querySelector('summary').click());
+} else if (location.hash) {
+  const target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+  if (target) requestAnimationFrame(() => target.scrollIntoView({behavior: 'instant', block: 'start'}));
+}
+new IntersectionObserver(([e]) => toolbar.classList.toggle('is-stuck', e.intersectionRatio < 1),
+  {threshold: [1], rootMargin: '-1px 0px 0px 0px'}).observe(toolbar);
+</script>
+<script type="module">
+/* ---------- Föreläsningar från Firebase (fr.o.m. 12 november 2026) ----------
+   Föreläsningar t.o.m. 22 oktober 2026 ligger som fast HTML ovan. Det som sparas i admin
+   visas här från dagen efter föreläsningen – kommande föreläsningar finns bara på huvudsidan. */
+import {initializeApp} from 'https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js';
+import {initializeFirestore, collection, onSnapshot} from 'https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js';
+const fbApp = initializeApp({
+  apiKey: 'AIzaSyDTb4uqqXGQ-c0vOKVCoy7dxCLbz5vX96c',
+  authDomain: 'nordenstedtska-seminariet.firebaseapp.com',
+  projectId: 'nordenstedtska-seminariet',
+  storageBucket: 'nordenstedtska-seminariet.firebasestorage.app',
+  messagingSenderId: '988793567620',
+  appId: '1:988793567620:web:d516a2cda0af58e67545d1'
+});
+const db = initializeFirestore(fbApp, {experimentalForceLongPolling: true});
+
+const MONTHS = ['januari', 'februari', 'mars', 'april', 'maj', 'juni', 'juli', 'augusti', 'september', 'oktober', 'november', 'december'];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'})[c]);
+// Kursiv text sparas i admin som *text* och visas som <em>text</em>
+const ITALIC_RE = /\*([^*\n]+?)\*/g;
+const fmt = s => esc(s).replace(ITALIC_RE, '<em>$1</em>');
+const plain = s => String(s || '').replace(ITALIC_RE, '$1').trim();
+const paras = s => String(s || '').trim().split(/\n\s*\n/).filter(p => p.trim()).map(p => fmt(p.trim()).replace(/\n/g, '<br>'));
+const mainEl = document.querySelector('main');
+
+function lectureHTML(l) {
+  const [, m, d] = l.date.split('-').map(Number);
+  const full = (a, b) => [a, b].map(x => String(x || '').trim()).filter(Boolean).join(' ');
+  const people = [full(l.firstName, l.lastName), full(l.firstName2, l.lastName2)].filter(Boolean);
+  const name = people.join(' och ');
+  const body = paras(l.description).map(p => `<p>${p}</p>`);
+  // Föreläsarnas namn görs fetstilta första gången de nämns i presentationen, som i de fasta posterna
+  const left = people.map(esc);
+  paras(l.about).forEach(p => {
+    for (let k = 0; k < left.length; k++) {
+      const at = p.indexOf(left[k]);
+      if (at < 0) continue;
+      p = p.slice(0, at) + `<strong>${left[k]}</strong>` + p.slice(at + left[k].length);
+      left.splice(k--, 1);
+    }
+    body.push(`<p>${p}</p>`);
+  });
+  return `<details class="lecture" data-source="firebase"><summary><time datetime="${esc(l.date)}">${d} ${MONTHS[m - 1]}</time><span class="title"><strong>${fmt(l.title)}</strong><small>${esc(name)}</small></span>${chevron}</summary><div class="body"><div class="inner">${body.join('')}</div></div></details>`;
+}
+
+// Hittar eller skapar årets avsnitt (nyaste året överst) och dess länk i årsraden
+function yearGroup(year) {
+  let g = groups.find(x => x.section.id === 'ar-' + year);
+  if (g) return g;
+  const section = document.createElement('section');
+  section.id = 'ar-' + year;
+  section.innerHTML = `<h2>${year}<span class="n"></span></h2><div class="list"></div>`;
+  const after = groups.map(x => x.section).filter(x => x.id.slice(3) < year).sort((x, y) => y.id.localeCompare(x.id))[0];
+  mainEl.insertBefore(section, after || mainEl.querySelector('script'));
+  const link = document.createElement('a');
+  link.href = '#ar-' + year; link.textContent = year;
+  const afterLink = after && yearsNav.querySelector(`a[href="#${after.id}"]`);
+  yearsNav.insertBefore(link, afterLink || null);
+  g = {section, label: section.querySelector('h2 .n'), link, lectures: []};
+  groups.push(g);
+  return g;
+}
+
+let all = [], firstRender = true;
+function render() {
+  const today = stockholmDate.format(new Date());
+  const open = new Set([...document.querySelectorAll('.lecture[data-source="firebase"][open] time')].map(t => t.dateTime));
+  for (const g of groups) {
+    g.lectures = g.lectures.filter(x => !x.element.dataset.source);
+    g.section.querySelectorAll('.lecture[data-source="firebase"]').forEach(el => el.remove());
+  }
+  for (const l of all) {
+    if (!(l.date < today)) continue;   // visas först dagen efter föreläsningen
+    const g = yearGroup(l.date.slice(0, 4));
+    const list = g.section.querySelector('.list');
+    // Finns föreläsningen redan i det fasta arkivet (samma datum och titel) visas den inte två gånger
+    const dup = [...list.querySelectorAll('.lecture:not([data-source])')]
+      .some(el => el.querySelector('time').dateTime === l.date && el.querySelector('strong').textContent.replace(/Kommande$/, '').trim() === plain(l.title));
+    if (dup) continue;
+    list.insertAdjacentHTML('beforeend', lectureHTML(l));
+    const element = list.lastElementChild;
+    if (open.has(l.date)) element.open = true;
+    const [year, month, day] = l.date.split('-');
+    g.lectures.push({element, index: normalize([
+      element.querySelector('time').textContent, element.querySelector('strong').textContent,
+      element.querySelector('small').textContent, element.querySelector('.body').textContent,
+      l.date, year + month + day, abbreviations[Number(month) - 1]].join(' '))});
+  }
+  // Samma ordning som avsnittet redan har (stigande eller fallande datum)
+  for (const g of groups) {
+    const list = g.section.querySelector('.list'), items = [...list.children];
+    const fixed = items.filter(el => !el.dataset.source).map(el => el.querySelector('time').dateTime);
+    const asc = fixed.length > 1 ? fixed[0] < fixed.at(-1) : false;
+    items.sort((a, b) => { const x = a.querySelector('time').dateTime, y = b.querySelector('time').dateTime; return asc ? x.localeCompare(y) : y.localeCompare(x); })
+      .forEach(el => list.appendChild(el));
+  }
+  filter();
+  updateUpcoming();
+  if (firstRender) {
+    firstRender = false;
+    const q = new URLSearchParams(location.search).get('q');
+    if (q) {
+      const hits = [...document.querySelectorAll('.lecture:not([hidden])')];
+      if (hits.length === 1 && !hits[0].open) requestAnimationFrame(() => hits[0].querySelector('summary').click());
+    } else if (location.hash) {
+      const target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+      if (target) requestAnimationFrame(() => target.scrollIntoView({behavior: 'instant', block: 'start'}));
+    }
+  }
+}
+
+onSnapshot(collection(db, 'terminer'), snap => {
+  all = snap.docs.flatMap(d => d.data().lectures || [])
+    .filter(l => /^\d{4}-\d{2}-\d{2}$/.test(l.date || '') && String(l.title || '').trim());
+  render();
+}, err => console.error('Kunde inte hämta arkivet från Firebase', err));
+// När ett nytt dygn börjar flyttas gårdagens föreläsning in i arkivet
+let day = stockholmDate.format(new Date());
+setInterval(() => { const d = stockholmDate.format(new Date()); if (d !== day) { day = d; render(); } }, 60000);
+</script>
+</body>
+</html>

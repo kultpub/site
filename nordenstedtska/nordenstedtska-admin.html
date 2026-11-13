@@ -1,0 +1,937 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Redigera program – Nordenstedtska seminariet</title>
+<style>
+:root{
+  --green-900:#0f2e28;--green-800:#153c34;--green-700:#1f5446;--green-600:#28594b;
+  --green-100:#e6f0ea;--green-50:#f1f6f2;
+  --brass:#c89150;--brass-soft:#f3e6d3;--rust:#a25319;--red:#b3261e;
+  --ink:#1c2724;--ink-2:#455c54;--line:#e2e6df;--paper:#f6f5f0;--card:#fff;
+  --radius:18px;--ease:cubic-bezier(.22,.8,.26,1);
+  font-family:"Work Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color:var(--ink);background:var(--paper);color-scheme:light;-webkit-font-smoothing:antialiased;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{overflow-y:scroll;scrollbar-gutter:stable;scroll-padding-bottom:6rem}
+body{margin:0}
+.wrap{max-width:1160px;margin:0 auto;padding:0 1.25rem}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+:focus-visible{outline:3px solid var(--rust);outline-offset:2px}
+
+header{background:linear-gradient(160deg,var(--green-800),var(--green-900));color:#fff;padding:2.4rem 0 2.2rem;position:relative}
+header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:linear-gradient(90deg,var(--brass),#e2b67c 50%,var(--brass))}
+.eyebrow{display:inline-flex;align-items:center;gap:.6rem;margin:0 0 .7rem;color:#d8e8de;font-size:.8rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+.eyebrow::before{content:"";width:1.6rem;height:2px;background:var(--brass);border-radius:2px}
+h1{font:500 clamp(2rem,5vw,3rem)/1.05 Georgia,serif;margin:0;letter-spacing:-.03em}
+.head-row{display:flex;justify-content:space-between;align-items:flex-end;gap:1.5rem;flex-wrap:wrap}
+.site-links{display:flex;gap:.5rem;flex-wrap:wrap}
+.site-links a{display:inline-flex;align-items:center;gap:.5rem;padding:.55rem .95rem;border-radius:999px;font-size:.9rem;font-weight:600;text-decoration:none;
+  color:#fff;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);transition:background .2s,border-color .2s}
+.site-links a:hover{background:rgba(255,255,255,.16);border-color:var(--brass)}
+.site-links svg{width:1rem;height:1rem}
+.site-links .ext{opacity:.7;width:.8rem;height:.8rem}
+.jump .site{margin:.8rem 0 0;padding:.8rem 0 0;border-top:1px solid var(--line);display:grid;gap:.15rem}
+.jump .site h2{margin-bottom:.35rem}
+.jump .site a{grid-template-columns:1.9rem 1fr auto}
+.jump .site .n svg{width:1rem;height:1rem}
+.jump .site .ext{width:.8rem;height:.8rem;color:var(--ink-2)}
+header p.sub{margin:.7rem 0 0;color:#cfe0d6;max-width:60ch;line-height:1.55}
+
+main.wrap{padding-top:1.6rem;padding-bottom:8rem;display:grid;grid-template-columns:minmax(0,1fr) 14.5rem;gap:2rem;align-items:start}
+.content{min-width:0}
+.panel,.lec{scroll-margin-top:1.2rem}
+
+/* Snabblänkar */
+.jump{position:sticky;top:1.2rem;max-height:calc(100vh - 8rem);overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:.9rem .7rem}
+.jump h2{margin:0 .45rem .5rem;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
+.jump ol{list-style:none;margin:0;padding:0;display:grid;gap:.15rem}
+.jump a{display:grid;grid-template-columns:1.9rem 1fr auto;gap:.6rem;align-items:center;padding:.45rem .45rem;border-radius:10px;text-decoration:none;color:var(--ink);transition:background .2s}
+.jump a:hover{background:var(--green-50)}
+.jump a.active{background:var(--green-100)}
+.jump .n{width:1.9rem;height:1.9rem;border-radius:50%;display:grid;place-items:center;background:var(--green-50);color:var(--green-700);font:500 .95rem Georgia,serif;transition:background .2s,color .2s}
+.jump a.active .n{background:var(--green-800);color:#fff}
+.jump .n svg{width:.95rem;height:.95rem}
+.jump .txt{min-width:0}
+.jump .txt b{display:block;font-size:.88rem;font-weight:600}
+.jump .txt small{display:block;font-size:.76rem;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.jump .dot{width:.6rem;height:.6rem;border-radius:50%;background:#d6dcd8}
+.jump .dot.part{background:var(--brass)}
+.jump .dot.done{background:#3f8a6a}
+.jump .more{margin:.5rem 0 0;width:100%;display:flex;align-items:center;justify-content:center;gap:.4rem;font:inherit;font-size:.85rem;font-weight:600;
+  padding:.55rem;border-radius:10px;border:1px dashed #b9cdbf;background:transparent;color:var(--green-700);cursor:pointer}
+.jump .more:hover:not(:disabled){background:var(--green-50)}
+.jump .more:disabled{opacity:.45;cursor:not-allowed}
+.jump .more svg{width:.85rem;height:.85rem}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:1.4rem 1.5rem}
+.panel h2{font:500 1.5rem Georgia,serif;margin:0 0 1rem}
+.row{display:grid;gap:1rem}
+.row.two{grid-template-columns:1fr 1fr}
+.row.three{grid-template-columns:1.25fr 1fr 1fr;align-items:start}
+.date-btn .val{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row.sem{grid-template-columns:auto auto 1fr;align-items:end}
+label,.label{display:block;font-weight:600;font-size:.9rem;margin-bottom:.35rem}
+.hint{font-weight:400;color:var(--ink-2);font-size:.84rem}
+input[type=text],input[type=url],textarea,select{width:100%;font:inherit;font-size:1rem;color:inherit;background:#fff;
+  padding:.7rem .85rem;border:1px solid #cdd6ce;border-radius:10px;outline:none;transition:border-color .2s,box-shadow .2s}
+textarea{resize:vertical;min-height:7.5rem;line-height:1.6}
+input:hover,textarea:hover,select:hover{border-color:#9fb1a6}
+input:focus,textarea:focus,select:focus{border-color:var(--green-600);box-shadow:0 0 0 4px rgba(40,89,75,.14)}
+.invalid input,.invalid textarea,.invalid .rich,input.invalid,.invalid .date-btn{border-color:var(--red)!important}
+.err{color:var(--red);font-size:.84rem;margin:.3rem 0 0;min-height:0}
+/* Kursiv */
+.fhead{display:flex;align-items:flex-end;justify-content:space-between;gap:.8rem}
+.fhead label{flex:1}
+.ital{flex:none;margin-bottom:.35rem;display:inline-flex;align-items:center;gap:.4rem;padding:.35rem .75rem;border-radius:999px;border:1px solid #cdd6ce;background:#fff;color:var(--green-700);cursor:pointer;font:inherit;font-size:.85rem;font-weight:600}
+.ital{font-style:italic}
+.ital:hover{background:var(--green-50);border-color:var(--green-600)}
+/* Textfält med kursiv direkt i texten */
+.rich{width:100%;font:inherit;font-size:1rem;color:inherit;background:#fff;padding:.7rem .85rem;border:1px solid #cdd6ce;border-radius:10px;outline:none;
+  line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;cursor:text;transition:border-color .2s,box-shadow .2s}
+.rich.multi{min-height:7.5rem;max-height:32rem;overflow:auto;resize:vertical}
+.rich.multi.short{min-height:6rem}
+.rich:hover{border-color:#9fb1a6}
+.rich:focus{border-color:var(--green-600);box-shadow:0 0 0 4px rgba(40,89,75,.14)}
+.rich i,.rich em{font-style:italic}
+.ital.on{background:var(--green-800);border-color:var(--green-800);color:#fff}
+.seg{display:inline-flex;background:var(--green-50);border:1px solid var(--line);border-radius:999px;padding:.2rem}
+.seg button{font:inherit;font-weight:600;font-size:.92rem;border:0;background:transparent;color:var(--green-700);padding:.5rem 1rem;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--green-800);color:#fff}
+.sem-window{color:var(--ink-2);font-size:.88rem;margin:0;padding-bottom:.6rem}
+
+/* Föreläsningskort */
+.lectures{display:grid;gap:1rem;margin-top:1.4rem}
+.lec{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:visible}
+.lec-head{display:flex;align-items:center;gap:.9rem;padding:1rem 1.2rem;border-bottom:1px solid var(--line)}
+.num{flex:none;width:2.3rem;height:2.3rem;border-radius:50%;display:grid;place-items:center;background:var(--green-800);color:#fff;font:500 1.1rem Georgia,serif}
+.lec-head h3{margin:0;font-size:1rem;font-weight:600;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lec-head h3 .empty{color:var(--ink-2);font-weight:500}
+.state{font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.25rem .6rem;border-radius:999px;background:var(--brass-soft);color:#7a4a14;white-space:nowrap}
+.state.done{background:var(--green-100);color:var(--green-700)}
+.state.blank{background:#eef0ec;color:var(--ink-2)}
+.icon-btn{flex:none;width:2.2rem;height:2.2rem;border-radius:50%;border:0;background:transparent;color:var(--ink-2);cursor:pointer;display:grid;place-items:center;transition:background .2s,color .2s}
+.icon-btn:hover{background:#fbe9e7;color:var(--red)}
+.icon-btn svg{width:1.1rem;height:1.1rem}
+.lec-body{padding:1.2rem;display:grid;gap:1rem}
+.lec-foot{display:flex;align-items:center;justify-content:flex-end;gap:.9rem;flex-wrap:wrap;padding:1rem 1.2rem;border-top:1px solid var(--line);background:#fbfbf8;border-radius:0 0 var(--radius) var(--radius)}
+.lec-foot .why{margin:0;color:var(--ink-2);font-size:.85rem;flex:1;min-width:12rem}
+.btn.send{background:var(--brass);color:var(--green-900)}
+.btn.send:hover:not(:disabled){background:#e2b67c}
+.btn.send:disabled{background:#e9ebe6;color:#8a9893;cursor:not-allowed;transform:none}
+
+/* Datumväljare */
+.date-field{position:relative}
+.date-btn{width:100%;display:flex;align-items:center;gap:.7rem;font:inherit;font-size:1rem;text-align:left;color:inherit;background:#fff;
+  padding:.7rem .85rem;border:1px solid #cdd6ce;border-radius:10px;cursor:pointer;transition:border-color .2s,box-shadow .2s}
+.date-btn:hover{border-color:#9fb1a6}
+.date-btn[aria-expanded=true]{border-color:var(--green-600);box-shadow:0 0 0 4px rgba(40,89,75,.14)}
+.date-btn svg{width:1.1rem;height:1.1rem;color:var(--green-600);flex:none}
+.date-btn .ph{color:#8a9893}
+.cal{position:absolute;z-index:20;top:calc(100% + .4rem);left:0;width:20.5rem;max-width:calc(100vw - 2.5rem);background:#fff;border:1px solid var(--line);
+  border-radius:14px;box-shadow:0 22px 50px -20px rgba(15,46,40,.45);padding:.8rem}
+.cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem}
+.cal-head strong{font:500 1.1rem Georgia,serif;text-transform:capitalize}
+.cal-nav{width:2rem;height:2rem;border-radius:50%;border:0;background:var(--green-50);color:var(--green-700);cursor:pointer;display:grid;place-items:center}
+.cal-nav:hover:not(:disabled){background:var(--green-100)}
+.cal-nav:disabled{opacity:.3;cursor:default}
+.cal-nav svg{width:1rem;height:1rem}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cal-dow{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-2);text-align:center;padding:.3rem 0}
+.cal-dow.thu{color:var(--green-700)}
+.cal-day{aspect-ratio:1;border:0;border-radius:9px;background:transparent;font:inherit;font-size:.9rem;color:#b8c0bc;display:grid;place-items:center;cursor:default}
+.cal-day.thu{background:var(--green-50);color:var(--green-800);font-weight:600;cursor:pointer;box-shadow:inset 0 0 0 1px #cfe0d5}
+.cal-day.thu:hover{background:var(--green-800);color:#fff}
+.cal-day.thu.taken{background:#f4f0e8;color:#a08a6a;box-shadow:none;cursor:not-allowed;text-decoration:line-through}
+.cal-day.thu.out{background:transparent;color:#c3cbc7;box-shadow:none;cursor:not-allowed}
+.cal-day.sel{background:var(--green-800)!important;color:#fff!important;box-shadow:0 0 0 2px var(--brass)}
+.cal-day.today{outline:1px dashed var(--brass);outline-offset:-3px}
+.cal-foot{margin:.6rem 0 0;font-size:.78rem;color:var(--ink-2);display:flex;gap:.9rem;flex-wrap:wrap}
+.cal-foot i{display:inline-block;width:.75rem;height:.75rem;border-radius:3px;vertical-align:-.1em;margin-right:.3rem}
+
+.add{margin-top:1rem;width:100%;display:flex;align-items:center;justify-content:center;gap:.6rem;font:inherit;font-weight:600;
+  padding:1rem;border-radius:var(--radius);border:2px dashed #b9cdbf;background:transparent;color:var(--green-700);cursor:pointer;transition:background .2s,border-color .2s}
+.add:hover:not(:disabled){background:var(--green-50);border-color:var(--green-600)}
+.add:disabled{opacity:.45;cursor:not-allowed}
+/* Två föreläsare */
+.link-btn{font:inherit;font-size:.88rem;font-weight:600;color:var(--green-700);background:none;border:0;padding:.2rem 0;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.link-btn:hover{color:var(--green-900)}
+.add-second{justify-self:end;margin-top:-.4rem}
+.second-tag{align-self:end;padding-bottom:.7rem;display:flex;align-items:baseline;gap:.8rem}
+.second-tag .label{margin:0}
+.link-btn.danger:hover{color:var(--red)}
+.add .plus{width:2rem;height:2rem;border-radius:50%;display:grid;place-items:center;background:var(--green-800);color:#fff}
+.add .plus svg{width:1rem;height:1rem}
+
+/* Åtgärdsfält */
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line)}
+.bar .wrap{display:flex;align-items:center;gap:.8rem;padding-top:.8rem;padding-bottom:.8rem;flex-wrap:wrap}
+.bar .status{flex:1;min-width:12rem;color:var(--ink-2);font-size:.9rem}
+.btn{display:inline-flex;align-items:center;gap:.5rem;font:inherit;font-weight:600;font-size:.95rem;padding:.7rem 1.2rem;border-radius:999px;border:0;cursor:pointer;transition:background .2s,transform .15s}
+.btn svg{width:1rem;height:1rem}
+.btn.primary{background:var(--green-800);color:#fff}
+.btn.primary:hover{background:var(--green-900)}
+.btn.ghost{background:var(--green-50);color:var(--green-700)}
+.btn.ghost:hover{background:var(--green-100)}
+.btn:active{transform:translateY(1px)}
+.toast{position:fixed;left:50%;bottom:5.5rem;translate:-50% 1rem;opacity:0;z-index:40;background:var(--green-900);color:#fff;padding:.75rem 1.1rem;border-radius:12px;
+  font-size:.92rem;box-shadow:0 14px 30px -14px rgba(0,0,0,.5);transition:opacity .25s,translate .25s var(--ease);pointer-events:none;max-width:calc(100vw - 2rem)}
+.toast.show{opacity:1;translate:-50% 0}
+
+/* Inloggning */
+.login{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:1.25rem;background:rgba(15,46,40,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.login form{width:100%;max-width:24rem;background:var(--card);border-radius:var(--radius);padding:1.6rem 1.6rem 1.4rem;box-shadow:0 30px 60px -25px rgba(0,0,0,.55);display:grid;gap:.9rem}
+.login h2{font:500 1.5rem Georgia,serif;margin:0}
+.login p{margin:0;color:var(--ink-2);font-size:.92rem;line-height:1.5}
+.login input{width:100%;font:inherit;font-size:1rem;padding:.7rem .85rem;border:1px solid #cdd6ce;border-radius:10px;outline:none}
+.login input:focus{border-color:var(--green-600);box-shadow:0 0 0 4px rgba(40,89,75,.14)}
+.login .btn{justify-content:center}
+.login .err{min-height:1.2em}
+.who{color:var(--ink-2);font-size:.85rem;white-space:nowrap}
+.who button{font:inherit;font-weight:600;color:var(--green-700);background:none;border:0;padding:0;margin-left:.4rem;cursor:pointer;text-decoration:underline}
+@media (max-width:900px){
+  main.wrap{grid-template-columns:1fr;gap:0}
+  .jump{order:-1;top:0;z-index:15;max-height:none;overflow-x:auto;overflow-y:hidden;border-radius:0;border-width:0 0 1px;margin:0 -1.25rem 1rem;padding:.55rem 1.25rem;
+    background:rgba(246,245,240,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+  .jump h2,.jump .txt,.jump .dot,.jump .site{display:none}
+  .jump ol{display:flex;gap:.35rem}
+  .jump a{display:flex;padding:0;border-radius:50%;position:relative}
+  .jump a.active{background:transparent}
+  .jump .n{width:2.3rem;height:2.3rem}
+  .jump a[data-state=done] .n{box-shadow:inset 0 0 0 2px #3f8a6a}
+  .jump a[data-state=part] .n{box-shadow:inset 0 0 0 2px var(--brass)}
+  .jump .more{margin:0 0 0 .35rem;width:2.3rem;height:2.3rem;border-radius:50%;padding:0;flex:none}
+  .jump .more span{display:none}
+  .jump-wrap{display:flex;align-items:center}
+  .panel,.lec{scroll-margin-top:4rem}
+}
+@media (max-width:860px){
+  .row.three{grid-template-columns:1fr 1fr}
+  .row.three .date-field{grid-column:1/-1}
+}
+@media (max-width:640px){
+  .row.three{grid-template-columns:1fr}
+  .row.two,.row.sem{grid-template-columns:1fr}
+  .panel{padding:1.2rem}
+  .lec-body{padding:1rem}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <p class="eyebrow">Nordenstedtska seminariet</p>
+    <div class="head-row">
+      <div>
+        <h1>Redigera terminsprogram</h1>
+        <p class="sub">Fyll i uppgifterna om terminens föreläsningar. De hämtas sedan till huvudsidan och till föreläsningsarkivet.</p>
+      </div>
+      <!-- Länkarna förutsätter att alla tre sidorna ligger i samma mapp. Ändra adresserna här och i snabblänkarna när sidorna publiceras. -->
+      <nav class="site-links" aria-label="Webbplatsens sidor">
+        <a href="nordenstedtska-seminariet.html" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7M5 10v10h14V10"/></svg>Huvudsidan<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="ext" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
+        <a href="nordenstedtska-arkiv.html" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9M10 13h4"/></svg>Arkivet<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="ext" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+<div class="content">
+  <section class="panel" id="termin" aria-labelledby="sem-h">
+    <h2 id="sem-h">Termin</h2>
+    <div class="row sem">
+      <div>
+        <span class="label" id="term-l">Termin</span>
+        <div class="seg" role="group" aria-labelledby="term-l">
+          <button type="button" data-term="var" aria-pressed="true">Våren</button>
+          <button type="button" data-term="host" aria-pressed="false">Hösten</button>
+        </div>
+      </div>
+      <div>
+        <label for="year">År</label>
+        <select id="year"></select>
+      </div>
+      <p class="sem-window" id="sem-window"></p>
+    </div>
+    <div style="margin-top:1rem">
+      <label for="intro">Om terminens program <span class="hint">– valfritt, visas ovanför programmet på huvudsidan</span></label>
+      <textarea id="intro" rows="4" placeholder="T.ex. Vårens program i Nordenstedtska seminariet rör sig från …"></textarea>
+    </div>
+  </section>
+
+  <div class="lectures" id="lectures"></div>
+  <button type="button" class="add" id="add"><span class="plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span><span id="add-label">Lägg till föreläsning</span></button>
+</div>
+<nav class="jump" id="jump" aria-label="Hoppa till">
+  <h2>Hoppa till</h2>
+  <div class="jump-wrap">
+    <ol id="jump-list"></ol>
+    <button type="button" class="more" id="jump-add" title="Lägg till föreläsning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>Lägg till</span></button>
+  </div>
+  <div class="site">
+    <h2>Webbplatsen</h2>
+    <a href="nordenstedtska-seminariet.html" target="_blank" rel="noopener"><span class="n"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7M5 10v10h14V10"/></svg></span><span class="txt"><b>Huvudsidan</b><small>Öppnas i ny flik</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="ext" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
+    <a href="nordenstedtska-arkiv.html" target="_blank" rel="noopener"><span class="n"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9M10 13h4"/></svg></span><span class="txt"><b>Arkivet</b><small>Öppnas i ny flik</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="ext" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
+  </div>
+</nav>
+</main>
+
+<div class="bar">
+  <div class="wrap">
+    <p class="status" id="status" role="status"></p>
+    <span class="who" id="who" hidden></span>
+    <button type="button" class="btn ghost" id="export"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4M5 21h14"/></svg>Ladda ner (JSON)</button>
+    <button type="button" class="btn primary" id="save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Spara</button>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="login" id="login" hidden>
+  <form id="login-form" novalidate>
+    <h2>Logga in</h2>
+    <p>Logga in för att spara terminsprogrammet. Det som sparas visas direkt på huvudsidan.</p>
+    <div><label for="login-email">E-post</label><input type="email" id="login-email" autocomplete="username" required></div>
+    <div><label for="login-pw">Lösenord</label><input type="password" id="login-pw" autocomplete="current-password" required></div>
+    <p class="err" id="login-err" role="alert"></p>
+    <button type="submit" class="btn primary" id="login-btn">Logga in</button>
+  </form>
+</div>
+
+<template id="lec-tpl">
+  <article class="lec">
+    <div class="lec-head">
+      <span class="num"></span>
+      <h3></h3>
+      <span class="state"></span>
+      <button type="button" class="icon-btn remove" hidden aria-label="Ta bort föreläsningen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>
+    </div>
+    <div class="lec-body">
+      <div class="row three">
+      <div class="date-field" data-f="date">
+        <span class="label">Datum <span class="hint">– alltid en torsdag</span></span>
+        <button type="button" class="date-btn" aria-haspopup="dialog" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+          <span class="val ph">Välj en torsdag</span>
+        </button>
+        <p class="err" hidden></p>
+      </div>
+        <div data-f="firstName"><label>Förnamn</label><input type="text" autocomplete="off"><p class="err" hidden></p></div>
+        <div data-f="lastName"><label>Efternamn</label><input type="text" autocomplete="off"><p class="err" hidden></p></div>
+      </div>
+      <div class="row three second" hidden>
+        <div class="second-tag"><span class="label">Andra föreläsaren</span><button type="button" class="link-btn danger remove-second">Ta bort</button></div>
+        <div data-f="firstName2"><label>Förnamn</label><input type="text" autocomplete="off"><p class="err" hidden></p></div>
+        <div data-f="lastName2"><label>Efternamn</label><input type="text" autocomplete="off"><p class="err" hidden></p></div>
+      </div>
+      <button type="button" class="link-btn add-second">+ Lägg till en föreläsare</button>
+      <div data-f="title"><div class="fhead"><label>Föreläsningstitel <span class="hint">– markera text och klicka på Kursiv för boktitlar o.d.</span></label><button type="button" class="ital" title="Markera text i fältet och klicka för kursiv. Klicka igen för att ta bort kursiven.">Kursiv</button></div><div class="rich" contenteditable="true" role="textbox" aria-multiline="false" spellcheck="true"></div><p class="err" hidden></p></div>
+      <div data-f="description"><div class="fhead"><label>Om föreläsningen <span class="hint">– ämne och innehåll. Tom rad ger nytt stycke.</span></label><button type="button" class="ital" title="Markera text i fältet och klicka för kursiv. Klicka igen för att ta bort kursiven.">Kursiv</button></div><div class="rich multi" contenteditable="true" role="textbox" aria-multiline="true" spellcheck="true"></div><p class="err" hidden></p></div>
+      <div data-f="about"><div class="fhead"><label>Om <span class="lw">föreläsaren</span> <span class="hint">– presentation av <span class="lw">föreläsaren</span>.</span></label><button type="button" class="ital" title="Markera text i fältet och klicka för kursiv. Klicka igen för att ta bort kursiven.">Kursiv</button></div><div class="rich multi short" contenteditable="true" role="textbox" aria-multiline="true" spellcheck="true"></div><p class="err" hidden></p></div>
+      <div data-f="link"><label>Länk till Kulturens webb <span class="hint">– valfri tills sidan på kulturen.com finns</span></label><input type="url" inputmode="url" placeholder="https://www.kulturen.com/kalendarium/…" autocomplete="off"><p class="err" hidden></p></div>
+    </div>
+    <div class="lec-foot">
+      <p class="why"></p>
+      <button type="button" class="btn send" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>Skicka till Program och Kommunikation</button>
+    </div>
+  </article>
+</template>
+
+<script type="module">
+/* ================== Firebase ================== */
+import {initializeApp} from 'https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js';
+import {getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut} from 'https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js';
+import {initializeFirestore, doc, getDocFromServer, setDoc} from 'https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js';
+const firebaseConfig = {
+  apiKey: 'AIzaSyDTb4uqqXGQ-c0vOKVCoy7dxCLbz5vX96c',
+  authDomain: 'nordenstedtska-seminariet.firebaseapp.com',
+  projectId: 'nordenstedtska-seminariet',
+  storageBucket: 'nordenstedtska-seminariet.firebasestorage.app',
+  messagingSenderId: '988793567620',
+  appId: '1:988793567620:web:d516a2cda0af58e67545d1'
+};
+const fbApp = initializeApp(firebaseConfig);
+const auth = getAuth(fbApp);
+// Long polling kommer igenom nätverk och antivirusprogram som annars håller kvar Firebase-strömmen
+const db = initializeFirestore(fbApp, {experimentalForceLongPolling: true});
+let user = null;
+
+/* ================== Inställningar ================== */
+const BASE = 5, MAX = 8;
+// Terminernas gränser (samma som på huvudsidan): våren t.o.m. 15 juni, hösten från augusti t.o.m. 15 november
+const WINDOWS = {var: ['01-01', '06-15'], host: ['08-01', '11-15']};
+const FIELDS = ['date', 'firstName', 'lastName', 'firstName2', 'lastName2', 'title', 'description', 'about', 'link'];
+// Länken till Kulturens webb finns ofta inte förrän senare – den är valfri
+const REQUIRED = FIELDS.filter(f => !['link', 'firstName2', 'lastName2'].includes(f));
+// En föreläsning kan ha en andra föreläsare (valfri)
+const SECOND = ['firstName2', 'lastName2'];
+const hasSecond = lec => SECOND.some(f => !!String(lec[f] || '').trim());
+const fullName = (a, b) => [a, b].map(x => String(x || '').trim()).filter(Boolean).join(' ');
+const names = lec => [fullName(lec.firstName, lec.lastName), fullName(lec.firstName2, lec.lastName2)].filter(Boolean).join(' och ');
+const has = (lec, f) => !!String(lec[f] || '').trim();
+
+/* ================== Hjälpfunktioner ================== */
+const $ = (s, el = document) => el.querySelector(s);
+const pad = n => String(n).padStart(2, '0');
+const iso = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const parseISO = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+const longDate = new Intl.DateTimeFormat('sv-SE', {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'});
+const shortDate = new Intl.DateTimeFormat('sv-SE', {weekday: 'short', day: 'numeric', month: 'short', year: 'numeric'});
+const monthName = new Intl.DateTimeFormat('sv-SE', {month: 'long', year: 'numeric'});
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+const todayISO = new Intl.DateTimeFormat('sv-SE', {timeZone: 'Europe/Stockholm'}).format(new Date());
+const store = {
+  get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch { return false; } }
+};
+let toastTimer;
+function toast(msg) {
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+/* ================== Termin ================== */
+// Förvald termin = nästa termin som ännu inte har börjat (den som planeras)
+function upcomingSem() {
+  const y = Number(todayISO.slice(0, 4)), md = todayISO.slice(5);
+  if (md < WINDOWS.host[0]) return md < WINDOWS.var[0] ? {term: 'var', year: y} : {term: 'host', year: y};
+  return {term: 'var', year: y + 1};
+}
+let sem = upcomingSem();
+const semKey = () => `${sem.year}-${sem.term}`;
+const semTitle = () => `${sem.term === 'var' ? 'Våren' : 'Hösten'} ${sem.year}`;
+const semRange = () => [`${sem.year}-${WINDOWS[sem.term][0]}`, `${sem.year}-${WINDOWS[sem.term][1]}`];
+
+const yearSel = $('#year');
+const FIRST_YEAR = 2026;   // första terminen i Firebase är hösten 2026 (från föreläsningen 12 november)
+if (sem.year < FIRST_YEAR) sem = {term: 'var', year: FIRST_YEAR};
+// Admin öppnar den termin man senast arbetade med
+const lastSem = store.get('nordenstedtska-senaste-termin');
+if (lastSem && ['var', 'host'].includes(lastSem.term) && lastSem.year >= FIRST_YEAR) sem = {term: lastSem.term, year: lastSem.year};
+for (let y = FIRST_YEAR; y <= Math.max(FIRST_YEAR, Number(todayISO.slice(0, 4))) + 2; y++)
+  yearSel.insertAdjacentHTML('beforeend', `<option value="${y}">${y}</option>`);
+
+/* ================== Föreläsningar ================== */
+const list = $('#lectures');
+let lectures = [];   // [{date, firstName, ...}]
+
+function blank() { return Object.fromEntries(FIELDS.map(f => [f, ''])); }
+
+function render() {
+  closeCalendars();
+  list.innerHTML = '';
+  lectures.forEach((lec, i) => list.appendChild(card(lec, i)));
+  $('#add').disabled = lectures.length >= MAX;
+  $('#add-label').textContent = lectures.length >= MAX
+    ? `Max ${MAX} föreläsningar per termin`
+    : `Lägg till föreläsning (${lectures.length + 1} av högst ${MAX})`;
+  updateStatus();
+  renderJump();
+}
+
+function card(lec, i) {
+  const el = $('#lec-tpl').content.firstElementChild.cloneNode(true);
+  el.dataset.i = i;
+  el.id = `forelasning-${i + 1}`;
+  $('.num', el).textContent = i + 1;
+  const remove = $('.remove', el);
+  remove.hidden = lectures.length <= BASE;
+  remove.addEventListener('click', () => removeLecture(i));
+  $('.add-second', el).addEventListener('click', () => {
+    lec._second = true; refreshHead(el, lec);
+    $('[data-f="firstName2"] input', el).focus();
+  });
+  $('.remove-second', el).addEventListener('click', () => {
+    lec._second = false;
+    for (const f of SECOND) { lec[f] = ''; const inp = $(`[data-f="${f}"] input`, el); inp.value = ''; validateField(el, lec, f); }
+    markDirty(); refreshHead(el, lec);
+    $('.add-second', el).focus();
+  });
+  $('.send', el).addEventListener('click', () => sendMail(lectures[Number(el.dataset.i)]));
+  for (const f of FIELDS) {
+    const wrap = $(`[data-f="${f}"]`, el);
+    const id = `l${i}-${f}`;
+    if (f === 'date') { setupDate(wrap, lec, i); continue; }
+    const rich = $('.rich', wrap);
+    if (rich) { setupRich(wrap, rich, lec, f, id, el); continue; }
+    const input = $('input, textarea', wrap);
+    input.id = id; $('label', wrap).htmlFor = id;
+    input.value = lec[f] || '';
+    input.addEventListener('input', () => { lec[f] = input.value; markDirty(); refreshHead(el, lec); });
+    input.addEventListener('blur', () => validateField(el, lec, f));
+  }
+  refreshHead(el, lec);
+  return el;
+}
+
+/* ================== Kursiv ================== */
+// Kursiv text sparas som *text* och visas kursivt på huvudsidan och i arkivet
+const ITALIC_RE = /\*([^*\n]+?)\*/g;
+const escHTML = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'})[c]);
+const fmt = s => escHTML(s).replace(ITALIC_RE, '<em>$1</em>');
+const paras = s => String(s || '').trim().split(/\n\s*\n/).filter(p => p.trim()).map(p => fmt(p.trim()).replace(/\n/g, '<br>'));
+const plain = s => String(s || '').replace(ITALIC_RE, '$1');
+// Fälten visar kursiv direkt (som i Word). I Firebase sparas texten som vanlig text där *så här* betyder kursiv.
+const SKIP = new Set(['STYLE', 'SCRIPT', 'HEAD', 'TITLE', 'META', 'XML']);
+function wrapItal(t) {
+  // Kursiv kan inte gå över radbrytning, och mellanslag i kanterna hamnar utanför asteriskerna
+  return t.replace(/\*/g, '').split('\n').map(part => {
+    const m = part.match(/^(\s*)([\s\S]*?)(\s*)$/);
+    return m[2] ? `${m[1]}*${m[2]}*${m[3]}` : part;
+  }).join('\n');
+}
+function richToText(root, pasted = false) {
+  let out = '';
+  const nl = () => { if (out && !out.endsWith('\n')) out += '\n'; };
+  const walk = (node, inItal) => {
+    for (const c of node.childNodes) {
+      if (c.nodeType === 3) { out += c.nodeValue.replace(/ /g, ' ').replace(pasted ? /\s*\n\s*/g : /(?!)/g, ' '); continue; }
+      if (c.nodeType !== 1 || SKIP.has(c.tagName)) continue;
+      if (c.tagName === 'BR') { out += '\n'; continue; }
+      const block = /^(DIV|P|LI|H[1-6]|BLOCKQUOTE)$/.test(c.tagName);
+      if (block) { nl(); if (pasted && out && !out.endsWith('\n\n')) out += '\n'; }   // inklistrade stycken blir egna stycken
+      const ital = !inItal && (c.tagName === 'I' || c.tagName === 'EM' || /italic/i.test(c.style?.fontStyle || ''));
+      if (ital) { const at = out.length; walk(c, true); out = out.slice(0, at) + wrapItal(out.slice(at)); }
+      else walk(c, inItal);
+      if (block) nl();
+    }
+  };
+  walk(root, false);
+  out = out.replace(/[ \t]+\n/g, '\n');
+  if (pasted) out = out.replace(/\n[ \t]+/g, '\n');
+  return out.replace(/\n{3,}/g, '\n\n');
+}
+function textToRich(t) {
+  const html = escHTML(t || '').replace(ITALIC_RE, '<i>$1</i>').replace(/\n/g, '<br>');
+  return /<br>$/.test(html) ? html + '<br>' : html;   // sista tomma raden syns bara med en extra radbrytning
+}
+function setupRich(wrap, rich, lec, f, id, el) {
+  const single = !rich.classList.contains('multi');
+  const label = $('label', wrap), btn = $('.ital', wrap);
+  rich.id = id; label.id = id + '-l'; rich.setAttribute('aria-labelledby', label.id);
+  label.addEventListener('click', () => rich.focus());
+  rich.innerHTML = textToRich(lec[f]);
+  const sync = () => {
+    let v = richToText(rich);
+    if (single) v = v.replace(/\s*\n\s*/g, ' ');
+    lec[f] = v; markDirty(); refreshHead(el, lec);
+  };
+  rich.addEventListener('input', sync);
+  rich.addEventListener('blur', () => validateField(el, lec, f));
+  // Bara kursiv är tillåten – inte fetstil, understrykning m.m.
+  rich.addEventListener('beforeinput', e => {
+    if (e.inputType.startsWith('format') && e.inputType !== 'formatItalic') e.preventDefault();
+    if (single && (e.inputType === 'insertParagraph' || e.inputType === 'insertLineBreak')) e.preventDefault();
+  });
+  rich.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !single) { e.preventDefault(); document.execCommand('insertLineBreak'); }
+  });
+  // Inklistrad text: kursiv (t.ex. från Word) följer med, all annan formatering tas bort
+  rich.addEventListener('paste', e => {
+    e.preventDefault();
+    const html = e.clipboardData.getData('text/html');
+    let t = html ? richToText(new DOMParser().parseFromString(html, 'text/html').body, true) : e.clipboardData.getData('text/plain').replace(/\r/g, '');
+    t = single ? t.replace(/\s*\n\s*/g, ' ').trim() : t.trim();
+    document.execCommand('insertHTML', false, textToRich(t).replace(/<br><br>$/, '<br>'));
+  });
+  rich.addEventListener('drop', e => e.preventDefault());
+  // Kursiv-knappen: markera text och klicka. Knappen lyser när markören står i kursiv text.
+  btn.addEventListener('mousedown', e => e.preventDefault());   // behåll markeringen i fältet
+  btn.addEventListener('click', () => {
+    if (!rich.contains(document.getSelection().anchorNode)) rich.focus();
+    document.execCommand('styleWithCSS', false, false);
+    document.execCommand('italic');
+    updateBtn();
+  });
+  const updateBtn = () => {
+    const inside = rich.contains(document.getSelection().anchorNode);
+    btn.classList.toggle('on', inside && document.queryCommandState('italic'));
+  };
+  document.addEventListener('selectionchange', updateBtn);
+}
+
+function refreshHead(el, lec) {
+  const name = names(lec);
+  // "Om föreläsaren" blir "Om föreläsarna" när det finns två föreläsare
+  el.querySelectorAll('.lw').forEach(w => w.textContent = hasSecond(lec) ? 'föreläsarna' : 'föreläsaren');
+  const showSecond = lec._second || hasSecond(lec);
+  $('.second', el).hidden = !showSecond;
+  $('.add-second', el).hidden = showSecond;
+  const h = $('h3', el);
+  h.innerHTML = '';
+  if (lec.title || name) h.textContent = [plain(lec.title), name].filter(Boolean).join(' – ');
+  else h.innerHTML = '<span class="empty">Ny föreläsning</span>';
+  const missing = REQUIRED.filter(f => !has(lec, f)).length;
+  const empty = FIELDS.every(f => !has(lec, f));
+  const st = $('.state', el);
+  st.className = 'state' + (missing === 0 ? ' done' : empty ? ' blank' : '');
+  st.textContent = empty ? 'Tom' : missing ? `${missing} fält kvar` : 'Klar';
+  refreshJump(Number(el.dataset.i));
+  refreshSend(el, lec);
+}
+function refreshSend(el, lec) {
+  const i = Number(el.dataset.i);
+  // Länken finns ofta inte än när mejlet skickas – den behövs inte för knappen (men måste vara giltig om den är ifylld)
+  const bad = FIELDS.filter(f => fieldError(lec, f, i));
+  const btn = $('.send', el), why = $('.why', el);
+  btn.disabled = bad.length > 0;
+  why.textContent = bad.length === 0 ? 'Öppnar ett färdigt mejl till Carina och Therese i ditt e-postprogram.'
+    : bad.length >= REQUIRED.length ? 'Knappen blir aktiv när alla fält utom länken är ifyllda.'
+    : `Knappen blir aktiv när alla fält utom länken är ifyllda (${bad.length} kvar).`;
+}
+
+function addLecture() {
+  if (lectures.length >= MAX) return;
+  lectures.push(blank());
+  render(); markDirty();
+  const last = list.lastElementChild;
+  last.scrollIntoView({behavior: 'smooth', block: 'center'});
+  $('.date-btn', last).focus({preventScroll: true});
+}
+function removeLecture(i) {
+  const l = lectures[i];
+  const filled = FIELDS.some(f => String(l[f] || '').trim());
+  if (filled && !confirm(`Ta bort föreläsning ${i + 1}${l.title ? ` (”${l.title}”)` : ''}?`)) return;
+  lectures.splice(i, 1);
+  render(); markDirty();
+}
+$('#add').addEventListener('click', addLecture);
+
+/* ================== Validering ================== */
+function fieldError(lec, f, i) {
+  const v = String(lec[f] || '').trim();
+  if (!v) return f === 'link' || (SECOND.includes(f) && !hasSecond(lec)) ? '' : f === 'date' ? 'Välj ett datum.' : 'Fältet måste fyllas i.';
+  if (f === 'date') {
+    const d = parseISO(v);
+    if (d.getDay() !== 4) return 'Datumet måste vara en torsdag.';
+    const [a, b] = semRange();
+    if (v < a || v > b) return `Datumet ligger utanför ${semTitle().toLowerCase()}.`;
+    if (lectures.some((o, j) => j !== i && o.date === v)) return 'Ett annat föreläsningstillfälle har redan det här datumet.';
+  }
+  if (f === 'link') {
+    let u; try { u = new URL(v); } catch { return 'Ange en fullständig adress som börjar med https://'; }
+    if (!/(^|\.)kulturen\.com$/i.test(u.hostname)) return 'Länken ska gå till kulturen.com.';
+  }
+  return '';
+}
+function validateField(el, lec, f) {
+  const i = Number(el.dataset.i);
+  const wrap = $(`[data-f="${f}"]`, el);
+  const msg = fieldError(lec, f, i);
+  const show = msg && (String(lec[f] || '').trim() || wrap.dataset.touched === 'all');
+  wrap.classList.toggle('invalid', !!show);
+  const err = $('.err', wrap); err.hidden = !show; err.textContent = show ? msg : '';
+  return !msg;
+}
+function validateAll() {
+  let firstBad = null, ok = 0;
+  [...list.children].forEach(el => {
+    const lec = lectures[Number(el.dataset.i)];
+    const empty = FIELDS.every(f => !String(lec[f] || '').trim());
+    let good = true;
+    for (const f of FIELDS) {
+      const wrap = $(`[data-f="${f}"]`, el);
+      wrap.dataset.touched = empty ? '' : 'all';
+      if (!validateField(el, lec, f)) { good = false; if (!empty && !firstBad) firstBad = wrap; }
+    }
+    if (good) ok++;
+  });
+  return {firstBad, ok};
+}
+
+/* ================== Datumväljare ================== */
+let openCal = null;
+function closeCalendars() {
+  if (!openCal) return;
+  openCal.cal.remove(); openCal.btn.setAttribute('aria-expanded', 'false'); openCal = null;
+}
+function setupDate(wrap, lec, i) {
+  const btn = $('.date-btn', wrap);
+  btn.id = `l${i}-date`;
+  const show = () => {
+    const val = $('.val', btn);
+    val.classList.toggle('ph', !lec.date);
+    val.textContent = lec.date ? cap(shortDate.format(parseISO(lec.date))) : 'Välj en torsdag';
+  };
+  show();
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    if (openCal?.btn === btn) { closeCalendars(); return; }
+    closeCalendars();
+    const [a] = semRange();
+    let view = lec.date ? parseISO(lec.date) : (todayISO > a && todayISO <= semRange()[1] ? parseISO(todayISO) : parseISO(a));
+    view = new Date(view.getFullYear(), view.getMonth(), 1);
+    const cal = document.createElement('div');
+    cal.className = 'cal'; cal.setAttribute('role', 'dialog'); cal.setAttribute('aria-label', 'Välj datum');
+    cal.addEventListener('click', ev => ev.stopPropagation());
+    const draw = () => {
+      const [from, to] = semRange();
+      const first = new Date(view.getFullYear(), view.getMonth(), 1);
+      const startOffset = (first.getDay() + 6) % 7;              // måndag först
+      const days = new Date(view.getFullYear(), view.getMonth() + 1, 0).getDate();
+      const prevOk = iso(new Date(view.getFullYear(), view.getMonth(), 0)) >= from;
+      const nextOk = iso(new Date(view.getFullYear(), view.getMonth() + 1, 1)) <= to;
+      const taken = new Set(lectures.filter((_, j) => j !== i).map(l => l.date).filter(Boolean));
+      let html = `<div class="cal-head">
+        <button type="button" class="cal-nav" data-nav="-1" aria-label="Föregående månad" ${prevOk ? '' : 'disabled'}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+        <strong>${monthName.format(view)}</strong>
+        <button type="button" class="cal-nav" data-nav="1" aria-label="Nästa månad" ${nextOk ? '' : 'disabled'}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+      </div><div class="cal-grid">`;
+      ['mån', 'tis', 'ons', 'tor', 'fre', 'lör', 'sön'].forEach((d, k) => html += `<span class="cal-dow${k === 3 ? ' thu' : ''}">${d}</span>`);
+      for (let k = 0; k < startOffset; k++) html += '<span></span>';
+      for (let n = 1; n <= days; n++) {
+        const d = new Date(view.getFullYear(), view.getMonth(), n), s = iso(d);
+        const thu = d.getDay() === 4, out = s < from || s > to, tk = taken.has(s);
+        const cls = ['cal-day', thu && 'thu', thu && out && 'out', thu && tk && 'taken', s === lec.date && 'sel', s === todayISO && 'today'].filter(Boolean).join(' ');
+        const usable = thu && !out && !tk;
+        const label = cap(longDate.format(d)) + (tk ? ' – upptaget' : out && thu ? ' – utanför terminen' : '');
+        html += usable
+          ? `<button type="button" class="${cls}" data-date="${s}" aria-label="${label}"${s === lec.date ? ' aria-pressed="true"' : ''}>${n}</button>`
+          : `<span class="${cls}" aria-hidden="true"${tk || (thu && out) ? ` title="${label}"` : ''}>${n}</span>`;
+      }
+      html += `</div><p class="cal-foot"><span><i style="background:var(--green-50);box-shadow:inset 0 0 0 1px #cfe0d5"></i>Torsdag</span><span><i style="background:#f4f0e8"></i>Upptaget</span></p>`;
+      cal.innerHTML = html;
+      cal.querySelectorAll('[data-nav]').forEach(b => b.addEventListener('click', () => {
+        view = new Date(view.getFullYear(), view.getMonth() + Number(b.dataset.nav), 1); draw();
+        (cal.querySelector(`[data-nav="${b.dataset.nav}"]:not(:disabled)`) || cal.querySelector('.cal-day[data-date]'))?.focus();
+      }));
+      cal.querySelectorAll('[data-date]').forEach(b => b.addEventListener('click', () => {
+        lec.date = b.dataset.date; show(); closeCalendars(); markDirty();
+        const el = wrap.closest('.lec'); refreshHead(el, lec); validateField(el, lec, 'date'); btn.focus();
+      }));
+    };
+    draw();
+    wrap.appendChild(cal);
+    btn.setAttribute('aria-expanded', 'true');
+    openCal = {cal, btn};
+    (cal.querySelector('.cal-day.sel') || cal.querySelector('.cal-day[data-date]') || cal.querySelector('.cal-nav:not(:disabled)'))?.focus();
+  });
+}
+document.addEventListener('click', closeCalendars);
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && openCal) { const b = openCal.btn; closeCalendars(); b.focus(); } });
+
+/* ================== Spara / ladda ================== */
+// Datamodellen som ska till Firebase: en post per termin, t.ex. "2027-var"
+function toData() {
+  const filled = lectures.filter(l => FIELDS.some(f => String(l[f] || '').trim()));
+  return {
+    id: semKey(),
+    title: semTitle(),
+    intro: $('#intro').value.trim(),
+    lectures: filled
+      .map(l => Object.fromEntries(FIELDS.map(f => [f, String(l[f] || '').trim()])))
+      .sort((a, b) => (a.date || '9999').localeCompare(b.date || '9999')),
+    updated: new Date().toISOString()
+  };
+}
+const draftKey = () => 'nordenstedtska-utkast:' + semKey();
+let dirty = false, saveTimer;
+function markDirty() {
+  dirty = true; updateStatus();
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => { store.set(draftKey(), {...toData(), unsaved: true}); }, 600);   // autosparar utkastet i webbläsaren
+}
+let loadSeq = 0;
+function load() {
+  const local = store.get(draftKey());
+  apply(local);
+  const seq = ++loadSeq, key = semKey();
+  getDocFromServer(doc(db, 'terminer', key)).then(snap => {
+    if (seq !== loadSeq || dirty) return;   // annan termin vald, eller redan börjat skriva
+    const remote = snap.exists() ? snap.data() : null;
+    if (local?.unsaved && (!remote || (local.updated || '') > (remote.updated || ''))) {
+      toast('Visar ändringar som ännu inte är sparade i Firebase.'); dirty = true; updateStatus(); return;
+    }
+    if (remote) { apply(remote); store.set(draftKey(), remote); }
+  }).catch(err => { console.error(err); if (seq === loadSeq) toast('Kunde inte hämta terminen från Firebase.'); });
+}
+function apply(d) {
+  lectures = (d?.lectures || []).map(l => ({...blank(), ...l}));
+  while (lectures.length < BASE) lectures.push(blank());
+  $('#intro').value = d?.intro || '';
+  dirty = false;
+  document.querySelectorAll('.seg button').forEach(b => b.setAttribute('aria-pressed', b.dataset.term === sem.term));
+  yearSel.value = sem.year;
+  const [a, b] = semRange();
+  const dm = new Intl.DateTimeFormat('sv-SE', {day: 'numeric', month: 'long'});
+  $('#sem-window').textContent = `Valbara datum: torsdagar ${dm.format(parseISO(a))} – ${dm.format(parseISO(b))} ${sem.year}`;
+  render();
+}
+function switchSem(next) {
+  if (dirty) store.set(draftKey(), {...toData(), unsaved: true});
+  sem = next; store.set('nordenstedtska-senaste-termin', sem); load();
+}
+document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => { if (b.dataset.term !== sem.term) switchSem({...sem, term: b.dataset.term}); }));
+yearSel.addEventListener('change', () => switchSem({...sem, year: Number(yearSel.value)}));
+$('#intro').addEventListener('input', markDirty);
+
+function updateStatus() {
+  const done = lectures.filter(l => REQUIRED.every(f => has(l, f))).length;
+  $('#status').textContent = `${semTitle()} · ${done} av ${lectures.length} föreläsningar ifyllda` + (dirty ? ' · ej sparat' : '');
+}
+
+$('#save').addEventListener('click', () => {
+  closeCalendars();
+  const {firstBad, ok} = validateAll();
+  if (firstBad) {
+    firstBad.scrollIntoView({behavior: 'smooth', block: 'center'});
+    ($('input, textarea, .rich, .date-btn', firstBad))?.focus({preventScroll: true});
+    toast('Några uppgifter behöver rättas innan du sparar.');
+    return;
+  }
+  if (!ok) { toast('Fyll i minst en föreläsning först.'); return; }
+  if (!user) { showLogin(); return; }
+  const data = toData(), title = semTitle(), key = semKey();
+  const btn = $('#save'); btn.disabled = true;
+  setDoc(doc(db, 'terminer', key), data).then(() => {
+    store.set('nordenstedtska-utkast:' + key, data);
+    if (key === semKey()) { dirty = false; updateStatus(); }
+    toast(`${title} är sparad och visas nu på huvudsidan.`);
+  }).catch(err => {
+    console.error(err);
+    toast(err.code === 'permission-denied' ? 'Ditt konto har inte behörighet att spara.' : 'Kunde inte spara till Firebase. Försök igen.');
+  }).finally(() => { btn.disabled = false; });
+});
+
+/* ================== Inloggning ================== */
+function showLogin() {
+  $('#login').hidden = false;
+  $('#login-err').textContent = '';
+  setTimeout(() => $('#login-email').focus(), 0);
+}
+$('#login-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const email = $('#login-email').value.trim(), pw = $('#login-pw').value;
+  const err = $('#login-err'), btn = $('#login-btn');
+  if (!email || !pw) { err.textContent = 'Fyll i e-post och lösenord.'; return; }
+  btn.disabled = true; btn.textContent = 'Loggar in …'; err.textContent = '';
+  try {
+    await signInWithEmailAndPassword(auth, email, pw);
+    $('#login-pw').value = '';
+  } catch (ex) {
+    err.textContent = ['auth/invalid-credential', 'auth/wrong-password', 'auth/user-not-found', 'auth/invalid-email'].includes(ex.code)
+      ? 'Fel e-post eller lösenord.' : ex.code === 'auth/too-many-requests' ? 'För många försök. Vänta en stund och försök igen.'
+      : 'Det gick inte att logga in. Kontrollera internetanslutningen.';
+  } finally { btn.disabled = false; btn.textContent = 'Logga in'; }
+});
+onAuthStateChanged(auth, u => {
+  user = u;
+  $('#login').hidden = !!u;
+  const who = $('#who');
+  who.hidden = !u;
+  if (u) {
+    who.textContent = 'Inloggad som ' + (u.email || 'okänd');
+    const out = document.createElement('button');
+    out.type = 'button'; out.textContent = 'Logga ut';
+    out.addEventListener('click', () => signOut(auth));
+    who.appendChild(out);
+  } else {
+    showLogin();
+  }
+});
+
+$('#export').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify(toData(), null, 2)], {type: 'application/json'});
+  const a = Object.assign(document.createElement('a'), {href: URL.createObjectURL(blob), download: `nordenstedtska-${semKey()}.json`});
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+});
+
+addEventListener('beforeunload', e => { if (dirty) { store.set(draftKey(), {...toData(), unsaved: true}); } });
+
+/* ================== Snabblänkar ================== */
+const jumpList = $('#jump-list');
+const calIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>';
+function renderJump() {
+  jumpList.innerHTML = `<li><a href="#termin" data-target="termin"><span class="n">${calIcon}</span><span class="txt"><b>Termin</b><small>${semTitle()}</small></span><span></span></a></li>` +
+    lectures.map((_, i) => `<li><a href="#forelasning-${i + 1}" data-target="forelasning-${i + 1}"><span class="n">${i + 1}</span><span class="txt"><b>Föreläsning ${i + 1}</b><small></small></span><span class="dot"></span></a></li>`).join('');
+  lectures.forEach((_, i) => refreshJump(i));
+  $('#jump-add').disabled = lectures.length >= MAX;
+  updateActive();
+}
+function refreshJump(i) {
+  const a = jumpList.querySelector(`[data-target="forelasning-${i + 1}"]`);
+  const lec = lectures[i];
+  if (!a || !lec) return;
+  const missing = REQUIRED.filter(f => !has(lec, f)).length;
+  const state = missing === 0 ? 'done' : FIELDS.every(f => !has(lec, f)) ? 'blank' : 'part';
+  a.dataset.state = state;
+  $('.dot', a).className = 'dot ' + state;
+  const sub = lec.date ? cap(shortDate.format(parseISO(lec.date))).replace(/ \d{4}$/, '') : '';
+  $('small', a).textContent = [sub, [lec.lastName, lec.lastName2].map(x => String(x || '').trim()).filter(Boolean).join(' och ')].filter(Boolean).join(' · ') || 'Ej ifylld';
+  a.setAttribute('aria-label', `Föreläsning ${i + 1}${lec.title ? ': ' + lec.title : ''} – ${state === 'done' ? 'klar' : state === 'part' ? 'påbörjad' : 'tom'}`);
+}
+jumpList.addEventListener('click', e => {
+  const a = e.target.closest('a[data-target]');
+  if (!a) return;
+  e.preventDefault();
+  const target = document.getElementById(a.dataset.target);
+  target.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start'});
+  const focusEl = target.querySelector('.date-btn, select, input');
+  setTimeout(() => focusEl?.focus({preventScroll: true}), 450);
+  history.replaceState(null, '', '#' + a.dataset.target);
+});
+$('#jump-add').addEventListener('click', addLecture);
+// Markera den del av sidan som syns
+function updateActive() {
+  const line = innerHeight * 0.33;
+  let current = 'termin';
+  for (const el of [$('#termin'), ...list.children]) if (el.getBoundingClientRect().top <= line) current = el.id;
+  jumpList.querySelectorAll('a').forEach(a => {
+    const on = a.dataset.target === current;
+    a.classList.toggle('active', on);
+    if (on) { a.setAttribute('aria-current', 'true'); if (matchMedia('(max-width:900px)').matches) {
+      const bar = $('#jump'), r = a.getBoundingClientRect(), b = bar.getBoundingClientRect();
+      if (r.left < b.left + 8 || r.right > b.right - 8) bar.scrollLeft += r.left - b.left - b.width / 2 + r.width / 2;
+    } }
+    else a.removeAttribute('aria-current');
+  });
+}
+let activeRaf = 0;
+addEventListener('scroll', () => { cancelAnimationFrame(activeRaf); activeRaf = requestAnimationFrame(updateActive); }, {passive: true});
+addEventListener('resize', updateActive);
+
+/* ================== Mejl till Program och Kommunikation ================== */
+const MAIL_TO = ['carina.rundberg@kulturen.com', 'therese.bygge@kulturen.com'];
+const SENDER = 'Johan Hofvendahl';
+const dayMonthYear = new Intl.DateTimeFormat('sv-SE', {day: 'numeric', month: 'long', year: 'numeric'});
+function mailContent(lec) {
+  const d = parseISO(lec.date);
+  const subject = `Info om föreläsare i Nordenstedtska seminariet ${dayMonthYear.format(d)}`;
+  const intro = ['Hej Carina och Therese,', `Här kommer information om en av föreläsarna i ${sem.term === 'var' ? 'vårens' : 'höstens'} program.`];
+  const rows = [
+    ['Datum', cap(longDate.format(d))],
+    ['Föreläsare', names(lec)],
+    ['Föreläsningstitel', lec.title.trim()],
+    ['Om föreläsningen', lec.description.trim()],
+    [hasSecond(lec) ? 'Om föreläsarna' : 'Om föreläsaren', lec.about.trim()]
+  ];
+  const outro = ['Jag skickar illustrationsbild och profilbild så snart jag har fått den informationen.', 'Med vänlig hälsning,\n' + SENDER];
+  // Vanlig text: tom rad mellan varje uppgift
+  const text = [...intro, ...rows.map(([k, v]) => `${k}: ${v}`), ...outro].join('\n\n');
+  return {subject, text};
+}
+function mailUrl(subject, body) {
+  const enc = s => encodeURIComponent(s.replace(/\r?\n/g, '\r\n'));
+  return `mailto:${MAIL_TO.join(',')}?subject=${enc(subject)}` + (body ? `&body=${enc(body)}` : '');
+}
+async function sendMail(lec) {
+  const {subject, text} = mailContent(lec);
+  let url = mailUrl(subject, text);
+  // Mycket långa mejl-länkar klarar inte alla e-postprogram – då kopieras texten och klistras in
+  if (url.length > 1900) {
+    let copied = false;
+    try { await navigator.clipboard.writeText(text); copied = true; } catch {}
+    if (copied) url = mailUrl(subject, '');
+    toast(copied ? 'Texten är lång och har kopierats – klistra in den i mejlet med Ctrl+V.' : 'Mejlet öppnas – kontrollera att hela texten kom med.');
+  } else {
+    toast('Mejlet öppnas i ditt e-postprogram.');
+  }
+  location.href = url;
+}
+
+load();
+</script>
+</body>
+</html>

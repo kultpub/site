@@ -1,0 +1,803 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nordenstedtska seminariet – Kulturen i Lund</title>
+<meta name="description" content="Nordenstedtska seminariet är en öppen och kostnadsfri föreläsningsserie på Kulturen i Lund sedan 2022.">
+<style>
+:root{
+  --green-900:#0f2e28;--green-800:#153c34;--green-700:#1f5446;--green-600:#28594b;
+  --green-100:#e6f0ea;--green-50:#f1f6f2;
+  --brass:#c89150;--brass-soft:#f3e6d3;--rust:#a25319;
+  --ink:#1c2724;--ink-2:#455c54;--line:#e2e6df;--paper:#f6f5f0;--card:#fff;
+  --radius:18px;--ease:cubic-bezier(.22,.8,.26,1);
+  font-family:"Work Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color:var(--ink);background:var(--paper);color-scheme:light;-webkit-font-smoothing:antialiased;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+html{scroll-behavior:smooth;overflow-y:scroll;scrollbar-gutter:stable}
+body{margin:0}
+img{max-width:100%;display:block}
+a{color:var(--green-700);text-underline-offset:3px}
+a:hover{color:var(--rust)}
+:focus-visible{outline:3px solid var(--rust);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 1.25rem}
+.serif{font-family:Georgia,"Times New Roman",serif}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;color:#fff;background:linear-gradient(160deg,var(--green-800),var(--green-900));overflow:hidden}
+.hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:linear-gradient(90deg,var(--brass),#e2b67c 50%,var(--brass))}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);min-height:min(640px,86vh)}
+.hero-text{padding:4.5rem 3rem 4rem max(1.25rem,calc((100vw - 1080px)/2 + 1.25rem));display:flex;flex-direction:column;justify-content:center;
+  background:radial-gradient(900px 380px at 0% 0%,rgba(200,145,80,.18),transparent 60%)}
+.eyebrow{display:inline-flex;align-items:center;gap:.6rem;margin:0 0 1rem;color:#d8e8de;font-size:.82rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+.eyebrow::before{content:"";width:1.8rem;height:2px;background:var(--brass);border-radius:2px}
+h1{font:500 clamp(2.6rem,6.2vw,4.7rem)/1.0 Georgia,serif;margin:0;letter-spacing:-.035em;text-wrap:balance}
+.lead{margin:1.3rem 0 0;max-width:50ch;color:#d3e3da;font-size:1.08rem;line-height:1.65}
+.hero-photo{position:relative;min-height:320px}
+.hero-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:72% 50%}
+.hero-photo::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,var(--green-900) 0%,rgba(15,46,40,.35) 22%,transparent 50%)}
+
+.next{margin-top:2.2rem;max-width:30rem;padding:1.15rem 1.25rem;border-radius:16px;background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.next .label{display:flex;align-items:center;gap:.5rem;margin:0 0 .5rem;color:#e7c494;font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.next .label::before{content:"";width:.5rem;height:.5rem;border-radius:50%;background:var(--brass);box-shadow:0 0 0 4px rgba(200,145,80,.25);animation:pulse 2.4s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 7px rgba(200,145,80,0)}}
+.next .when{margin:0;color:#d3e3da;font-size:.95rem}
+.next .what{margin:.3rem 0 0;font:500 1.3rem/1.3 Georgia,serif;text-wrap:pretty}
+.next .who{margin:.35rem 0 0;color:#d3e3da;font-size:.95rem}
+.next a{color:#fff;font-weight:600}
+.next a:hover{color:#e7c494}
+.btn{display:inline-flex;align-items:center;gap:.5rem;margin-top:1rem;padding:.6rem 1rem;border-radius:999px;font-weight:600;font-size:.92rem;text-decoration:none;
+  background:var(--brass);color:var(--green-900)!important;transition:background .2s,transform .2s}
+.btn:hover{background:#e2b67c;transform:translateY(-1px)}
+.btn svg{width:1rem;height:1rem}
+
+/* ---------- Fakta ---------- */
+.facts{margin:-2.2rem auto 0;position:relative;z-index:2}
+.facts ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);box-shadow:0 20px 40px -30px rgba(15,46,40,.6)}
+.facts li{display:flex;gap:.8rem;align-items:flex-start;padding:1.15rem 1.2rem}
+.facts li + li{border-left:1px solid var(--line)}
+.facts .ic{flex:none;width:2.3rem;height:2.3rem;border-radius:50%;display:grid;place-items:center;background:var(--green-50);color:var(--green-600)}
+.facts .ic svg{width:1.1rem;height:1.1rem}
+.facts strong{display:block;font-size:.98rem}
+.facts span{display:block;color:var(--ink-2);font-size:.88rem;margin-top:.15rem;line-height:1.4}
+
+/* ---------- Sektioner ---------- */
+section.wrap{margin-top:5rem;scroll-margin-top:1.5rem}
+section#nyhetsbrev{margin-top:4.5rem}
+section#arkiv{margin-top:1rem}
+.kicker{margin:0 0 .5rem;color:var(--rust);font-size:.8rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+h2{font:500 clamp(1.9rem,4vw,2.6rem)/1.1 Georgia,serif;margin:0 0 1rem;letter-spacing:-.02em}
+h3{font:500 1.45rem/1.2 Georgia,serif;margin:0 0 .6rem}
+p{line-height:1.7}
+.intro{max-width:68ch;color:#2c3a36;font-size:1.05rem}
+
+/* Program */
+.sem-head{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin:0 0 1rem}
+.sem-head h2{margin:0}
+.semester .intro{margin-top:0}
+.planning{margin-top:.6rem;padding:2rem 2.2rem;border-radius:var(--radius);background:var(--card);border:1px dashed #c6d2c9;max-width:52rem}
+.planning h2{margin:0 0 .6rem}
+.planning p{margin:0 0 .7rem;color:#2c3a36;max-width:62ch}
+.planning p:last-child{margin-bottom:0}
+/* Tacktext när terminens program är genomfört */
+.done-note{margin:.6rem 0 1.6rem;padding:1.8rem 2.2rem;border-radius:var(--radius);background:var(--card);border:1px solid #c6d2c9;border-left:4px solid var(--brass);max-width:52rem}
+.done-note h2{margin:0 0 .7rem}
+.done-note p{margin:0 0 .7rem;color:#2c3a36;max-width:62ch}
+.done-note p:last-child{margin-bottom:0}
+@media (max-width:640px){.done-note{padding:1.4rem 1.3rem}}
+.sem-head .n{color:var(--ink-2);font-size:.9rem}
+.program{list-style:none;margin:0;padding:0;display:grid;gap:.6rem}
+.program li{scroll-margin-top:1rem}
+.pitem{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  transition:border-color .3s var(--ease),box-shadow .35s var(--ease)}
+.pitem:hover{border-color:#b9cdbf;box-shadow:0 14px 32px -24px rgba(15,46,40,.55)}
+.pitem[open]{border-color:#b9cdbf;box-shadow:0 18px 40px -26px rgba(15,46,40,.55)}
+.pitem summary{display:grid;grid-template-columns:4.2rem 1fr auto 2.2rem;gap:1.1rem;align-items:center;padding:.95rem 1.2rem .95rem 1rem;
+  cursor:pointer;list-style:none;border-radius:var(--radius);-webkit-tap-highlight-color:transparent;user-select:none}
+.pitem summary::-webkit-details-marker{display:none}
+.pitem summary:focus-visible{outline:3px solid var(--rust);outline-offset:2px}
+.chev{width:2.2rem;height:2.2rem;border-radius:50%;display:grid;place-items:center;background:var(--green-50);color:var(--green-600);
+  transition:transform .45s var(--ease),background .3s,color .3s}
+.chev svg{width:1rem;height:1rem}
+.pitem summary:hover .chev{background:var(--green-100)}
+.pitem[open] > summary .chev{transform:rotate(180deg);background:var(--green-800);color:#fff}
+.pitem .body{overflow:hidden}
+.pitem .inner{padding:.2rem 1.4rem 1.5rem calc(1rem + 4.2rem + 1.1rem);line-height:1.72;max-width:calc(76ch + 6.5rem);color:#26332f}
+.pitem .inner p{margin:0 0 .95rem}
+.pitem .inner p:last-child{margin-bottom:0}
+.pitem .inner p + p:has(> strong:first-child){padding-top:.95rem;border-top:1px dashed var(--line)}
+.pitem .inner a{font-weight:600}
+.date{display:grid;place-items:center;width:4.2rem;height:4.2rem;border-radius:14px;background:var(--green-50);color:var(--green-700);line-height:1}
+.date b{font:500 1.6rem Georgia,serif}
+.date i{font-style:normal;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-top:-.4rem}
+.program .t{display:block;font-weight:600;font-size:1.04rem;line-height:1.35;text-wrap:pretty}
+.program .s{display:block;margin-top:.25rem;color:var(--ink-2);font-size:.92rem}
+.status{font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.25rem .6rem;border-radius:999px;white-space:nowrap;
+  background:var(--green-50);color:var(--ink-2)}
+.program li.is-next .pitem{border-color:var(--brass);box-shadow:0 0 0 3px var(--brass-soft)}
+.program li.is-next .date,.program li.is-up .date{background:var(--green-800);color:#fff}
+.program li.is-up .status,.program li.is-next .status{background:var(--brass-soft);color:#7a4a14}
+.program li.is-past .date{background:#eef0ec;color:#7d8a85}
+.program li.is-past .t{color:#4c5a55}
+
+/* Praktiskt */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.4rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:1.7rem 1.8rem}
+.card p{margin:0 0 .9rem;color:#2c3a36}
+.card p:last-child{margin-bottom:0}
+.card.accent{background:var(--green-800);border-color:var(--green-800);color:#fff}
+.card.accent h3{color:#fff}
+.card.accent p{color:#d3e3da}
+.card.accent strong{color:#e7c494}
+
+/* Arkiv */
+.archive{display:grid;grid-template-columns:1.2fr 1fr;gap:2rem;align-items:center;padding:2.2rem;border-radius:calc(var(--radius) + 6px);
+  background:linear-gradient(135deg,var(--brass-soft),#f8efe2);border:1px solid #ead7bb}
+.archive h2{margin-bottom:.6rem}
+.archive p{margin:0;color:#4a3a22;max-width:46ch}
+.years{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:flex-end}
+.years a{min-width:4.6rem;text-align:center;padding:.7rem 1rem;border-radius:14px;background:var(--card);border:1px solid #ead7bb;
+  color:var(--green-800);font:500 1.25rem Georgia,serif;text-decoration:none;transition:background .2s,color .2s,transform .2s,border-color .2s}
+.years a:hover{background:var(--green-800);border-color:var(--green-800);color:#fff;transform:translateY(-2px)}
+.years a.all{font:600 .95rem "Work Sans",system-ui,sans-serif;display:inline-flex;align-items:center;gap:.4rem;background:var(--green-800);color:#fff;border-color:var(--green-800)}
+.years a.all:hover{background:var(--green-900)}
+.years a.all svg{width:1rem;height:1rem;transition:transform .25s var(--ease)}
+.years a.all:hover svg{transform:translateX(3px)}
+
+/* Historia */
+.history{display:grid;grid-template-columns:1.25fr 1fr;gap:2.5rem;align-items:start}
+.history p{margin:0 0 1rem;color:#2c3a36;max-width:62ch}
+blockquote{margin:0;padding:1.8rem 1.8rem 1.6rem;border-radius:var(--radius);background:var(--card);border:1px solid var(--line);position:relative}
+blockquote::before{content:"”";position:absolute;top:-.25rem;left:1.1rem;font:500 5rem/1 Georgia,serif;color:var(--brass)}
+blockquote p{margin:1.2rem 0 0;font:italic 400 1.12rem/1.6 Georgia,serif;color:var(--ink)}
+blockquote footer{margin-top:1rem;color:var(--ink-2);font-size:.9rem}
+
+/* Kontakt */
+.people{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.4rem}
+.person{display:grid;grid-template-columns:7.5rem 1fr;gap:1.3rem;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:1.2rem}
+.person img{width:7.5rem;height:9rem;object-fit:cover;object-position:50% 25%;border-radius:12px;filter:grayscale(1)}
+.person h3{margin:0}
+.person .role{margin:.3rem 0 .8rem;color:var(--ink-2);font-size:.92rem;line-height:1.45}
+.person ul{list-style:none;margin:0;padding:0;display:grid;gap:.35rem}
+.person li a{display:inline-flex;align-items:center;gap:.5rem;font-size:.93rem;font-weight:500;text-decoration:none;color:var(--green-700);word-break:break-word}
+.person li a:hover{color:var(--rust)}
+.person li svg{flex:none;width:1rem;height:1rem}
+
+.site-foot{margin-top:5rem;padding:2rem 0;background:var(--green-900);color:#bcd0c5;font-size:.9rem}
+.site-foot .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.site-foot a{color:#fff}
+
+/* Nyhetsbrev */
+.news{display:grid;grid-template-columns:auto 1fr minmax(0,26rem);gap:1.4rem;align-items:center;padding:1.6rem 1.8rem;border-radius:calc(var(--radius) + 6px);
+  background:var(--green-800);color:#fff;background-image:radial-gradient(600px 220px at 100% 0%,rgba(200,145,80,.25),transparent 60%)}
+.news .ic{width:3.4rem;height:3.4rem;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.1);color:#e7c494}
+.news .ic svg{width:1.5rem;height:1.5rem}
+.news h2{font-size:clamp(1.5rem,3vw,1.9rem);margin:0 0 .3rem;color:#fff}
+.news p{margin:0;color:#d3e3da}
+.news .btn{margin:0;white-space:nowrap}
+.signup{display:flex;gap:.5rem;align-items:center;min-width:min(100%,25rem)}
+.signup input{flex:1;min-width:0;font:inherit;font-size:1rem;color:var(--ink);padding:.75rem 1.1rem;border-radius:999px;
+  border:1px solid rgba(255,255,255,.25);background:#fff;outline:none;transition:box-shadow .2s}
+.signup input:focus{box-shadow:0 0 0 4px rgba(200,145,80,.45)}
+.signup .btn{border:0;cursor:pointer;justify-content:center;font:inherit;font-weight:600;padding:.75rem 1.2rem}
+.signup .btn[disabled]{opacity:.7;cursor:progress;transform:none}
+.signup-msg{margin:.6rem 0 0!important;font-size:.9rem;min-height:1.2em}
+.signup-msg.error{color:#ffd3b0!important}
+.news-done{display:flex;align-items:center;gap:.8rem}
+.news-done:focus{outline:none}
+.news-done .check{flex:none;width:2.6rem;height:2.6rem;border-radius:50%;display:grid;place-items:center;background:var(--brass);color:var(--green-900)}
+.news-done .check svg{width:1.3rem;height:1.3rem}
+.news-done strong{display:block;color:#fff;font-size:1.05rem}
+.news-done span{color:#d3e3da;font-size:.92rem}
+.hero-links{display:flex;flex-wrap:wrap;gap:.6rem 1.4rem;margin-top:1.6rem}
+.hero-links a{color:#fff;font-weight:600;font-size:.95rem;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.3);padding-bottom:.1rem;transition:border-color .2s,color .2s}
+.hero-links a:hover{color:#e7c494;border-color:#e7c494}
+@media (max-width:860px){.news{grid-template-columns:1fr;gap:1rem}.news .btn{justify-self:start}}
+@media (max-width:420px){.signup{flex-direction:column;align-items:stretch}}
+
+@media (max-width:860px){
+  .hero-grid{grid-template-columns:1fr;min-height:0}
+  .hero-photo{order:-1;min-height:0;aspect-ratio:16/9}
+  .hero-photo::before{background:linear-gradient(0deg,var(--green-900) 0%,transparent 45%)}
+  .hero-text{padding:1.5rem 1.25rem 4rem}
+  .facts ul{grid-template-columns:1fr 1fr}
+  .facts li:nth-child(3){border-left:0}
+  .facts li:nth-child(n+3){border-top:1px solid var(--line)}
+  .two,.history,.people,.archive{grid-template-columns:1fr}
+  .years{justify-content:flex-start}
+}
+@media (max-width:520px){
+  section.wrap{margin-top:3.8rem}
+  .facts ul{grid-template-columns:1fr}
+  .facts li + li{border-left:0;border-top:1px solid var(--line)}
+  .pitem summary{grid-template-columns:3.6rem 1fr 2.2rem;gap:.9rem}
+  .pitem .chev{grid-column:3;grid-row:1}
+  .pitem .inner{padding:.1rem 1.1rem 1.3rem}
+  .date{width:3.6rem;height:3.6rem}
+  .date b{font-size:1.35rem}
+  .status{grid-column:2;grid-row:2;justify-self:start;margin-top:-.4rem}
+  .person{grid-template-columns:5.5rem 1fr;align-items:start}
+  .person img{width:5.5rem;height:6.8rem}
+  .card{padding:1.4rem}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-grid">
+    <div class="hero-text">
+      <p class="eyebrow">Kulturen i Lund · sedan 2022</p>
+      <h1>Nordenstedtska seminariet</h1>
+      <p class="lead">En föreläsningsserie som hålls på Kulturen sedan 2022 med målet att främja vetenskaplig forskning och spridning av forskningsresultat med koppling till museets verksamhet. Serien finansieras av Nordenstedtska Stiftelsen och inkluderar både presentationer av museets egen personal och gästföreläsare inom olika ämnesområden.</p>
+      <div class="next" id="next" hidden aria-live="polite"></div>
+      <p class="hero-links"><a href="#program">Programmet</a><a href="nordenstedtska-arkiv.html">Föreläsningsarkivet</a><a href="#nyhetsbrev">Prenumerera på nyhetsbrevet</a></p>
+    </div>
+    <div class="hero-photo">
+      <img src="nordenstedtska-auditoriet.jpg" alt="Fullsatt publik lyssnar på en föreläsare vid talarstolen" width="1080" height="675" fetchpriority="high">
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap facts">
+    <ul>
+      <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><div><strong>Kl. 18–19</strong><span>Cirka 45–50 min + frågestund</span></div></li>
+      <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg></span><div><strong>Auditoriet</strong><span>Kulturen i Lund</span></div></li>
+      <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span><div><strong>Fri entré</strong><span>Öppet för alla, ingen anmälan</span></div></li>
+      <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg></span><div><strong>Begränsat antal platser</strong><span>Kom 15–20 min före start</span></div></li>
+    </ul>
+  </div>
+
+  <section id="program" class="wrap">
+    <!--
+      Terminsprogram. Huvudsidan visar bara den termin som gäller när besökaren kommer:
+        Hösten: 16 juni – 15 november      Våren: 16 november – 15 juni
+      Lägg till en ny termin genom att kopiera ett <div class="semester">-block och ändra
+      data-sem (t.ex. "2027-var" eller "2027-host"), rubriken och föreläsningarna.
+      Finns inget block för terminen visas texten om att planeringen pågår.
+    -->
+    <p class="kicker">Program</p>
+    <div class="done-note" id="done-note" hidden aria-live="polite"></div>
+
+    <div class="semester" data-sem="2026-host" hidden>
+    <div class="sem-head"><h2>Hösten 2026</h2><span class="n">4 föreläsningar</span></div>
+    <ol class="program">
+      <li data-date="2026-09-24" id="f-2026-09-24"><details class="pitem"><summary><span class="date"><b>24</b><i>sep</i></span><span><span class="t">Från Skåne till Alger – svenska livsöden i slaveriets Medelhav</span><span class="s">Joachim Östlund</span></span><span class="status">Kommande</span><span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></summary><div class="body"><div class="inner"><p>Den 29 december 1697 skriver två svenska soldater, Oluf Örnvinge och Johan Brant, ett brev från Alger till den svenske kungen. Soldaternas väg till Nordafrika hade börjat nästan tjugo år tidigare, i efterdyningarna av det Skånska kriget. Samtidigt berättar handlingar från Lunds domkapitel om kyrkliga kollekter för landsmän i fångenskap i ”Turkiet” – en samtida beteckning för det Osmanska riket, som Alger formellt tillhörde. Genom sådana spår vidgar föreläsningen bilden av den tidigmoderna världen och lyfter fram en historia om enskilda livsöden, ofrihet och människors vilja att hjälpa andra i nöd.</p><p><strong>Joachim Östlund</strong> är docent och universitetslektor i historia vid Lunds universitet. Han har bland annat forskat om Sveriges förbindelser med Medelhavsvärlden under tidigmodern tid och är författare till <em>Saltets pris: svenska slavar i Nordafrika och handeln i Medelhavet 1650–1770</em>. Han leder för närvarande forskningsprojektet <em>Scripture and Scholarship: The Swedish Search for Ancient Egypt, 1677–1739</em>, som undersöker hur kunskap om det forntida Egypten formades och diskuterades i stormaktstidens Sverige.</p></div></div></details></li>
+      <li data-date="2026-10-08" id="f-2026-10-08"><details class="pitem"><summary><span class="date"><b>8</b><i>okt</i></span><span><span class="t">De många slagen om Lund 1676–2026</span><span class="s">Ulf Zander</span></span><span class="status">Kommande</span><span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></summary><div class="body"><div class="inner"><p>Det blodiga slaget vid Lund har tolkats på olika sätt från det sena 1800-talet till våra dagar. I skandinavismens och nationalismens tidevarv har det varit utgångspunkt för förening mellan brödrafolk, ett manande exempel på manlighet och stridsiver samt en batalj som kontrasterar senare tiders fredliga utveckling.</p><p><strong>Ulf Zander</strong> är professor i historia vid Lunds universitet och forskar om historiebruk och hur historia förmedlas i offentlighet och populärkultur. Han har särskilt studerat film, fotografi, monument och musik samt minnet av andra världskriget och Förintelsen. Bland hans böcker finns <em>Clio på bio</em> och <em>Raoul Wallenberg – liv och legend</em>.</p></div></div></details></li>
+      <li data-date="2026-10-15" id="f-2026-10-15"><details class="pitem"><summary><span class="date"><b>15</b><i>okt</i></span><span><span class="t">Bakom kulisserna på Vipeholm – om att öppna arkiven och låta människorna som klassades som idioter träda fram</span><span class="s">Randi Mossige-Norheim</span></span><span class="status">Kommande</span><span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></summary><div class="body"><div class="inner"><p>Med utgångspunkt i sin egen familjehistoria gräver Randi Mossige-Norheim i arkiven och presenterar nu nya detaljer om det institutionella våld som de tvångsintagna patienterna på Vipeholm utsattes för. Kariesexperimentet var långt ifrån det enda experiment där patienter användes som försökspersoner. De intagna reducerades till ”koder” och ”material” och var helt utlämnade till överläkaren Hugo Fröderbergs hemsnickrade teorier om vem som var lågt eller högre stående.</p><p><strong>Randi Mossige-Norheim</strong> är dokumentärjournalist och har varit verksam på Sveriges Radio sedan 1980-talet. Hon har tidigare gjort en uppmärksammad radiodokumentärserie om Vipeholm för vilken hon fick Stora Journalistpriset 2021. I sin bok <em>När du var idiot</em> (utgiven i september 2026) återvänder hon till Vipeholm, för att försöka förstå vad hennes egen farbror och de andra patienterna var med om där inne på den slutna anstalten.</p></div></div></details></li>
+      <li data-date="2026-10-22" id="f-2026-10-22"><details class="pitem"><summary><span class="date"><b>22</b><i>okt</i></span><span><span class="t">Slaget vid Lund 1676 – vad källorna berättar om slagets förlopp</span><span class="s">Göran Larsson</span></span><span class="status">Kommande</span><span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></summary><div class="body"><div class="inner"><p>Slaget vid Lund kan sägas utgöra något av en höjdpunkt i den långa konflikten mellan det danska och svenska riket om dominansen i Norden. Slaget avgjorde inte det Skånska kriget som fortsatte i ytterligare tre år, men den svenska segern möjliggjorde en fortsättning av kriget. Föreläsningen handlar om hur slaget utvecklades med utgångspunkt i samtida källor.</p><p><strong>Göran Larsson</strong> är en svensk arkivarie, museiman och författare som bland annat varit chef för Malmö Museer och Malmö stadsarkiv. Hans främsta intresseområde är Skånes historia och vid sidan av arkiv- och studenthistoriska skrifter har han även författat böcker om slaget vid Lund.</p></div></div></details></li>
+    </ol>
+    </div>
+
+    <div class="semester" data-sem="2026-var" hidden>
+    <div class="sem-head"><h2>Våren 2026</h2><span class="n">6 föreläsningar</span></div>
+    <p class="intro">Vårens program i Nordenstedtska seminariet rör sig från förkristna maktstrukturer till 1600-talets europeiska stormaktspolitik. Vi undersöker hur Norden styrdes innan riken och stat växte fram, följer upptakten till Slaget vid Lützen och fördjupar oss i det Skånska kriget och Slaget vid Lund. Samtidigt granskas hur modern DNA-forskning används i tolkningar av vikingatiden, hur 1800-talets kulturpolitiska reformer formades kring Nils Månsson Mandelgren och hur de skånska spelkvinnornas liv och musik kan spåras i arkiv och tradition. Historia, musik och forskning – levande och angeläget.</p>
+    <ol class="program">
+      <li data-date="2026-03-05" id="f-2026-03-05"><details class="pitem"><summary><span class="date"><b>5</b><i>mar</i></span><span><span class="t">Hur styrdes Norden innan riken fanns?</span><span class="s">Stefan Brink</span></span><span class="status">Kommande</span><span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></summary><div class="body"><div class="inner"><p>Hur fungerade lag och rätt utan stat? Vad hände när den gamla tron mötte kristendomen? I det här föredraget tar Stefan Brink oss till ett samhälle i omvandling – från hedniska maktstrukturer till kyrkans och kungamaktens nya landskap. Föreläsningen blir också en levande inblick i forskningen bakom den kommande boken <em>Viking Landscape – A Spatial (Pre-)History</em>, och i arbetet med att förstå hur det nordiska samhället växte fram.</p><p><strong>Stefan Brink</strong> är professor i Scandinavian Studies med anknytning till Cambridge University, University of the Highlands and Islands och Uppsala universitet. Under 20 år var han Sixth Century Professor och föreståndare för Centre for Scandinavian Studies vid University of Aberdeen. Han är ledamot av Kungl. Vitterhetsakademien, Kungl. Gustav Adolfs Akademien, Royal Society of Edinburgh och Royal Historical Society samt har varit gästprofessor vid bl.a. Princeton, Harvard, UCLA, Durham, Bergen, Århus och Bonn.</p></div></div></details></li>
+      <li data-date="2026-03-12" id="f-2026-03-12"><details class="pitem"><summary><span class="date"><b>12</b><i>mar</i></span><span><span class="t">Slaget vid Lützen</span><span class="s">Johan Romin</span></span><span class="status">Kommande</span><span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></summary><div class="body"><div class="inner"><p>Slaget vid Lützen den 6 november 1632 är ett av de mest mytomspunna och omtalade slagen i svensk historia. Här hade Sverige blandat sig i det europeiska krig, som senare kom att kallas för 30-åriga kriget. Den svenske kungen Gustav II Adolf ledde de protestantiska styrkorna och stod emot den katolska kejserliga armén under ledning av Albrecht von Wallenstein. Slaget blev historiskt och avgörande, inte minst med tanke på att den svenske kungen dödades under slaget. Men hur betydelsefull var egentligen denna drabbning? Vad hände under slaget och varför var Sverige ens med i detta krig? Vad var det strategiska syftet och målsättningen från svensk sida?</p><p><strong>Johan Romin</strong> är militärhistoriker och journalist, verksam på Kulturen i Lund, bland annat som producent och programledare för podden <em>Historielunden</em>. Han har examen i militärhistoria från Försvarshögskolan och skriver just nu på sin tredje bok i ämnet krig och konflikt.</p></div></div></details></li>
+      <li data-date="2026-04-02" id="f-2026-04-02"><details class="pitem"><summary><span class="date"><b>2</b><i>apr</i></span><span><span class="t">Skånska spelkvinnor – musikföreläsning</span><span class="s">Miriam Andersén &amp; Anna Rynefors</span></span><span class="status">Kommande</span><span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></summary><div class="body"><div class="inner"><p>Fanns det några spelkvinnor i Skåne förr i tiden? Den frågan besvaras med musik, sång och berättande av två nutida spelkvinnor, som har forskat kring kvinnor i folkmusiktraditionen och hittat många spännande livsöden i bland annat Kulturens samlingar.</p><p>Riksspelmännen <strong>Miriam Andersén</strong> och <strong>Anna Rynefors</strong> startade sitt musikaliska samarbete <em>Kvinnolåt</em> år 2015 med syftet att synliggöra kvinnliga musiker, komponister och poeter från medeltiden och framåt. Båda är framgångsrika frilansmusiker med världen som arbetsfält och bosatta i Skåne.</p></div></div></details></li>
+      <li data-date="2026-05-14" id="f-2026-05-14"><details class="pitem"><summary><span class="date"><b>14</b><i>maj</i></span><span><span class="t">Skånska kriget 1675–1679</span><span class="s">Katarina Harrison Lindbergh</span></span><span class="status">Kommande</span><span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></summary><div class="body"><div class="inner"><p>Skånska kriget var ett av de hårdaste och mest brutala krig som drabbade Sverige och Danmark – fyllt av övergrepp, snapphanar, gömda skatter, ond bråd död och mänskligt lidande. Men mitt i mörkret fanns också en annan möjlighet. Med freden i Lund öppnades vägen mot något ljusare: försoning, samförstånd och en framtid där gamla fiender kunde börja närma sig varandra.</p><p><strong>Katarina Harrison Lindbergh</strong> är historiker och föreläsare med ett tiotal böcker bakom sig. Hon har framförallt skrivit om 1500-talet och 1600-talet i böcker som <em>Erik XIV</em> och <em>Skånska kriget 1675–1679</em>. Hon har också skrivit flera böcker om nordiska guda- och hjältesagor. Tillsammans med maken Dick Harrison poddar hon i <em>Harrisons dramatiska historia</em>.</p></div></div></details></li>
+      <li data-date="2026-06-11" id="f-2026-06-11"><details class="pitem"><summary><span class="date"><b>11</b><i>jun</i></span><span><span class="t">The Vikings’ Impact on Scotland’s Islands</span><span class="s">Alan MacNiven</span></span><span class="status">Kommande</span><span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></summary><div class="body"><div class="inner"><p>The lecture takes Islay in the Inner Hebrides as a case study in how scholars reconstruct the Viking past. While earlier accounts drew on National Romantic literature, more recent studies have looked for evidence in the DNA of present-day populations believed to have Viking ancestry. MacNiven considers what genetic evidence can contribute and where statistical errors or claims that go beyond the data can lead historians astray. He asks when DNA helps us understand the past and when the apparent precision of genetic analysis makes an uncertain interpretation seem more convincing than it is.</p><p><strong>Alan MacNiven</strong> is Senior Lecturer and Head of Scandinavian Studies at the University of Edinburgh, where he teaches on a range of courses covering the language, literature and culture of modern and medieval Scandinavia. He is particularly interested in areas where aspects of Nordic history and culture intersect with those of Scotland. Alan’s research has focused on the identification, interpretation and implications of the evidence for Viking activity in Scotia Scandinavica.</p></div></div></details></li>
+      <li data-date="2026-06-11" id="f-2026-06-11"><details class="pitem"><summary><span class="date"><b>11</b><i>jun</i></span><span><span class="t">Nils Månsson Mandelgren i nytt ljus</span><span class="s">Solfrid Söderlind</span></span><span class="status">Kommande</span><span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></summary><div class="body"><div class="inner"><p>Nils Månsson Mandelgren är mest känd för att ha dokumenterat äldre folklig kultur. Föreläsningen handlar om hans arbete för att påverka hur Sveriges kulturinstitutioner skulle utvecklas. Med utgångspunkt i en bok där tolv forskare medverkar tar Söderlind upp hans betydelse för museerna, kulturminnesvården och utbildningen inom konst och hantverk. Hon lyfter också fram hans förslag på hur människors levnadsvillkor kunde förbättras och det starka engagemang som drev honom att föra fram dem.</p><p><strong>Solfrid Söderlind</strong> är professor emerita vid Institutionen för kulturvetenskaper på Lunds universitet. Hon har tidigare varit överintendent för Nationalmuseum och tillsammans med etnologen Karin Gustavsson redaktör för boken <em>Nils Månsson Mandelgren och kampen för kulturens framtid</em> (2025).</p></div></div></details></li>
+    </ol>
+    </div>
+
+    <div class="planning" id="planning" hidden>
+      <h2 id="planning-title">Vårens program</h2>
+      <p>Planeringsarbetet pågår för fullt och vi kommer snart att publicera <span id="planning-name">vårens</span> program. Anmäl dig gärna till <a href="#nyhetsbrev">nyhetsbrevet</a> så får du veta när det är klart.</p>
+      <p>Under tiden kan du läsa om tidigare föreläsningar i <a href="nordenstedtska-arkiv.html">föreläsningsarkivet</a>.</p>
+    </div>
+  </section>
+
+  <section id="praktiskt" class="wrap">
+    <p class="kicker">Praktiskt</p>
+    <h2>Välkommen till seminariet</h2>
+    <div class="two">
+      <div class="card accent">
+        <h3>Öppet för alla, fri entré, kom i tid</h3>
+        <p>Föreläsningarna är öppna för allmänheten. Åhörare betalar inte entréavgift, deltagandet är kostnadsfritt. Ingen anmälan krävs. Däremot är antalet platser begränsat, så var gärna på plats <strong>15–20 minuter före start</strong>.</p>
+        <p>Hjärtligt välkommen!</p>
+      </div>
+      <div class="card">
+        <h3>Så går det till</h3>
+        <p>Föreläsningarna äger rum kl. 18–19 i Auditoriet på Kulturen vid särskilda dagar under året (se <a href="#program">programmet</a>). Varje föreläsning är cirka 45–50 minuter lång och avslutas med frågestund.</p>
+        <p>Våra föreläsare avgör själva ifall de tillhandahåller åhörarkopior eller ej, Kulturen tillhandahåller inget material. Vi har begränsat antal platser, så kom gärna 15–20 minuter före start.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="nyhetsbrev" class="wrap">
+    <div class="news">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span>
+      <div>
+        <h2>Vill du ha mailutskick om kommande föreläsningar?</h2>
+        <p>Fyll i din e-postadress så får du information om framtida föreläsningar. Det är kostnadsfritt.</p>
+      </div>
+      <div>
+        <form class="signup" id="signup" novalidate>
+          <label for="signup-email" class="sr-only">E-postadress</label>
+          <input type="email" id="signup-email" name="email" required autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="namn@exempel.se">
+          <button class="btn" type="submit" id="signup-btn">Anmäl mig</button>
+        </form>
+        <p class="signup-msg" id="signup-msg" role="status" aria-live="polite"></p>
+        <div class="news-done" id="signup-done" hidden tabindex="-1">
+          <span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>
+          <div><strong>Tack!</strong><span>Din e-postadress har sparats. Du kommer att få information om framtida föreläsningar.</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="arkiv" class="wrap">
+    <div class="archive">
+      <div>
+        <p class="kicker">Tidigare föreläsare</p>
+        <h2>Föreläsningsarkivet</h2>
+        <p>Alla föreläsningar sedan starten 2022 – <span id="total">51</span> stycken – med beskrivningar och presentationer av föreläsarna. Välj ett år, eller sök i hela arkivet.</p>
+      </div>
+      <nav class="years" aria-label="Föreläsningsarkivet per år">
+        <a href="nordenstedtska-arkiv.html#ar-2026">2026</a>
+        <a href="nordenstedtska-arkiv.html#ar-2025">2025</a>
+        <a href="nordenstedtska-arkiv.html#ar-2024">2024</a>
+        <a href="nordenstedtska-arkiv.html#ar-2023">2023</a>
+        <a href="nordenstedtska-arkiv.html#ar-2022">2022</a>
+        <a class="all" href="nordenstedtska-arkiv.html">Hela arkivet <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </nav>
+    </div>
+  </section>
+
+  <section id="historia" class="wrap">
+    <p class="kicker">Historia och syfte</p>
+    <h2>Forskning för alla</h2>
+    <div class="history">
+      <div>
+        <p>Kulturen bedriver forskning med relevans för museets verksamhet. För att stödja och sprida detta har Nordenstedtska seminariet inrättats (2022), en serie öppna, kostnadsfria och fristående föreläsningar som genomförs kvällstid kl. 18–19 vid tio tillfällen under året.</p>
+        <p>Nordenstedtska seminariet erbjuder på så sätt en plattform där Kulturens doktorander, disputerad personal samt inbjudna forskare och experter presenterar aktuella arbeten och forskningsresultat av betydelse för museets inriktning och samlingar.</p>
+        <p>Stiftelsen, som ursprungligen hette Kulturens Toppeladugård, Nordenstedtska stiftelsen, grundades 1953 genom gåvor av advokat Rolf Nordenstedt (1884–1964) och hans maka Karin Nordenstedt (1890–1984).</p>
+      </div>
+      <blockquote>
+        <p>Att gynna vetenskaplig forskning och spridning av forskningsresultat inom de ämneskretsar som omfattas av Kulturens verksamhet samt att bereda museimän och andra vetenskapliga tillfälle att i lokaler inom Kulturens område i Lund mötas för vetenskapliga överläggningar.</p>
+        <footer>Nordenstedtska Stiftelsens ändamål. Stiftelsen finansierar seminariet.</footer>
+      </blockquote>
+    </div>
+  </section>
+
+  <section id="kontakt" class="wrap">
+    <p class="kicker">Kontakt</p>
+    <h2>Frågor om seminariet?</h2>
+    <p class="intro">Seminariet arrangeras av Kulturen under ledning av Mattias Karlsson och Johan Hofvendahl. Du når oss på följande sätt:</p>
+    <div class="people">
+      <article class="person">
+        <img src="mattias-karlsson.jpg" alt="Porträtt av Mattias Karlsson" width="500" height="612" loading="lazy">
+        <div>
+          <h3>Mattias Karlsson</h3>
+          <p class="role">Fil dr i historisk arkeologi. Arkeolog på Kulturen.</p>
+          <ul>
+            <li><a href="mailto:mattias.karlsson@kulturen.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>mattias.karlsson@kulturen.com</a></li>
+            <li><a href="tel:+46765390445"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>0765-39 04 45</a></li>
+          </ul>
+        </div>
+      </article>
+      <article class="person">
+        <img src="johan-hofvendahl.jpg" alt="Porträtt av Johan Hofvendahl" width="404" height="495" loading="lazy">
+        <div>
+          <h3>Johan Hofvendahl</h3>
+          <p class="role">Fil dr i språk och kultur. Forskningssamordnare på Kulturen.</p>
+          <ul>
+            <li><a href="mailto:johan.hofvendahl@kulturen.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>johan.hofvendahl@kulturen.com</a></li>
+            <li><a href="tel:+46765390425"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>0765-39 04 25</a></li>
+          </ul>
+        </div>
+      </article>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <span>Nordenstedtska seminariet · Kulturen i Lund</span>
+    <span>Finansieras av Nordenstedtska Stiftelsen · <a href="nordenstedtska-arkiv.html">Föreläsningsarkivet</a> · <a href="#nyhetsbrev">Nyhetsbrevet</a></span>
+  </div>
+</footer>
+
+<script>
+// Markerar genomförda, kommande och nästa föreläsning utifrån dagens datum i Stockholm
+const stockholmDate = new Intl.DateTimeFormat('sv-SE', {timeZone: 'Europe/Stockholm'});
+// Testläge: nordenstedtska-seminariet.html?datum=2027-01-01 visar sidan som den ser ut det datumet
+const testDate = (new URLSearchParams(location.search).get('datum') || '').match(/^\d{4}-\d{2}-\d{2}$/)?.[0];
+if (testDate) {
+  const realFormat = stockholmDate.format.bind(stockholmDate);
+  // format är en skrivskyddad egenskap i webbläsaren och måste ersättas med defineProperty
+  Object.defineProperty(stockholmDate, 'format', {value: () => testDate});
+  addEventListener('DOMContentLoaded', () => document.body.insertAdjacentHTML('afterbegin',
+    `<div style="position:sticky;top:0;z-index:100;background:#a25319;color:#fff;text-align:center;padding:.5rem 1rem;font:600 .9rem system-ui,sans-serif">Testläge: sidan visas som den ser ut ${testDate} (i verkligheten är det ${realFormat(new Date())}). <a href="${location.pathname}" style="color:#fff">Avsluta</a></div>`));
+}
+const weekday = new Intl.DateTimeFormat('sv-SE', {weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC'});
+const nextBox = document.querySelector('#next');
+// Vilken termin gäller ett visst datum? Höst 16/6–15/11, vår 16/11–15/6 (nov–dec = nästa års vår).
+function semesterFor(iso) {
+  const [y, md] = [Number(iso.slice(0, 4)), iso.slice(5)];
+  if (md >= '06-16' && md <= '11-15') return {key: y + '-host', name: 'höstens', title: 'Hösten ' + y};
+  const year = md > '11-15' ? y + 1 : y;
+  return {key: year + '-var', name: 'vårens', title: 'Våren ' + year};
+}
+// Vilket program visas? Inga fasta datum – det styrs av föreläsningarnas datum:
+//  • Terminen som har en kommande föreläsning (i dag eller senare) visas.
+//  • Har ingen termin en kommande föreläsning visas den senast genomförda terminen, med en tacktext ovanför.
+//    Tacktexten syns alltså från dagen efter sista föreläsningen tills minst en ny föreläsning publiceras.
+const semOrder = key => { const [y, t] = key.split('-'); return Number(y) * 2 + (t === 'host' ? 1 : 0); };
+let shownSem = null;
+function updateProgram() {
+  const today = stockholmDate.format(new Date());
+  // Ett års program visas tidigast 1 februari samma år – vårprogrammet aldrig före 1 februari,
+  // och ett höstprogram som publiceras i förväg tar inte över före sin tid
+  const visibleFrom = key => key.slice(0, 4) + '-02-01';
+  const blocks = [...document.querySelectorAll('.semester')]
+    .filter(s => s.querySelector('.program li') && today >= visibleFrom(s.dataset.sem))
+    .sort((a, b) => semOrder(a.dataset.sem) - semOrder(b.dataset.sem));
+  let block = blocks.find(s => [...s.querySelectorAll('.program li')].some(li => li.dataset.date >= today)) || null;
+  const finished = !block && blocks.length > 0;
+  if (!block) block = blocks.at(-1) || null;
+  // Från 1 januari varje år visas inget gammalt program – bara en text om att vårens program är på väg,
+  // tills minst en ny kommande föreläsning har publicerats
+  let doneKey = finished ? block.dataset.sem : null, springSoon = false;
+  if (finished && Number(today.slice(0, 4)) > Number(block.dataset.sem.slice(0, 4))) {
+    springSoon = true; block = null;
+  }
+  for (const s of document.querySelectorAll('.semester')) s.hidden = s !== block;
+  const planning = document.querySelector('#planning');
+  planning.hidden = !!block || springSoon;
+  if (!block && !springSoon) {
+    const sem = semesterFor(today);
+    document.querySelector('#planning-title').textContent = sem.title;
+    document.querySelector('#planning-name').textContent = sem.name;
+  }
+  if (springSoon) renderSpringSoon(today); else renderDoneNote(doneKey, today);
+  const key = block ? block.dataset.sem : null;
+  if (shownSem !== key) {
+    // termin har bytts medan sidan var öppen: stäng utfällda föreläsningar
+    document.querySelectorAll('.pitem[open]').forEach(d => d.open = false);
+    shownSem = key;
+  }
+  const items = [...(block ? block.querySelectorAll('.program li') : [])]
+    .sort((a, b) => a.dataset.date.localeCompare(b.dataset.date));
+  let next = null;
+  for (const li of items) {
+    const past = li.dataset.date < today;
+    if (!past && !next) next = li;
+    li.classList.toggle('is-past', past);
+    li.classList.toggle('is-up', !past);
+    li.classList.toggle('is-next', li === next);
+    li.querySelectorAll('[data-upcoming-link]').forEach(p => p.hidden = past);
+    li.querySelector('.status').textContent =
+      li === next ? (li.dataset.date === today ? 'I kväll' : 'Nästa') : past ? 'Genomförd' : 'Kommande';
+  }
+  if (next) {
+    const when = weekday.format(new Date(next.dataset.date + 'T12:00:00Z'));
+    nextBox.innerHTML = `
+      <p class="label">${next.dataset.date === today ? 'I kväll' : 'Nästa föreläsning'}</p>
+      <p class="when">${when.charAt(0).toUpperCase() + when.slice(1)} · kl. 18–19 · Auditoriet</p>
+      <p class="what">${next.querySelector('.t').innerHTML}</p>
+      <p class="who">${next.querySelector('.s').textContent}</p>
+      <a class="btn" href="#f-${next.dataset.date}" data-open="${next.dataset.date}">Läs mer <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>`;
+    nextBox.hidden = false;
+  } else {
+    nextBox.hidden = true;
+  }
+}
+// Tacktexterna. De roterar mellan terminerna (1, 2, 3, 1 …) så att samma text aldrig kommer två gånger i rad.
+function renderDoneNote(key, today) {
+  const box = document.querySelector('#done-note');
+  if (!key) { box.hidden = true; box.innerHTML = ''; return; }
+  const [y, t] = key.split('-'), year = Number(y), spring = t === 'var';
+  // Efter hösten är nästa termin våren året därpå. Årtalet visas bara t.o.m. 31 december.
+  const showYear = !spring && Number(today.slice(0, 4)) <= year;
+  const nextYear = showYear ? ' ' + (year + 1) : '';
+  const nl = text => `<a href="#nyhetsbrev">${text}</a>`;
+  const texts = [
+    {
+      h: `Tack för en fantastisk ${spring ? 'vår' : 'höst'}!`,
+      p: [`Nu har ${spring ? 'vårens' : 'höstens'} föreläsningsprogram med våra uppskattade föreläsningar kommit i mål. Vi vill rikta ett varmt tack till alla er som kom, lyssnade, ställde frågor och deltog i samtalen – er närvaro och era insikter har gjort varje tillfälle givande.`,
+          `Just nu tar vi nya tag och planerar för fullt inför ${spring ? 'hösten' : 'våren' + nextYear}. Inom en snar framtid kommer vi att publicera ${spring ? 'höstterminens' : 'vårterminens'} föreläsningsprogram här på hemsidan.`,
+          `Vill du vara säker på att inte missa en föreläsning? ${nl('Skriv upp dig på vårt nyhetsbrev')} så får du all information direkt i din inkorg! Stort tack och på återseende!`]
+    },
+    {
+      h: `Tack för den här ${spring ? 'våren' : 'hösten'} – vi ses ${spring ? 'i höst' : showYear ? 'våren' + nextYear : 'snart igen'}!`,
+      p: [`${spring ? 'Vårens' : 'Höstens'} föreläsningar är nu avklarade. Ett stort tack till alla er som har besökt oss!`,
+          `Arbetet med ${spring ? 'höstens program' : 'vårprogrammet' + nextYear} är i full gång och kommer att presenteras här på hemsidan inom kort.`,
+          `Vill du inte missa några uppdateringar? ${nl('Prenumerera på vårt nyhetsbrev')} så får du ett mail inför varje föreläsning. Stort tack och på återseende!`]
+    },
+    {
+      h: `${spring ? 'Vårens' : 'Höstens'} föreläsningar genomförda – tack för ert engagemang`,
+      p: [`Vi vill rikta ett uppriktigt tack till alla besökare som har medverkat vid våra föreläsningar under ${spring ? 'vårterminen' : 'höstterminen'}. Det stora intresset och de givande efterföljande diskussionerna har varit mycket uppskattade.`,
+          `Planeringen av ${spring ? 'hösten' : 'våren' + nextYear} pågår för fullt, och programmet kommer att publiceras på vår webbplats inom en snar framtid.`,
+          `För att säkerställa att du tar del av informationen, rekommenderar vi att du anmäler dig ${nl('till vårt nyhetsbrev')}. Stort tack och på återseende!`]
+    }
+  ];
+  const n = texts[semOrder(key) % 3];
+  const html = `<h2>${n.h}</h2>` + n.p.map(p => `<p>${p}</p>`).join('');
+  if (box.innerHTML !== html) box.innerHTML = html;
+  box.hidden = false;
+}
+// Från 1 januari: vårens program är på väg. Texterna roterar per år så att samma text aldrig kommer två år i rad.
+function renderSpringSoon(today) {
+  const box = document.querySelector('#done-note');
+  const nl = text => `<a href="#nyhetsbrev">${text}</a>`;
+  const texts = [
+    {h: 'Vårens program är på väg!',
+     p: `Inom kort publicerar vi här på hemsidan vårens spännande föreläsningsprogram. Vill du vara säker på att inte missa en enda föreläsning? ${nl('Skriv upp dig på vårt nyhetsbrev')} så får du allt direkt i inkorgen!`},
+    {h: 'Nytt föreläsningsprogram på ingång',
+     p: `Snart släpper vi vårens fullspäckade program med ett riktigt spännande innehåll här på webbplatsen. ${nl('Följ vårt nyhetsbrev')} så missar du ingen av vårens föreläsningar.`},
+    {h: 'Vårens program publiceras snart!',
+     p: `Vi laddar upp med ett spännande innehåll inför våren som presenteras här inom kort. Säkra din information i god tid genom att ${nl('prenumerera på vårt nyhetsbrev')} – då missar du ingen föreläsning.`}
+  ];
+  const n = texts[Number(today.slice(0, 4)) % 3];
+  const html = `<h2>${n.h}</h2><p>${n.p}</p>`;
+  if (box.innerHTML !== html) box.innerHTML = html;
+  box.hidden = false;
+}
+updateProgram();
+document.addEventListener('visibilitychange', updateProgram);
+setInterval(updateProgram, 60000);
+
+/* ---------- Programmet: mjuk expandering, en öppen i taget, centrering ---------- */
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+const DURATION = 420, EASING = 'cubic-bezier(.22,.8,.26,1)';
+const running = new Map();
+function animateBody(details, opening) {
+  const body = details.querySelector('.body');
+  const prev = running.get(details);
+  const from = body.getBoundingClientRect().height;
+  if (prev) prev.cancel();
+  if (opening) details.open = true;
+  const to = opening ? body.scrollHeight : 0;
+  if (reduceMotion.matches) { if (!opening) details.open = false; running.delete(details); return; }
+  const anim = body.animate(
+    [{height: from + 'px', opacity: opening ? (from ? 1 : 0) : 1}, {height: to + 'px', opacity: opening ? 1 : 0}],
+    {duration: DURATION, easing: EASING});
+  running.set(details, anim);
+  anim.onfinish = () => { if (running.get(details) !== anim) return; running.delete(details); if (!opening) details.open = false; };
+  anim.oncancel = () => { if (running.get(details) === anim) running.delete(details); };
+}
+function bezier(x1, y1, x2, y2) {
+  const f = (t, a, b) => 3 * a * t * (1 - t) ** 2 + 3 * b * t * t * (1 - t) + t ** 3;
+  return x => { let lo = 0, hi = 1, t = x; for (let i = 0; i < 24; i++) { t = (lo + hi) / 2; f(t, x1, x2) < x ? lo = t : hi = t; } return f(t, y1, y2); };
+}
+const ease = bezier(.22, .8, .26, 1);
+let scrollJob = 0;
+function centerOnOpen(details, collapseAbove, beforeHeight, beforeBody) {
+  const body = details.querySelector('.body');
+  const finalH = beforeHeight - beforeBody + body.scrollHeight;
+  const finalTopDoc = details.getBoundingClientRect().top + scrollY - collapseAbove;
+  let target = finalH >= innerHeight - 24 ? finalTopDoc - 12 : finalTopDoc + finalH / 2 - innerHeight / 2;
+  const docH = document.documentElement.scrollHeight - collapseAbove + (body.scrollHeight - beforeBody);
+  target = Math.max(0, Math.min(target, docH - innerHeight));
+  const start = scrollY, job = ++scrollJob;
+  if (reduceMotion.matches) { scrollTo({top: target, behavior: 'instant'}); return; }
+  const t0 = performance.now();
+  (function tick(now) {
+    if (job !== scrollJob) return;
+    const p = Math.min(1, (now - t0) / DURATION);
+    scrollTo({top: start + (target - start) * ease(p), behavior: 'instant'});
+    if (p < 1) requestAnimationFrame(tick);
+  })(t0);
+}
+for (const ev of ['wheel', 'touchstart', 'keydown']) addEventListener(ev, () => scrollJob++, {passive: true});
+const isOpening = d => !d.open || running.get(d)?.effect.getKeyframes().at(-1).height === '0px';
+function toggle(details, forceOpen = false) {
+  const opening = forceOpen || isOpening(details);
+  if (!opening) { animateBody(details, false); return; }
+  if (!isOpening(details)) { centerOnOpen(details, 0, details.getBoundingClientRect().height, details.querySelector('.body').getBoundingClientRect().height); return; }
+  let collapseAbove = 0;
+  document.querySelectorAll('.pitem[open]').forEach(other => {
+    if (other === details || isOpening(other)) return;
+    if (other.compareDocumentPosition(details) & Node.DOCUMENT_POSITION_FOLLOWING)
+      collapseAbove += other.querySelector('.body').getBoundingClientRect().height;
+    animateBody(other, false);
+  });
+  const beforeHeight = details.getBoundingClientRect().height;
+  const beforeBody = details.open ? details.querySelector('.body').getBoundingClientRect().height : 0;
+  animateBody(details, true);
+  centerOnOpen(details, collapseAbove, beforeHeight, beforeBody);
+}
+document.querySelector('#program').addEventListener('click', e => {
+  const summary = e.target.closest('.pitem > summary');
+  if (!summary) return;
+  e.preventDefault();
+  toggle(summary.parentElement);
+});
+// "Läs mer" i rutan om nästa föreläsning öppnar den i programmet
+document.addEventListener('click', e => {
+  const a = e.target.closest('a[data-open]');
+  if (!a) return;
+  e.preventDefault();
+  const d = document.querySelector(`#f-${a.dataset.open} .pitem`);
+  if (d) toggle(d, true);
+});
+// Länk direkt till en föreläsning: nordenstedtska-seminariet.html#f-2026-11-12
+if (location.hash.startsWith('#f-')) {
+  const d = document.querySelector(location.hash + ' .pitem');
+  if (d && !d.closest('[hidden]')) { d.open = true; requestAnimationFrame(() => d.scrollIntoView({block: 'center', behavior: 'instant'})); }
+}
+
+// Antalet föreläsningar räknas i arkivet (fast HTML + föreläsningar i Firebase), se modulen längre ner.
+// Anmälan till nyhetsbrevet – skickas till samma Google Apps Script som anmälningssidan
+const signup = document.querySelector('#signup');
+const signupMsg = document.querySelector('#signup-msg');
+const signupBtn = document.querySelector('#signup-btn');
+const signupEmail = document.querySelector('#signup-email');
+signup.addEventListener('submit', async e => {
+  e.preventDefault();
+  const email = signupEmail.value.trim();
+  signupMsg.classList.remove('error');
+  if (!signupEmail.checkValidity() || !email) {
+    signupMsg.textContent = 'Skriv en giltig e-postadress, t.ex. namn@exempel.se.';
+    signupMsg.classList.add('error');
+    signupEmail.focus();
+    return;
+  }
+  signupBtn.disabled = true;
+  signupBtn.textContent = 'Sparar …';
+  signupMsg.textContent = '';
+  try {
+    await fetch('https://script.google.com/macros/s/AKfycbxpxR_H71oonTkmDLAxLdNY05em4s5EpGwG9NmQgqs_JeiQ6ch486zM01-53hp-c-fC8Q/exec', {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({email})
+    });
+    signup.hidden = true;
+    signupMsg.hidden = true;
+    const done = document.querySelector('#signup-done');
+    done.hidden = false;
+    done.focus();
+  } catch {
+    signupMsg.textContent = 'Det gick inte att skicka just nu. Kontrollera internetanslutningen och försök igen.';
+    signupMsg.classList.add('error');
+    signupBtn.disabled = false;
+    signupBtn.textContent = 'Anmäl mig';
+  }
+});
+signupEmail.addEventListener('input', () => { signupMsg.textContent = ''; signupMsg.classList.remove('error'); });
+</script>
+<script type="module">
+/* ---------- Terminsprogram från Firebase (fr.o.m. föreläsningen 12 november 2026) ----------
+   Föreläsningar t.o.m. 22 oktober 2026 ligger som fast HTML ovan. Det som sparas i admin
+   läggs till i rätt termin; har en föreläsning samma datum som en fast post ersätts den. */
+import {initializeApp} from 'https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js';
+import {initializeFirestore, collection, getDocs, getDocsFromServer, onSnapshot} from 'https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js';
+const fbApp = initializeApp({
+  apiKey: 'AIzaSyDTb4uqqXGQ-c0vOKVCoy7dxCLbz5vX96c',
+  authDomain: 'nordenstedtska-seminariet.firebaseapp.com',
+  projectId: 'nordenstedtska-seminariet',
+  storageBucket: 'nordenstedtska-seminariet.firebasestorage.app',
+  messagingSenderId: '988793567620',
+  appId: '1:988793567620:web:d516a2cda0af58e67545d1'
+});
+// Long polling kommer igenom nätverk och antivirusprogram som annars håller kvar Firebase-strömmen
+const db = initializeFirestore(fbApp, {experimentalForceLongPolling: true});
+const MONTHS = ['jan', 'feb', 'mar', 'apr', 'maj', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'})[c]);
+// Kursiv text sparas i admin som *text* och visas som <em>text</em>
+const ITALIC_RE = /\*([^*\n]+?)\*/g;
+const fmt = s => esc(s).replace(ITALIC_RE, '<em>$1</em>');
+const plain = s => String(s || '').replace(ITALIC_RE, '$1').trim();
+const paras = s => String(s || '').trim().split(/\n\s*\n/).filter(p => p.trim()).map(p => fmt(p.trim()).replace(/\n/g, '<br>'));
+const CHEV = '<span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>';
+
+function lectureHTML(l) {
+  const [, m, d] = l.date.split('-').map(Number);
+  const full = (a, b) => [a, b].map(x => String(x || '').trim()).filter(Boolean).join(' ');
+  const people = [full(l.firstName, l.lastName), full(l.firstName2, l.lastName2)].filter(Boolean);
+  const name = people.join(' och ');
+  const body = paras(l.description).map(p => `<p>${p}</p>`);
+  // Föreläsarnas namn görs fetstilta första gången de nämns i presentationen, som i de fasta posterna
+  const left = people.map(esc);
+  paras(l.about).forEach(p => {
+    for (let k = 0; k < left.length; k++) {
+      const at = p.indexOf(left[k]);
+      if (at < 0) continue;
+      p = p.slice(0, at) + `<strong>${left[k]}</strong>` + p.slice(at + left[k].length);
+      left.splice(k--, 1);
+    }
+    body.push(`<p>${p}</p>`);
+  });
+  let link = '';
+  try { if (l.link && /^https:$/.test(new URL(l.link).protocol)) link = `<p data-upcoming-link><a href="${esc(l.link)}">Läs mer i Kulturens kalendarium</a></p>`; } catch {}
+  return `<li data-date="${esc(l.date)}" id="f-${esc(l.date)}" data-source="firebase"><details class="pitem"><summary><span class="date"><b>${d}</b><i>${MONTHS[m - 1]}</i></span><span><span class="t">${fmt(l.title)}</span><span class="s">${esc(name)}</span></span><span class="status">Kommande</span>${CHEV}</summary><div class="body"><div class="inner">${body.join('')}${link}</div></div></details></li>`;
+}
+
+function semesterBlock(key, title) {
+  let block = document.querySelector(`.semester[data-sem="${key}"]`);
+  if (!block) {
+    block = document.createElement('div');
+    block.className = 'semester'; block.dataset.sem = key; block.hidden = true;
+    block.innerHTML = `<div class="sem-head"><h2>${esc(title)}</h2><span class="n"></span></div><ol class="program"></ol>`;
+    const first = document.querySelector('#program .semester');
+    document.querySelector('#program').insertBefore(block, first || document.querySelector('#planning'));
+  }
+  return block;
+}
+
+function merge(key, data) {
+  const lectures = (data?.lectures || []).filter(l => /^\d{4}-\d{2}-\d{2}$/.test(l.date || '') && String(l.title || '').trim());
+  const intro = String(data?.intro || '').trim();
+  let block = document.querySelector(`.semester[data-sem="${key}"]`);
+  if (!block && !lectures.length && !intro) return;
+  const [y, t] = key.split('-');
+  block ||= semesterBlock(key, data?.title || (t === 'var' ? 'Våren ' : 'Hösten ') + y);
+  const ol = block.querySelector('.program');
+  // Föreläsningar som är utfällda hålls öppna när programmet uppdateras
+  const open = new Set([...ol.querySelectorAll('li[data-source="firebase"] .pitem[open]')].map(d => d.closest('li').dataset.date));
+  block.querySelectorAll('.intro[data-source="firebase"]').forEach(p => p.remove());
+  if (intro && !block.querySelector('.intro')) {
+    block.querySelector('.sem-head').insertAdjacentHTML('afterend', paras(intro).map(p => `<p class="intro" data-source="firebase">${p}</p>`).join(''));
+  }
+  ol.querySelectorAll('li[data-source="firebase"]').forEach(li => li.remove());
+  for (const l of lectures) {
+    ol.querySelector(`li[data-date="${l.date}"]`)?.remove();
+    ol.insertAdjacentHTML('beforeend', lectureHTML(l));
+  }
+  [...ol.children].sort((a, b) => a.dataset.date.localeCompare(b.dataset.date)).forEach(li => ol.appendChild(li));
+  open.forEach(d => { const el = ol.querySelector(`li[data-date="${d}"] .pitem`); if (el) el.open = true; });
+  const n = ol.children.length;
+  block.querySelector('.sem-head .n').textContent = `${n} föreläsning${n === 1 ? '' : 'ar'}`;
+}
+
+// Lyssnar på alla terminer i Firebase: ändringar som sparas i admin syns direkt, utan att sidan laddas om
+let merged = new Set(), lastJSON = '', firstLoad = true;
+function apply(docs) {
+  const json = JSON.stringify(docs.map(d => [d.id, d.data()]));
+  if (json === lastJSON) return;
+  lastJSON = json;
+  const keys = new Set(docs.map(d => d.id));
+  for (const k of merged) if (!keys.has(k)) merge(k, null);   // borttagen termin
+  for (const d of docs) merge(d.id, d.data());
+  merged = keys;
+  updateProgram();
+  if (firstLoad) {
+    firstLoad = false;
+    // Direktlänk till en föreläsning som just hämtats, t.ex. #f-2026-11-12
+    if (location.hash.startsWith('#f-')) {
+      const d = document.querySelector(location.hash + ' .pitem');
+      if (d && !d.open && !d.closest('[hidden]')) { d.open = true; requestAnimationFrame(() => d.scrollIntoView({block: 'center', behavior: 'instant'})); }
+    }
+  }
+}
+onSnapshot(collection(db, 'terminer'), snap => apply(snap.docs), err => console.error('Kunde inte hämta programmet från Firebase', err));
+// Reserv: hämtar direkt från servern ifall strömmen ändå inte kommer fram
+async function refresh() {
+  try { apply((await getDocsFromServer(collection(db, 'terminer'))).docs); }
+  catch (err) { console.warn('Reservhämtningen misslyckades', err); }
+}
+document.addEventListener('visibilitychange', () => { if (!document.hidden) refresh(); });
+addEventListener('focus', refresh);
+setInterval(refresh, 20000);
+
+// Antalet föreläsningar i arkivet: de fasta posterna i arkivet plus genomförda föreläsningar i Firebase.
+// (Fungerar när sidorna ligger på en webbserver; öppnas filen lokalt visas den inbyggda siffran.)
+Promise.all([
+  fetch('nordenstedtska-arkiv.html', {cache: 'no-cache'}).then(r => r.ok ? r.text() : Promise.reject()),
+  getDocs(collection(db, 'terminer'))
+]).then(([html, snap]) => {
+  const arkiv = new DOMParser().parseFromString(html, 'text/html');
+  const fixed = new Set([...arkiv.querySelectorAll('.lecture')].map(el =>
+    el.querySelector('time')?.dateTime + '|' + (el.querySelector('strong')?.textContent.trim() || '')));
+  const today = stockholmDate.format(new Date());
+  const extra = snap.docs.flatMap(d => d.data().lectures || [])
+    .filter(l => /^\d{4}-\d{2}-\d{2}$/.test(l.date || '') && String(l.title || '').trim() && l.date < today)
+    .filter(l => !fixed.has(l.date + '|' + plain(l.title))).length;
+  if (fixed.size + extra) document.querySelector('#total').textContent = arkiv.querySelectorAll('.lecture').length + extra;
+}).catch(() => {});
+setInterval(listen, 60000);   // byter termin om sidan står öppen över terminsskiftet
+</script>
+</body>
+</html>
