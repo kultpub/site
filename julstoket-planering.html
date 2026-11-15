@@ -3336,6 +3336,354 @@
     font-weight: 400;
   }
 
+
+  /* Instruktioner till alla: flikar och tre arbetsytor. */
+  /* Som Aktiviteter: överkanten ligger alltid på samma höjd, oavsett vilken flik som visas. */
+  dialog.shared-info-modal {
+    width: min(860px, calc(100% - 30px));
+    top: 4vh;
+    bottom: auto;
+    margin: 0 auto;
+  }
+
+  .shared-info-modal .shared-tabs .pass-day-tab {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+
+  .shared-tab-count {
+    padding: 1px 7px;
+    border-radius: 10px;
+    background: #f3e7c9;
+    color: #7a5a17;
+    font-size: 11px;
+  }
+
+  .shared-tab-count[data-complete="true"] {
+    background: #dfe9da;
+    color: var(--green);
+  }
+
+  .shared-panel {
+    min-height: 420px;
+    padding: 18px;
+    border: 1px solid var(--line);
+    border-radius: 0 8px 8px 8px;
+    background: var(--paper);
+  }
+
+  .shared-info-modal .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .shared-panel[hidden] {
+    display: none;
+  }
+
+  .shared-panel-intro {
+    margin: 0 0 14px;
+    font-size: 12px;
+  }
+
+  .shared-info-modal #sharedInfoText {
+    min-height: 300px;
+    max-height: 52dvh;
+    margin-top: 8px;
+  }
+
+  .sick-contact-list {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: white;
+  }
+
+  .sick-contact-row {
+    display: grid;
+    grid-template-columns: 150px minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: 4px 12px;
+    align-items: center;
+    padding: 12px 14px;
+  }
+
+  .sick-contact-row + .sick-contact-row {
+    border-top: 1px solid var(--line);
+  }
+
+  .sick-contact-day small {
+    display: block;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 400;
+  }
+
+  .sick-contact-row select,
+  .sick-contact-row input {
+    width: 100%;
+    min-width: 0;
+    padding: 9px 10px;
+    border: 1px solid #d0d9c8;
+    border-radius: 6px;
+    background: white;
+    color: var(--ink);
+    font: inherit;
+  }
+
+  .sick-contact-row input {
+    background: #f6f8f3;
+    color: var(--muted);
+  }
+
+  .sick-contact-row .hint {
+    grid-column: 2 / 4;
+    margin: 0;
+  }
+
+  .sick-contact-row .hint:empty,
+  .sick-contact-row .hint[hidden] {
+    display: none;
+  }
+
+  .program-date {
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  .program-day-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  .program-day-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 14px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: white;
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .program-day-tab small {
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  .program-day-tab[aria-selected="true"] {
+    border-color: var(--green2);
+    background: var(--green2);
+    color: white;
+  }
+
+  .program-day-tab[aria-selected="true"] small {
+    color: #d8e6dc;
+  }
+
+  .program-day-count {
+    min-width: 18px;
+    padding: 0 6px;
+    border-radius: 9px;
+    background: #dfe9da;
+    color: var(--green);
+    font-size: 11px;
+    text-align: center;
+  }
+
+  .program-day-count:empty {
+    display: none;
+  }
+
+  .program-day-panel {
+    padding: 4px 14px 14px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: white;
+  }
+
+  .program-head,
+  .program-row {
+    display: grid;
+    grid-template-columns: 22px 90px 90px minmax(0, 1fr) 28px;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .program-head {
+    padding: 8px 0 6px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .program-row {
+    padding: 8px 0;
+    border-top: 1px solid var(--line);
+    cursor: grab;
+  }
+
+  .program-row input {
+    cursor: text;
+  }
+
+  .program-row .program-time,
+  .program-row .program-title {
+    width: 100%;
+    min-width: 0;
+    padding: 9px 10px;
+    border: 1px solid #d0d9c8;
+    border-radius: 6px;
+    background: white;
+    color: var(--ink);
+    font: inherit;
+    font-size: 13px;
+  }
+
+  /* Krysset är en SVG så att det ligger exakt mitt i hovringsytan. */
+  .program-row .program-remove {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: #8a9489;
+    line-height: 0;
+  }
+
+  .program-row .program-remove:hover,
+  .program-row .program-remove:focus-visible {
+    background: #f4dfd8;
+    color: var(--red);
+  }
+
+  .program-row .program-remove svg {
+    display: block;
+    width: 13px;
+    height: 13px;
+  }
+
+  .program-row .program-drag {
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 34px;
+    padding: 0;
+    border: 0;
+    border-radius: 5px;
+    background: transparent;
+    color: #a3ab9f;
+    cursor: grab;
+    touch-action: none;
+  }
+
+  .program-row .program-drag:hover,
+  .program-row .program-drag:focus-visible {
+    background: #eef3ea;
+    color: var(--green2);
+  }
+
+  .program-row .program-drag svg {
+    width: 10px;
+    height: 16px;
+  }
+
+  .program-rows {
+    position: relative;
+  }
+
+  .program-row {
+    position: relative;
+    background: white;
+  }
+
+  .program-row.program-shift {
+    transition: transform .18s cubic-bezier(.2, .7, .3, 1);
+  }
+
+  .program-row.dragging {
+    z-index: 5;
+    border-top-color: transparent;
+    border-radius: 8px;
+    box-shadow: 0 10px 28px #173d3530, 0 2px 6px #173d3520;
+    outline: 2px solid var(--green2);
+    cursor: grabbing;
+  }
+
+  .program-row.program-settle {
+    transition: transform .2s cubic-bezier(.2, .7, .3, 1);
+  }
+
+  .program-rows.drag-active,
+  .program-rows.drag-active * {
+    cursor: grabbing !important;
+    user-select: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .program-row.program-shift,
+    .program-row.program-settle {
+      transition: none;
+    }
+  }
+
+  .program-row .program-time {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .program-empty {
+    margin: 12px 0 0;
+  }
+
+  .program-add {
+    margin-top: 12px;
+  }
+
+  .program-section [hidden] {
+    display: none !important;
+  }
+
+  @media (max-width: 760px) {
+    .sick-contact-row {
+      grid-template-columns: 1fr;
+    }
+
+    .sick-contact-row .hint {
+      grid-column: 1;
+    }
+
+    .program-head {
+      display: none;
+    }
+
+    .program-row {
+      grid-template-columns: 22px 1fr 1fr 28px;
+    }
+
+    .program-row .program-drag {
+      grid-row: 1 / 3;
+    }
+
+    .program-row .program-title {
+      grid-column: 2 / 4;
+    }
+
+    .program-row [data-program-edit="remove"] {
+      grid-column: 4;
+      grid-row: 1;
+    }
+  }
+
   #sharedInfoText ul {
     list-style: disc;
     margin: 0;
@@ -9662,7 +10010,7 @@ const navButton=([view,label,count,tip],action="navigate") => `
     </button>`;
 $("navigation").innerHTML=`<section class="nav-stage" aria-label="Steg 1: Vad ska göras? Vem jobbar?"><div class="nav-stage-heading"><span>1</span> Vad ska göras? Vem jobbar?</div>${["activities","people"].map(view=>navButton(items.find(item=>item[0]===view))).join("")}</section><div class="nav-stage-arrow" aria-hidden="true">↓</div><section class="nav-stage" aria-label="Steg 2: Vem gör vad?"><div class="nav-stage-heading"><span>2</span> Vem gör vad?</div>${navButton(items.find(item=>item[0]==="staffing"))}</section>` + `
     <div class="nav-separator" role="separator"></div>
-    ${navButton(["shared-info","Instruktioner till alla","","Vem ringer man om man blir sjuk? Var är min lunchbiljett? Här kan du lägga in information som gäller alla medarbetare under hela Julstöket."],"edit-shared-info")}
+    ${navButton(["shared-info","Instruktioner till alla","","Vem ringer man om man blir sjuk? Var är min lunchbiljett? Vad händer på området? Här lägger du in information som gäller alla medarbetare under hela Julstöket – och det publika programmet."],"edit-shared-info")}
     ${navButton(["places","Översikt platser","","Hantera platser där arbete utförs – och se vilket arbete som utförs på dessa."])}
     <button type="button" data-action="open-mobile"><span>Se mobilversion ↗</span><span class="location-info menu-info-icon" data-menu-tip="Förhandsgranska mobilversion av planens innehåll." aria-label="Förhandsgranska mobilversion av planens innehåll.">i</span></button>`;
 
@@ -11151,7 +11499,7 @@ function showDialog(title,subtitle,body,footer="",onSubmit=null) {
   closeClockPicker();
   hideMenuTooltip();
   document.body.append($("menuTooltip"));
-  modal.classList.remove("report-modal","days-modal","staff-assign-modal","history-modal","timeline-assign-modal","activity-edit-modal","place-overview-modal");
+  modal.classList.remove("shared-info-modal","report-modal","days-modal","staff-assign-modal","history-modal","timeline-assign-modal","activity-edit-modal","place-overview-modal");
   delete modal.dataset.directoryMode;
   modal.style.removeProperty("--days-width");
   modal.style.removeProperty("--day-count");
@@ -11288,6 +11636,279 @@ function initSharedInfoEditor(editor,initial) {
   }
 }
 
+/* Instruktioner till alla: tre flikar – Allmänt, Sjukanmälan och Publikt program. */
+let activeSharedTab="general";
+function showSharedTab(name,remember=true) {
+  if (remember) activeSharedTab=name;
+  modal.querySelectorAll("[data-shared-tab]").forEach(tab=>tab.setAttribute("aria-selected",String(tab.dataset.sharedTab===name)));
+  modal.querySelectorAll("[data-shared-panel]").forEach(panel=>{panel.hidden=panel.dataset.sharedPanel!==name;});
+}
+function updateSharedCounts() {
+  const contacts=SICK_CONTACT_DAYS.filter(key=>modal.querySelector(`[data-sick-contact="${key}"] select`)?.value).length;
+  const program=SICK_CONTACT_DAYS.filter((key,day)=>programRowsFor(day).some(row=>row.title || row.startText)).length;
+  updateProgramDayCounts();
+  const set=(name,count)=>{const chip=modal.querySelector(`[data-shared-count="${name}"]`);if (chip) {chip.textContent=`${count}/3`;chip.dataset.complete=String(count===3);}};
+  set("contacts",contacts);set("program",program);
+}
+function initSharedTabs() {
+  activeSharedTab="general";
+  modal.querySelector(".shared-tabs").addEventListener("click",event=>{
+    const tab=event.target.closest("[data-shared-tab]");
+    if (tab) showSharedTab(tab.dataset.sharedTab);
+  });
+  modal.querySelector("#modalForm").addEventListener("input",updateSharedCounts);
+  modal.querySelector("#modalForm").addEventListener("change",updateSharedCounts);
+  updateSharedCounts();
+}
+
+/* Publikt program: en flik per dag och en rad per programpunkt.
+   sharedInfo.program = {friday:[{id,start,end,title}],…}. Sluttiden är valfri. */
+// Tider skrivs som vanlig text: 16.00, 16:00, 16 eller 1600. De sparas som 16:00 och visas som 16.00.
+function parseProgramTime(value) {
+  const text=String(value || "").trim().replace(/^kl\.?\s*/i,"");
+  if (!text) return "";
+  const match=text.match(/^(\d{1,2})(?:[.:]?(\d{2}))?$/);
+  if (!match) return null;
+  const h=Number(match[1]),m=Number(match[2] || 0);
+  return h<24 && m<60 ? String(h).padStart(2,"0")+":"+String(m).padStart(2,"0") : null;
+}
+
+function programTimeLabel(value) {
+  return value ? value.replace(":",".") : "";
+}
+
+function programRowHTML(item={}) {
+  return `<div class="program-row" data-program-row="${esc(safeId(item.id)?item.id:uid())}">
+    <button type="button" class="program-drag" aria-label="Flytta programpunkten (dra, eller använd pil upp/ned)" title="Dra för att flytta"><svg viewBox="0 0 10 16" aria-hidden="true"><g fill="currentColor"><circle cx="3" cy="3" r="1.4"/><circle cx="7" cy="3" r="1.4"/><circle cx="3" cy="8" r="1.4"/><circle cx="7" cy="8" r="1.4"/><circle cx="3" cy="13" r="1.4"/><circle cx="7" cy="13" r="1.4"/></g></svg></button>
+    <input type="text" class="program-time program-start" inputmode="numeric" aria-label="Starttid" placeholder="16.00" maxlength="8" value="${esc(programTimeLabel(item.start))}">
+    <input type="text" class="program-time program-end-value" inputmode="numeric" aria-label="Sluttid (valfri)" placeholder="–" maxlength="8" value="${esc(programTimeLabel(item.end))}">
+    <input type="text" class="program-title" aria-label="Programpunkt" placeholder="T.ex. Luciatåg vid granen" maxlength="200" value="${esc(item.title || "")}">
+    <button type="button" class="remove program-remove" data-program-edit="remove" aria-label="Ta bort programpunkten" title="Ta bort programpunkten"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="m3 3 6 6M9 3 3 9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.6"/></svg></button>
+  </div>`;
+}
+
+function programEditorHTML(program) {
+  return `<div class="program-day-tabs" role="tablist" aria-label="Programdagar">${DAYS.map((name,day)=>
+      `<button type="button" role="tab" class="program-day-tab" id="program-tab-${day}" aria-controls="program-panel-${day}" aria-selected="${day===0}" data-program-tab="${day}">${name} <small>${esc(dateLabel(day))}</small><span class="program-day-count" data-program-count="${day}"></span></button>`).join("")}
+    </div>
+    ${SICK_CONTACT_DAYS.map((key,day)=>`<div class="program-day-panel" role="tabpanel" id="program-panel-${day}" aria-labelledby="program-tab-${day}" data-program-day="${day}" ${day?"hidden":""}>
+      <div class="program-head" aria-hidden="true"><span></span><span>Starttid</span><span>Sluttid</span><span>Programpunkt</span><span></span></div>
+      <div class="program-rows">${(Array.isArray(program?.[key])?program[key]:[]).map(programRowHTML).join("")}</div>
+      <p class="hint program-empty">Inga programpunkter för ${DAYS[day].toLocaleLowerCase("sv-SE")} ännu.</p>
+      <button type="button" class="btn small program-add" data-program-edit="add" data-day="${day}">+ Lägg till programpunkt</button>
+    </div>`).join("")}`;
+}
+
+function initProgramRow(row) {
+  row.querySelectorAll(".program-time").forEach(input=>input.addEventListener("blur",()=>{
+    const parsed=parseProgramTime(input.value);
+    if (parsed) input.value=programTimeLabel(parsed);
+  }));
+}
+
+function showProgramDay(day) {
+  modal.querySelectorAll("[data-program-tab]").forEach(tab=>tab.setAttribute("aria-selected",String(Number(tab.dataset.programTab)===day)));
+  modal.querySelectorAll("[data-program-day]").forEach(panel=>{panel.hidden=Number(panel.dataset.programDay)!==day;});
+}
+
+function readProgramRow(row) {
+  return {
+    id:row.dataset.programRow,
+    startText:row.querySelector(".program-start").value.trim(),
+    endText:row.querySelector(".program-end-value").value.trim(),
+    start:parseProgramTime(row.querySelector(".program-start").value),
+    end:parseProgramTime(row.querySelector(".program-end-value").value),
+    title:row.querySelector(".program-title").value.trim()
+  };
+}
+
+function programRowsFor(day) {
+  return [...modal.querySelectorAll(`[data-program-day="${day}"] .program-row`)].map(readProgramRow);
+}
+
+function updateProgramDayCounts() {
+  modal.querySelectorAll("[data-program-day]").forEach(panel=>{
+    const day=panel.dataset.programDay;
+    const rows=panel.querySelectorAll(".program-row").length;
+    const filled=programRowsFor(day).filter(row=>row.title || row.startText).length;
+    modal.querySelector(`[data-program-count="${day}"]`).textContent=filled?String(filled):"";
+    panel.querySelector(".program-head").hidden=!rows;
+    panel.querySelector(".program-empty").hidden=Boolean(rows);
+  });
+}
+
+// Inklistring av en eller flera programpunkter, t.ex. kopierade rader ur en tabell
+// (starttid, sluttid, programpunkt med tabb eller | emellan) eller rader som "Kl 11-14  Julpyssel".
+function parsePastedProgram(text) {
+  const items=[];
+  const TIME="(?:kl\\.?\\s*)?\\d{1,2}(?:[.:]\\d{2})?";
+  for (const raw of String(text || "").split(/\r?\n/)) {
+    let line=raw.trim().replace(/^\|/,"").replace(/\|$/,"").trim();
+    if (!line || /^[\s|:–-]+$/.test(line)) continue;
+    let cells=line.split(/\t|\s\|\s|\|/).map(cell=>cell.trim()).filter((cell,i,all)=>cell || (i>0 && i<all.length-1));
+    if (/^(start(tid)?|tid)$/i.test(cells[0] || "")) continue;
+    let start="",end="",title="";
+    const range=new RegExp(`^(${TIME})\\s*(?:[–—-]\\s*(${TIME}))?$`,"i");
+    if (cells.length>=3 && parseProgramTime(cells[0])) {
+      start=cells[0];end=/^[–—-]?$/.test(cells[1])?"":cells[1];title=cells.slice(2).join(" ");
+    } else if (cells.length>=2 && range.test(cells[0])) {
+      const match=cells[0].match(range);start=match[1];end=match[2] || "";title=cells.slice(1).join(" ");
+    } else {
+      // Tider åtskilda med bindestreck eller mellanslag; "–" som sluttid betyder ingen sluttid.
+      const FULL="(?:kl\\.?\\s*)?\\d{1,2}[.:]\\d{2}";
+      const match=line.match(new RegExp(`^(${TIME})\\s*[–—-]\\s*(${TIME})\\s+(.+)$`,"i"))
+        || line.match(new RegExp(`^(${TIME})\\s+(${FULL})\\s+(.+)$`,"i"))
+        || line.match(new RegExp(`^(${TIME})()\\s+(?:[–—-]\\s+)?(.+)$`,"i"));
+      if (!match) continue;
+      start=match[1];end=match[2] || "";title=match[3];
+    }
+    const startTime=parseProgramTime(start),endTime=parseProgramTime(end);
+    title=title.replace(/^[\s|–—-]+/,"").trim();
+    if (!startTime || endTime===null || !title) continue;
+    items.push({start:startTime,end:endTime,title});
+  }
+  return items;
+}
+
+function fillProgramRow(row,item) {
+  row.querySelector(".program-start").value=programTimeLabel(item.start);
+  row.querySelector(".program-end-value").value=programTimeLabel(item.end);
+  row.querySelector(".program-title").value=item.title;
+}
+
+function initProgramEditor() {
+  const panel=modal.querySelector('[data-shared-panel="program"]');
+  panel.querySelectorAll(".program-row").forEach(initProgramRow);
+  updateSharedCounts();
+  panel.addEventListener("paste",event=>{
+    const input=event.target.closest(".program-row input");
+    if (!input) return;
+    const text=event.clipboardData?.getData("text/plain") || "";
+    // Vanlig text i fältet Programpunkt klistras in som vanligt.
+    if (!/[\t|\n]/.test(text.trim()) && !input.classList.contains("program-time") && !/^\s*(kl\.?\s*)?\d/i.test(text)) return;
+    const items=parsePastedProgram(text);
+    if (!items.length) return;
+    event.preventDefault();
+    let row=input.closest(".program-row");
+    fillProgramRow(row,items[0]);
+    for (const item of items.slice(1)) {
+      row.insertAdjacentHTML("afterend",programRowHTML());
+      row=row.nextElementSibling;
+      initProgramRow(row);
+      fillProgramRow(row,item);
+    }
+    updateSharedCounts();
+    row.querySelector(".program-title").focus();
+    if (items.length>1) toast(`${items.length} programpunkter är inklistrade.`);
+  });
+  // Flytta rader: raden lyfts och följer pekaren, övriga rader glider undan.
+  // Greppet eller radens kant (utanför fälten) kan användas. Pil upp/ned fungerar när greppet har fokus.
+  const reduceMotion=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let drag=null;
+  panel.addEventListener("pointerdown",event=>{
+    const row=event.target.closest(".program-row");
+    if (!row || event.button>0 || drag) return;
+    if (!event.target.closest(".program-drag") && event.target.closest("input,button")) return;
+    event.preventDefault();
+    const list=row.parentElement,rows=[...list.children];
+    const boxes=rows.map(item=>item.getBoundingClientRect());
+    const index=rows.indexOf(row);
+    const step=index<rows.length-1 ? boxes[index+1].top-boxes[index].top : index>0 ? boxes[index].top-boxes[index-1].top : boxes[index].height;
+    drag={row,list,rows,boxes,index,target:index,step,startY:event.clientY,id:event.pointerId,
+      minY:boxes[0].top-boxes[index].top,maxY:boxes[rows.length-1].top-boxes[index].top};
+    row.setPointerCapture(event.pointerId);
+    rows.forEach(item=>{if (item!==row) item.classList.add("program-shift");});
+    row.classList.add("dragging");list.classList.add("drag-active");
+  });
+  panel.addEventListener("pointermove",event=>{
+    if (!drag || event.pointerId!==drag.id) return;
+    const dy=Math.max(drag.minY-12,Math.min(drag.maxY+12,event.clientY-drag.startY));
+    drag.row.style.transform=`translateY(${dy}px) scale(1.01)`;
+    const center=drag.boxes[drag.index].top+drag.boxes[drag.index].height/2+dy;
+    let target=0;
+    drag.rows.forEach((item,i)=>{if (i!==drag.index && drag.boxes[i].top+drag.boxes[i].height/2<center) target++;});
+    drag.target=target;
+    drag.rows.forEach((item,i)=>{
+      if (item===drag.row) return;
+      const shift=i>drag.index && i<=target ? -drag.step : i<drag.index && i>=target ? drag.step : 0;
+      item.style.transform=shift?`translateY(${shift}px)`:"";
+    });
+  });
+  const endDrag=event=>{
+    if (!drag || event.pointerId!==drag.id) return;
+    const {row,list,rows,target,index}=drag;
+    drag=null;
+    const before=row.getBoundingClientRect().top;
+    rows.forEach(item=>{item.classList.remove("program-shift");item.style.transform="";});
+    if (target!==index) {
+      const others=rows.filter(item=>item!==row);
+      if (target>=others.length) list.append(row); else list.insertBefore(row,others[target]);
+    }
+    // Låt den släppta raden glida sista biten in på sin nya plats.
+    const after=row.getBoundingClientRect().top;
+    row.classList.remove("dragging");
+    if (!reduceMotion && Math.abs(before-after)>1) {
+      row.style.transform=`translateY(${before-after}px)`;
+      row.getBoundingClientRect();
+      row.classList.add("program-settle");
+      row.style.transform="";
+      row.addEventListener("transitionend",()=>row.classList.remove("program-settle"),{once:true});
+    }
+    list.classList.remove("drag-active");
+    row.querySelector(".program-drag").focus({preventScroll:true});
+  };
+  panel.addEventListener("pointerup",endDrag);
+  panel.addEventListener("pointercancel",endDrag);
+  panel.addEventListener("keydown",event=>{
+    const handle=event.target.closest(".program-drag");
+    if (!handle || !["ArrowUp","ArrowDown"].includes(event.key)) return;
+    event.preventDefault();
+    const row=handle.closest(".program-row");
+    if (event.key==="ArrowUp" && row.previousElementSibling) row.previousElementSibling.before(row);
+    if (event.key==="ArrowDown" && row.nextElementSibling) row.nextElementSibling.after(row);
+    handle.focus();
+  });
+  panel.addEventListener("click",event=>{
+    const tab=event.target.closest("[data-program-tab]");
+    if (tab) {showProgramDay(Number(tab.dataset.programTab));return;}
+    const control=event.target.closest("[data-program-edit]");
+    if (!control) return;
+    const action=control.dataset.programEdit,row=control.closest(".program-row");
+    if (action==="add") {
+      const list=modal.querySelector(`[data-program-day="${control.dataset.day}"] .program-rows`);
+      list.insertAdjacentHTML("beforeend",programRowHTML());
+      initProgramRow(list.lastElementChild);
+      updateSharedCounts();
+      list.lastElementChild.querySelector(".program-start").focus();
+    }
+    if (action==="remove") {row.remove();updateSharedCounts();}
+  });
+}
+
+function readProgram() {
+  const program={};
+  for (const [day,key] of SICK_CONTACT_DAYS.entries()) {
+    program[key]=[];
+    for (const row of modal.querySelectorAll(`[data-program-day="${day}"] .program-row`)) {
+      const item=readProgramRow(row);
+      if (!item.startText && !item.endText && !item.title) continue;
+      const fail=message=>{
+        showSharedTab("program");showProgramDay(day);
+        row.scrollIntoView({block:"nearest"});
+        throw Error(`Publikt program, ${DAYS[day].toLocaleLowerCase("sv-SE")}: ${message}`);
+      };
+      if (!item.title) fail(`Skriv vad som händer${item.start?" kl. "+item.start:""}.`);
+      if (!item.startText) fail(`Ange starttid för ”${item.title}”.`);
+      if (!item.start) fail(`Starttiden ”${item.startText}” för ”${item.title}” kan inte läsas. Skriv t.ex. 16.00.`);
+      if (item.end===null) fail(`Sluttiden ”${item.endText}” för ”${item.title}” kan inte läsas. Skriv t.ex. 16.30.`);
+      if (item.end && item.end<=item.start) fail(`Sluttiden för ”${item.title}” måste vara efter starttiden.`);
+      program[key].push({id:safeId(item.id)?item.id:uid(),start:item.start,end:item.end || "",title:item.title});
+    }
+    // Ingen sortering: programmet visas i den ordning raderna har i modalen.
+  }
+  return program;
+}
+
 function editSharedInfo() {
   const year=plan.year;
   const initial=plan.sharedInfo;
@@ -11297,20 +11918,24 @@ function editSharedInfo() {
     const personId=initial?.sickContactPersonIds?.[key];
     const missingOption=personId && !people.some(person=>person.id===personId)
       ? `<option value="${esc(personId)}">Tidigare vald person saknas</option>` : "";
-    return `<div class="formsection" data-sick-contact="${key}">
-      <h3>${DAYS[day]}</h3>
-      <div class="formgrid">
-        <label class="field">Namn<select aria-label="Kontaktperson ${DAYS[day]}" aria-describedby="sickContactHint-${key}">
-          <option value="">Ingen vald</option>${missingOption}${options}
-        </select></label>
-        <label class="field" data-no-dirty>Telefonnummer<input type="tel" readonly aria-label="Telefonnummer ${DAYS[day]}"></label>
-      </div>
+    return `<div class="sick-contact-row" data-sick-contact="${key}">
+      <strong class="sick-contact-day">${DAYS[day]} <small>${esc(dateLabel(day))}</small></strong>
+      <select aria-label="Kontaktperson ${DAYS[day]}" aria-describedby="sickContactHint-${key}">
+        <option value="">Ingen vald</option>${missingOption}${options}
+      </select>
+      <span data-no-dirty><input type="tel" readonly tabindex="-1" placeholder="Telefonnummer" aria-label="Telefonnummer ${DAYS[day]}"></span>
       <p class="hint" id="sickContactHint-${key}" aria-live="polite"></p>
     </div>`;
   }).join("");
   showDialog("Instruktioner till alla",`Gemensam information för Julstöket ${year}.`,
-    `<div class="field">
-      <span id="sharedInfoLabel">Instruktioner till alla medarbetare</span>
+    `<div class="shared-tabs pass-day-tabs" role="tablist" aria-label="Delar av Instruktioner till alla">
+      <button type="button" role="tab" class="pass-day-tab" id="shared-tab-general" aria-controls="shared-panel-general" aria-selected="true" data-shared-tab="general">Allmänt</button>
+      <button type="button" role="tab" class="pass-day-tab" id="shared-tab-contacts" aria-controls="shared-panel-contacts" aria-selected="false" data-shared-tab="contacts">Sjukanmälan<span class="shared-tab-count" data-shared-count="contacts"></span></button>
+      <button type="button" role="tab" class="pass-day-tab" id="shared-tab-program" aria-controls="shared-panel-program" aria-selected="false" data-shared-tab="program">Publikt program<span class="shared-tab-count" data-shared-count="program"></span></button>
+    </div>
+    <div class="shared-panel" role="tabpanel" id="shared-panel-general" aria-labelledby="shared-tab-general" data-shared-panel="general">
+      <p class="hint shared-panel-intro">Allmän information som gäller alla medarbetare under Julstöket.</p>
+      <span id="sharedInfoLabel" class="sr-only">Instruktioner till alla medarbetare</span>
       <div class="shared-info-format" role="group" aria-label="Textformatering">
         <button type="button" class="btn small" data-shared-format="insertUnorderedList" aria-pressed="false">• Punktlista</button>
         <button type="button" class="btn small" data-shared-format="bold" aria-pressed="false">Fet</button>
@@ -11320,20 +11945,25 @@ function editSharedInfo() {
       <div id="sharedInfoText" contenteditable="true" role="textbox" aria-multiline="true" aria-labelledby="sharedInfoLabel"></div>
       <p class="hint">Webbadresser och e-postadresser blir klickbara i mobilversionen.</p>
     </div>
-    <div class="formsection">
-      <h3>Kontakt vid sjukfrånvaro</h3>
-      <p class="hint">Välj en person från Personal för varje dag. Telefonnummer hämtas automatiskt.</p>
-      ${contactFields}
+    <div class="shared-panel" role="tabpanel" id="shared-panel-contacts" aria-labelledby="shared-tab-contacts" data-shared-panel="contacts" hidden>
+      <p class="hint shared-panel-intro">Vem ringer man om man blir sjuk? Telefonnumret hämtas automatiskt.</p>
+      <div class="sick-contact-list">${contactFields}</div>
+    </div>
+    <div class="shared-panel program-section" role="tabpanel" id="shared-panel-program" aria-labelledby="shared-tab-program" data-shared-panel="program" hidden>
+      <p class="hint shared-panel-intro">Skriv in programmet för varje dag.</p>
+      ${programEditorHTML(initial?.program)}
     </div>`,
     button("Avbryt","close")+saveButton("Spara",{track:true}),async()=>{
       if (plan.year!==year) throw Error("Planeringsåret har ändrats. Öppna Instruktioner till alla igen.");
       const current=plan.sharedInfo;
       if ((current?.text || "")!==(initial?.text || "") || (current?.html || "")!==(initial?.html || "") ||
+        JSON.stringify(current?.program || null)!==JSON.stringify(initial?.program || null) ||
         SICK_CONTACT_DAYS.some(key=>
         (current?.sickContactPersonIds?.[key] || null)!==(initial?.sickContactPersonIds?.[key] || null))) {
         throw Error("Informationen har ändrats av någon annan. Öppna Instruktioner till alla igen innan du sparar.");
       }
       const sickContactPersonIds={};
+      showSharedTab("contacts",false);
       for (const [day,key] of SICK_CONTACT_DAYS.entries()) {
         const personId=modal.querySelector(`[data-sick-contact="${key}"] select`).value;
         if (personId) {
@@ -11343,14 +11973,19 @@ function editSharedInfo() {
         }
         sickContactPersonIds[key]=personId || null;
       }
+      showSharedTab(activeSharedTab,false);
       const editor=$("sharedInfoText");
       const text=editor.innerText.trim();
       const html=text ? sanitizeSharedInfoHtml(editor.innerHTML) : "";
-      await commit(data=>{data.sharedInfo={text,html,sickContactPersonIds};},"Instruktioner till alla är sparade.");
+      const program=readProgram();
+      await commit(data=>{data.sharedInfo={text,html,sickContactPersonIds,program};},"Instruktioner till alla är sparade.");
       closeDialog();
     });
 
+  modal.classList.add("shared-info-modal");
   initSharedInfoEditor($("sharedInfoText"),initial);
+  initSharedTabs();
+  initProgramEditor();
   for (const key of SICK_CONTACT_DAYS) {
     const row=modal.querySelector(`[data-sick-contact="${key}"]`);
     const select=row.querySelector("select");
@@ -11369,6 +12004,7 @@ function editSharedInfo() {
     select.addEventListener("change",updateContact);
     updateContact();
   }
+  updateSharedCounts();
   $("modalForm")._markSaved();
   guardDialogEdits();
 }
