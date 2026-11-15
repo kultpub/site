@@ -3389,10 +3389,159 @@
     font-size: 12px;
   }
 
-  .shared-info-modal #sharedInfoText {
-    min-height: 300px;
-    max-height: 52dvh;
-    margin-top: 8px;
+  /* Allmänt: ett fält per ämne, med rubrik, formateringsknappar och text. */
+  .info-fields {
+    display: grid;
+    gap: 10px;
+  }
+
+  .info-field {
+    position: relative;
+    padding: 10px 12px 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: white;
+    cursor: grab;
+  }
+
+  .info-field-head {
+    display: grid;
+    grid-template-columns: 22px minmax(0, 1fr) auto 28px;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .info-field .info-title {
+    width: 100%;
+    min-width: 0;
+    padding: 8px 10px;
+    border: 1px solid #d0d9c8;
+    border-radius: 6px;
+    background: white;
+    color: #000;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: text;
+  }
+
+  .info-field .shared-info-format {
+    display: flex;
+    gap: 4px;
+    margin: 0;
+  }
+
+  .info-field .info-text {
+    min-height: 3.2em;
+    max-height: 22em;
+    overflow-y: auto;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+    padding: 8px 10px;
+    border: 1px solid #d0d9c8;
+    border-radius: 6px;
+    background: white;
+    color: #000;
+    font-size: 14px;
+    font-weight: 400;
+    cursor: text;
+  }
+
+  .info-field .info-text:focus,
+  .info-field .info-title:focus {
+    outline: 2px solid #9bb8a1;
+    outline-offset: 0;
+  }
+
+  .info-field .info-text ul,
+  .info-field .info-text ol {
+    margin: 0;
+    padding-inline-start: 1.6em;
+  }
+
+  .info-field .info-text ul {
+    list-style: disc;
+  }
+
+  .info-field .info-text ol {
+    list-style: decimal;
+  }
+
+  .info-drag,
+  .info-field .info-remove {
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+  }
+
+  .info-drag {
+    width: 22px;
+    height: 34px;
+    color: #a3ab9f;
+    cursor: grab;
+    touch-action: none;
+  }
+
+  .info-drag:hover,
+  .info-drag:focus-visible {
+    background: #eef3ea;
+    color: var(--green2);
+  }
+
+  .info-drag svg {
+    width: 10px;
+    height: 16px;
+  }
+
+  .info-field .info-remove {
+    width: 28px;
+    height: 28px;
+    color: #8a9489;
+    line-height: 0;
+  }
+
+  .info-field .info-remove:hover,
+  .info-field .info-remove:focus-visible {
+    background: #f4dfd8;
+    color: var(--red);
+  }
+
+  .info-field .info-remove svg {
+    display: block;
+    width: 13px;
+    height: 13px;
+  }
+
+  .info-field.sort-dragging {
+    border-color: transparent;
+  }
+
+  .info-add {
+    margin-top: 12px;
+  }
+
+  .info-empty,
+  .info-note {
+    margin: 10px 0 0;
+  }
+
+  .info-empty[hidden] {
+    display: none;
+  }
+
+  @media (max-width: 760px) {
+    .info-field-head {
+      grid-template-columns: 22px minmax(0, 1fr) 28px;
+    }
+
+    .info-field .shared-info-format {
+      grid-column: 2 / 4;
+      grid-row: 2;
+    }
   }
 
   .sick-contact-list {
@@ -3607,11 +3756,11 @@
     background: white;
   }
 
-  .program-row.program-shift {
+  .sort-shift {
     transition: transform .18s cubic-bezier(.2, .7, .3, 1);
   }
 
-  .program-row.dragging {
+  .sort-dragging {
     z-index: 5;
     border-top-color: transparent;
     border-radius: 8px;
@@ -3620,19 +3769,19 @@
     cursor: grabbing;
   }
 
-  .program-row.program-settle {
+  .sort-settle {
     transition: transform .2s cubic-bezier(.2, .7, .3, 1);
   }
 
-  .program-rows.drag-active,
-  .program-rows.drag-active * {
+  .sort-active,
+  .sort-active * {
     cursor: grabbing !important;
     user-select: none;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .program-row.program-shift,
-    .program-row.program-settle {
+    .sort-shift,
+    .sort-settle {
       transition: none;
     }
   }
@@ -11579,17 +11728,86 @@ function sanitizeSharedInfoHtml(html) {
       return color && content ? `<span style="color:${color}">${content}</span>` : content;
     }
     const allowedTag=tag==="b" ? "strong" : tag==="i" ? "em" : tag;
-    return ["strong","em","div","p","ul","li"].includes(allowedTag)
+    return ["strong","em","div","p","ul","ol","li"].includes(allowedTag)
       ? `<${allowedTag}>${content}</${allowedTag}>` : content;
   };
   return [...template.content.childNodes].map(serialize).join("");
 }
 
-function initSharedInfoEditor(editor,initial) {
-  editor.innerHTML=typeof initial?.html==="string"
-    ? sanitizeSharedInfoHtml(initial.html)
-    : esc(initial?.text || "").replace(/\r\n?|\n/g,"<br>");
-  const buttons=[...modal.querySelectorAll("[data-shared-format]")];
+/* Dra för att flytta (programrader och instruktionsfält): raden lyfts och följer pekaren,
+   övriga rader glider undan. Greppet eller radens kant (utanför fälten) kan användas.
+   Pil upp/ned flyttar raden när greppet har fokus. */
+function makeSortable(container,rowSelector,handleSelector) {
+  const reduceMotion=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let drag=null;
+  container.addEventListener("pointerdown",event=>{
+    const row=event.target.closest(rowSelector);
+    if (!row || event.button>0 || drag) return;
+    if (!event.target.closest(handleSelector) && event.target.closest('input,button,select,textarea,[contenteditable="true"]')) return;
+    event.preventDefault();
+    const list=row.parentElement,rows=[...list.children];
+    const boxes=rows.map(item=>item.getBoundingClientRect());
+    const index=rows.indexOf(row);
+    const step=index<rows.length-1 ? boxes[index+1].top-boxes[index].top : index>0 ? boxes[index].top-boxes[index-1].top : boxes[index].height;
+    // Steget är den lyfta radens egen höjd inklusive mellanrum, så att även fält med olika höjd glider rätt.
+    const ownStep=index<rows.length-1 ? boxes[index+1].top-boxes[index].top : boxes[index].height+(index>0 ? boxes[index].top-boxes[index-1].bottom : 0);
+    drag={row,list,rows,boxes,index,target:index,step:ownStep || step,startY:event.clientY,id:event.pointerId,
+      minY:boxes[0].top-boxes[index].top,maxY:boxes[rows.length-1].bottom-boxes[index].bottom};
+    row.setPointerCapture(event.pointerId);
+    rows.forEach(item=>{if (item!==row) item.classList.add("sort-shift");});
+    row.classList.add("sort-dragging");list.classList.add("sort-active");
+  });
+  container.addEventListener("pointermove",event=>{
+    if (!drag || event.pointerId!==drag.id) return;
+    const dy=Math.max(drag.minY-12,Math.min(drag.maxY+12,event.clientY-drag.startY));
+    drag.row.style.transform=`translateY(${dy}px) scale(1.01)`;
+    const center=drag.boxes[drag.index].top+drag.boxes[drag.index].height/2+dy;
+    let target=0;
+    drag.rows.forEach((item,i)=>{if (i!==drag.index && drag.boxes[i].top+drag.boxes[i].height/2<center) target++;});
+    drag.target=target;
+    drag.rows.forEach((item,i)=>{
+      if (item===drag.row) return;
+      const shift=i>drag.index && i<=target ? -drag.step : i<drag.index && i>=target ? drag.step : 0;
+      item.style.transform=shift?`translateY(${shift}px)`:"";
+    });
+  });
+  const endDrag=event=>{
+    if (!drag || event.pointerId!==drag.id) return;
+    const {row,list,rows,target,index}=drag;
+    drag=null;
+    const before=row.getBoundingClientRect().top;
+    rows.forEach(item=>{item.classList.remove("sort-shift");item.style.transform="";});
+    if (target!==index) {
+      const others=rows.filter(item=>item!==row);
+      if (target>=others.length) list.append(row); else list.insertBefore(row,others[target]);
+    }
+    // Låt den släppta raden glida sista biten in på sin nya plats.
+    const after=row.getBoundingClientRect().top;
+    row.classList.remove("sort-dragging");
+    if (!reduceMotion && Math.abs(before-after)>1) {
+      row.style.transform=`translateY(${before-after}px)`;
+      row.getBoundingClientRect();
+      row.classList.add("sort-settle");
+      row.style.transform="";
+      row.addEventListener("transitionend",()=>row.classList.remove("sort-settle"),{once:true});
+    }
+    list.classList.remove("sort-active");
+    row.querySelector(handleSelector)?.focus({preventScroll:true});
+  };
+  container.addEventListener("pointerup",endDrag);
+  container.addEventListener("pointercancel",endDrag);
+  container.addEventListener("keydown",event=>{
+    const handle=event.target.closest(handleSelector);
+    if (!handle || !["ArrowUp","ArrowDown"].includes(event.key)) return;
+    event.preventDefault();
+    const row=handle.closest(rowSelector);
+    if (event.key==="ArrowUp" && row.previousElementSibling) row.previousElementSibling.before(row);
+    if (event.key==="ArrowDown" && row.nextElementSibling) row.nextElementSibling.after(row);
+    handle.focus();
+  });
+}
+
+function initRichEditor(editor,buttons) {
   let lastRange=null;
   const selection=window.getSelection();
   const editorRange=()=>{
@@ -11634,6 +11852,137 @@ function initSharedInfoEditor(editor,initial) {
       syncButtons();
     });
   }
+}
+
+/* ---------- Allmänt: ett fält per ämne ----------
+   sharedInfo.sections = [{id,title,html,text}] i den ordning fälten har i modalen.
+   sharedInfo.html/text byggs av fälten (rubrik i fetstil, tom rad mellan fälten), så att
+   mobilen visar dem som en sammanhängande text. Supersöket i mobilen använder sections. */
+function infoFieldHTML(section={}) {
+  return `<div class="info-field" data-info-field="${esc(safeId(section.id)?section.id:uid())}">
+    <div class="info-field-head">
+      <button type="button" class="info-drag" aria-label="Flytta fältet (dra, eller använd pil upp/ned)" title="Dra för att flytta"><svg viewBox="0 0 10 16" aria-hidden="true"><g fill="currentColor"><circle cx="3" cy="3" r="1.4"/><circle cx="7" cy="3" r="1.4"/><circle cx="3" cy="8" r="1.4"/><circle cx="7" cy="8" r="1.4"/><circle cx="3" cy="13" r="1.4"/><circle cx="7" cy="13" r="1.4"/></g></svg></button>
+      <input type="text" class="info-title" aria-label="Rubrik" placeholder="Rubrik, t.ex. Vid sjukdom" maxlength="120" value="${esc(section.title || "")}">
+      <div class="shared-info-format" role="group" aria-label="Textformatering">
+        <button type="button" class="btn small" data-shared-format="insertUnorderedList" aria-pressed="false" title="Punktlista">• Lista</button>
+        <button type="button" class="btn small" data-shared-format="insertOrderedList" aria-pressed="false" title="Numrerad lista">1. Lista</button>
+        <button type="button" class="btn small" data-shared-format="bold" aria-pressed="false" title="Fet">Fet</button>
+        <button type="button" class="btn small" data-shared-format="italic" aria-pressed="false" title="Kursiv">Kursiv</button>
+        <button type="button" class="btn small" data-shared-format="foreColor" aria-pressed="false" title="Röd text">Röd</button>
+      </div>
+      <button type="button" class="remove info-remove" data-info-edit="remove" aria-label="Ta bort fältet" title="Ta bort fältet"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="m3 3 6 6M9 3 3 9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.6"/></svg></button>
+    </div>
+    <div class="info-text" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Text">${section.html ? sanitizeSharedInfoHtml(section.html) : ""}</div>
+  </div>`;
+}
+
+// Befintlig text utan fält delas upp vid tomma rader; första raden i varje del blir rubrik.
+function splitSharedInfo(initial) {
+  const box=document.createElement("div");
+  box.innerHTML=typeof initial?.html==="string" && initial.html.trim()
+    ? sanitizeSharedInfoHtml(initial.html)
+    : esc(initial?.text || "").replace(/\r\n?|\n/g,"<br>");
+  const lines=[];let current=null;
+  const plain=html=>html.replace(/<[^>]*>/g,"").trim();
+  const end=()=>{if (current!==null) {lines.push(plain(current)?{kind:"line",html:current}:{kind:"blank"});current=null;}};
+  const lineBreak=()=>{if (current===null || !plain(current)) {end();lines.push({kind:"blank"});} else end();};
+  const openTag=el=>{const html=el.cloneNode(false).outerHTML;return html.slice(0,html.lastIndexOf("</"));};
+  const walk=(parent,wrap)=>{
+    for (const node of parent.childNodes) {
+      if (node.nodeType===Node.TEXT_NODE) {
+        node.data.split("\n").forEach((part,i)=>{
+          if (i>0) lineBreak();
+          if (part) current=(current ?? "")+wrap.map(w=>w[0]).join("")+esc(part)+wrap.map(w=>w[1]).reverse().join("");
+        });
+        continue;
+      }
+      if (node.nodeType!==Node.ELEMENT_NODE) continue;
+      const tag=node.localName;
+      if (tag==="br") {lineBreak();continue;}
+      if (tag==="ul" || tag==="ol") {
+        // Listor följer med oförändrade, numrerade som punktlistor.
+        end();
+        if (node.textContent.trim()) lines.push({kind:"list",html:`<${tag}>${node.innerHTML}</${tag}>`});
+        continue;
+      }
+      if (tag==="div" || tag==="p" || tag==="li") {
+        end();
+        if (!node.textContent.trim()) {lines.push({kind:"blank"});continue;}
+        walk(node,wrap);end();continue;
+      }
+      walk(node,[...wrap,[openTag(node),`</${tag}>`]]);
+    }
+  };
+  walk(box,[]);end();
+  const sections=[];let part=[];
+  for (const line of [...lines,{kind:"blank"}]) {
+    if (line.kind==="blank") {if (part.length) sections.push(part);part=[];}
+    else part.push(line);
+  }
+  return sections.map(section=>{
+    const first=section[0].kind==="line" ? section.shift() : null;
+    let html="",list=false;
+    for (const line of section) {
+      if (line.kind==="li" && !list) {html+="<ul>";list=true;}
+      if (line.kind!=="li" && list) {html+="</ul>";list=false;}
+      html+=line.kind==="li" ? `<li>${line.html}</li>` : line.kind==="list" ? line.html : `<div>${line.html}</div>`;
+    }
+    if (list) html+="</ul>";
+    const holder=document.createElement("div");
+    holder.innerHTML=first ? first.html : "";
+    return {id:uid(),title:holder.textContent.trim(),html};
+  });
+}
+
+function updateInfoEmpty() {
+  const empty=modal.querySelector(".info-empty");
+  if (empty) empty.hidden=Boolean(modal.querySelector(".info-field"));
+}
+
+function addInfoField(section={},focus=true) {
+  const list=modal.querySelector(".info-fields");
+  list.insertAdjacentHTML("beforeend",infoFieldHTML(section));
+  const field=list.lastElementChild;
+  initRichEditor(field.querySelector(".info-text"),[...field.querySelectorAll("[data-shared-format]")]);
+  updateInfoEmpty();
+  if (focus) field.querySelector(".info-title").focus();
+  return field;
+}
+
+function initInfoFields(initial) {
+  const sections=Array.isArray(initial?.sections) ? initial.sections : splitSharedInfo(initial);
+  sections.forEach(section=>addInfoField(section,false));
+  updateInfoEmpty();
+  const panel=modal.querySelector('[data-shared-panel="general"]');
+  makeSortable(panel,".info-field",".info-drag");
+  panel.addEventListener("click",event=>{
+    const control=event.target.closest("[data-info-edit]");
+    if (!control) return;
+    if (control.dataset.infoEdit==="add") addInfoField();
+    if (control.dataset.infoEdit==="remove") {control.closest(".info-field").remove();updateInfoEmpty();}
+  });
+}
+
+function readInfoFields() {
+  const sections=[];
+  for (const field of modal.querySelectorAll(".info-field")) {
+    const title=field.querySelector(".info-title").value.trim();
+    const editor=field.querySelector(".info-text");
+    const text=editor.innerText.trim();
+    if (!title && !text) continue;
+    if (!title) {
+      showSharedTab("general");
+      field.scrollIntoView({block:"nearest"});
+      field.querySelector(".info-title").focus();
+      throw Error(`Allmänt: ange en rubrik för fältet som börjar med ”${text.slice(0,40)}${text.length>40?"…":""}”.`);
+    }
+    sections.push({id:safeId(field.dataset.infoField)?field.dataset.infoField:uid(),title,html:text?sanitizeSharedInfoHtml(editor.innerHTML):"",text});
+  }
+  return {
+    sections,
+    html:sections.map(section=>`<div><strong>${esc(section.title)}</strong></div>${section.html?`<div>${section.html}</div>`:""}`).join("<div><br></div>"),
+    text:sections.map(section=>section.title+(section.text?"\n"+section.text:"")).join("\n\n")
+  };
 }
 
 /* Instruktioner till alla: tre flikar – Allmänt, Sjukanmälan och Publikt program. */
@@ -11801,73 +12150,7 @@ function initProgramEditor() {
     row.querySelector(".program-title").focus();
     if (items.length>1) toast(`${items.length} programpunkter är inklistrade.`);
   });
-  // Flytta rader: raden lyfts och följer pekaren, övriga rader glider undan.
-  // Greppet eller radens kant (utanför fälten) kan användas. Pil upp/ned fungerar när greppet har fokus.
-  const reduceMotion=matchMedia("(prefers-reduced-motion: reduce)").matches;
-  let drag=null;
-  panel.addEventListener("pointerdown",event=>{
-    const row=event.target.closest(".program-row");
-    if (!row || event.button>0 || drag) return;
-    if (!event.target.closest(".program-drag") && event.target.closest("input,button")) return;
-    event.preventDefault();
-    const list=row.parentElement,rows=[...list.children];
-    const boxes=rows.map(item=>item.getBoundingClientRect());
-    const index=rows.indexOf(row);
-    const step=index<rows.length-1 ? boxes[index+1].top-boxes[index].top : index>0 ? boxes[index].top-boxes[index-1].top : boxes[index].height;
-    drag={row,list,rows,boxes,index,target:index,step,startY:event.clientY,id:event.pointerId,
-      minY:boxes[0].top-boxes[index].top,maxY:boxes[rows.length-1].top-boxes[index].top};
-    row.setPointerCapture(event.pointerId);
-    rows.forEach(item=>{if (item!==row) item.classList.add("program-shift");});
-    row.classList.add("dragging");list.classList.add("drag-active");
-  });
-  panel.addEventListener("pointermove",event=>{
-    if (!drag || event.pointerId!==drag.id) return;
-    const dy=Math.max(drag.minY-12,Math.min(drag.maxY+12,event.clientY-drag.startY));
-    drag.row.style.transform=`translateY(${dy}px) scale(1.01)`;
-    const center=drag.boxes[drag.index].top+drag.boxes[drag.index].height/2+dy;
-    let target=0;
-    drag.rows.forEach((item,i)=>{if (i!==drag.index && drag.boxes[i].top+drag.boxes[i].height/2<center) target++;});
-    drag.target=target;
-    drag.rows.forEach((item,i)=>{
-      if (item===drag.row) return;
-      const shift=i>drag.index && i<=target ? -drag.step : i<drag.index && i>=target ? drag.step : 0;
-      item.style.transform=shift?`translateY(${shift}px)`:"";
-    });
-  });
-  const endDrag=event=>{
-    if (!drag || event.pointerId!==drag.id) return;
-    const {row,list,rows,target,index}=drag;
-    drag=null;
-    const before=row.getBoundingClientRect().top;
-    rows.forEach(item=>{item.classList.remove("program-shift");item.style.transform="";});
-    if (target!==index) {
-      const others=rows.filter(item=>item!==row);
-      if (target>=others.length) list.append(row); else list.insertBefore(row,others[target]);
-    }
-    // Låt den släppta raden glida sista biten in på sin nya plats.
-    const after=row.getBoundingClientRect().top;
-    row.classList.remove("dragging");
-    if (!reduceMotion && Math.abs(before-after)>1) {
-      row.style.transform=`translateY(${before-after}px)`;
-      row.getBoundingClientRect();
-      row.classList.add("program-settle");
-      row.style.transform="";
-      row.addEventListener("transitionend",()=>row.classList.remove("program-settle"),{once:true});
-    }
-    list.classList.remove("drag-active");
-    row.querySelector(".program-drag").focus({preventScroll:true});
-  };
-  panel.addEventListener("pointerup",endDrag);
-  panel.addEventListener("pointercancel",endDrag);
-  panel.addEventListener("keydown",event=>{
-    const handle=event.target.closest(".program-drag");
-    if (!handle || !["ArrowUp","ArrowDown"].includes(event.key)) return;
-    event.preventDefault();
-    const row=handle.closest(".program-row");
-    if (event.key==="ArrowUp" && row.previousElementSibling) row.previousElementSibling.before(row);
-    if (event.key==="ArrowDown" && row.nextElementSibling) row.nextElementSibling.after(row);
-    handle.focus();
-  });
+  makeSortable(panel,".program-row",".program-drag");
   panel.addEventListener("click",event=>{
     const tab=event.target.closest("[data-program-tab]");
     if (tab) {showProgramDay(Number(tab.dataset.programTab));return;}
@@ -11934,16 +12217,11 @@ function editSharedInfo() {
       <button type="button" role="tab" class="pass-day-tab" id="shared-tab-program" aria-controls="shared-panel-program" aria-selected="false" data-shared-tab="program">Publikt program<span class="shared-tab-count" data-shared-count="program"></span></button>
     </div>
     <div class="shared-panel" role="tabpanel" id="shared-panel-general" aria-labelledby="shared-tab-general" data-shared-panel="general">
-      <p class="hint shared-panel-intro">Allmän information som gäller alla medarbetare under Julstöket.</p>
-      <span id="sharedInfoLabel" class="sr-only">Instruktioner till alla medarbetare</span>
-      <div class="shared-info-format" role="group" aria-label="Textformatering">
-        <button type="button" class="btn small" data-shared-format="insertUnorderedList" aria-pressed="false">• Punktlista</button>
-        <button type="button" class="btn small" data-shared-format="bold" aria-pressed="false">Fet</button>
-        <button type="button" class="btn small" data-shared-format="italic" aria-pressed="false">Kursiv</button>
-        <button type="button" class="btn small" data-shared-format="foreColor" aria-pressed="false">Röd text</button>
-      </div>
-      <div id="sharedInfoText" contenteditable="true" role="textbox" aria-multiline="true" aria-labelledby="sharedInfoLabel"></div>
-      <p class="hint">Webbadresser och e-postadresser blir klickbara i mobilversionen.</p>
+      <p class="hint shared-panel-intro">Använd ett textfält för varje instruktion. Varje fält blir sökbart för sig i mobilversionen.</p>
+      <div class="info-fields"></div>
+      <p class="hint info-empty">Inga fält ännu.</p>
+      <button type="button" class="btn small info-add" data-info-edit="add">+ Lägg till fält</button>
+      <p class="hint info-note">I mobilversionen visas fälten som en sammanhängande text. Webbadresser och e-postadresser blir klickbara.</p>
     </div>
     <div class="shared-panel" role="tabpanel" id="shared-panel-contacts" aria-labelledby="shared-tab-contacts" data-shared-panel="contacts" hidden>
       <p class="hint shared-panel-intro">Vem ringer man om man blir sjuk? Telefonnumret hämtas automatiskt.</p>
@@ -11957,6 +12235,7 @@ function editSharedInfo() {
       if (plan.year!==year) throw Error("Planeringsåret har ändrats. Öppna Instruktioner till alla igen.");
       const current=plan.sharedInfo;
       if ((current?.text || "")!==(initial?.text || "") || (current?.html || "")!==(initial?.html || "") ||
+        JSON.stringify(current?.sections || null)!==JSON.stringify(initial?.sections || null) ||
         JSON.stringify(current?.program || null)!==JSON.stringify(initial?.program || null) ||
         SICK_CONTACT_DAYS.some(key=>
         (current?.sickContactPersonIds?.[key] || null)!==(initial?.sickContactPersonIds?.[key] || null))) {
@@ -11974,16 +12253,14 @@ function editSharedInfo() {
         sickContactPersonIds[key]=personId || null;
       }
       showSharedTab(activeSharedTab,false);
-      const editor=$("sharedInfoText");
-      const text=editor.innerText.trim();
-      const html=text ? sanitizeSharedInfoHtml(editor.innerHTML) : "";
+      const {sections,html,text}=readInfoFields();
       const program=readProgram();
-      await commit(data=>{data.sharedInfo={text,html,sickContactPersonIds,program};},"Instruktioner till alla är sparade.");
+      await commit(data=>{data.sharedInfo={text,html,sections,sickContactPersonIds,program};},"Instruktioner till alla är sparade.");
       closeDialog();
     });
 
   modal.classList.add("shared-info-modal");
-  initSharedInfoEditor($("sharedInfoText"),initial);
+  initInfoFields(initial);
   initSharedTabs();
   initProgramEditor();
   for (const key of SICK_CONTACT_DAYS) {
