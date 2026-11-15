@@ -591,7 +591,19 @@ function searchData(){
     .sort((a,b)=>String(a.title||"").localeCompare(String(b.title||""),"sv"));
   const places=(plan.places||[]).filter(p=>!isGeneral(p)&&placeIds.has(p.id))
     .sort((a,b)=>a.name.localeCompare(b.name,"sv"));
-  return {words,byPerson,byActivity,people,activities,places};
+  // Programpunkter söks bara på de dagar personen arbetar (alla dagar om inga arbetsdagar finns registrerade).
+  const me=currentPerson();
+  const mine=me?workDays(me):[];
+  const program=(mine.length?mine:[0,1,2]).flatMap(day=>programItems(day).filter(item=>match(item.title)).map(item=>({...item,day})));
+  const sick=isSickQuery(words);
+  const instructions=instructionSections().filter(section=>match(section.text))
+    .map(section=>({...section,sick:isSickSection(section)}));
+  const sickContacts=sick||instructions.some(section=>section.sick)?sickContactDays(me):[];
+  return {words,byPerson,byActivity,people,activities,places,program,instructions,sickContacts};
+}
+function searchProgramRow(item){
+  const time=dotTime(item.start)+(item.end?"–"+dotTime(item.end):"");
+  return `<div class="rowlink program-hit"><div><strong>${esc(DAY_NAMES[item.day])}</strong>, ${esc(item.title)} kl.&nbsp;${esc(time)}</div></div>`;
 }
 // Fasta kolumner: dag, klockslag och (för personer) aktivitet hamnar alltid på samma plats.
 const SEARCH_LINES_STYLE="margin-top:6px;font-size:12px;line-height:1.55;color:var(--muted);font-variant-numeric:tabular-nums";
@@ -632,7 +644,7 @@ function renderSharedInstruction(text,html){
   // Tolka formatet i en inaktiv mall och bygg upp en ny HTML-sträng med godkända element.
   const template=document.createElement("template");
   template.innerHTML=html;
-  const blocks=new Set(["div","p","ul","li"]);
+  const blocks=new Set(["div","p","ul","ol","li"]);
   const ignored=new Set(["script","style","template","iframe","object","noscript"]);
   let result="",hasText=false,run=[];
   const flush=()=>{
@@ -691,6 +703,92 @@ function sickContactsFor(shifts){
   const contacts=state.plan?.sharedInfo?.sickContactPersonIds;
   return ["friday","saturday","sunday"].map((key,day)=>shifts.some(shift=>shift.day===day)
     ? {person:namedPerson(contacts?.[key])} : null);
+}
+
+// ---- Supersök i Instruktioner till alla ----
+// Instruktionen delas i avsnitt: rader som skiljs åt av en tom rad. Ett avsnitt visas
+// i sin helhet om sökorden finns i det. Formatering (fet, röd, punktlistor, länkar) behålls.
+function instructionSections(){
+  // Instruktioner sparade som fält i planeringsverktyget: varje fält är en egen sökträff.
+  const fields=state.plan?.sharedInfo?.sections;
+  if(Array.isArray(fields)){
+    return fields.filter(field=>field&&String(field.title||"").trim()).map(field=>{
+      const title=String(field.title).trim(),text=typeof field.text==="string"?field.text:"";
+      const body=text.trim()?renderSharedInstruction(text,typeof field.html==="string"?field.html:""):"";
+      return {html:`<div><strong>${esc(title)}</strong></div>${body?`<div>${body}</div>`:""}`,text:title+"\n"+text};
+    });
+  }
+  // Äldre instruktion i ett enda textfält: dela upp vid tomma rader.
+  const html=renderSharedInstruction(sharedInstructionText(),sharedInstructionHtml());
+  if(!html)return [];
+  const box=document.createElement("div");box.innerHTML=html;
+  const lines=[];let current=null;
+  const end=()=>{if(current!==null){lines.push(current.replace(/<[^>]*>/g,"").trim()?{kind:"line",html:current}:{kind:"blank"});current=null;}};
+  const blank=()=>{end();lines.push({kind:"blank"});};
+  const lineBreak=()=>{if(current===null||!current.replace(/<[^>]*>/g,"").trim())blank();else end();};
+  // Formatering (fet, färg, länk) kan omsluta flera rader. Varje textbit får därför sina
+  // omslutande taggar för sig, så att raderna kan delas upp utan att formateringen tappas.
+  const openTag=el=>{const html=el.cloneNode(false).outerHTML;return html.slice(0,html.lastIndexOf("</"));};
+  const walk=(parent,wrap)=>{
+    for(const node of parent.childNodes){
+      if(node.nodeType===Node.TEXT_NODE){
+        node.data.split("\n").forEach((part,i)=>{
+          if(i>0)lineBreak();
+          if(part)current=(current??"")+wrap.map(w=>w[0]).join("")+esc(part)+wrap.map(w=>w[1]).reverse().join("");
+        });
+        continue;
+      }
+      if(node.nodeType!==Node.ELEMENT_NODE)continue;
+      const tag=node.localName;
+      if(tag==="br"){lineBreak();continue;}
+      if(tag==="ul"||tag==="ol"){
+        end();
+        if(node.textContent.trim())lines.push({kind:"list",html:wrap.map(w=>w[0]).join("")+`<${tag}>${node.innerHTML}</${tag}>`+wrap.map(w=>w[1]).reverse().join("")});
+        continue;
+      }
+      if(tag==="div"||tag==="p"||tag==="li"){
+        end();
+        if(!node.textContent.trim()){lines.push({kind:"blank"});continue;}
+        walk(node,wrap);end();continue;
+      }
+      walk(node,[...wrap,[openTag(node),`</${tag}>`]]);
+    }
+  };
+  walk(box,[]);end();
+  const sections=[];let part=[];
+  for(const line of [...lines,{kind:"blank"}]){
+    if(line.kind==="blank"){if(part.length)sections.push(part);part=[];}
+    else part.push(line);
+  }
+  return sections.map(section=>{
+    let out="",list=false;
+    for(const line of section){
+      if(line.kind==="li"&&!list){out+="<ul>";list=true;}
+      if(line.kind!=="li"&&list){out+="</ul>";list=false;}
+      out+=line.kind==="li"?`<li>${line.html}</li>`:line.kind==="list"?line.html:`<div>${line.html}</div>`;
+    }
+    if(list)out+="</ul>";
+    const tmp=document.createElement("div");tmp.innerHTML=out;
+    return {html:out,text:tmp.textContent};
+  });
+}
+// Sökningar som "sjuk", "sjukdom", "sjukanmälan" räknas som frågor om sjukdom.
+const isSickQuery=words=>words.some(w=>w.startsWith("sjuk"));
+// Ett avsnitt som handlar om sjukdom får alltid kontaktpersonens telefonnummer direkt under sig.
+const isSickSection=section=>/sjuk/.test(norm(section.text));
+// Kontakt vid sjukdom: dagens kontakt om man arbetar idag, annars kontakterna för de
+// kommande dagar man arbetar (alla dagar med kontakt om inga arbetsdagar finns).
+function sickContactDays(person){
+  const ids=state.plan?.sharedInfo?.sickContactPersonIds||{};
+  const today=dayIndexNow();
+  let days=person?workDays(person):[];
+  if(today>=0)days=days.includes(today)?[today]:days.filter(day=>day>today);
+  if(!days.length&&!(person&&workDays(person).length))days=today>=0?[today]:[0,1,2];
+  return days.map(day=>({day,person:namedPerson(ids[PROGRAM_KEYS[day]])})).filter(item=>item.person||days.length===1);
+}
+function searchSickContactRow({day,person}){
+  const label=day===dayIndexNow()?`Idag, ${DAY_NAMES[day].toLocaleLowerCase("sv-SE")}`:DAY_NAMES[day];
+  return `<div class="rowlink sick-contact"><div><strong>Ring vid sjukdom – ${esc(label)}</strong><small>${person?esc(person.name):"Ingen kontaktperson angiven."}</small></div>${person?phoneLink(person)||'<span class="smallmuted">Telefonnummer saknas.</span>':""}</div>`;
 }
 
 // ---- Publikt program ----
@@ -896,15 +994,21 @@ function renderSearch(){
   const group=(title,items,rows,plain)=>items.length?`<h3 class="inline-title" style="margin:20px 0 9px">${title} (${items.length})</h3>${plain?rows:`<div class="rows">${rows}</div>`}`:"";
   let body;
   if(!data.words.length){
-    body=`<div class="empty">${icon("search","lg")}<p>Skriv för att söka bland personer, aktiviteter och platser.</p></div>`;
-  }else if(!data.people.length&&!data.places.length&&!data.activities.length){
+    body=`<div class="empty">${icon("search","lg")}<p>Skriv för att söka bland personer, aktiviteter, platser, instruktioner och det publika programmet.</p></div>`;
+  }else if(!data.people.length&&!data.places.length&&!data.activities.length&&!data.program.length&&!data.instructions.length&&!data.sickContacts.length){
     body=`<div class="empty"><h3>Inga träffar</h3><p>Prova ett annat sökord.</p></div>`;
   }else{
     body=group("Personer",data.people,data.people.map(p=>searchPersonRow(p,data)).join(""))
       +group("Aktiviteter",data.activities,data.activities.map(a=>searchActivityRow(a,data)).join(""))
-      +group("Platser",data.places,data.places.map(p=>placeCard(p,"search")).join(""),true);
+      +group("Platser",data.places,data.places.map(p=>placeCard(p,"search")).join(""),true)
+      +group("Instruktioner till alla",data.instructions,data.instructions.map(section=>`<div class="person-hero shared-info-text search-instruction">${section.html}</div>`
+          +(section.sick&&data.sickContacts.length?`<div class="rows search-sick-contacts">${data.sickContacts.map(searchSickContactRow).join("")}</div>`:"")).join("")
+        +(data.instructions.length?`<button type="button" class="context-back search-instruction-link" data-action="view" data-view="info">Visa hela instruktionen ${icon("chevron","sm")}</button>`:""),true)
+      // Sökning på sjukdom utan träff i instruktionen: visa ändå vem man ringer.
+      +(data.sickContacts.length&&!data.instructions.some(section=>section.sick)?`<h3 class="inline-title" style="margin:20px 0 9px">Vem ringer jag om jag blir sjuk?</h3><div class="rows">${data.sickContacts.map(searchSickContactRow).join("")}</div>`:"")
+      +group("Publikt program",data.program,data.program.map(searchProgramRow).join(""));
   }
-  return `${renderAlert()}<div class="heading"><h2>Sök</h2></div><label class="search">${icon("search")}<input id="searchInput" type="search" style="-webkit-appearance:none;appearance:none" placeholder="Person, plats eller aktivitet" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" value="${esc(state.query)}" aria-label="Sök"></label>${body}`;
+  return `${renderAlert()}<div class="heading"><h2>Sök</h2></div><label class="search">${icon("search")}<input id="searchInput" type="search" style="-webkit-appearance:none;appearance:none" placeholder="Sök person, plats, aktivitet etc..." autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" value="${esc(state.query)}" aria-label="Sök"></label>${body}`;
 }
 // Delningslänken är alltid appens publicerade adress, oavsett var sidan öppnats.
 const SHARE_URL="https://kultpub.github.io/site/mitt-julstok/";
@@ -958,7 +1062,7 @@ function renderSeasonGate(){
 }
 function render(){const preserved=[...document.querySelectorAll(".vg-scroll")].map(el=>({id:el.closest("[data-pass-day]")?.id,left:el.scrollLeft}));let content="";if(state.seasonMode!=="active"&&!state.demo){content=renderSeasonGate();}else if(!state.plan){content=state.status==="error"?`<main class="shell"><div class="content"><h2>Mitt Julstök</h2><div class="notice">${esc(state.error||"Kunde inte hämta planen.")}</div><div class="actions"><button class="action-btn" data-action="retry">Försök igen</button><button class="action-btn outline" data-action="demo">Visa exempel</button></div></div></main>`:`<div class="boot"><div class="boot-logo"><img src="icon-192.png" alt=""></div><h1>Mitt Julstök</h1><p>Hämtar Julstökets uppgifter…</p></div>`;}else if(!currentPerson()){content=renderNameSelect();}else{content=shell(state.view==="people"?renderPeople():state.view==="places"?renderPlaces():state.view==="share"?renderShare():state.view==="search"?renderSearch():state.view==="info"?renderSharedInfo():renderHome());}$("app").innerHTML=content;document.body.style.touchAction=swipeAllowed()?"pan-y pinch-zoom":"";initializeGantt();for(const saved of preserved){if(!saved.id)continue;const target=document.getElementById(saved.id)?.querySelector(".vg-scroll");if(target)target.scrollLeft=saved.left;}if(state.view==="share"&&currentPerson()&&shareReady()&&$("qrCanvas")){try{window.JulQR?.draw($("qrCanvas"),sharedUrl());}catch(error){$("qrWrap").innerHTML=`<p class="error-message">QR-koden kunde inte skapas.</p>`;}}}
 function focusRender(id){const el=$(id),pos=el?.selectionStart??null;render();const target=$(id);if(target){target.focus();if(pos!==null&&target.setSelectionRange)try{target.setSelectionRange(pos,pos);}catch{}}}
-function exampleData(){const people=[{id:"demo-amanda",name:"Amanda (exempel)",phone:"070-123 45 67",availability:[{day:0,start:"15:00",end:"20:00"},{day:1,start:"09:00",end:"18:00"},{day:2,start:"10:00",end:"14:00"}]},{id:"demo-sara",name:"Sara (exempel)",phone:"070-222 11 00",availability:[{day:1,start:"10:00",end:"18:00"}]},{id:"demo-ludvig",name:"Ludvig (exempel)",phone:"070-333 22 11",availability:[{day:1,start:"11:00",end:"18:00"}]}],places=[{id:"demo-gate",name:"Gröna grinden",description:"Entréområdet (exempel)",mapsUrl:""},{id:"demo-shop",name:"Vita huset",description:"Museibutiken (exempel)",mapsUrl:""},{id:"demo-square",name:"Torget",description:"",mapsUrl:""}],activities=[{id:"demo-a1",title:"Entrékassor",placeId:"demo-gate",notes:"Välkomna besökarna och kontrollera biljetter.",dayNotes:{},staffingPattern:{shifts:[]}},{id:"demo-a2",title:"Julbutiken",placeId:"demo-shop",notes:"Kontrollera växelkassan vid passets början.",dayNotes:{1:"På lördagen är det extra mycket besökare."},staffingPattern:{shifts:[{id:"demo-source",kind:"ordinary",day:1,breaks:[{id:"demo-pause",start:"13:00",end:"13:30"}]},{id:"demo-rel-source",kind:"relief",day:1,breaks:[],reliefPeriods:[{breakId:"demo-pause",start:"13:00",end:"13:30"}]}]}},{id:"demo-a3",title:"Glöggförsäljning",placeId:"demo-square",notes:"Se till att glöggen hålls varm.",dayNotes:{},staffingPattern:{shifts:[]}}],assignments=[{id:"demo-s1",activityId:"demo-a1",personId:"demo-amanda",day:0,start:"15:00",end:"20:00",kind:"ordinary",breaks:[]},{id:"demo-s2",activityId:"demo-a1",personId:"demo-amanda",day:1,start:"09:00",end:"11:00",kind:"ordinary",breaks:[]},{id:"demo-s3",activityId:"demo-a2",personId:"demo-amanda",day:1,start:"11:00",end:"15:00",kind:"ordinary",breaks:[{id:"demo-pause",start:"13:00",end:"13:30",type:"Paus"}],patternShiftId:"demo-source"},{id:"demo-s4",activityId:"demo-a3",personId:"demo-amanda",day:1,start:"15:30",end:"18:00",kind:"ordinary",breaks:[]},{id:"demo-s5",activityId:"demo-a2",personId:"demo-ludvig",day:1,start:"13:00",end:"13:30",kind:"relief",breaks:[],patternShiftId:"demo-rel-source"},{id:"demo-s6",activityId:"demo-a2",personId:"demo-sara",day:1,start:"11:00",end:"15:00",kind:"ordinary",breaks:[]},{id:"demo-s7",activityId:"demo-a1",personId:"demo-amanda",day:2,start:"10:00",end:"14:00",kind:"ordinary",breaks:[]}];const sharedInfo={text:"",program:{friday:[{id:"demo-p1",start:"16:00",end:"16:30",title:"Jakthornen (exempel)"},{id:"demo-p2",start:"17:00",end:"19:30",title:"Jazz (exempel)"},{id:"demo-p3",start:"19:30",end:"19:50",title:"Luciatåg (exempel)"}],saturday:[{id:"demo-p4",start:"11:00",end:"14:00",title:"Musik med Tomten och Bocken (exempel)"},{id:"demo-p5",start:"12:00",end:"",title:"Dans kring granen (exempel)"},{id:"demo-p6",start:"13:30",end:"14:00",title:"Gospelkör (exempel)"}],sunday:[{id:"demo-p7",start:"12:00",end:"18:00",title:"Träffa tomten och hans familj (exempel)"},{id:"demo-p8",start:"17:30",end:"17:50",title:"Luciatåg (exempel)"}]}};return {schemaVersion:1,year:state.year,revision:1,places,people,activities,assignments,sharedInfo};}
+function exampleData(){const people=[{id:"demo-amanda",name:"Amanda (exempel)",phone:"070-123 45 67",availability:[{day:0,start:"15:00",end:"20:00"},{day:1,start:"09:00",end:"18:00"},{day:2,start:"10:00",end:"14:00"}]},{id:"demo-sara",name:"Sara (exempel)",phone:"070-222 11 00",availability:[{day:1,start:"10:00",end:"18:00"}]},{id:"demo-ludvig",name:"Ludvig (exempel)",phone:"070-333 22 11",availability:[{day:1,start:"11:00",end:"18:00"}]}],places=[{id:"demo-gate",name:"Gröna grinden",description:"Entréområdet (exempel)",mapsUrl:""},{id:"demo-shop",name:"Vita huset",description:"Museibutiken (exempel)",mapsUrl:""},{id:"demo-square",name:"Torget",description:"",mapsUrl:""}],activities=[{id:"demo-a1",title:"Entrékassor",placeId:"demo-gate",notes:"Välkomna besökarna och kontrollera biljetter.",dayNotes:{},staffingPattern:{shifts:[]}},{id:"demo-a2",title:"Julbutiken",placeId:"demo-shop",notes:"Kontrollera växelkassan vid passets början.",dayNotes:{1:"På lördagen är det extra mycket besökare."},staffingPattern:{shifts:[{id:"demo-source",kind:"ordinary",day:1,breaks:[{id:"demo-pause",start:"13:00",end:"13:30"}]},{id:"demo-rel-source",kind:"relief",day:1,breaks:[],reliefPeriods:[{breakId:"demo-pause",start:"13:00",end:"13:30"}]}]}},{id:"demo-a3",title:"Glöggförsäljning",placeId:"demo-square",notes:"Se till att glöggen hålls varm.",dayNotes:{},staffingPattern:{shifts:[]}}],assignments=[{id:"demo-s1",activityId:"demo-a1",personId:"demo-amanda",day:0,start:"15:00",end:"20:00",kind:"ordinary",breaks:[]},{id:"demo-s2",activityId:"demo-a1",personId:"demo-amanda",day:1,start:"09:00",end:"11:00",kind:"ordinary",breaks:[]},{id:"demo-s3",activityId:"demo-a2",personId:"demo-amanda",day:1,start:"11:00",end:"15:00",kind:"ordinary",breaks:[{id:"demo-pause",start:"13:00",end:"13:30",type:"Paus"}],patternShiftId:"demo-source"},{id:"demo-s4",activityId:"demo-a3",personId:"demo-amanda",day:1,start:"15:30",end:"18:00",kind:"ordinary",breaks:[]},{id:"demo-s5",activityId:"demo-a2",personId:"demo-ludvig",day:1,start:"13:00",end:"13:30",kind:"relief",breaks:[],patternShiftId:"demo-rel-source"},{id:"demo-s6",activityId:"demo-a2",personId:"demo-sara",day:1,start:"11:00",end:"15:00",kind:"ordinary",breaks:[]},{id:"demo-s7",activityId:"demo-a1",personId:"demo-amanda",day:2,start:"10:00",end:"14:00",kind:"ordinary",breaks:[]}];const demoSections=[{id:"demo-s1",title:"Matbiljett",text:"Lunchbiljetter hämtas i Vita huset.",html:""},{id:"demo-s2",title:"Vid sjukdom",text:"Ring dagens kontaktperson (se nedan) så tidigt som möjligt.",html:""},{id:"demo-s3",title:"Nycklar",text:"Nycklar lämnas i receptionen.",html:""}];const sharedInfo={sections:demoSections,html:demoSections.map(x=>`<div><strong>${x.title}</strong></div><div>${x.text}</div>`).join("<div><br></div>"),text:demoSections.map(x=>x.title+"\n"+x.text).join("\n\n"),sickContactPersonIds:{friday:"demo-amanda",saturday:"demo-amanda",sunday:"demo-amanda"},program:{friday:[{id:"demo-p1",start:"16:00",end:"16:30",title:"Jakthornen (exempel)"},{id:"demo-p2",start:"17:00",end:"19:30",title:"Jazz (exempel)"},{id:"demo-p3",start:"19:30",end:"19:50",title:"Luciatåg (exempel)"}],saturday:[{id:"demo-p4",start:"11:00",end:"14:00",title:"Musik med Tomten och Bocken (exempel)"},{id:"demo-p5",start:"12:00",end:"",title:"Dans kring granen (exempel)"},{id:"demo-p6",start:"13:30",end:"14:00",title:"Gospelkör (exempel)"}],sunday:[{id:"demo-p7",start:"12:00",end:"18:00",title:"Träffa tomten och hans familj (exempel)"},{id:"demo-p8",start:"17:30",end:"17:50",title:"Luciatåg (exempel)"}]}};return {schemaVersion:1,year:state.year,revision:1,places,people,activities,assignments,sharedInfo};}
 function setDemo(){stopListeners();state.demo=true;scheduleBaselines.clear();demoScheduleChanged.clear();if(TEST)state.day=TEST.day;state.plan=exampleData();state.registerPeople=state.plan.people;state.registerPlaces=state.plan.places;state.status="live";state.error="";state.cached=false;state.personId="";state.detailPersonId=null;state.view="home";render();}
 const demoScheduleChanged=new Set();
 function simulateScheduleChange(){

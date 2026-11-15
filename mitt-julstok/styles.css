@@ -175,6 +175,7 @@
 .top-actions { flex-shrink: 0; }
 .shared-info-text { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.55; color: #000; }
 .shared-info-text ul { list-style: disc; padding-inline-start: 1.5em; margin: 0; }
+.shared-info-text ol { list-style: decimal; padding-inline-start: 1.6em; margin: 0; }
 .shared-info-text p { margin: 0; }
 .shared-info-text .shared-text-red { color: #b91c1c; }
 .shared-info-text .shared-text-black { color: #000; }
@@ -219,3 +220,6 @@
 .program-time{font-weight:720;font-variant-numeric:tabular-nums;white-space:nowrap}
 .program-what{overflow-wrap:anywhere}
 .program-toggle{margin-top:2px}
+.rowlink.program-hit{display:block;min-height:0;font-size:14px;line-height:1.45;cursor:default}.rowlink.program-hit:active{background:#fff}
+.search-instruction{margin-bottom:9px}.search-instruction-link{margin:2px 0 0}
+.search-instruction:has(+ .search-sick-contacts){margin-bottom:0;border-bottom-left-radius:0;border-bottom-right-radius:0}.search-sick-contacts{margin-bottom:9px;border-top:0;border-top-left-radius:0;border-top-right-radius:0}

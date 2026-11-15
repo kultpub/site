@@ -1,6 +1,6 @@
 /* Mitt Julstök: versionsbundet appskal. Personligt namnval och schema sparas separat. */
 const CACHE_PREFIX="mitt-julstok-app-";
-const APP_VERSION="20261115-public-program-v49";
+const APP_VERSION="20261115-public-program-v56";
 const CACHE_NAME=CACHE_PREFIX+APP_VERSION;
 const SHELL=["./","./index.html","./styles.css?v="+APP_VERSION,"./app.js?v="+APP_VERSION,"./qr.js?v=20261108-gantt-contrast-v39","./manifest.webmanifest","./icon-192.png","./icon-512.png"];
 self.addEventListener("install",event=>{
