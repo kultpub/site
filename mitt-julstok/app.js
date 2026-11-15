@@ -693,6 +693,39 @@ function sickContactsFor(shifts){
     ? {person:namedPerson(contacts?.[key])} : null);
 }
 
+// ---- Publikt program ----
+// sharedInfo.program = {friday:[{id,start,end,title}],saturday:[…],sunday:[…]}.
+// Sluttiden är valfri. Punkterna visas i exakt den ordning de har i planeringsverktyget.
+const PROGRAM_KEYS=["friday","saturday","sunday"];
+function programItems(day){
+  const list=state.plan?.sharedInfo?.program?.[PROGRAM_KEYS[day]];
+  return (Array.isArray(list)?list:[])
+    .filter(item=>item&&validTime(item.start)&&String(item.title||"").trim())
+    .map(item=>({start:item.start,end:validTime(item.end)&&item.end>item.start?item.end:"",title:String(item.title).trim()}));
+}
+const dotTime=value=>value.replace(":",".");
+// Arbetsdagar = dagar med registrerad arbetstid eller tilldelat pass.
+function workDays(person){return [0,1,2].filter(day=>availableRanges(person,day).length||assignments(person?.id,day).length);}
+function programDayHtml(day){
+  return `<div class="program-day"><h4 class="program-day-title">${esc(datesHeading(day))}</h4><ol class="program-list">${programItems(day).map(item=>
+    `<li><span class="program-time">${esc(dotTime(item.start))}${item.end?"–"+esc(dotTime(item.end)):""}</span><span class="program-what">${renderInstruction(item.title)}</span></li>`).join("")}</ol></div>`;
+}
+// Programmet visas för de egna arbetsdagarna. Övriga dagar visas med en knapp,
+// som inte finns om personen arbetar alla dagar (eller om övriga dagar saknar program).
+function renderProgram(person){
+  const mine=workDays(person);
+  const own=mine.filter(day=>programItems(day).length);
+  const others=[0,1,2].filter(day=>!mine.includes(day)&&programItems(day).length);
+  if(!own.length&&!others.length)return "";
+  const toggle=others.length?`<button type="button" class="action-btn outline block program-toggle" data-action="toggle-program" aria-expanded="${state.showOtherProgram?"true":"false"}">${state.showOtherProgram?"Dölj program övriga dagar":"Visa program övriga dagar"}</button>`:"";
+  return `<section class="shared-section" aria-labelledby="programTitle">
+    <h3 class="inline-title" id="programTitle">Publikt program</h3>
+    ${own.length?own.map(programDayHtml).join(""):`<p class="smallmuted">Inget program är inlagt för de dagar du arbetar.</p>`}
+    ${state.showOtherProgram?others.map(programDayHtml).join(""):""}
+    ${toggle}
+  </section>`;
+}
+
 function personalScheduleSnapshot(person){
   const timeRange=range=>`${range.start}–${range.end}`;
   const shifts=assignments(person.id);
@@ -847,11 +880,15 @@ function renderSharedInfo(){
   return `${renderAlert()}
     <button type="button" class="context-back" data-action="person-back">${icon("back","sm")} Till Min dag</button>
     <div class="heading"><h2>Instruktioner till alla</h2></div>
-    ${instructions?`<div class="person-hero shared-info-text">${instructions}</div>`:'<p class="smallmuted">Inga gemensamma instruktioner har lagts in ännu.</p>'}
-    ${contacts?`<section aria-labelledby="sickContactsTitle">
+    <section class="shared-section" aria-labelledby="generalInfoTitle">
+      <h3 class="inline-title" id="generalInfoTitle">Allmänt</h3>
+      ${instructions?`<div class="person-hero shared-info-text">${instructions}</div>`:'<p class="smallmuted">Ingen allmän information har lagts in ännu.</p>'}
+    </section>
+    ${contacts?`<section class="shared-section" aria-labelledby="sickContactsTitle">
       <h3 class="inline-title" id="sickContactsTitle">Vem ringer jag om jag blir sjuk?</h3>
       <div class="rows">${contacts}</div>
-    </section>`:""}`;
+    </section>`:""}
+    ${worker?renderProgram(worker):""}`;
 }
 
 function renderSearch(){
@@ -921,7 +958,7 @@ function renderSeasonGate(){
 }
 function render(){const preserved=[...document.querySelectorAll(".vg-scroll")].map(el=>({id:el.closest("[data-pass-day]")?.id,left:el.scrollLeft}));let content="";if(state.seasonMode!=="active"&&!state.demo){content=renderSeasonGate();}else if(!state.plan){content=state.status==="error"?`<main class="shell"><div class="content"><h2>Mitt Julstök</h2><div class="notice">${esc(state.error||"Kunde inte hämta planen.")}</div><div class="actions"><button class="action-btn" data-action="retry">Försök igen</button><button class="action-btn outline" data-action="demo">Visa exempel</button></div></div></main>`:`<div class="boot"><div class="boot-logo"><img src="icon-192.png" alt=""></div><h1>Mitt Julstök</h1><p>Hämtar Julstökets uppgifter…</p></div>`;}else if(!currentPerson()){content=renderNameSelect();}else{content=shell(state.view==="people"?renderPeople():state.view==="places"?renderPlaces():state.view==="share"?renderShare():state.view==="search"?renderSearch():state.view==="info"?renderSharedInfo():renderHome());}$("app").innerHTML=content;document.body.style.touchAction=swipeAllowed()?"pan-y pinch-zoom":"";initializeGantt();for(const saved of preserved){if(!saved.id)continue;const target=document.getElementById(saved.id)?.querySelector(".vg-scroll");if(target)target.scrollLeft=saved.left;}if(state.view==="share"&&currentPerson()&&shareReady()&&$("qrCanvas")){try{window.JulQR?.draw($("qrCanvas"),sharedUrl());}catch(error){$("qrWrap").innerHTML=`<p class="error-message">QR-koden kunde inte skapas.</p>`;}}}
 function focusRender(id){const el=$(id),pos=el?.selectionStart??null;render();const target=$(id);if(target){target.focus();if(pos!==null&&target.setSelectionRange)try{target.setSelectionRange(pos,pos);}catch{}}}
-function exampleData(){const people=[{id:"demo-amanda",name:"Amanda (exempel)",phone:"070-123 45 67",availability:[{day:0,start:"15:00",end:"20:00"},{day:1,start:"09:00",end:"18:00"},{day:2,start:"10:00",end:"14:00"}]},{id:"demo-sara",name:"Sara (exempel)",phone:"070-222 11 00",availability:[{day:1,start:"10:00",end:"18:00"}]},{id:"demo-ludvig",name:"Ludvig (exempel)",phone:"070-333 22 11",availability:[{day:1,start:"11:00",end:"18:00"}]}],places=[{id:"demo-gate",name:"Gröna grinden",description:"Entréområdet (exempel)",mapsUrl:""},{id:"demo-shop",name:"Vita huset",description:"Museibutiken (exempel)",mapsUrl:""},{id:"demo-square",name:"Torget",description:"",mapsUrl:""}],activities=[{id:"demo-a1",title:"Entrékassor",placeId:"demo-gate",notes:"Välkomna besökarna och kontrollera biljetter.",dayNotes:{},staffingPattern:{shifts:[]}},{id:"demo-a2",title:"Julbutiken",placeId:"demo-shop",notes:"Kontrollera växelkassan vid passets början.",dayNotes:{1:"På lördagen är det extra mycket besökare."},staffingPattern:{shifts:[{id:"demo-source",kind:"ordinary",day:1,breaks:[{id:"demo-pause",start:"13:00",end:"13:30"}]},{id:"demo-rel-source",kind:"relief",day:1,breaks:[],reliefPeriods:[{breakId:"demo-pause",start:"13:00",end:"13:30"}]}]}},{id:"demo-a3",title:"Glöggförsäljning",placeId:"demo-square",notes:"Se till att glöggen hålls varm.",dayNotes:{},staffingPattern:{shifts:[]}}],assignments=[{id:"demo-s1",activityId:"demo-a1",personId:"demo-amanda",day:0,start:"15:00",end:"20:00",kind:"ordinary",breaks:[]},{id:"demo-s2",activityId:"demo-a1",personId:"demo-amanda",day:1,start:"09:00",end:"11:00",kind:"ordinary",breaks:[]},{id:"demo-s3",activityId:"demo-a2",personId:"demo-amanda",day:1,start:"11:00",end:"15:00",kind:"ordinary",breaks:[{id:"demo-pause",start:"13:00",end:"13:30",type:"Paus"}],patternShiftId:"demo-source"},{id:"demo-s4",activityId:"demo-a3",personId:"demo-amanda",day:1,start:"15:30",end:"18:00",kind:"ordinary",breaks:[]},{id:"demo-s5",activityId:"demo-a2",personId:"demo-ludvig",day:1,start:"13:00",end:"13:30",kind:"relief",breaks:[],patternShiftId:"demo-rel-source"},{id:"demo-s6",activityId:"demo-a2",personId:"demo-sara",day:1,start:"11:00",end:"15:00",kind:"ordinary",breaks:[]},{id:"demo-s7",activityId:"demo-a1",personId:"demo-amanda",day:2,start:"10:00",end:"14:00",kind:"ordinary",breaks:[]}];return {schemaVersion:1,year:state.year,revision:1,places,people,activities,assignments};}
+function exampleData(){const people=[{id:"demo-amanda",name:"Amanda (exempel)",phone:"070-123 45 67",availability:[{day:0,start:"15:00",end:"20:00"},{day:1,start:"09:00",end:"18:00"},{day:2,start:"10:00",end:"14:00"}]},{id:"demo-sara",name:"Sara (exempel)",phone:"070-222 11 00",availability:[{day:1,start:"10:00",end:"18:00"}]},{id:"demo-ludvig",name:"Ludvig (exempel)",phone:"070-333 22 11",availability:[{day:1,start:"11:00",end:"18:00"}]}],places=[{id:"demo-gate",name:"Gröna grinden",description:"Entréområdet (exempel)",mapsUrl:""},{id:"demo-shop",name:"Vita huset",description:"Museibutiken (exempel)",mapsUrl:""},{id:"demo-square",name:"Torget",description:"",mapsUrl:""}],activities=[{id:"demo-a1",title:"Entrékassor",placeId:"demo-gate",notes:"Välkomna besökarna och kontrollera biljetter.",dayNotes:{},staffingPattern:{shifts:[]}},{id:"demo-a2",title:"Julbutiken",placeId:"demo-shop",notes:"Kontrollera växelkassan vid passets början.",dayNotes:{1:"På lördagen är det extra mycket besökare."},staffingPattern:{shifts:[{id:"demo-source",kind:"ordinary",day:1,breaks:[{id:"demo-pause",start:"13:00",end:"13:30"}]},{id:"demo-rel-source",kind:"relief",day:1,breaks:[],reliefPeriods:[{breakId:"demo-pause",start:"13:00",end:"13:30"}]}]}},{id:"demo-a3",title:"Glöggförsäljning",placeId:"demo-square",notes:"Se till att glöggen hålls varm.",dayNotes:{},staffingPattern:{shifts:[]}}],assignments=[{id:"demo-s1",activityId:"demo-a1",personId:"demo-amanda",day:0,start:"15:00",end:"20:00",kind:"ordinary",breaks:[]},{id:"demo-s2",activityId:"demo-a1",personId:"demo-amanda",day:1,start:"09:00",end:"11:00",kind:"ordinary",breaks:[]},{id:"demo-s3",activityId:"demo-a2",personId:"demo-amanda",day:1,start:"11:00",end:"15:00",kind:"ordinary",breaks:[{id:"demo-pause",start:"13:00",end:"13:30",type:"Paus"}],patternShiftId:"demo-source"},{id:"demo-s4",activityId:"demo-a3",personId:"demo-amanda",day:1,start:"15:30",end:"18:00",kind:"ordinary",breaks:[]},{id:"demo-s5",activityId:"demo-a2",personId:"demo-ludvig",day:1,start:"13:00",end:"13:30",kind:"relief",breaks:[],patternShiftId:"demo-rel-source"},{id:"demo-s6",activityId:"demo-a2",personId:"demo-sara",day:1,start:"11:00",end:"15:00",kind:"ordinary",breaks:[]},{id:"demo-s7",activityId:"demo-a1",personId:"demo-amanda",day:2,start:"10:00",end:"14:00",kind:"ordinary",breaks:[]}];const sharedInfo={text:"",program:{friday:[{id:"demo-p1",start:"16:00",end:"16:30",title:"Jakthornen (exempel)"},{id:"demo-p2",start:"17:00",end:"19:30",title:"Jazz (exempel)"},{id:"demo-p3",start:"19:30",end:"19:50",title:"Luciatåg (exempel)"}],saturday:[{id:"demo-p4",start:"11:00",end:"14:00",title:"Musik med Tomten och Bocken (exempel)"},{id:"demo-p5",start:"12:00",end:"",title:"Dans kring granen (exempel)"},{id:"demo-p6",start:"13:30",end:"14:00",title:"Gospelkör (exempel)"}],sunday:[{id:"demo-p7",start:"12:00",end:"18:00",title:"Träffa tomten och hans familj (exempel)"},{id:"demo-p8",start:"17:30",end:"17:50",title:"Luciatåg (exempel)"}]}};return {schemaVersion:1,year:state.year,revision:1,places,people,activities,assignments,sharedInfo};}
 function setDemo(){stopListeners();state.demo=true;scheduleBaselines.clear();demoScheduleChanged.clear();if(TEST)state.day=TEST.day;state.plan=exampleData();state.registerPeople=state.plan.people;state.registerPlaces=state.plan.places;state.status="live";state.error="";state.cached=false;state.personId="";state.detailPersonId=null;state.view="home";render();}
 const demoScheduleChanged=new Set();
 function simulateScheduleChange(){
@@ -934,7 +971,7 @@ function simulateScheduleChange(){
   const start=minutes(first.start)+15;
   first.start=`${String(Math.floor(start/60)).padStart(2,"0")}:${String(start%60).padStart(2,"0")}`;
   first.note="Samlas vid ingången 10 minuter före passet.";
-  state.plan.sharedInfo={text:"Lunchbiljetter hämtas i Vita huset. (Exempel)"};
+  state.plan.sharedInfo={...state.plan.sharedInfo,text:"Lunchbiljetter hämtas i Vita huset. (Exempel)"};
 }
 function stopListeners(){for(const stop of [stopPlan,stopPeople,stopPlaces])try{stop?.();}catch{}stopPlan=stopPeople=stopPlaces=null;}
 function syncSeason(){
@@ -1002,6 +1039,7 @@ document.addEventListener("click",event=>{const button=event.target.closest("[da
   if(action==="retry"){if(firestore)listen();else connect();return;}
   if(action==="demo"){setDemo();return;}
   if(action==="share"){shareLink();return;}
+  if(action==="toggle-program"){state.showOtherProgram=!state.showOtherProgram;render();return;}
   if(action==="copy"){copyLink();return;}
 });
 // Navigeringsnivåer: 0 = Min dag, 1 = undervy, 2 = person.
